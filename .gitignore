@@ -1,0 +1,16 @@
+/classes
+/dist
+/logs
+/javadoc
+.classpath
+.idea
+.project
+*.iml
+/out
+.DS_Store
+*/.DS_Store
+/bin
+/temp
+/workspace
+src/com/macys/sdt/shared
+src/com/macys/sdt/projects

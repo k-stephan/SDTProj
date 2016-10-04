@@ -1,0 +1,52 @@
+{
+    "configs": [
+        {
+            "url": "http://www.qa17codemacys.fds.com",
+            "host": "11.168.112.153",
+            "port": "60000",
+            "dbName": "MLQ10",
+            "userName": "mcyapp",
+            "password": "dbacce5s"
+        },
+        {
+            "url": "http://www.qa19codemacys.fds.com",
+            "host": "11.168.114.93",
+            "port": "60000",
+            "dbName": "MLQ10",
+            "userName": "mcyread",
+            "password": "only4read"
+        },
+        {
+            "url": "http://www.qa14codemacys.fds.com",
+            "host": "111.168.112.129",
+            "port": "60000",
+            "dbName": "MLQ10",
+            "userName": "mcyread",
+            "password": "only4read"
+        },
+        {
+            "url": "http://www.qa11codemacys.fds.com",
+            "host": "11.168.112.175",
+            "port": "60000",
+            "dbName": "MLQ10",
+            "userName": "mcyread",
+            "password": "only4read"
+        },
+        {
+            "url": "http://www.qa13codebloomingdales.fds.com",
+            "host": "11.168.113.64",
+            "port": "60004",
+            "dbName": "BLX01",
+            "userName": "blmapp",
+            "password": "only4BLM"
+        },
+        {
+            "url": "http://www.qa15codebloomingdales.fds.com",
+            "host": "11.168.114.24",
+            "port": "60004",
+            "dbName": "BLX01",
+            "userName": "blmapp",
+            "password": "only4BLM"
+        }
+    ]
+}
