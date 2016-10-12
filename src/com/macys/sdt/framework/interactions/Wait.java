@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import static com.macys.sdt.framework.runner.MainRunner.appTest;
 import static com.macys.sdt.framework.runner.MainRunner.useAppium;
@@ -21,6 +22,23 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
  * A collection of ways to wait for expected conditions
  */
 public class Wait {
+
+    public static boolean until(BooleanSupplier condition) {
+        return until(condition, null);
+    }
+
+    public static boolean until(BooleanSupplier condition, Integer seconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds != null ? seconds : 5);
+            wait.until((WebDriver driver) -> condition.getAsBoolean());
+            return true;
+        } catch (Exception ex) {
+            if (MainRunner.debugMode) {
+                System.err.println("-->Error:until: " + condition + ": " + ex.getMessage());
+            }
+            return false;
+        }
+    }
 
     /**
      * Wait until an element is no longer present
