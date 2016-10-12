@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import static com.macys.sdt.framework.runner.MainRunner.appTest;
 import static com.macys.sdt.framework.runner.MainRunner.useAppium;
@@ -22,22 +23,18 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
  */
 public class Wait {
 
-    public interface Predicate {
-        boolean test();
+    public static boolean until(BooleanSupplier condition) {
+        return until(condition, null);
     }
 
-    public static boolean until(Predicate predicate) {
-        return until(predicate, null);
-    }
-
-    public static boolean until(Predicate predicate, Integer seconds) {
+    public static boolean until(BooleanSupplier condition, Integer seconds) {
         try {
             WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds != null ? seconds : 5);
-            wait.until((WebDriver driver) -> predicate.test());
+            wait.until((WebDriver driver) -> condition.getAsBoolean());
             return true;
         } catch (Exception ex) {
             if (MainRunner.debugMode) {
-                System.err.println("-->Error:until: " + predicate + ": " + ex.getMessage());
+                System.err.println("-->Error:until: " + condition + ": " + ex.getMessage());
             }
             return false;
         }
