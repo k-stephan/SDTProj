@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.pagefactory.ByAll;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -346,41 +347,12 @@ public class Elements {
             return null;
         }
 
-        ArrayList<WebElement> elements = new ArrayList<>();
-        ArrayList<By> locators = new ArrayList<>();
-        By first = null;
-
+        By[] bys = new By[elementData.elementLocators.size()];
         for (int i = 0; i < elementData.elementLocators.size(); i++) {
-            By el = findLocatorMethod(elementData.elementLocators.get(i), elementData.elementValues.get(i));
-            if (elementData.elementLocators.size() == 1) {
-                return el;
-            }
-
-            if (first == null) {
-                first = el;
-            }
-            try {
-                WebElement element = findElement(el);
-                if (element != null) {
-                    elements.add(element);
-                    locators.add(el);
-                }
-            } catch (Exception e) {
-                // try the next one (if it exists)
-            }
+            bys[i] = Elements.findLocatorMethod(elementData.elementLocators.get(i), elementData.elementValues.get(i));
         }
 
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).isDisplayed()) {
-                return locators.get(i);
-            }
-        }
-
-        if (!locators.isEmpty()) {
-            return locators.get(0);
-        }
-
-        return first;
+        return new ByAll(bys);
     }
 
     /**
@@ -412,9 +384,7 @@ public class Elements {
             return null;
         }
 
-        ArrayList<WebElement> elements = new ArrayList<>();
-        ArrayList<By> locators = new ArrayList<>();
-        By first = null;
+        By[] bys = new By[elementData.elementLocators.size()];
 
         for (int i = 0; i < elementData.elementLocators.size(); i++) {
             String paramValue = elementData.elementValues.get(i);
@@ -424,34 +394,11 @@ public class Elements {
                 // System.out.println("Param element: (" + param + "): " + paramValue);
                 index++;
             }
-            By el = findLocatorMethod(elementData.elementLocators.get(i), paramValue);
-            if (first == null) {
-                first = el;
-            }
-            try {
-                WebElement element = findElement(el);
-                if (element != null) {
-                    elements.add(element);
-                    locators.add(el);
-                }
-            } catch (Exception e) {
-                if (MainRunner.debugMode && el != null) {
-                    System.err.println("-->StepUtils.paramElement():tried " + el.toString());
-                }
-            }
+
+            bys[i] = Elements.findLocatorMethod(elementData.elementLocators.get(i), paramValue);
         }
 
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).isDisplayed()) {
-                return locators.get(i);
-            }
-        }
-
-        if (!locators.isEmpty()) {
-            return locators.get(0);
-        }
-
-        return first;
+        return new ByAll(bys);
     }
 
     private static By findLocatorMethod(String locator, String value) {
