@@ -22,6 +22,27 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
  */
 public class Wait {
 
+    public interface Predicate {
+        boolean test();
+    }
+
+    public static boolean until(Predicate predicate) {
+        return until(predicate, null);
+    }
+
+    public static boolean until(Predicate predicate, Integer seconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds != null ? seconds : 5);
+            wait.until((WebDriver driver) -> predicate.test());
+            return true;
+        } catch (Exception ex) {
+            if (MainRunner.debugMode) {
+                System.err.println("-->Error:until: " + predicate + ": " + ex.getMessage());
+            }
+            return false;
+        }
+    }
+
     /**
      * Wait until an element is no longer present
      *
