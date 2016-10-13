@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.htmlelements.loader.decorator;
 
+import com.google.common.base.CaseFormat;
 import com.macys.sdt.framework.interactions.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindAll;
@@ -61,6 +62,26 @@ public class JsonHtmlElementFieldAnnotationsHandler extends Annotations {
             FindBy findBy = getField().getAnnotation(FindBy.class);
             return buildByFromFindBy(findBy);
         }
+
+        // this block allows to map fields to selectors from json implicitly
+        // it makes sense only for web elements. for html elements it's needed to exclude the case when it has its own
+        // selector to find it.
+
+        // example:
+        // @FindBy(jsonPath = "some_page")
+        // public class SomePage extends Page { WebElement someField; }
+        //
+        // will allow to extract selector by path "some_page.some_field"
+
+        Class<?> declaringClass = getField().getDeclaringClass();
+        if (declaringClass.isAnnotationPresent(com.macys.sdt.framework.htmlelements.annotations.FindBy.class)
+                && (isWebElement(getField()) || isWebElementList(getField())) ) {
+            String jsonPath = declaringClass.getAnnotation(com.macys.sdt.framework.htmlelements.annotations.FindBy.class).jsonPath();
+            if ((!isHtmlElement(getField()) && !isHtmlElementList(getField())) || !jsonPath.matches(".+\\..+")) {
+                return Elements.element(String.format("%s.%s", jsonPath, CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, getField().getName())));
+            }
+        }
+
         return null;
     }
 
