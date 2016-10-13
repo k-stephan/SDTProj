@@ -111,11 +111,4 @@ public class PageElement {
         }
         return pagePath;
     }
-
-    public static String getResponsivePath(String pagePath) {
-        if (!(pagePath.startsWith("website") || pagePath.startsWith("MEW"))) {
-            return pagePath;
-        }
-        return pagePath.replace("website", "responsive").replace("MEW", "responsive");
-    }
 }

@@ -398,9 +398,13 @@ public class TestUsers {
      * @return random email address
      */
     public static String generateRandomEmail(int length) {
+        if (length == 0) {
+            length = 16;
+        }
+        
         String allowedChars = "abcdefghijklmnopqrstuvwxyz" + "1234567890";
         String email = RandomStringUtils.random(length, allowedChars);
-        email = email.substring(0, email.length()) + "@macys.com";
+        email = email.substring(0, email.length()) + "@blackhole.macys.com";
         return email;
     }
 
@@ -804,7 +808,7 @@ public class TestUsers {
             profileAddress.setCity(address.getString("address_city"));
             profileAddress.setState(address.getString("address_state"));
             profileAddress.setZipCode(Integer.valueOf(address.getString("address_zip_code").trim()));
-            profileAddress.setEmail(generateRandomEmail(30));
+            profileAddress.setEmail(generateRandomEmail(16));
             profileAddress.setBestPhone(generateRandomPhoneNumber());
         } catch (JSONException e) {
             System.err.println("Unable to get random address: " + e);

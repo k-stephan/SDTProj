@@ -12,7 +12,7 @@ import java.util.List;
 public class ScenarioHelper {
 
     protected static ScenarioImpl scenario = null;
-    private static int outlineCount = 1;
+    public static int outlineCount = 1;
     private static LinkedTreeMap scenarioInfo = null;
     private static int stepOffset = 1;
 

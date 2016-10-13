@@ -422,7 +422,7 @@ public class WebDriverConfigurator {
         WebDriver driver = initDriver(capabilities);
         browsermobServer.newHar(browsermobServerHarTs);
 
-        if (!StepUtils.mobileDevice()) {
+        if (!StepUtils.mobileDevice() && !StepUtils.MEW()) {
             browsermobServer.addRequestFilter(new ProxyFilters.ProxyRequestFilter(url));
             browsermobServer.addResponseFilter(new ProxyFilters.ProxyResponseFilter());
         }

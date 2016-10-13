@@ -212,6 +212,8 @@ public class MainRunner {
             System.out.println("-->Current project: " + project);
         }
         System.out.println("-->Running with parameters:\n" + featureScenarios);
+
+        // attempt to use workspace as relative path to feature file (if needed)
         if (workspace != null && !workspace.isEmpty()) {
             for (int i = 0; i < featureScenarios.size(); i++) {
                 String value = featureScenarios.get(i);
@@ -235,7 +237,6 @@ public class MainRunner {
             }
         }
 
-        //--glue sdt.runner.steps --plugin json:logs/cucumber.json
         featureScenarios.add("--glue");
         if (project != null) {
             if (!project.startsWith("com")) {

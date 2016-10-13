@@ -105,9 +105,13 @@ public class SDTFormatter implements Reporter, Formatter {
         if (!result.getStatus().equals("passed")) {
             System.err.println(" --> " + result.getStatus().toUpperCase());
         }
-        HashMap map = new HashMap(result.toMap());
+        HashMap<String, Object> map = new HashMap<>(result.toMap());
         if (!result.getStatus().equals("passed")) {
-            String screenShot = Utils.getScenarioShaKey(this.uri, ":" + this.getSteps().size()) + ".png";
+            String tempUri = this.uri;
+            if (ScenarioHelper.isScenarioOutline()) {
+                tempUri += ScenarioHelper.outlineCount;
+            }
+            String screenShot = Utils.getScenarioShaKey(tempUri, ":" + this.getSteps().size()) + ".png";
             StepUtils.browserScreenCapture(screenShot);
             map.put("screen_shot", screenShot);
         }
@@ -188,13 +192,13 @@ public class SDTFormatter implements Reporter, Formatter {
     private List<Map<String, Object>> getFeatureElements() {
         List<Map<String, Object>> featureElements = (List) featureMap.get("elements");
         if (featureElements == null) {
-            featureElements = new ArrayList<Map<String, Object>>();
+            featureElements = new ArrayList<>();
             featureMap.put("elements", featureElements);
         }
         return featureElements;
     }
 
-    private Map<Object, List<Map>> getFeatureElement() {
+    private Map<String, List<Map>> getFeatureElement() {
         if (getFeatureElements().size() > 0) {
             return (Map) getFeatureElements().get(getFeatureElements().size() - 1);
         } else {

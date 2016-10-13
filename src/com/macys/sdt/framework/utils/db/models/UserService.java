@@ -107,7 +107,7 @@ public class UserService {
             countryCode.appendChild(doc.createTextNode("US"));
             profileaddress.appendChild(countryCode);
             Element email = doc.createElement("email");
-            email.appendChild(doc.createTextNode((TestUsers.generateRandomEmail(10))));
+            email.appendChild(doc.createTextNode((TestUsers.generateRandomEmail(16))));
             profileaddress.appendChild(email);
             Element bestPhone = doc.createElement("bestPhone");
             bestPhone.appendChild(doc.createTextNode(TestUsers.generateRandomPhoneNumber()));

@@ -81,7 +81,7 @@ public class UserProfileService {
             if (profileAddress == null) {
                 profileAddress = new ProfileAddress();
             }
-            profileAddress.setEmail(TestUsers.generateRandomEmail(20));
+            profileAddress.setEmail(TestUsers.generateRandomEmail(16));
             profileAddress.setFirstName(TestUsers.generateRandomFirstName());
             profileAddress.setLastName(TestUsers.generateRandomLastName());
             profileAddress.setBestPhone(TestUsers.generateRandomPhoneNumber());

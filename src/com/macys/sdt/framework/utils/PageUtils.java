@@ -41,12 +41,6 @@ public class PageUtils {
      * @param pagePath name of page to load
      */
     public static void loadPageJSON(String pagePath) {
-        String responsivePath = PageElement.getResponsivePath(pagePath);
-        if (responsivePath.startsWith("responsive")) {
-            if (cachePagesProject.get(responsivePath) != null || cachePagesShared.get(responsivePath) != null) {
-                return;
-            }
-        }
         if (cachePagesProject.get(pagePath) != null || cachePagesShared.get(pagePath) != null) {
             return;
         }
@@ -55,20 +49,30 @@ public class PageUtils {
         if (!new File(resRepoPath).exists()) {
             resRepoPath = "./";
         }
+        String path = pagePath.replace(".page.", ".pages.").replace(".panel.", ".panels.").replace(".", "/");
+        String resPath = "/resources/elements/" + path + ".json";
 
-        String fullPath;
-        // check for responsive elements
-        if (responsivePath.startsWith("responsive")) {
-            fullPath = pagePath.replace(".page.", ".pages.").replace(".panel.", ".panels.").replace(".", "/");
-            fullPath = "/resources/elements/" + fullPath + ".json".replace("website", "responsive");
-            loadJSONFiles(fullPath, pagePath, resRepoPath);
+        // project elements first
+        if (MainRunner.project != null) {
+            path = resRepoPath + MainRunner.project.replace(".", "/") + resPath;
+            loadOnePageJSONFile(pagePath, path, "project");
+
+            // also load panel elements
+            if (pagePath.contains(".page.")) {
+                path = path.replace("/pages/", "/panels/");
+                loadOnePageJSONFile(pagePath, path, "project");
+            }
         }
 
-        // standard "expected" file
-        fullPath = pagePath.replace(".page.", ".pages.").replace(".panel.", ".panels.").replace(".", "/");
-        fullPath = "/resources/elements/" + fullPath + ".json";
+        // shared elements next
+        path = resRepoPath + "com/macys/sdt/shared" + resPath;
+        loadOnePageJSONFile(pagePath, path, "shared");
 
-        loadJSONFiles(fullPath, pagePath, resRepoPath);
+        // also load panel elements
+        if (pagePath.contains(".page.")) {
+            path = path.replace("/pages/", "/panels/");
+            loadOnePageJSONFile(pagePath, path, "shared");
+        }
 
         // on MCOM env, it is done
         if (!pagePath.contains(".bcom.")) {
@@ -76,38 +80,33 @@ public class PageUtils {
         }
 
         // on BCOM env, fallback onto mcom elements
-        fullPath = fullPath.replace("/bcom/", "/mcom/");
+        resPath = resPath.replace("/bcom/", "/mcom/");
         pagePath = pagePath.replace(".bcom.", ".mcom.");
-        loadJSONFiles(fullPath, pagePath, resRepoPath);
 
-    }
-
-    private static void loadJSONFiles(String resPath, String pagePath, String resRepoPath) {
-        String path;
         // project elements first
         if (MainRunner.project != null) {
             path = resRepoPath + MainRunner.project.replace(".", "/") + resPath;
-            loadPageAndPanels(pagePath, path, "project");
+            loadOnePageJSONFile(pagePath, path, "project");
 
             // also load panel elements
             if (pagePath.contains(".page.")) {
                 path = path.replace("/pages/", "/panels/");
-                loadPageAndPanels(pagePath, path, "project");
+                loadOnePageJSONFile(pagePath, path, "project");
             }
         }
 
         // shared elements next
         path = resRepoPath + "com/macys/sdt/shared" + resPath;
-        loadPageAndPanels(pagePath, path, "shared");
+        loadOnePageJSONFile(pagePath, path, "shared");
 
         // also load panel elements
         if (pagePath.contains(".page.")) {
             path = path.replace("/pages/", "/panels/");
-            loadPageAndPanels(pagePath, path, "shared");
+            loadOnePageJSONFile(pagePath, path, "shared");
         }
     }
 
-    private static boolean loadPageAndPanels(String pagePath, String filePath, String cache) {
+    private static boolean loadOnePageJSONFile(String pagePath, String filePath, String cache) {
         File f = new File(filePath);
         if (f.exists() && !f.isDirectory()) {
             loadPageJsonFiles(pagePath, f, cache);
@@ -117,7 +116,7 @@ public class PageUtils {
         // find file recursively under the directory
         String fName = f.getName();
         File dir = f.getParentFile();
-        f = findFile(dir, fName);
+        f = findPage(dir, fName);
 
         if (f != null && f.exists() && !f.isDirectory()) {
             int fileCount = countFoundPage(dir, fName);
@@ -136,7 +135,7 @@ public class PageUtils {
     }
 
     // recursively checks all subdirectories for a file matching pageName
-    private static File findFile(File dir, String pageName) {
+    private static File findPage(File dir, String pageName) {
         File[] subDirs = dir.listFiles(File::isDirectory);
         File[] resources = dir.listFiles(File::isFile);
         if (resources != null) {
@@ -151,7 +150,7 @@ public class PageUtils {
         }
         File resource = null;
         for (File subDir : subDirs) {
-            resource = findFile(subDir, pageName);
+            resource = findPage(subDir, pageName);
             if (resource != null && resource.getName().equals(pageName)) {
                 break;
             }
@@ -183,13 +182,12 @@ public class PageUtils {
     }
 
     private static void loadPageJsonFiles(String pagePath, File file, String cache) {
-        String responsivePath = PageElement.getResponsivePath(pagePath);
         if (cache.equals("project")) {
-            if (cachePagesProject.get(pagePath) != null || cachePagesProject.get(responsivePath) != null) {
+            if (cachePagesProject.get(pagePath) != null) {
                 return;
             }
         } else {
-            if (cachePagesShared.get(pagePath) != null || cachePagesShared.get(responsivePath) != null) {
+            if (cachePagesShared.get(pagePath) != null) {
                 return;
             }
         }
@@ -285,22 +283,11 @@ public class PageUtils {
 
     private static String findPageJSONValueInternal(String pagePath, String elementName, String cache) {
         String result = null;
-        String responsivePath = PageElement.getResponsivePath(pagePath);
-        JSONObject pageData = null;
+        JSONObject pageData;
         if (cache.equals("project")) {
-            if (responsivePath.startsWith("responsive")) {
-                pageData = cachePagesProject.get(responsivePath);
-            }
-            if (pageData == null) {
-                pageData = cachePagesProject.get(pagePath);
-            }
+            pageData = cachePagesProject.get(pagePath);
         } else {
-            if (responsivePath.startsWith("responsive")) {
-                pageData = cachePagesShared.get(responsivePath);
-            }
-            if (pageData == null) {
-                pageData = cachePagesShared.get(pagePath);
-            }
+            pageData = cachePagesShared.get(pagePath);
         }
 
         try {
@@ -323,7 +310,7 @@ public class PageUtils {
 
         if (includedDataFiles == null) {
             // System.out.println("No value found for " + pageName + "." + elementName);
-            return null;
+            return result;
         }
 
         int count = includedDataFiles.length();
@@ -344,6 +331,6 @@ public class PageUtils {
             }
         }
         //System.out.println("No value found for " + pagePath + "." + elementName);
-        return null;
+        return result;
     }
 }

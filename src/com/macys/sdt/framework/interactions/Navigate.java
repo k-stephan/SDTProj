@@ -167,6 +167,7 @@ public class Navigate {
      */
     public static void visit(String pageURL) {
         runBeforeNavigation();
+        boolean urlFromJSON = false;
         if (pageURL == null) {
             return;
         }
@@ -184,6 +185,7 @@ public class Navigate {
                 }
                 // grab the first one on the list (if there are multiple)
                 String jsonURL = Elements.getValues(pageURL).get(0);
+                urlFromJSON = true;
 
                 if (givenURL == null) {
                     if (jsonURL == null) {
@@ -212,7 +214,7 @@ public class Navigate {
             //Utils.ThreadWatchDog twd = new Utils.ThreadWatchDog(null, 60000, "ThreadWatchDog:visit(" + link + ")", () -> stopPageLoad());
             MainRunner.getWebDriver().get(givenURL);
             //twd.interrupt();
-            Wait.forPageReady();
+            Wait.forPageReady(urlFromJSON ? pageURL.replace(".url", "") : null);
             StepUtils.closeAlert();
             if (MainRunner.analytics != null) {
                 MainRunner.analytics.recordPageSource(givenURL, getPageSource());

@@ -30,6 +30,7 @@ import static com.macys.sdt.framework.runner.MainRunner.appTest;
  */
 public abstract class StepUtils {
 
+    public static boolean ajaxCheck = false;
 
     /**
      * A regex string that will match allowed mobile devices
@@ -306,6 +307,7 @@ public abstract class StepUtils {
         }
 
         ArrayList<String> expectedURLs = Elements.getValues(name + ".url");
+
         String currentURL = url();
         if (MainRunner.debugMode) {
             System.err.println("---> OnPage call: " + name + "\nfound url: " + currentURL);
@@ -381,7 +383,7 @@ public abstract class StepUtils {
         }
 
         // give the first option some more time just to be sure
-        Wait.secondsUntilElementPresent(names[0] + ".verify_page", MainRunner.timeout);
+        Wait.secondsUntilElementPresent(names[0] + ".verify_page", 10);
         if (onPage(names[0])) {
             return;
         }

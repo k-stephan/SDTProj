@@ -327,12 +327,6 @@ public class Wait {
      * Wait for any loading activities on the page to complete
      */
     public static void forPageReady() {
-        // app loading is much simpler, there are already built-in waits in appium interactions
-        // that work perfectly well. Sadly, not the same for the website.
-        if (appTest) {
-            return;
-        }
-
         forPageReady(null);
     }
 
@@ -340,9 +334,15 @@ public class Wait {
      * Wait for any loading activities and waits for page verify_page element to load (if provided)
      *
      * @param pageName page you expect to be loaded
-     * @return true if page is loaded and contains specified text
+     * @return true if page is loaded and pageName.verify_page element is loaded
      */
     public static boolean forPageReady(final String pageName) {
+        // app loading is handled much better, there are already built-in waits in appium interactions
+        // that work perfectly well. Sadly, not the same for the website.
+        if (appTest) {
+            return true;
+        }
+
         int waitTime = MainRunner.timeout;
         //final long ts = System.currentTimeMillis();
         //List<String> stacks = Utils.getCallFromFunction(".forPageReady(");
@@ -377,7 +377,6 @@ public class Wait {
         }
 
         StepUtils.closeJQueryPopup();
-        //stopPageLoad();
         //System.out.println(".exit");
         return true;
     }
@@ -402,14 +401,10 @@ public class Wait {
         if (useAppium) {
             return true;
         }
+        StepUtils.ajaxCheck = true;
         Utils.redirectSErr();
         try {
-            MainRunner.currentURL = MainRunner.getCurrentUrl();
-            // MEW is leaving ajax calls hanging all over the place. Specifically only checking them
-            // on pages that have issues if we don't
-            if (StepUtils.MEW() && !StepUtils.onPage("product_display") && !StepUtils.onPage("responsive_checkout") && !StepUtils.onPage("new_create_registry")) {
-                return true;
-            }
+
             //below script returns either string or long value, so fetching the results conditionally to avoid type cast error
             Object jsResponse = Navigate.execJavascript("return jQuery.active;");
             Long queries;
@@ -422,16 +417,19 @@ public class Wait {
             }
             //System.out.print("." + queries + " AJAX");
 
-            // TEMPORARY - currently a bug in MEW & BCOM sign in & checkout that leaves AJAX calls hanging
-            if ((StepUtils.MEW() || StepUtils.bloomingdales()) &&
-                    (MainRunner.currentURL.contains("signin") || MainRunner.currentURL.contains("chkout"))) {
-                return queries <= 1;
+            // TEMPORARY - currently a bug in BCOM sign in & checkout that leaves AJAX calls hanging
+            if (StepUtils.bloomingdales()) {
+                MainRunner.currentURL = MainRunner.getCurrentUrl();
+                if (MainRunner.currentURL.contains("signin") || MainRunner.currentURL.contains("chkout")){
+                    return queries <= 1;
+                }
             }
             // END TEMPORARY FIX
 
             return queries == 0;
         } finally {
             Utils.resetSErr();
+            StepUtils.ajaxCheck = false;
         }
     }
 
