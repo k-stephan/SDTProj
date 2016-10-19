@@ -104,7 +104,11 @@ public abstract class StepUtils {
      * @return true if on macys website
      */
     public static boolean macys() {
-        return MainRunner.url.matches(".*?(macys|mcom).*?") || ((MainRunner.domain != null) && MainRunner.domain.equalsIgnoreCase("mcom"));
+        if (MainRunner.brand != null) {
+            return MainRunner.brand.equalsIgnoreCase("mcom");
+        }
+
+        return MainRunner.url.matches(".*?(macys|mcom).*?");
     }
 
     /**
@@ -113,7 +117,11 @@ public abstract class StepUtils {
      * @return true if on bloomingdales website
      */
     public static boolean bloomingdales() {
-        return MainRunner.url.matches(".*?(bloomingdales|bcom).*?") || ((MainRunner.domain != null) && MainRunner.domain.equalsIgnoreCase("bcom"));
+        if (MainRunner.brand != null) {
+            return MainRunner.brand.equalsIgnoreCase("bcom");
+        }
+        
+        return MainRunner.url.matches(".*?(bloomingdales|bcom).*?");
     }
 
     /**
@@ -308,7 +316,7 @@ public abstract class StepUtils {
 
         ArrayList<String> expectedURLs = Elements.getValues(name + ".url");
 
-        String currentURL = url();
+        String currentURL = MainRunner.getCurrentUrl();
         if (MainRunner.debugMode) {
             System.err.println("---> OnPage call: " + name + "\nfound url: " + currentURL);
         }

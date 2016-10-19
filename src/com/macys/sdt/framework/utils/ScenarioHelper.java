@@ -13,7 +13,7 @@ public class ScenarioHelper {
 
     protected static ScenarioImpl scenario = null;
     public static int outlineCount = 1;
-    private static LinkedTreeMap scenarioInfo = null;
+    private static LinkedTreeMap scenarioInfo = new LinkedTreeMap();
     private static int stepOffset = 1;
 
 

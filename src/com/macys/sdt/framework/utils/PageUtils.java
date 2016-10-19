@@ -45,16 +45,12 @@ public class PageUtils {
             return;
         }
 
-        String resRepoPath = "src/";
-        if (!new File(resRepoPath).exists()) {
-            resRepoPath = "./";
-        }
         String path = pagePath.replace(".page.", ".pages.").replace(".panel.", ".panels.").replace(".", "/");
         String resPath = "/resources/elements/" + path + ".json";
 
         // project elements first
         if (MainRunner.project != null) {
-            path = resRepoPath + MainRunner.project.replace(".", "/") + resPath;
+            path = MainRunner.projectDir + resPath;
             loadOnePageJSONFile(pagePath, path, "project");
 
             // also load panel elements
@@ -65,7 +61,7 @@ public class PageUtils {
         }
 
         // shared elements next
-        path = resRepoPath + "com/macys/sdt/shared" + resPath;
+        path = "shared" + resPath;
         loadOnePageJSONFile(pagePath, path, "shared");
 
         // also load panel elements
@@ -85,7 +81,7 @@ public class PageUtils {
 
         // project elements first
         if (MainRunner.project != null) {
-            path = resRepoPath + MainRunner.project.replace(".", "/") + resPath;
+            path = MainRunner.projectDir + resPath;
             loadOnePageJSONFile(pagePath, path, "project");
 
             // also load panel elements
@@ -96,7 +92,7 @@ public class PageUtils {
         }
 
         // shared elements next
-        path = resRepoPath + "com/macys/sdt/shared" + resPath;
+        path = "src/com/macys/sdt/shared" + resPath;
         loadOnePageJSONFile(pagePath, path, "shared");
 
         // also load panel elements

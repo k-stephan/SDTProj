@@ -170,18 +170,6 @@ public class ProfileAddress {
 
     public void setBestPhone(String bestPhone) {
         this.bestPhone = bestPhone;
-        String area_code = TestUsers.generateRandomPhoneAreaCodeExchange();
-        while (area_code.length() != 3)
-            area_code = TestUsers.generateRandomPhoneAreaCodeExchange();
-        String phone_number = TestUsers.generateRandomPhoneSubscriber();
-        while (phone_number.length() != 4)
-            phone_number = TestUsers.generateRandomPhoneSubscriber();
-        if (this.bestPhone.length() != 10) {
-            this.bestPhone += area_code + phone_number;
-        }
-        if (this.bestPhone.length() > 10) {
-            this.bestPhone = this.bestPhone.substring(0, 10);
-        }
     }
 
     public String getPhoneAreaCode() {

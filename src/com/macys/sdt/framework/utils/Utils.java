@@ -520,14 +520,10 @@ public class Utils {
      * @return resulting File
      */
     public static File getResourceFile(String fname) {
-        String resPath = "src/com/macys/sdt/";
-        if (!new File("src").exists()) {
-            resPath = "com/macys/sdt/";
-        }
 
         // project data
         String full_path = getResourcePath(fname);
-        String path = resPath + MainRunner.project.replace(".", "/") + "/resources/data/" + full_path;
+        String path = MainRunner.projectDir + "/resources/data/" + full_path;
         File resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
@@ -535,21 +531,21 @@ public class Utils {
 
         if (!resource.exists()) {
             //fallback to website resources
-            resource = new File(path.replace("MEW", "website"));
+            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
         }
 
         // shared data
-        path = resPath + "shared/resources/data/" + full_path;
+        path = "shared/resources/data/" + full_path;
         resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
         }
         if (!resource.exists()) {
             //fallback to website resources
-            resource = new File(path.replace("MEW", "website"));
+            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
@@ -586,8 +582,15 @@ public class Utils {
      * @return file path
      */
     private static String getResourcePath(String fName) {
-        return (StepUtils.MEW() ? "MEW/" : "website/")
-                + (macys() ? "mcom/" : (StepUtils.bloomingdales() ? "bcom/" : "other/")) + fName;
+        String resPath;
+        if (MainRunner.appTest) {
+            resPath = StepUtils.iOS() ? "iOS/" : "android/";
+        } else {
+            resPath = StepUtils.MEW() ? "MEW/" : "website/";
+        }
+        resPath += (StepUtils.macys() ? "mcom/" : (StepUtils.bloomingdales() ? "bcom/" : "other/"));
+
+        return resPath + fName;
     }
 
     public static String listToString(List<String> list, String token, String[] cleans) {

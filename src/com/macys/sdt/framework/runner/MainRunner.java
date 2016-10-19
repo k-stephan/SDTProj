@@ -115,7 +115,7 @@ public class MainRunner {
     /**
      * Domain - MCOM or BCOM, only needed when resolving website with IP
      */
-    public static String domain;
+    public static String brand;
     /**
      * Time the tests were started
      */
@@ -140,6 +140,8 @@ public class MainRunner {
      * Path to project currently being run
      */
     public static String project = null;
+
+    public static String projectDir = null;
     /**
      * The current URL
      */
@@ -194,18 +196,16 @@ public class MainRunner {
         if (project == null) {
             String projectPath = featureScenarios.get(0).replace("/", ".").replace("\\", ".");
             String[] parts = projectPath.split(Pattern.quote("."));
-            int comIndex = 0;
+            int sdtIndex = 0;
             for (int i = 0; i < parts.length; i++) {
-                if (parts[i].equals("com")) {
-                    comIndex = i;
-                }
-                if (domain == null && parts[i].matches("mcom|bcom")) {
-                    domain = parts[i];
+                if (parts[i].equals("SDT")) {
+                    sdtIndex = i;
+                    break;
                 }
             }
-            if (comIndex != parts.length) {
-                project = parts[comIndex + 4] + "." +    // domain
-                        parts[comIndex + 5];           // project
+            if (sdtIndex != parts.length) {
+                project = parts[sdtIndex + 1] + "." +    // domain
+                        parts[sdtIndex + 2];             // project
             }
         }
         if (project != null) {
@@ -237,19 +237,14 @@ public class MainRunner {
             }
         }
 
-        featureScenarios.add("--glue");
         if (project != null) {
-            if (!project.startsWith("com")) {
-                project = "com.macys.sdt.projects." + project;
-            }
-
-            featureScenarios.add(project);
             featureScenarios.add("--glue");
+            featureScenarios.add("com.macys.sdt.projects." + project);
+            projectDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project;
         }
 
-        featureScenarios.add("com.macys.sdt.shared");
         featureScenarios.add("--glue");
-        featureScenarios.add("com.macys.sdt.framework.shared");
+        featureScenarios.add("com.macys.sdt.shared");
         featureScenarios.add("--plugin");
         featureScenarios.add("com.macys.sdt.framework.utils.SDTFormatter");
         featureScenarios.add("--plugin");
@@ -292,7 +287,7 @@ public class MainRunner {
         Utils.createDirectory(temp = workspace + "temp/", true);
 
         url = getExParams("website");
-        domain = getExParams("domain");
+        brand = getExParams("brand");
         remoteOS = getExParams("remote_os");
         if (remoteOS == null) {
             System.out.println("Remote OS not specified.  Using default: Windows 7");

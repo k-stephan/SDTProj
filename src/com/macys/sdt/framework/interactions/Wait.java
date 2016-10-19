@@ -420,7 +420,7 @@ public class Wait {
             // TEMPORARY - currently a bug in BCOM sign in & checkout that leaves AJAX calls hanging
             if (StepUtils.bloomingdales()) {
                 MainRunner.currentURL = MainRunner.getCurrentUrl();
-                if (MainRunner.currentURL.contains("signin") || MainRunner.currentURL.contains("chkout")){
+                if (MainRunner.currentURL.contains("signin") || MainRunner.currentURL.contains("chkout") || MainRunner.currentURL.contains("profile")){
                     return queries <= 1;
                 }
             }

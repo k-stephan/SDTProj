@@ -94,7 +94,7 @@ public class PageElement {
     }
 
     // make 'home' or 'panel.home' to 'website.mcom.page.home' or 'website.mcom.panel.home'
-    private static String getPageFullPath(String pageName) {
+    public static String getPageFullPath(String pageName) {
         String pagePath;
         if (MainRunner.appTest) {
             pagePath = StepUtils.iOS() ? "iOS." : "android.";

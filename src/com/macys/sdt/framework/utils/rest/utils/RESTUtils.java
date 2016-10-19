@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class RESTUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RESTUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(RESTUtils.class);
 
     /**
      * convert relative REST uri to absolute URI
@@ -30,8 +30,8 @@ public class RESTUtils {
      *
      * @return REST client
      */
-    public static Optional<Client> createClient() {
-        return Optional.of(ClientBuilder.newClient());
+    public static Client createClient() {
+        return ClientBuilder.newClient();
     }
 
     /**
@@ -44,12 +44,15 @@ public class RESTUtils {
     public static WebTarget createTarget(Client client, String resource) {
         String baseAddress = null;
         WebTarget webTarget;
-        String pattern = "^https?://.+";
+        String pattern = "^https?://.+";        //works for both http and https
+
+        //return webTarget when full uri is passed
         if (resource != null && Pattern.matches(pattern, resource)) {
             webTarget = client.target(resource);
             return webTarget;
         }
 
+        //return webTarget when relative uri is passed
         try {
             baseAddress = getBaseAddress().orElseThrow(Exception::new);
         } catch (Exception e) {

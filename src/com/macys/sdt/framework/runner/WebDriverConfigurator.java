@@ -122,10 +122,8 @@ public class WebDriverConfigurator {
             if (Utils.isOSX()) {
                 fileName = "chromedriver";
             }
-            File file = new File(MainRunner.workspace + "src/com/macys/sdt/shared/resources/framework/selenium_drivers/" + fileName);
-            if (!file.exists()) {
-                file = new File(MainRunner.workspace + "com/macys/sdt/shared/resources/framework/selenium_drivers/" + fileName);
-            }
+            File file = new File(MainRunner.workspace + "shared/resources/framework/selenium_drivers/" + fileName);
+
             System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
         }
     }
