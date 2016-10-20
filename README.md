@@ -4,7 +4,7 @@ All the documentation related to the framework can be found here:
 http://confluence5/pages/viewpage.action?pageId=35160962
 
 If you want to use the framework, you can add it as a maven dependency:
-
+```
 <dependency>
     <groupId>com.macys.sdt</groupId>
     <artifactId>sdt-framework</artifactId>
@@ -35,3 +35,4 @@ If you want to use the framework, you can add it as a maven dependency:
         <updatePolicy>always</updatePolicy>
     </snapshots>
 </repository>
+```
