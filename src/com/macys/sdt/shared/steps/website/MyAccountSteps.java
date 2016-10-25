@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
 
 public class MyAccountSteps extends StepUtils {
 
     public boolean userProfileHasCheckoutEligibleAddress = false;
+    private String simplePwd = "1234567";
 
     @When("^I navigate to My Wallet page from My Account page$")
     public void iNavigateToMyWalletPageFromMyAccountPage() throws Throwable {
@@ -158,6 +160,104 @@ public class MyAccountSteps extends StepUtils {
         }
         CreateProfile.closeSecurityAlertPopUp();
         Utils.threadSleep(9000, null);
+    }
+    @And("^I create a new profile with simple password$")
+    public void createNewProfileWithSimplePwd()  throws Throwable {
+        if (prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot create profiles in production");
+        }
+        TestUsers.clearCustomer();
+
+        UserProfile customer = TestUsers.getCustomer(null);
+        User user = customer.getUser();
+        user.getLoginCredentials().setPassword(simplePwd);
+        CreateProfile.createProfile(customer);
+        Wait.forPageReady();
+    }
+
+    @When("^I create a new profile and my age is less that 13 years$")
+    public void createNewProfileWithAgeLessThanThirteen()  throws Throwable {
+        String targetDOB = "-12-31";//signify Dec 31st.
+        int yearsToDeduct = 13;
+        if (prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot create profiles in production");
+        }
+        TestUsers.clearCustomer();
+
+        UserProfile customer = TestUsers.getCustomer(null);
+        User user = customer.getUser();
+
+        //From current year, if we subtract yearsToDeduct, we will get target year.
+        String targetYear = String.valueOf((Calendar.getInstance().get(Calendar.YEAR))-yearsToDeduct);
+        targetDOB = targetYear + targetDOB;
+        user.setDateOfBirth(targetDOB);
+        CreateProfile.createProfile(customer);
+        Wait.forPageReady();
+    }
+
+    @When("^I create a new profile with missing first_name, last_name, email and primary_phone_number$")
+    public void createNewProfileWithMissingData()  throws Throwable {
+        if (prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot create profiles in production");
+        }
+        TestUsers.clearCustomer();
+
+        UserProfile customer = TestUsers.getCustomer(null);
+        User user = customer.getUser();
+        ProfileAddress profileAddress = user.getProfileAddress();
+        profileAddress.setFirstName("");
+        profileAddress.setLastName("");
+        profileAddress.setEmail("");
+        /*
+        Parameters:
+        1. false - suggests to use valid dob.
+        2. true - suggests to input EMPTY phone field so as to validate phone inline error msg.
+         */
+        CreateProfile.createProfile(customer, false, true);
+        Wait.forPageReady();
+    }
+
+    @When("^I try to create a new account with invalid data$")
+    public void createNewProfileWithInvalidData()  throws Throwable {
+        if (prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot create profiles in production");
+        }
+        TestUsers.clearCustomer();
+
+        UserProfile customer = TestUsers.getCustomer(null);
+        User user = customer.getUser();
+        ProfileAddress profileAddress = user.getProfileAddress();
+        profileAddress.setFirstName("10");
+        profileAddress.setLastName("20");
+        profileAddress.setEmail("davsin@gmailcom");
+        /*
+        Parameters:
+        1. true  - suggests to use invalid dob.
+        2. false - suggests not to input EMPTY phone field.
+        3. true  - suggests not to input invalid/incomplete phone field.
+         */
+        //true parameter in below method suggests entering invalid date while creating new profile.
+        CreateProfile.createProfile(customer, true, false, true);
+        Wait.forPageReady();
+    }
+
+    @When("^I create a new account with all same digits for phone$")
+    public void createNewProfileWithAllSameDigitsForPhone()  throws Throwable {
+        if (prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot create profiles in production");
+        }
+        TestUsers.clearCustomer();
+
+        UserProfile customer = TestUsers.getCustomer(null);
+        /*
+        Parameters:
+        1. true  - suggests to use invalid dob.
+        2. false - suggests not to input EMPTY phone field.
+        3. false - suggests not to input invalid/incomplete phone field.
+        4. true  - suggests to input all same digits for phone.
+         */
+        CreateProfile.createProfile(customer, false, false, false, true);
+        Wait.forPageReady();
     }
 
     @When("^I navigate to my plenti page$")
@@ -727,5 +827,11 @@ public class MyAccountSteps extends StepUtils {
         Clicks.click("my_account.my_lists");
         if (Elements.elementPresent("my_account.view_all_link"))
             Clicks.click("my_account.view_all_link");
+    }
+
+    @Then("^I should see date of birth auto-populated$")
+    public void validateDateOfBirth(){
+        Assert.assertTrue("Error - DOB entered while creating new profile do not match with DOB on My Profile page.",
+                          new MyProfile().getDobFromMyProfilePage());
     }
 }
