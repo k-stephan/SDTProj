@@ -1,0 +1,9 @@
+{
+    "email":                            "id, emailAddr",
+    "password":                         "id, password",
+    "forgot_password_link":             "id, frgtPwd",
+    "error_message":                    "className, generalError",
+    
+    "checkout_button":                  "id, isnormalcheckout",
+    "continue_checkout_guest_button":   "id, isWithoutProfile"
+}

@@ -1,0 +1,653 @@
+{
+    "macys": [
+        {
+            "id": 1310,
+            "click_to_call": false,
+            "gift_wrappable": false,
+            "master_product": true,
+            "available": false
+        },
+        {
+            "id": 86800,
+            "click_to_call": false,
+            "gift_wrappable": false,
+            "master_product": false,
+            "available": false
+        },
+        {
+            "id": 366367,
+            "click_to_call": false,
+            "iship_eligible": false,
+            "registrable": true,
+            "gift_wrappable": true,
+            "gift_messageable": true,
+            "master_product": false,
+            "available": true,
+            "orderable": true
+        },
+        {
+            "id": 1310,
+            "click_to_call": false,
+            "iship_eligible": true,
+            "master_product": true,
+            "registrable": true,
+            "category_page_type": "Browse",
+            "available": true
+        },
+        {
+            "id": 22805,
+            "click_to_call": false,
+            "iship_eligible": true,
+            "registrable": true,
+            "master_product": false,
+            "loyalty_pppc": true,
+            "available": true
+        },
+        {
+            "id": 19942,
+            "click_to_call": false,
+            "registrable": true,
+            "member_product": false,
+            "electronic_gift_card": false,
+            "available": true
+        },
+        {
+            "id": 1310,
+            "click_to_call": false,
+            "iship_eligible": true,
+            "member_product": true,
+            "with_size": false,
+            "with_color": false,
+            "electronic_gift_card": false,
+            "available": false,
+            "orderable": true
+        },
+        {
+            "id": 1870598,
+            "click_to_call": false,
+            "iship_eligible": true,
+            "member_product": true,
+            "with_size": true,
+            "with_color": true,
+            "available": true
+        },
+        {
+            "id": 380444,
+            "iship_eligible": true,
+            "price": 700.00,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 658418,
+            "available_bops": true,
+            "registrable": true,
+            "click_to_call": false,
+            "upc": 46928538645,
+            "store_location_nbr": 93,
+            "price": 28.00,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 658418,
+            "available_bops": true,
+            "eligible_bops": true,
+            "available_in_store": true,
+            "click_to_call": false,
+            "upc": 46928538645,
+            "store_location_nbr": 93,
+            "master_product": false,
+            "available": true,
+            "sdd_eligible": true,
+            "single_upc": true,
+            "ship_available": true
+        },
+        {
+            "id": 658418,
+            "available_bops": true,
+            "eligible_bops": true,
+            "available_in_store": true,
+            "click_to_call": false,
+            "upc": 46928538645,
+            "store_location_nbr": 93,
+            "master_product": false,
+            "available": true,
+            "available_sdd": true,
+            "prod_available": false
+        },
+        {
+            "id": 22805,
+            "available_bops": false,
+            "eligible_bops": true,
+            "available_in_store": false
+        },
+        {
+            "id": 92913,
+            "available_bops": false,
+            "eligible_bops": true,
+            "available_in_store": true,
+            "available": true
+        },
+        {
+            "id": 366368,
+            "available_bops": false,
+            "eligible_bops": true,
+            "available_in_store": false
+        },
+        {
+            "id": 366368,
+            "available_bops": false,
+            "eligible_bops": false,
+            "available_in_store": false
+        },
+        {
+            "id": 658418,
+            "available_bops": true,
+            "click_to_call": false,
+            "upc": 46928538645,
+            "store_location_nbr": 93,
+            "price": 895.00,
+            "available": true
+        },
+        {
+            "id": 1310,
+            "available_sdd": true,
+            "click_to_call": false,
+            "upc": 721074333220,
+            "available": true,
+            "orderable": true
+        },
+        {
+            "id": 556750,
+            "electronic_gift_card": true,
+            "click_to_call": false,
+            "member_product": false,
+            "available": true
+        },
+        {
+            "id": 666269,
+            "click_to_call": false,
+            "electronic_gift_card": true,
+            "available": false
+        },
+        {
+            "id": 22805,
+            "prod_available_wishlist": true,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 366367,
+            "with_po_box_restriction": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 366367,
+            "with_shipping_surcharge": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 86800,
+            "click_to_call": false,
+            "restricted_shipping": true,
+            "gift_wrappable": false,
+            "gift_messageable": false,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 1877013,
+            "free_shipping": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 1275,
+            "free_shipping": false,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 1494,
+            "with_shipping_state_exclusion": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 22805,
+            "promo_code_eligible": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true,
+            "orderable": true,
+            "prod_available": true
+        },
+        {
+            "id": 78600,
+            "price": "58.00",
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 577079,
+            "click_to_call": false,
+            "with_color_swatch": true,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 366368,
+            "click_to_call": false,
+            "web_buster": true,
+            "master_product": false
+        },
+        {
+            "id": 723599,
+            "click_to_call": false,
+            "deal_of_the_day": true,
+            "master_product": false
+        },
+        {
+            "id": 366367,
+            "click_to_call": false,
+            "limited_time_special": true,
+            "master_product": false
+        },
+        {
+            "id": 2041821,
+            "click_to_call": false,
+            "ring": true,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 1877013,
+            "free_shipping": true,
+            "beauty": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true,
+            "iship_eligible": false
+        },
+        {
+            "id": 1360270,
+            "click_to_call": false,
+            "member_product": true,
+            "with_promotion": "Threshold_GWP",
+            "with_color": true,
+            "available": true
+        },
+        {
+            "id": 1518704,
+            "product_type": "FURNITURE",
+            "available": true
+        },
+        {
+            "id": 1518704,
+            "click_to_call": true,
+            "product_type": "FURNITURE",
+            "available": true,
+            "furniture": true
+        },
+        {
+            "id": 1310,
+            "click_to_call": false,
+            "customer_top_rated": true,
+            "with_customer_ratings": true,
+            "iship_eligible": true,
+            "available": true,
+            "orderable": true
+        },
+        {
+            "id": 369568,
+            "click_to_call": false,
+            "prod_available_bops": true,
+            "master_product": false,
+            "prod_pdp_all_details": true,
+            "available": true
+        },
+        {
+            "id": 1504765,
+            "click_to_call": false,
+            "available_bops": false,
+            "eligible_bops": false,
+            "available": false,
+            "with_brand": "CHANEL",
+            "member_product": true
+        },
+        {
+            "id": 669039,
+            "click_to_call": false,
+            "available_bops": false,
+            "eligible_bops": false,
+            "available": false,
+            "with_brand": "CHANEL",
+            "master_product": true
+        },
+        {
+            "id": 86800,
+            "with_recommendations": true,
+            "restricted_dyces": true,
+            "master_product": false
+        },
+        {
+            "id": 2209924,
+            "ztailor": true
+        },
+        {
+            "id": 609735,
+            "upc": 882864347527,
+            "str_location_nbr": 5422,
+            "order_method": "SPEC",
+            "available_bops": true,
+            "available": true
+        },
+        {
+            "id": 571300,
+            "upc": 4003686163454,
+            "str_location_nbr": 5422,
+            "order_method": "DROP",
+            "available_bops": true,
+            "available": true
+        },
+        {
+            "id": 834045,
+            "preorder": true,
+            "click_to_call": false,
+            "registrable": true,
+            "iship_eligible": true,
+            "member_product": true
+        },
+        {
+            "id": 1072509,
+            "preorder": true,
+            "click_to_call": false,
+            "with_brand": "CHANEL",
+            "member_product": true
+        },
+        {
+            "id": 1902537,
+            "preorder": true,
+            "click_to_call": false,
+            "master_product": true,
+            "with_brand": "CHANEL"
+        },
+        {
+            "id": 232716,
+            "available": false,
+            "orderable": true,
+            "click_to_call": false,
+            "mbmoney": true,
+            "mbmoney_eligible": false,
+            "mbmoney_threshold_met": true
+        },
+        {
+            "id": 1310,
+            "available": false,
+            "orderable": true,
+            "click_to_call": false,
+            "mbmoney": true,
+            "mbmoney_eligible": true,
+            "mbmoney_threshold_not_met": true
+        },
+        {
+            "id": 1310,
+            "click_to_call": false,
+            "member_product": true,
+            "with_size": false,
+            "with_color": false,
+            "electronic_gift_card": false,
+            "available": false,
+            "orderable": true,
+            "mbmoney": true,
+            "mbmoney_eligible": true,
+            "mbmoney_threshold_met": true
+        },
+        {
+            "id": 19942,
+            "member_product": false,
+            "available_bops": true,
+            "order_method": "POOL",
+            "with_v2c_flag": true,
+            "orderable": true,
+            "registrable": true
+        },
+        {
+            "id": 19942,
+            "member_product": false,
+            "eligible_bops": false,
+            "order_method": "POOL",
+            "with_v2c_flag": true,
+            "orderable": true,
+            "registrable": true,
+            "with_all_suppressed_member": false,
+            "with_our_suggestions": true
+        },
+        {
+            "id": 11751,
+            "member_product": true,
+            "special_order": true,
+            "orderable": true
+        },
+        {
+            "id": 100064,
+            "orderable": true,
+            "with_country_exclusion": "AU"
+        },
+        {
+            "id": 399128,
+            "price_type": 21,
+            "member_product": true,
+            "orderable": true,
+            "iship_eligible": true,
+            "registrable": true,
+            "click_to_call": false
+        },
+        {
+            "id": 397141,
+            "price_type": 21,
+            "member_product": false,
+            "orderable": true,
+            "iship_eligible": true,
+            "registrable": true
+        },
+        {
+            "id": 822378,
+            "orderable": true,
+            "with_brand": "Lenox",
+            "click_to_call": false
+        },
+        {
+            "id": 1977676,
+            "member_product": true,
+            "with_brand": "CHANEL",
+            "registrable": true,
+            "click_to_call": false,
+            "available": true
+        },
+        {
+            "id": 2122031,
+            "master_product": true,
+            "with_brand": "CHANEL",
+            "registrable": true,
+            "click_to_call": false,
+            "available": true
+        },
+        {
+            "id": 359301,
+            "orderable": true,
+            "member_product": false,
+            "iship_eligible": true,
+            "master_product": true
+        },
+        {
+            "id": 802011,
+            "available": true,
+            "orderable": true,
+            "prod_available": true,
+            "product_warranty": true
+        },
+        {
+            "id": 1902537,
+            "click_to_call": false,
+            "iship_eligible": false,
+            "registrable": true,
+            "gift_wrappable": true,
+            "gift_messageable": true,
+            "master_product": true,
+            "available": true,
+            "orderable": true,
+            "prod_available": true
+        },
+        {
+            "id": 369568,
+            "click_to_call": false,
+            "prod_available": true,
+            "available_bops": true,
+            "master_product": false,
+            "available": true
+        },
+        {
+            "id": 1518704,
+            "click_to_call": true,
+            "product_type": "FURNITURE",
+            "available": true,
+            "furniture": true,
+            "prod_available": true
+        },
+        {
+            "id": 78600,
+            "price": "58.00",
+            "master_product": false,
+            "available": true,
+            "prod_available": true
+        },
+        {
+            "id": 2720408,
+            "click_to_call": false,
+            "with_color_swatch": true,
+            "with_size": true,
+            "master_product": false,
+            "available": true,
+            "prod_available": true,
+            "this_one": true
+        },
+        {
+            "id": 2689992,
+            "electronic_gift_card": true,
+            "click_to_call": false,
+            "member_product": false,
+            "available": true,
+            "prod_available": true
+        },
+        {
+            "id": 834045,
+            "preorder": true,
+            "member_product": true,
+            "registrable": true,
+            "iship_eligible": true,
+            "orderable": true,
+            "prod_available": true
+        },
+        {
+            "id": 802052,
+            "click_to_call": false,
+            "member_product": true,
+            "with_promotion": "Threshold_GWP",
+            "with_color": true,
+            "available": true,
+            "prod_available": true
+        },
+        {
+            "id": 1310,
+            "click_to_call": false,
+            "customer_top_rated": true,
+            "with_customer_ratings": true,
+            "iship_eligible": true,
+            "available": true,
+            "orderable": true,
+            "prod_available": true
+        },
+        {
+            "id": 1877013,
+            "free_shipping": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true,
+            "prod_available": true
+        },
+        {
+            "id": 514648,
+            "with_warranty": true,
+            "click_to_call": false,
+            "master_product": false,
+            "prod_available": true
+        },
+        {
+            "id": 380444,
+            "price": "489.99",
+            "click_to_call": false,
+            "master_product": false,
+            "available": true,
+            "prod_available": true
+        },
+        {
+            "id": 666269,
+            "click_to_call": false,
+            "electronic_gift_card": true,
+            "available": false,
+            "prod_available": true
+        },
+        {
+            "id": 821084,
+            "FST_product": true,
+            "FST_registrable": true
+        },
+        {
+            "id": 75206,
+            "FST_beauty": true
+        },
+        {
+            "id": 2689998,
+            "VGC_item": true
+        },
+        {
+            "id": 64754,
+            "FST_bops": true
+        },
+        {
+            "id": 1183772,
+            "promo_code_eligible": true,
+            "click_to_call": false,
+            "master_product": false,
+            "available": true,
+            "olapic": true,
+            "prod_available": true
+        },
+        {
+            "id": 2909248,
+            "available_bops": true,
+            "click_to_call": false,
+            "upc": 884630077720,
+            "store_location_nbr": 93,
+            "master_product": false,
+            "multiple_upc": true,
+            "ship_available": true
+        },
+        {
+            "id": 702366,
+            "click_to_call": false,
+            "registrable": true,
+            "available": true,
+            "backorderable": true
+        }
+    ]
+}

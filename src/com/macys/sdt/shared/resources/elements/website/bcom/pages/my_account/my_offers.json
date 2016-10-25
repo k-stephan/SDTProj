@@ -1,0 +1,18 @@
+{
+  "include": [
+    "website.mcom.panel.header_and_footer"
+  ],
+  "url": "/shop/coupons-sales-promotions",
+
+  "offers_container": "id, ofr_content",
+  "facebook_button": "id, ofr_fbLink",
+  "twitter_button": "id, ofr_twtLink",
+  "offers_page_navigation": "className, bl_leftNav_header",
+  "offers_desc": "className, ofr_hdrInfo",
+  "offers_page_title": "alt, Sales & Promotions",
+  "shop_from_info_exclusions": "className, ofr_disclaimerShopLink",
+  "info_exclusions_text": "className, ofr_disclaimer",
+  "promotion_banner": "id, row1_column2",
+  "free_returns_image": "alt, free returns",
+  "free_returns_message": "className, blDynPopupDetails"
+}

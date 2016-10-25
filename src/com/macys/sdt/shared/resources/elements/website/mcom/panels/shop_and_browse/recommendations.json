@@ -1,0 +1,6 @@
+{
+    "vertical_recommendations":         "cssSelector, div#verticalProsCarousel a.recommendationLink||cssSelector, section#verticalPros a.recommendationLink",
+    "horizontal_recommendations":       "cssSelector, div#horizontalProsCarousel img.recommendationImage||cssSelector, div#horizontalATBProsCarousel a.recommendationLink||cssSelector, ul#carousel div.title",
+    "scroll_forward":                   "cssSelector, span.nav.next",
+    "scroll_back":                      "cssSelector, span.nav.prev"
+}

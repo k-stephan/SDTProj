@@ -1,0 +1,49 @@
+{
+    "url":                                          "/chkout/internationalShipping",
+    
+    "choose_language":                      "id, language",
+
+    "shipping_iFrame":                      "cssSelector, #envoyId",
+    "payment_iFrame":                       "cssSelector, #cc-frame",
+
+    "shipping_first_name":                  "id, shipping-first-name",
+    "shipping_last_name":                   "id, shipping-last-name",
+    "shipping_address_line_1":              "id, shipping-address-line1",
+    "shipping_address_line_2":              "id, shipping-address-line2",
+    "shipping_address_line_3":              "id, shipping-address-line3",
+    "shipping_address_city":                "id, shipping-city",
+    "shipping_address_region":              "xpath, //section[@id='shippingAddress']//input[@name='region']",
+    "shipping_address_country":             "id, shipping-country",
+    "shipping_address_postal_code":         "id, shipping-postal-code",
+    "shipping_phone_number":                "id, shipping-tel",
+    "shipping_alternate_phone_number":      "id, shipping-tel-alternate",
+    "shipping_email_address":               "id, shipping-email",
+    "shipping_address_province":            "id, shipping-province",
+
+    "use_my_shipping_address":              "xpath, //*[@id='sameBillingAddressLabel']//input",
+    "billing_first_name":                   "xpath, //section[@id='billingAddress']//input[@name='given-name']",
+    "billing_last_name":                    "xpath, //section[@id='billingAddress']//input[@name='family-name']",
+    "billing_address_line_1":               "xpath, //section[@id='billingAddress']//input[@name='address-line1']",
+    "billing_address_line_2":               "xpath, //section[@id='billingAddress']//input[@name='address-line2']",
+    "billing_address_line_3":               "xpath, //section[@id='billingAddress']//input[@name='address-line3']",
+    "billing_city":                         "xpath, //section[@id='billingAddress']//input[@name='city']",
+    "billing_region":                       "xpath, //section[@id='billingAddress']//input[@name='region']",
+    "billing_country":                      "id, billing-country",
+    "billing_postal_code":                  "xpath, //section[@id='billingAddress']//input[@name='postal-code']",
+    "billing_primary_phone_number":         "xpath, //section[@id='billingAddress']//input[@name='tel']",
+    "billing_alternate_phone_number":       "xpath, //section[@id='billingAddress']//input[@name='tel-alternate']",
+    "billing_email":                        "xpath, //section[@id='billingAddress']//input[@name='email']",
+    "billing_province":                     "xpath, //*[@id='billing-region-group']/div/select",
+
+    "card_payment_method":                  "id, payment-method-cc",
+    "card_same_billing_addr":               "id, same-billing-address",
+    "pay_pal_payment_method":               "id, payPalPayment",
+    "card_number":                          "id, cc-num",
+    "expiry_month":                         "id, cc-exp-month",
+    "expiry_year":                          "id, cc-exp-year",
+    "security_code":                        "id, cc-sec-num",
+
+    "submit_order_button":                  "id, submit-order-btn",
+    "item_names":                           "className, fiftyone-order-item-name",
+    "go_to_usa":                            "id, shipToUs"
+}

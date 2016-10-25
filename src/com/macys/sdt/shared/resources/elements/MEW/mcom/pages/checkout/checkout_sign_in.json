@@ -1,0 +1,7 @@
+{
+  "url": "/account/signin?fromCheckout=fromCheckout",
+  "continue_checkout_guest_button": "id, isWithoutProfile",
+  "email": "id, emailAddr",
+  "password": "id, password",
+  "checkout_button": "id, isnormalcheckout"
+}

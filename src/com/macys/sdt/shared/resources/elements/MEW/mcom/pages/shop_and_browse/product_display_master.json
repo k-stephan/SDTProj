@@ -1,0 +1,48 @@
+{
+    "include": [
+        "panel.header",
+        "panel.footer",
+        "panel.search",
+        "panel.share",
+        "panel.recently_viewed"
+    ],
+
+    "url":                                          "/shop/product/",
+
+    "choose_member_items":                  "id, m-product-members-of-master",
+    "member_prod_list":                     "id, m-product-members",
+    "add_member_to_bag":                           "id, m-j-product-add-bag",
+    "view_remaining_products":              "id, mb-j-product-show-members",
+    "right_image_arrow":                    "cssSelector, .b-pdp-images-arrow.b-pdp-images-arrow-right",
+    "selected_latchkey":                    "cssSelector, .m-j-product-latchkey.selected",
+    "member_products":                      "className, m-product-member-of-master",
+    "size_charts":                          "id, m-j-upper-size-chart-link",
+    "latch_keys_section":                   "id, m-product-latchkeys",
+    "latch_keys":                           "className, m-j-product-latchkey",
+
+    "collection_details_container":         "className, b-product-collection-details-content",
+    "part_of_collection":                   "className, b-j-product-partofcollection-btn",
+    "collection_web_id":                    "cssSelector, div.b-product-inner > div.b-pdp-info-section > div.b-j-product-web-id.b-pdp-info-extra",
+    "collection_description":               "className, b-pdp-master-desc",
+    "collection_bullets":                   "cssSelector, div.b-product-collection-details-content > ul",
+    "collection_details":                   "id, b-product-collection-features",
+    "promotion_message":                    "id, mj-product-promotion",
+
+    "collection_color_header":              "className, b-product-swatches",
+    "collection_color_header_text":         "className, b-product-text",
+    "collection_master_image":              "cssSelector, .swiper-slide.b-pdp-image-wrapper.swiper-slide-active",
+    "collection_color_count":               "className, b-product-color-count",
+    "collection_more_colors":               "cssSelector, .b-product-collection-details-toogle.b-hide-expanded','#b-j-product-collection-colors-toggler",
+    "collection_less_colors":               "cssSelector, .b-product-collection-details-toogle.b-hide-collapsed','#b-j-product-collection-colors-toggler",
+    "collection_color_swatch_container":    "cssSelector, #b-product-container .b-j-product-color-wrapper.b-truncated",
+    "collection_color_swatch_list":         "className, b-swatches-list",
+    "collection_selected_color":            "cssSelector .b-j-product-swatch.selected",
+    "collection_color_swatch":              "className, b-j-product-swatch",
+    "collection_color_name":                "className, b-j-product-color-name",
+    "collection_images_zoom":               "id, b-pdp-images-zoom-icon",
+    "collection_zoom_page":                 "id, mb-j-zoom-swiper",
+    "member_urls":                          "cssSelector, .m-view-details",
+
+    "bops_availability_message":            "className, bops-msg-available"
+
+}

@@ -1,0 +1,9 @@
+{
+  "shipping_methods_set":  "id, rc-shipping-method-set",
+  "gift_options_set":      "className, rc-gift-option-set",
+  "shipping_summary":      "cssSelector, .rc-shipping-info-summary||cssSelector, #rc-shipping-methods-info",
+  "edit_shipping_section": "id, rc-shipping-edit",
+  "add_new_card":          "id, rc-payment-add",
+  "security_code":         "id, creditCard.securityCode",
+  "shipping_section":      "cssSelector, div.rc-shipping-info-summary > div"
+}

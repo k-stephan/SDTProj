@@ -1,0 +1,25 @@
+{
+    "include": [
+        "panel.header",
+        "panel.footer"
+    ],
+    "close_overlay_monetate": "xpath, //*[starts-with(@class,'monetate_lightbox_close')]",
+    "close_overlay_modal": "xpath, //*[@id='tt_modal_close']",
+    "close_overlay_chat": "xpath, //*[@class='container-close']",
+    "close_overlay_country": "xpath, //a[@id='closeButton']",
+    "goto_change_country": "id, href_changeCountry",
+    "goto_change_country2": "id, footerFlagShippingTo",
+    "country_code_flag": "id, footerFlag",
+    "goto_guest_sign_in": "id, globalMastheadSignIn",
+    "goto_guest_my_account": "id, href_myAccountHeader",
+    "goto_change_country_at_registry": "id, footerFlagShippingTo",
+    "social_media_container": "class, socialLinks",
+    "header_country_flag": "id, headerCountryFlag",
+    "search_field": "id, globalSearchInputField",
+    "suggestions_list": "id, ui-id-1",
+    "suggestion": "className, suggestion",
+    "categories": "id, globalMastheadCategoryMenu",
+    "category": "xpath, //*[@id='globalMastheadCategoryMenu']/ul/li",
+    "flex_link": "xpath, //*[starts-with(@id, 'flexLabel_')]",
+    "find_out_more": "xpath, //map/area[@alt='find out more']"
+}

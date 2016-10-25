@@ -1,0 +1,34 @@
+{
+    "add_to_bag_dialog":                    "id, pdpAddToBagPanel",
+    "add_to_bag_continue_shopping":         "id, btnContinueShoppin",
+    "add_to_bag_continue_dialog":           "id, atb_cont_shopping",
+    "add_to_bag_checkout":                  "id, btnCheckout",
+    "add_to_bag_close_dialog":              "id, closeModal",
+    "add_to_bag_price_dialog":              "className, itemPrice",
+    "add_to_bag_price_dialog_atb":          "className, atb_itemPriceInfo",
+    "add_to_bag_special_offers":            "id, atb_specialOffers",
+    "add_to_bag_summary_panel":				"id, atbPageSummaryPanel",
+
+    "master_add_to_bag_dialog":             "id, pdpMasterAddToBagPanel",
+    "master_add_to_bag_continue_shopping":  "id, m_atb_add_more",
+    "master_add_to_bag_checkout":           "id, m_atb_checkout",
+    "master_add_to_bag_close_dialog":       "id, m_atb_close",
+    "master_add_to_bag_price_dialog":       "className, productPrice, priceSale",
+
+    "line_item_price":                      "id, pdp_atb_price",
+    "total_price":                          "id, pdp_atb_totalPrice",
+    "add_to_bag_color_size":                "id, atbClrSize",
+    "sub_total_price":                      "id, pdp_atb_bagSubTotal",
+    "item_quantity":                        "id, pdp_atb_Qty",
+    "goto_shopping_bag":                    "className, underlineText",
+    "product_image":                        "className, atb_prod_img",
+
+    "item_description":                     "className, atb_item_text",
+    "item_price":                           "className, itemPrice",
+    "item_price_atb":                       "className, atb_itemPriceInfo",
+    "atb_iteminfo_member":                  "className, atb_iteminfo_member",
+    "atb_item_quantity":                    "id, pdpAddToBagItemsInfo",
+    "sub_total_value":                      "id, pdpAddToBagSubTotal",
+    "you_just_saved_price":                 "className, youSaved",
+    "promo_discount_price":                 "className, promoDiscounted"
+}

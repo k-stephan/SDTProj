@@ -1,0 +1,6 @@
+{
+    "continue_shopping": "id, mb-confirm-continue",
+    "checkout": "id, mb-confirm-view-bag",
+    "add_to_bag_dialog": "cssSelector, #m-view-overlay",
+    "overlay_close": "cssSelector, .mb-j-overlay-close m-modal-button"
+}

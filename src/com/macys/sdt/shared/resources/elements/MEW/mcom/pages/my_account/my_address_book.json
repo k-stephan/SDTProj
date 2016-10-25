@@ -1,0 +1,23 @@
+{
+  "include": [
+    "panel.header"
+  ],
+
+  "url": "/account/addressbook",
+  "verify_page": "id, firstName",
+  "first_name": "id, firstName||id, rc-bc-firstName",
+  "last_name": "id, lastName||id, rc-bc-lastName",
+  "address_line_1": "id, shippingContact.address.addressLine1||id, rc-bc-line1",
+  "address_line_2": "id, shippingContact.address.addressLine2||id, rc-bc-line2",
+  "address_city": "id, city||id, rc-bc-city",
+  "address_state": "id, shippingContact.address.state||id, rc-bc-state",
+  "address_zip_code": "id, postalCode||id, rc-bc-zipCode",
+  "phone_area_code": "id, areaCode",
+  "phone_exchange": "id,exchangeNbr",
+  "phone_subscriber": "id, subscriberNbr",
+  "phone_number": "id, rc-bc-phoneNumber",
+  "add_shipping_address_button": "name, processShippingAddress||id, rc-save-new-address",
+  "message": "id, addressBookStatusMsg",
+  "make_primary_link": "linkText, make primary",
+  "remove_link": "linkText, remove"
+}

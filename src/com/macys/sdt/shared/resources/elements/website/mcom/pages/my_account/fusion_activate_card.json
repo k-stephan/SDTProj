@@ -1,0 +1,27 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url":                                 "/RSnextgen/svc/registration",
+  "verify_page":                         "id, mod_label_7",
+
+  "activate_card_heading":               "id, mod_label_7",
+  "card_number":                         "id, card_number_0",
+  "card_name":                           "id, card_name_0",
+  "cvv_code":                            "id, cvv_1",
+  "ssn_code":                            "id, ssn_last4_2",
+  "verify_button":                       "linkText, Verify",
+  "activate_home":                       "xpath, //div[@id='skip_target']//div[@data-page-title='data-page-title']",
+  "activate_now_button":                 "xpath, //form[@data-form-id='card_activation_form']//button[@type='submit']",
+  "activate_later_button":               "xpath, //form[@data-form-id='card_activation_form']//button[@type='button']",
+  "msg_activate_card":                   "xpath, //h2[contains(text(), 'Congratulations')]",
+  "return_to_dot_com_button":            "xpath, //a[@href='http_activate_shopnow']",
+  "sign_off":                            "xpath, //div[@data-variation='list']//a[contains(@href,'sign_off')]",
+  "heading_activate_later":              "xpath, //p[contains(text(), 'Please come back later to activate')]",
+  "err_msg_card_number":                 "xpath, //span[@data-error-flag-for='card_number_0']",
+  "err_msg_card_name":                   "xpath, //span[@data-error-flag-for='card_name_0']",
+  "err_msg_card_cvv":                    "xpath, //span[@data-error-flag-for='cvv_1']",
+  "err_msg_card_ssn":                    "xpath, //span[@data-error-flag-for='ssn_last4_2']",
+  "err_activate_card_data":              "xpath, //p[contains(text(),'We encountered a problem')]",
+  "err_citi_down":                       "xpath, //p --wrong"
+}

@@ -1,0 +1,18 @@
+{
+    "include": [
+        "panel.header_and_footer"
+    ],
+    "url":                              "/registrycaptureemail",
+    "verify_page":                      "id, existingEmail",
+
+    "existing_user_email":              "id, existingEmail",
+    "existing_user_password":           "id, existingPassword",
+    "new_user_email":                   "id, newUserEmail",
+    "new_user_password":                "id, newUserPassword",
+    "new_user_email_verify":            "id, verifyEmail",
+    "new_user_password_verify":         "id, verifyPassword",
+    "existing_user_continue_button":    "id, existingUserBtn",
+    "new_user_continue_button":         "id, newUserBtn",
+    "error_message":                    "id, searchErrorMsg",
+    "forgot_password_link":             "linkText, Forgot your password?"
+}

@@ -1,0 +1,11 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url": "/m/campaign/loyalty/index",
+  "verify_page": "id, plenti-index-content-links",
+
+  "enroll_today_button": "linkText, JOIN FOR FREE",
+  "plenti_index_content": "id, plenti-index-content-links",
+  "video_overlay": "className, overlay-experience"
+}

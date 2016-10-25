@@ -1,0 +1,21 @@
+{
+    "include": [
+        "panel.header_and_footer",
+        "panel.flexible_template",
+        "panel.left_navigation_category",
+        "panel.category_splash",
+        "panel.category_not_available",
+        "panel.browse_preview"
+    ],
+
+    "url":                  "/shop",
+    "verify_page":          "id, catSplash",
+
+    "star_rating":          "id, ratingImage",
+    "review_date":          "id, reviewDate",
+    "copyblock":            "id, catalogCopyBlock",
+    "banner_slide":         "id, bSlide0_4",
+    "recently_viewed":      "id, recentlyViewed",
+    "tag_cloud":            "className, seoContent",
+    "breadcrumbs":          "className, bcElement"
+}

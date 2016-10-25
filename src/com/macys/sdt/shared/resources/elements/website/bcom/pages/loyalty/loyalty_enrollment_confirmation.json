@@ -1,0 +1,10 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url": "/loyallist/enrollment?",
+
+  "loyalty_number": "id, loyaltyNumber",
+  "continue_shopping": "id, submitImg",
+  "goto_apply_now": "id, applyNowLink"
+}

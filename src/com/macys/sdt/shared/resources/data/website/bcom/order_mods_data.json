@@ -1,0 +1,16 @@
+{
+  "bloomingdales":
+    {
+      "processing": "11771218109",
+      "delivered": "201306121",
+      "backordered": "123364807",
+      "cancel": "280520138",
+      "return": "31201625",
+      "BOPS_processing": "35000959260",
+      "intransit_shipment": "117144400",
+      "sdd_shipped": "9777414027",
+      "sdd_processing": "9777364111",
+      "BOPS_PU": "11744109796",
+      "sdd_cancel": "9777364112"
+    }
+}

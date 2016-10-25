@@ -1,0 +1,7 @@
+{
+    "include": [
+        "page.product_display"
+    ],
+
+    "url":      "/shop/registry/wedding/product/"
+}

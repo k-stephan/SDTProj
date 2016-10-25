@@ -1,0 +1,14 @@
+{
+  "bvr_prod_list":        "className, upcLineItem||className, productItem",
+  "prod_desc":            "className, productName||cssSelector, .product-details>a>h3",
+  "prod_price":           "className, tieredPrice||className, pricing-info",
+  "edit_reqs_qty":        "className, edit-wrapper",
+  "edit_reqs_close":      "className, ui-dialog-titlebar-close",
+  "prod_reqs_qunt":       "className, requested_text_style||id, wouldLove",
+  "prod_open_qunt":       "className, received_text_style||id, purchased",
+  "product_thumbnail":    "className, productThumbnail",
+  "save_changes":         "className, save-changes",
+  "remove_item":          "className, remove-item",
+  "prod_sel_qunt":        "xpath, //select[contains(@id,'quantity_')]||className, atb-quantity",
+  "prod_add_to_bag":      "className, addToBagBt||className, atb"
+}

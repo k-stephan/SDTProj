@@ -1,0 +1,23 @@
+{
+  "include": [
+    "panel.navigation",
+    "panel.header_and_footer"
+  ],
+  "url": "/account/furniture",
+  "verify_page": "id, onSubmit",
+
+  "breadcrumb": "class, depthPathActive",
+  "main_heading": "id, macysGlobalBanner",
+  "delivery_status_heading": "class, arrival",
+  "delivery_status_message": "class, deliveryStatus",
+  "delivery_date_message": "class, deliveryDate",
+  "schedule_delivery_btn": "class, primaryBtnL",
+  "delivery_topics": "class, deliveryTopics",
+  "popular_delivery_questions": "class, KnowledgeSyndication",
+  "sales_check_number": "name, SalesCheckNumber",
+  "first_name": "id, FIRSTNAME_TEXTFIELD",
+  "last_name": "id, LASTNAME_TEXTFIELD",
+  "phone_number1": "id, PHONENUMBER1_TEXTFIELD",
+  "phone_number2": "id, PHONENUMBER2_TEXTFIELD",
+  "check_status_btn": "name, SUBMIT_BUTTON"
+}

@@ -1,0 +1,29 @@
+{
+    "include": [
+        "panel.navigation",
+        "panel.header_and_footer"
+    ],
+    "url":                          "/service/easyreturn",
+    "verify_page":                  "id, bl_breadCrumbAndMainContentContainer",
+
+    "sign_in_button":               "linkText, SIGN IN",
+    "gift_return_section":          "className, orHist_isGiftWrapper",
+    "content_container":            "id, bl_breadCrumbAndMainContentContainer",
+    "error_message":                "id, orStatus_errors",
+    "order_number":                 "id, orHist_orderLookup",
+    "email":                        "id, orHist_VerifEmail",
+    "phone_area_code":              "id, orHist_VerifPhone_AreaCode",
+    "phone_exchange":               "id, orHist_VerifPhone_xchangeNumber",
+    "phone_subscriber":             "id, orHist_VerifPhone_SubscriberNumber",
+    "yes_radio_button":             "id, orHist_giftYes",
+    "no_radio_button":              "id, orHist_giftNo",
+    "view_order_details":           "id, orHist_viewOrderStatus",
+    "zip_code":                     "id, orHist_zipLookup",
+    "phone_number":                 "id, orHist_VerifPhoneWrapper",
+    "view_order_history":           "linkText, VIEW ORDER HISTORY",
+    "goto_gift_return":             "linkText, Gift return",
+    "goto_return_policy":           "linkText, Return policy",
+    "goto_in_store_return":         "linkText, In-store return",
+    "goto_all_faq":                 "linkText, See all FAQs",
+    "goto_ups_dropoff_location":    "linkText, UPS drop-off location"
+}

@@ -1,0 +1,35 @@
+{
+  "bloomingdales": [
+    {
+      "card_type": "Visa",
+      "card_number": "4445222299990007",
+      "security_code": "234",
+      "balance": 562,
+      "expiry_month": "June",
+      "expiry_month_index": "06",
+      "expiry_year": "2019"
+    },
+     {
+      "3d_secure":"true",
+      "card_type": "Visa",
+      "card_number": "4445222299990007",
+      "security_code": "222",
+      "expiry_month": "January",
+      "balance": 562,
+      "expiry_year": "2017",
+      "expiry_month_index": "01",
+      "3d_secure_password": "test1"
+     },
+     {
+      "3d_secure":"true",
+      "card_type": "MasterCard",
+      "card_number": "5444009999222205",
+      "security_code": "222",
+      "balance": 562,
+      "expiry_month": "January",
+      "expiry_year": "2017",
+      "expiry_month_index": "01",
+      "3d_secure_password": "test1"
+    }
+  ]
+}

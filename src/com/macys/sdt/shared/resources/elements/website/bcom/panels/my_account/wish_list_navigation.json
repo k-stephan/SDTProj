@@ -1,0 +1,18 @@
+{
+    "goto_my_wishlist_link":    "id, my-wish-list",
+    "list_name_text":           "id, listItemName",
+    "error_message":            "id, listCreateError",
+
+    "goto_my_account_link":     "id, myAccount",
+    "my_list_items":            "id, list_items",
+    "goto_create_list_link":    "id, nav-create-title",
+    "list_add_box":             "className, list-form",
+    "open_create_list":         "id, createList",
+    
+    "find_list":                "id, nav-find-title",
+    "first_name_text":          "name, firstname",
+    "last_name_text":           "name, lastname",
+    "open_find_list":           "id, findList",
+    "find_error_message":       "id, findListError",
+    "list_find_box":            "className, list-find-box"
+}

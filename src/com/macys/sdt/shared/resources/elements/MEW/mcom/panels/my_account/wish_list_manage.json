@@ -1,0 +1,4 @@
+{
+    "udate_setting": "cssSelector, #m-manage-update",
+    "share_list": "cssSelector, .m-overlay-forward"
+}

@@ -1,0 +1,11 @@
+{
+    "thumbnail_wrapper":                "className, Items",
+    "vertical_recommendations":         "cssSelector, div#ProsZoneA li.Item||cssSelector, div#ProsZoneA img.productImage",
+    "horizontal_recommendations":       "cssSelector, div#ProsZoneB li.Item||cssSelector, div#ProsZoneZSRZB a",
+    "scroll_forward":                   "cssSelector, div.prosRightArrow",
+    "scroll_back":                      "cssSelector, div.prosLeftArrow",
+    "vertical_scroll_forward":          "cssSelector, div#ProsZoneA div.prosRightArrow",
+    "vertical_scroll_back":             "cssSelector, div#ProsZoneA div.prosLeftArrow",
+    "horizontal_scroll_forward":        "cssSelector, div#ProsZoneB div.prosRightArrow",
+    "horizontal_scroll_back":           "cssSelector, div#ProsZoneB div.prosLeftArrow"
+}

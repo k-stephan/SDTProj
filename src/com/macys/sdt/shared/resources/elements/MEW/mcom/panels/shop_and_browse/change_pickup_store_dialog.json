@@ -1,0 +1,9 @@
+{
+
+  "search_distance": "id, mb-bops-distance",
+  "address_zip_code": "id, mb-bops-address",
+  "search_button": "id, mb-bops-nearme",
+  "select_store_button":"className, m-bops-result-name",
+  "search_results_section": "className, mb-j-bops-result"
+
+}

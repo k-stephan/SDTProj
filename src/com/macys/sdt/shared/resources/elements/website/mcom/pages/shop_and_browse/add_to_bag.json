@@ -1,0 +1,22 @@
+{
+    "url":                       "/bag/atbpage",
+    "verify_page":              "id, atbTopMessage",
+
+    "header":                   "id, atbTopMessage",
+    "keep_shopping_button":     "id, btnKeepShopping",
+    "checkout":                 "id, btnCheckout",
+    "bag_summary_panel":        "id, bagInfo",
+    "product_summary_panel":    "id, atbPageProductSummary",
+    "product_image":            ":xpath, //img[@class='productImage']",
+    "product_name":             "className, addToBagPageLineItemName",
+    "item_quantity":            "className, atbPageBagTotalQty",
+    "line_item_price":          "className, addToBagPageLineItemPrice",
+    "original_price":           "xpath, //div[@id[starts-with(.,'bag_origPrice')]]",
+    "sub_total_price":          "className, atbPageBagSubtotalPrice",
+    "saved_price":              "className, atbPageBagYouSavedPrice",
+    "sales_price":              "xpath, //div[@id[starts-with(.,'bag_salesPrice')]]",
+    "bag_product_color_size":   "className, addToBagPageProductFeatureRow",
+    "product_recommendations":  "className, thumbCarousel",
+    "amount_field":               "id, amount",
+    "email_field":                "id, email"
+}

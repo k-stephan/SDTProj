@@ -1,0 +1,29 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url":                                 "/creditservice/marketing/main",
+  "verify_page":                         "id, learnandApply",
+  
+  "heading":                             "id, learnandApply",
+  "bank_privacy_notice":                 "xpath, //area[contains(@href,'Privacy_policy_DSNB179PRV0614')]",
+  "credit_card_agreement":               "xpath, //area[contains(@href,'DSNB170TC0315_PL068PL069_R4_FINAL')]",
+  "amex_card_agreement":                 "xpath, //area[contains(@href,'BA922TC0315_PL068AM014_FINAL')]",
+  "apply_now":                           "xpath, //area[@class='goto-citi']",
+  "benefits_link":                       "xpath, //area[contains(@href,'/creditservice/marketing/benefits')]",
+  "apply_today":                         "altText, apply today",
+  "thanks_for_sharing":                  "xpath, //map/area[@alt='thanks for sharing expand']",
+  "find_out_more":                       "xpath, //map/area[@alt='find out more']",
+  "my_wallet":                           "xpath, //map/area[@alt='my wallet expand']",
+  "my_wallet_signin":                    "xpath, //map/area[@alt='sign in']",
+  "my_wallet_createprofile":             "xpath, //map/area[@alt='create a profile']",
+  "my_wallet_deals_promotions":          "xpath, //map/area[@alt='deals and promotions']",
+  "my_wallet_see_how_it_works":          "xpath, //map/area[@alt='see how it works']",
+  "my_wallet_get_started":               "xpath, //map/area[@alt='get started']",
+  "plenti":                              "xpath, //map/area[@alt='plenti expand']",
+  "plenti_join_for_free":                "xpath, //map/area[@alt='join for free']",
+  "secure_shopping":                     "xpath, //map/area[@alt='secure shopping expand']",
+  "secure_shop_learn_more":              "xpath, //map/area[contains(@href,'secure_shopping_learn_more')]",
+  "exclusive_travel_benefits":           "xpath, //map/area[@alt='travel benefits expand']",
+  "travel_learn_more":                   "xpath, //map/area[contains(@href,'travel_learn_more')]"
+}

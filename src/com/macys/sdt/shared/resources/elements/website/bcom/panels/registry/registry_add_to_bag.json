@@ -1,0 +1,6 @@
+{
+  "registry_atb_overlay":       "id, atbOverlay",
+  "registry_continue_shopping": "id, pdp_atb_cont_shopping",
+  "registry_chkout_button":     "id, checkoutBtn",
+  "registry_close_overlay":     "className, container-close"
+}

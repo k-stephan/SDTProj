@@ -1,0 +1,21 @@
+[
+  {
+    "loyallistType": "toptier_loyallist",
+    "loyaltyId": "L920000100935",
+    "lastName": "test",
+    "zipCode": "10022",
+    "cardNumber": "6035342200026252",
+    "securityCode": "1170",
+    "billingLastName": "JONAS",
+    "billingZipCode": "94105"
+  },
+  {
+    "loyallistType": "basetier_loyallist",
+    "loyaltyId": "L910003944343",
+    "lastName": "JONAH",
+    "zipCode": "94105",
+    "cardNumber": "210047706490",
+    "billingLastName": "JONAH",
+    "billingZipCode": "94105"
+  }
+]

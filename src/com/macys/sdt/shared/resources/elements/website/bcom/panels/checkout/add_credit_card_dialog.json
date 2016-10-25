@@ -1,0 +1,6 @@
+{
+  "add_card_overlay_no_thanks_button": "className, not_now",
+  "add_card_overlay_add_card_button": "className, add_card",
+  "add_card_overlay_close_button": "className, container-close",
+  "add_card_overlay_apply_today_link": "linkText, Apply now"
+}

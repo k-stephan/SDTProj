@@ -1,0 +1,38 @@
+{
+    "manage_list":                          "id, manageList",
+    "sort_list_item":                       "id, dropSortBy",
+    "filter_list_item":                     "id, dropFilterBy",
+
+    "make_searchable_list":                 "name, wishlist.makePublic",
+    "list_rename_text":                     "id, rename-wishlist-input",
+    "select_rename_button":                 "id, rename-list",
+    "select_delete_button":                 "id, wishlist-settings-deleteList",
+
+    "filter_by_available":                  "id, filterAvailable",
+    "filter_by_stillwant":                  "id, filterStillWant",
+    "filter_by_purchased":                  "name, filterPurchased",
+    "filter_by_priority":                   "id, filterMostCoveted",
+
+    "select_clear_all_filter":              "id, clearFilters",
+
+    "default_list":                         "id, setting-make-default",
+    "not_default_list":                     "id, setting-make-not-default",
+    "make_default_list":                    "name, wishlist.makeDefault",
+
+    "items_on_sale":                        "name, wishlist.makeOnSaleAlert",
+    "sale_alert":                           "id, setting-not-sale-alert",
+    "sale_alert_dialog":                    "id, infoPanelOverlay",
+    
+    "rename_confirm_message":               "id, msgRename",
+    "delete_confirm_message":               "id, deleteConfirmation",
+
+    "select_sort_by":                       "id, wishlist-sortBy-select",
+    "legal_message":                        "id, wishlist-invite-signin",
+    "no_longer_msg":                        "className, guest-no-items-copy",
+
+    "filter_item_count":                    "id, filterItemCount",
+    "share_list":                           "id, shareList",
+
+    "yes_confirmation":                    "className, confirmation-yes",
+    "no_confirmation":                     "className, confirmation-no"
+}

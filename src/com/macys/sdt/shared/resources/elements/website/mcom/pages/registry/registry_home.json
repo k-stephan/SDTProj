@@ -1,0 +1,30 @@
+{
+  "include": [
+    "panel.header_and_footer",
+    "panel.category_menu",
+    "panel.flexible_template",
+    "panel.category_splash"
+  ],
+  "url": "/wedding-registry",
+  "verify_page": "id, globalMastheadFeatureMenuWeddingRegistry",
+
+  "goto_create_registry": "cssSelector, area[alt='create a registry']",
+  "goto_create_registry_new": "className, createRegistryLink",
+  "goto_find_registry": "cssSelector, area[alt='find a registry']",
+  "create_registry": "className, createRegistryLink",
+  "sign_in_button": "className, submit-manage",
+  "find_button": "className, submit-find",
+  "sign_in_email": "id, regEmail",
+  "sign_in_password": "id, regPassword",
+  "fake_password": "id, fakePassword",
+  "search_first_name": "id, firstName",
+  "search_last_name": "id, lastName",
+  "goto_start_here": "id, accessStore",
+  "view_registry": "linkText, wedding registry",
+  "find_box": "id, find-reg",
+  "manage_box": "id, manage-reg",
+  "create_box": "id, create-reg",
+  "close_box": "className, reghomeclosebtn",
+  "sign_in_default_password": "id, fakePassword",
+  "value_add_banner": "id, valueAddedBanner"
+}

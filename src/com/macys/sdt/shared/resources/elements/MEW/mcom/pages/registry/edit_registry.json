@@ -1,0 +1,8 @@
+{
+  "url":                                 "/registry/wedding/registryeditaccount",
+  "verify_page":                         "className, update-registry-heading",
+
+  "contact_information":                 "cssSelector, #registryInfo .greyHeader",
+  "update_button":                       "cssSelector, .pirvacy-note #updateData",
+  "co_registrant_first_name":            "name, registryEditAccount.coRegistrantFirstName"
+}

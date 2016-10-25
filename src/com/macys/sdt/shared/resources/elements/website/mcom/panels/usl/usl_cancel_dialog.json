@@ -1,0 +1,6 @@
+{
+  "cancel_dialog": "id, cancelOverlay",
+  "close": "className, closeOverlay",
+  "yes_cancel_button": "id, yesCancleEnrollmentBtn",
+  "back_to_signup_button": "id, goBackToEnrollmentBtn"
+}

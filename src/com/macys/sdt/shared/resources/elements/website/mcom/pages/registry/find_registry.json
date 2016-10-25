@@ -1,0 +1,18 @@
+{
+    "include": [
+        "panel.navigation",
+        "panel.header_and_footer"
+    ],
+
+    "url":                    "/registry/wedding/registrysearch",
+
+    "find_registry_button":   "id, searchButton",
+    "verify_page":            "id, firstName",
+    "first_name":             "id, firstName",
+    "last_name":              "id, lastName",
+    "search_results":         "xpath, //*[contains(@class, 'view-registry')]",
+    "find_registry_results":  "className, view-registry"
+    
+
+
+    }

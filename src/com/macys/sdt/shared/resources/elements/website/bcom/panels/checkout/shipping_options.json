@@ -1,0 +1,8 @@
+{
+  "standard_shipping":    "id, checkout_shippingMethod_radio_G_cover",
+  "premium_shipping":     "id, checkout_shippingMethod_radio_2_cover",
+  "express_shipping":     "id, checkout_shippingMethod_radio_O_cover",
+  "sdd_shipping":         "id, checkout_shippingMethod_radio_S_cover",
+
+  "normal_shipping_note": "id, checkout_shippingSeparate"
+}

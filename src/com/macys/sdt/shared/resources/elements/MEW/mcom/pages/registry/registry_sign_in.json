@@ -1,0 +1,17 @@
+{
+  "include": [
+    "panel.header",
+    "panel.footer"
+  ],
+  "url": "/registry/wedding/registrycaptureemail",
+  "error_message": "id, registryErrorMsg",
+  "new_user_email_verify": "id, verifyEmail",
+  "new_user_password_verify": "id, verifyPassword",
+  "create_registry": "className, createRegistryLink",
+  "existing_user_email": "cssSelector, input#email",
+  "existing_user_password": "cssSelector, input#password",
+  "new_user_email": "cssSelector, form#registrySignInVB input#email",
+  "new_user_password": "cssSelector, form#registrySignInVB input#password",
+  "existing_user_continue_button": "cssSelector, div#regLeft>input#noProfileSubmitImg||id, signInBtn",
+  "new_user_continue_button": "cssSelector, div#regRight>input#noProfileSubmitImg"
+}

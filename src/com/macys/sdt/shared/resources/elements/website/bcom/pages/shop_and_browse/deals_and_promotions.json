@@ -1,0 +1,11 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url": "shop/coupons-sales-promotions",
+  "verify_page": "id, ofr_content",
+  
+  "offers_container":"id, ofr_content",
+  "facebook_button":":id, ofr_fbLink",
+  "twitter_button":":id, ofr_twtLink"
+}

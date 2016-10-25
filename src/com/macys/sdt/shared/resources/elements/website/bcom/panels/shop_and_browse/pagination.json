@@ -1,0 +1,18 @@
+{
+    "include": [
+        "panel.pagination_top"
+    ],
+    
+    "product_count_span":               "className, productCount",
+    "product_count_h3":                 "id, weFoundMsg",
+    "loading_mask":                     "id, loading",
+    "chanel_prod_container":            "id, thumbnails",
+    "product_count_breadcrumb":         "className, productCount",
+    "selected_facets_container":        "className, facetItemContainer",
+
+    "sort_by":                          "id, sortBy",
+    "sort_by_options":                  "className, sortByItens",
+    "sort_by_container":                "id, filterSort",
+    "sort_by_text":                     "linkText, SORT BY:"
+
+}

@@ -1,0 +1,7 @@
+{
+  "recently_viewed_panel":                "id, m-product-recently-viewed",
+  "recently_viewed_header":               "id, m-product-recently-viewed-header",
+  "edit_button":                          "id, m-j-product-recently-viewed-edit",
+  "recently_viewed_product_container":    "id, m-product-recently-viewed-products",
+  "recently_viewed_products":             "xpath, //div[@id='m-product-recently-viewed-products']/div"
+}

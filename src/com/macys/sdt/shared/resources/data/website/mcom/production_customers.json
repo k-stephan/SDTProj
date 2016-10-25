@@ -1,0 +1,83 @@
+[
+  {
+    "login": {
+      "email": "macyauto123@gmail.com",
+      "password": "Macys12345"
+    },
+    "registry": {
+      "event_type": "WEDDING",
+      "event_month": "April",
+      "event_day": "18",
+      "event_year": "2016",
+      "event_location": "Alaska",
+      "number_of_guest": "110",
+      "preferred_store_state": "New York",
+      "preferred_store": "New York - Herald Square"
+    }
+  },
+  {
+    "login": {
+      "email": "qaautosdt@qa.com",
+      "password": "macys12345"
+    },
+    "registry": {
+      "event_type": "WEDDING",
+      "event_month": "April",
+      "event_day": "18",
+      "event_year": "2016",
+      "event_location": "Alaska",
+      "number_of_guest": "110",
+      "preferred_store_state": "New York",
+      "preferred_store": "New York - Herald Square"
+    }
+  },
+  {
+    "login": {
+      "email": "qaautosdt1@qa.com",
+      "password": "macys12345"
+    },
+    "registry": {
+      "event_type": "WEDDING",
+      "event_month": "April",
+      "event_day": "18",
+      "event_year": "2016",
+      "event_location": "Alaska",
+      "number_of_guest": "110",
+      "preferred_store_state": "New York",
+      "preferred_store": "New York - Herald Square"
+    }
+  },
+  {
+    "login": {
+      "email": "qaautosdt2@qa.com",
+      "password": "macys12345"
+    },
+    "registry": {
+      "event_type": "WEDDING",
+      "event_month": "April",
+      "event_day": "18",
+      "event_year": "2016",
+      "event_location": "Alaska",
+      "number_of_guest": "110",
+      "preferred_store_state": "New York",
+      "preferred_store": "New York - Herald Square"
+    }
+  },
+  {
+    "login": {
+      "email": "qaautosdt3@qa.com",
+      "password": "macys12345"
+    },
+    "registry": {
+      "event_type": "WEDDING",
+      "event_month": "April",
+      "event_day": "18",
+      "event_year": "2016",
+      "event_location": "Alaska",
+      "number_of_guest": "110",
+      "preferred_store_state": "New York",
+      "preferred_store": "New York - Herald Square"
+    }
+  }
+]
+

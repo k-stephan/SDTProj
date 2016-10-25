@@ -1,0 +1,48 @@
+{
+    "include": [
+        "website.mcom.panel.header_and_footer",
+        "panel.shipping_options",
+        "panel.order_summary"
+    ],
+
+    "url":                         "/chkout/shipping",
+
+    "shipping_first_name":         "id, shipments0.shippingAddress.firstName",
+    "shipping_last_name":          "id, shipments0.shippingAddress.lastName",
+    "shipping_address_line_1":     "id, shipments0.shippingAddress.address.addressLine1",
+    "shipping_address_line_2":     "id, shipments0.shippingAddress.address.addressLine2",
+    "shipping_address_city":       "id, shipments0.shippingAddress.address.city",
+    "shipping_address_state":      "id, shipments0.shippingAddress.address.state",
+    "shipping_address_zip_code":   "id, shipments0.shippingAddress.address.postalCode",
+
+    "shipping_phone_area_code":    "id, shipments0.shippingAddress.address.phone.areaCode",
+    "shipping_phone_exchange":     "id, shipments0.shippingAddress.address.phone.exchangeNumber",
+    "shipping_phone_subscriber":   "id, shipments0.shippingAddress.address.phone.subscriberNumber",
+
+    "egift_card_section":          "id, checkout_vgcShippingSection",
+    "e_gift_card_delivery":        "id, checkout_vgcShippingSection",
+    "e_gift_card_shipping_info":   "id, checkout_vgcShipment_description",
+
+    "international_shipping_link": "id, checkout_internationalShippingMessage_noTile",
+    "shipping_address_section":    "id, checkout_shippingAddress_divSection",
+    "shipping_method_section":     "id, checkout_shippingMethod",
+    "shipping_gift_section":       "className, checkout_sectionLast",
+    "gift_option":                 "id, giftYes_cover",
+    "gift_message":                "id, haveGiftMessage_cover",
+    "gift_message_field1":         "id, shipments0.giftOptions.senderName",
+    "gift_box":                    "id, packageInGiftBox_cover",
+
+    "hide_price":                  "id, sendGiftReceipt",
+    "continue_checkout":           "id, checkout_continueCheckout",
+    "add_shipping_address_button": "id, checkout_registry_newShippingAddress",
+    "special_order_message":       "className, bl_errorMessage",
+    "error_container":             "id, bl_pageErrorContainer",
+    "item_level_error":            "cssSelector, div.bl_errorMessage>ul>li",
+
+    "pickup_first_name":           "id, bopsShipments0.pickUpContactInfo.firstName",
+    "pickup_last_name":            "id, bopsShipments0.pickUpContactInfo.lastName",
+    "pickup_email_address":        "id, bopsShipments0.pickUpContactInfo.email",
+    "pickup_phone_area_code":      "id, bopsShipments0.pickUpContactInfo.phone.areaCode",
+    "pickup_phone_exchange":       "id, bopsShipments0.pickUpContactInfo.phone.exchangeNumber",
+    "pickup_phone_subscriber":     "id, bopsShipments0.pickUpContactInfo.phone.subscriberNumber"
+}

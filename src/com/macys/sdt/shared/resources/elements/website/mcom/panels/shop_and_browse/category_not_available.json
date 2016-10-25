@@ -1,0 +1,6 @@
+{
+	"category_not_available_panel": "id, categoryNotAvailablePanel",
+	"category_not_available_content": "class, categoryNotAvailable_content",
+	"category_not_available_button": "id, categoryNotAvailableButton",
+	"close_category_not_available_panel": "class, itemSecondary"
+}

@@ -1,0 +1,17 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url": "/registry/signin",
+  "verify_page": "id, verifyEmail",
+  "existing_user_email": "cssSelector, div.innerLeft.gainlayout input#email||cssSelector, input#email",
+  "existing_user_password": "cssSelector, div.innerLeft.gainlayout input#password||cssSelector, input#password",
+  "new_user_email": "cssSelector, fieldset#captureEmailFields input#email",
+  "new_user_password": "cssSelector, fieldset#captureEmailFields input#password",
+  "new_user_email_verify": "id, verifyEmail",
+  "new_user_password_verify": "id, verifyPassword",
+  "existing_user_continue_button": "id, signInBtn||cssSelector, div#regLeft>input#noProfileSubmitImg",
+  "new_user_continue_button": "cssSelector, div#regRight>input#noProfileSubmitImg",
+  "error_message": "className, generalError||id, errorMessage",
+  "forgot_password_link": "linkText, Forgot your password?"
+}

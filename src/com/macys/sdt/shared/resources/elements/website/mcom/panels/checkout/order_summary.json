@@ -1,0 +1,5 @@
+{
+  "plenti_points_text": "xpath,//li[@id='uslAppliedSection']/label/span[@id='redeemedPoints']",
+  "bops_shipping": "id, bopsShipping",
+  "normal_shipping": "id, shippingMethodType"
+}

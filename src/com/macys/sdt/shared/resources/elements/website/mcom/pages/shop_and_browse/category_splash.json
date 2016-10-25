@@ -1,0 +1,31 @@
+{
+    "include": [
+        "panel.header_and_footer",
+        "panel.flexible_template",
+        "panel.left_navigation_category",
+        "panel.category_splash",
+        "panel.category_not_available",
+        "panel.browse_preview"
+    ],
+    "url":                                      "/shop",
+
+    "verify_page":                              "id, catSplash",
+    "star_rating":                              "id, ratingImage",
+    "review_date":                              "id, reviewDate",
+    "copyblock":                                "id, catalogCopyBlock",
+    "banner_slide":                             "id, bSlide0_4",
+    "recently_viewed":                          "id, recentlyViewedContainerNew",
+    "tag_cloud":                                "className, seoContent",
+
+    "shop_by_occasion":                         "xpath, //img[contains(@alt,'Shop by Occasion!')]",
+    "shop_by_cat_gift_card":                    "xpath, //area[contains(@alt, 'Gift Cards. just choose a design')]",
+    "shop_by_cat_egift_card":                   "xpath, //area[contains(@alt, 'E-Gift Cards')",
+    "shop_by_cat_gift_card_personalize":        "xpath, //area[contains(@alt, 'Personalized gift cards')]",
+    "customer_top_rated":                       "className, reviewProductThumbnailLink",
+    "rows":                                     "cssSelector, div#catSplash>div.row",
+    "popular_searches_container":               "cssSelector, div.row.seoContent",
+    "popular_searches":                         "cssSelector, div.tagCloudLinks>a",
+    "subcategory":                              "cssSelector, .nav_cat_item_bold a",
+    "featured_categories":                      "id, shopByCat_Featured categories",
+    "top_rated":                                "id, shopByCat_shop customers' top rated"
+}

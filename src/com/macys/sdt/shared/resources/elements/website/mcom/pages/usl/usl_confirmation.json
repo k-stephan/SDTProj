@@ -1,0 +1,16 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url": "/loyalty/confirm",
+  "verify_page": "id, uslID",
+
+  "congratulation_message": "className, sucess-info",
+  "usl_id": "id, uslID",
+  "shop_now_button": "id, shopnowButton",
+  "my_account_button": "id, myAccountButton",
+  "apply_now_button": "id, goToCiti",
+  "goto_print_page": "id, printButton",
+  "confirmation_banner": "className, confirm-banner-image",
+  "error_message": "id, generalErrorMsg"
+}

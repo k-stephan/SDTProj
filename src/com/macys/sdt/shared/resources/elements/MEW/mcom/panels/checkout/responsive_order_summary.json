@@ -1,0 +1,16 @@
+{
+  "plenti_points_text": "xpath,//*[contains(text(),'Plenti Points')]",
+  "gift_plenti_reward_cards": "id, rc-at-gift-rewards-cards",
+  "gift_plenti_reward_values": "id, rc-at-gift-rewards-cards-value",
+
+  "mmoney_earn_logo":             "cssSelector, .rc-reward-card-logo",
+  "mmoney_estimated_earn_text":   "id, rc-at-money-reward",
+  "mmoney_estimated_earn_amount": "id, rc-mmoney-reward",
+  "mmoney_hint_icon":             "id, rc-reward-hint",
+  "mmoney_hint_overlay":          "id, rc-overlay-content",
+  "mmoney_hint_overlay_close":    "className, rc-close-btn",
+
+  "bops_shipping":                "id, rc-at-bops-cost||id, rc-at-bops",
+  "normal_shipping":              "id, rc-at-shipping-cost",
+  "shipping_fee":                 "id, rc-at-shipping-cost-value"
+}

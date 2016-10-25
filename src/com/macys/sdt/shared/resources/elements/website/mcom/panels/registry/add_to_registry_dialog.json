@@ -1,0 +1,8 @@
+{
+
+  "add_to_registry_dialog":                    "id, addToRegistryModal",
+  "add_to_bag_continue_shopping":              "id, continueShopping||className, continueShopping",
+  "add_to_bag_view_registry":                  "id, m_atr_view_my_registry||className, viewMyRegistry",
+  "add_to_registry_close_dialog":              "id, pdpatrDivClose"
+
+}

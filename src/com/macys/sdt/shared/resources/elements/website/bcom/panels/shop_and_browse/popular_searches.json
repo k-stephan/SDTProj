@@ -1,0 +1,5 @@
+{
+    "tag_cloud_link_section":   "id, macysHomePageLogo",
+    "seo_tag_links":            "xpath, //div[@class='tagCloudLinks']/a",
+    "seo_tag_cloud":            "id, seoTagCloud"
+}

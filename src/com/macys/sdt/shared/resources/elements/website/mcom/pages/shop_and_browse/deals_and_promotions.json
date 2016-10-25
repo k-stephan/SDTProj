@@ -1,0 +1,15 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url": "/shop/coupons-deals",
+  "verify_page": "class, offersMain",
+
+  "offers_container":"id, macys-offers",
+  "all_available_offers":"class, offer-actions-section",
+  "facebook_button":":id, facebook-share",
+  "twitter_button":":id, twitter-share",
+  "google_button":":id, gplus-shar'",
+  "shop_now":" :class, shop-now"
+
+}

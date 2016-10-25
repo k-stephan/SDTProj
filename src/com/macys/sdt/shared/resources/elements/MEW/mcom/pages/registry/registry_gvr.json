@@ -1,0 +1,6 @@
+{
+  "url": "wgl/registry/guest",
+  "verify_page": "className, registrantInfo",
+  "add_to_bag": "className, atb",
+  "atb_checkout": "className, checkout"
+}

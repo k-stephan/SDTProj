@@ -1,0 +1,28 @@
+{
+    "include": [
+        "panel.left_facet",
+        "panel.product_thumbnails",
+        "panel.footer"
+    ],
+
+    "url": 								"/shop/search||/shop/registry/wedding/search",
+    "verify_page": 						"id, productCount",
+
+    "recommendation_thumbnail_link":	"className, recommendationLink",
+    "best_sellers":                     "className, productImage",
+    "product_thumbnail_quickview": 		"cssSelector, div.quickPeekIcon",
+    "product_quickview_details": 		"id, goToFulDetailsBtn",
+    "sort_by_select": 					"id, sortBy",
+    "sort_by_option":                   "className, sortByItens||xpath, //ul[@class='newDropDown_list']/li/a",
+    "prices": 							"xpath, //div[@class='prices']/span",
+
+    "search_result_container":     		"id, searchResultContentSection",
+    "results_info":                		"id, resultsInfo",
+    "zero_result_header":          		"id, rmMessage",
+    "zero_result_message":         		"id, rmDescription",
+    "instructional_message":       		"id, searchPane",
+    "search_tip":                  		"id, searchTips",
+    "search_tip_instruction":      		"id, tipPane",
+    "products":                    		"className, prodDetails",
+    "back_to_top_button":        		"className, btt-btn"
+}

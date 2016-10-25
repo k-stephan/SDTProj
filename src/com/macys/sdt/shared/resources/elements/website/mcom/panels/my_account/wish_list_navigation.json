@@ -1,0 +1,20 @@
+{
+  "goto_my_account_link": "linkText, My Account",
+  "goto_my_wishlist_link": "linkText, My Lists",
+  "list_name_text": "id, createNameInput",
+  "error_message": "id, msgCreateError",
+  "my_list_links": "className, lnkListname",
+  "goto_guest_wishlist_link": "id, guestWishList_NoProfile",
+  "goto_signin_left_link": "linkText, Sign In",
+  "goto_create_list_link": "id, createList",
+  "select_create_list_button": "id, addNewListButton",
+  "select_create_list_cancel_button": "id, cancelNewListButton",
+  "create_list_box": "id, createNameInputBox",
+  "goto_find_wishlist_link": "id, findList",
+  "goto_wedding_registry_link": "id, goToRegistry",
+  "my_friend_wishlist": "id, friendWishlist",
+  "feedback_text": "id, feedbackText",
+  "select_feedback_button": "id, giveFeedBack",
+  "feedback_success": "id, feedbackSuccess",
+  "wishlist_success_message": "className, wishlistsuccessmsg"
+}

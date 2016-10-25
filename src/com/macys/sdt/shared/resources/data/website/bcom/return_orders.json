@@ -1,0 +1,25 @@
+{
+  "bloomingdales": [
+    {
+      "return_order": "submitted",
+      "order_number": "31201625",
+      "email": "test@macys.com",
+      "item_credited_date": "November 15, 2013",
+      "fill_division_cd": "72",
+      "fill_store_nbr": "51",
+      "item_quantity": "5",
+      "upc_id": "123456789",
+      "vendor_nm": "test_vendor",
+      "item_desc": "test_desc",
+      "shipping_zip_code": "22102",
+      "refund_method": "orignal_payment"
+    },
+    {
+      "return_order": "intransit",
+      "order_number": "REGDSG57",
+      "email": "test@macys.com",
+      "carrier_tracking_nbr": "1ZA0T5770261724429",
+      "shipping_zip_code": "22102"
+    }
+  ]
+}

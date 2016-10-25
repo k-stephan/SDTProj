@@ -1,0 +1,17 @@
+{
+  "url":                        "/chkout/confirm||/chkout/rc",
+  "verify_page":                "className, checkout_confirm_orderValue||id, rc-place-order",
+
+  "paypal_section":             "id, checkout_confirm_paypalSection",
+  "paypal_email_text":          "id, checkout_confirm_paypal_email",
+
+  "alert_message":              "id, checkout_confirm_sddConfirmationMailTxt",
+  "iship_order_number":         "id, order-num-perm",
+  "order_confirmation_message": "id, orderHeading",
+  "order_number":               "id, orderNumberSpan",
+
+  "bops_shipping_section":      "id, checkout_pickupInfo_section",
+  "normal_shipping_section":    "id, ch_confirm_shippingMethodSection",
+  "loyalty_pending_points_section": "id, checkout_confirm_loyaltyPendingPoints",
+  "loyalty_total_points_section": "id, checkout_confirm_totalPointsBalance"
+}

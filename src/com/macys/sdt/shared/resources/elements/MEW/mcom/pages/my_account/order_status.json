@@ -1,0 +1,13 @@
+{
+  "url": "service/order-status",
+  "verify_page": "id, orderNumber",
+  "cancel_order_button": "className, cancelOrderBtn",
+  "order_cancel_yes_button": "className, yesBtn",
+  "order_status_text": "xpath, //div[@class='orderStatus']/h2",
+  "order_total_amount": "xpath, //span[contains(@id,'orderTotalSpan')]",
+  "order_history_container": "className, orderHistoryDetail",
+  "order_history_order_date": "className, date",
+  "order_date_range": "id, selectPeriodDropDown",
+  "order_number_detail": "xpath, //label[@class = 'devider']/span",
+  "page_navigation": "className, pageNavPosition"
+}

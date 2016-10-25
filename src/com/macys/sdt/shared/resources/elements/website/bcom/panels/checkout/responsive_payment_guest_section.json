@@ -1,0 +1,42 @@
+{
+
+    "add_gift_card_button":               "id, rc-openGCAreaButton",
+    "egift_card_section":                 "id, checkout_vgcShippingSection",
+    "gift_card_paypal_note":              "id, rc-paypal-disclaimer",
+        
+    "credit_card_radio_button":           "id, payment.type_cover",
+    "card_type":                          "id, creditCard.cardType.code",
+    "card_type_list":                     "xpath, //div[@id='rc-credit-card-container']/div[2]//div[@class='current']",
+    "card_type_options":                  "xpath, //div[@id='rc-credit-card-container']/div[2]//ul/li",
+    "card_number":                        "id, creditCard.cardNumber",
+    "expiry_month":                       "id, creditCard.expMonth",
+    "expiry_month_list":                  "xpath, //div[@id='rc-credit-card-container']/div[7]/div[1]//div[@class='current']",
+    "expiry_month_options":               "xpath, //div[@id='rc-credit-card-container']/div[7]/div[1]//ul/li",
+    "expiry_year":                        "id, creditCard.expYear",
+    "expiry_year_list":                   "xpath, //div[@id='rc-credit-card-container']/div[7]/div[2]//div[@class='current']",
+    "expiry_year_options":                "xpath, //div[@id='rc-credit-card-container']/div[7]/div[2]//ul/li",
+    "security_code":                      "id, creditCard.securityCode",
+
+    "use_shipping_address":               "id, rc-use-shipping_cover",
+        
+    "first_name":                         "id, billingContact.firstName",
+    "last_name":                          "id, billingContact.lastName",
+    "address_line_1":                     "id, billingAddress.addressLine1",
+    "address_line_2":                     "id, billingAddress.addressLine2",
+    "address_city":                       "id, billingAddress.city",
+    "address_state":                      "id, billingAddress.state",
+    "address_state_list":                 "xpath, //div[@id='rc-billing-address']//div[11]//div[@class='current']",
+    "address_state_options":              "xpath, //div[@id='rc-billing-address']//div[11]//ul/li",
+    "address_zip_code":                   "id, billingAddress.zipCode",
+    "billing_address_section":            "id, rc-billing-address-container",
+
+    "email":                              "id, billingContact.email",
+    "payment_email":                      "id, billingContact.email",
+    "phone_number":                       "id, billingAddress.phone",
+
+    "continue_payment_checkout_button":   "id, rc-payment-continue",
+    "paypal_radio_button":                "id, rc-paypal_cover",
+    "continue_with_paypal":               "id, rc-paypal-continue",
+    "edit_payment_info":                  "id, rc-payment-edit"
+
+}

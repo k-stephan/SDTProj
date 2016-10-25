@@ -1,0 +1,20 @@
+{
+  "card_type": "id, creditCardType",
+  "card_number": "id, cardNumber",
+  "expiry_month": "id, expMonthCreditCardSelect",
+  "expiry_year": "id, expYearCreditCardSelect",
+  "first_name": "id, creditCardFirstName",
+  "last_name": "id, creditCardLastName",
+  "address_line_1": "id, creditCardAddressLine1",
+  "address_line_2": "id, creditCardAddressLine2",
+  "address_city": "id, creditCardCity",
+  "address_state": "id, creditCardState",
+  "address_zip_code": "id, creditCardZipCode",
+  "card_phone_area_code": "id, creditCardAreaNum",
+  "card_phone_exchange": "id, creditCardExchangeNum",
+  "card_phone_subscriber": "id, creditCardSubscribeNum",
+  "payment_email": "id, creditCardEmail",
+  "set_as_a_default_card": "id, setAsDefaultCC",
+  "cancel": "id, cancel_addNewCard",
+  "save_card": "id, save_addNewCard"
+}

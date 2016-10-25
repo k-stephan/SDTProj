@@ -1,0 +1,26 @@
+{
+    "shipping_first_name":                  "id, addressFirstName",
+    "shipping_last_name":                   "id, addressLastName",
+    "shipping_address_line_1":              "id, addressLine1",
+    "shipping_address_line_2":              "id, addressLine2",
+    "shipping_address_city":                "id, addressCity",
+    "shipping_address_state":               "id, addressState",
+    "shipping_address_zip_code":            "id, addressZipCode",
+    "shipping_phone_area_code":             "id, addressAreaCode",
+    "shipping_phone_exchange":              "id, addressExchNum",
+    "shipping_phone_subscriber":            "id, addressSubNum",
+    "set_as_a_default_address":             "id, addressPrimary",
+    "error":                                "className, generalError",
+    "confirm_delete_address":               "id, overlayDeleteAddressConfirmBox",
+    "mask_layer":                           "id, maskLayer",
+    "close":                                "id, cancelEditAddress",
+
+    "cancel":                               "id, shippingAddressOverlayCancel",
+    "save_address":                         "id, saveShippingAddress",
+    "edit_save_address":                    "id, editShippingAddress",
+    "delete_address":                       "id, deleteShippingAddress",
+    "yes_delete_address":                   "id, confirmDeleteShippingAddress",
+    "no_delete_address":                    "id, cancelDeleteShippingAddress",
+    "address_overlay_heading":              "id, headingAddAddress",
+    "address_overlay_loading":              "id, shippingAddressOverlayLoadingWheel"
+}

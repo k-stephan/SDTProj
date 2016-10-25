@@ -1,0 +1,15 @@
+{
+  "include": [
+    "panel.responsive_shipping_options",
+    "panel.responsive_payment_guest_section",
+    "panel.responsive_order_summary"
+  ],
+
+  "url":                      "/chkout/rc",
+
+  "edit_payment_info":    "id, rc-payment-edit",
+  "place_order":          "id, rc-place-order",
+  "paypal_radio_button":  "id,rc-paypal",
+  "continue_with_paypal": "id,rc-paypal-continue",
+  "bops_shipping":        "id, rc-at-bops-cost"
+}

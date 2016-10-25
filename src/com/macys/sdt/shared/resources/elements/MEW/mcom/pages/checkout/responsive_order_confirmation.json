@@ -1,0 +1,17 @@
+{
+  "url":                        "/chkout/rc",
+
+  "paypal_section":             "xpath,//div[@id='rc-at-paypal-method']/p[@class='rc-paypalicon']",
+  "paypal_email_text":          "xpath,//div[@id='rc-at-paypal-method']/p[2]",
+
+  "alert_message":              "className, SDDConfirmMessage",
+  "sdd_shipping_note":          "id, rc-sdd-note",
+  "estimated_delivery":         "id, rc-non-delrep-estimated-delivery",
+
+  "plenti_section":             "id,rc-plenti",
+  "plenti_points_redeemed":     "xpath,//div[@id='rc-plenti-redeemed-used']/div[2]/p",
+  "order_confirmation_message": "id,rc-order-confirmation",
+  "bops_shipping_section":      "id, rc-pickup-store||id, rc-at-store-details",
+  "normal_shipping_section":    "id, rc-at-shipping-address",
+  "order_number":                "id, rc-at-order-number"
+}

@@ -1,0 +1,7 @@
+{
+  "become_a_loyallist": "alt, Become A Loyallist",
+  "manage_my_loyallist": "alt, Manage My Loyallist",
+  "become_a_loyallist_selected": "id, becomAloyallistSelected",
+  "become_a_loyallist_unselected": "id, becomAloyallist",
+  "manage_my_loyallist_link": "id, manageMyLoyallist"
+}

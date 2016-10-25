@@ -1,0 +1,9 @@
+{
+  "bvr_prod_list":        "className, r_registryView_itemContainer",
+  "prod_desc":            "className, r_standard",
+  "prod_price":           "className, priceBig",
+  "prod_reqs_qunt":       "name, requestedQuantities",
+  "prod_open_qunt":       "name, openQuantities",
+  "prod_sel_qunt":        "className, itemQty",
+  "prod_add_to_bag":      "xpath, //*[contains(@id,'r_addToBag')][1]"
+}

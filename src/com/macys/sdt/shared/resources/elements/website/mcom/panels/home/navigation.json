@@ -1,0 +1,20 @@
+{
+  "goto_my_profile": "linkText, My Profile",
+  "goto_my_preferences_link": "linkText, My Preferences",
+  "goto_my_address_book_link": "linkText, My Address Book",
+  "goto_my_wish_list": "linkText, My Lists",
+  "goto_order_status": "linkText, My Order History",
+  "goto_my_credit_card": "linkText, My Macy's Credit Card",
+  "goto_cardholder_benefits": "linkText, Cardholder Benefits",
+  "goto_apply_and_learn_more": "linkText, Apply & Learn More",
+  "goto_my_account": "id, common-heading",
+  "goto_my_wallet_link": "linkText, My Wallet",
+  "goto_furniture_mattress_status": "linkText, Furniture & Mattress Status",
+  "account_strength_bar": "id, progressBarId",
+  "account_strength_percentage": "id, percentageInfoId",
+  "task_list_overlay": "id, taskListBoxId",
+  "profile_progress_offer_banner": "id, accountRewardBannerId",
+  "goto_gift_card_balance": "linkText, Gift Card Balance",
+  "left_nav_container": "className, side-nav",
+  "goto_my_plenti": "linkText, My Plenti"
+}

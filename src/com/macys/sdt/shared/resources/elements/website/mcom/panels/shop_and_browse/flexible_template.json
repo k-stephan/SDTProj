@@ -1,0 +1,27 @@
+{
+	"splash_reviews": 						"id, splashReviews",
+	"row_one_point_zero": 					"className, rowType0",
+	"row_one_point_one": 					"className, rowType101",
+	"row_one_point_two": 					"className, rowType102",
+	"row_one_point_three": 					"className, rowType103",
+	"row_one_point_four": 					"className, rowType104",
+	"row_one_point_five": 					"className, rowType105",
+	"row_one_point_six": 					"className, rowType106",
+	"top_banner_container": 				"css, ul.nospacing:nth-child(1)",
+
+	"video_scripts": 						"xpath, //div[@class='columned']/ul/li/script",
+	"current_category_id": 					"id, currentCategoryId",
+	"search_banner_machine_sections": 		"className, canvas",
+	"global_container": 					"id, catSplash",
+	"right_content_container": 				"id, macysGlobalLayout",
+	"row_container": 						"id, catSplash||id, bl_hp_main",
+	"rows_elements":                        "cssSelector, div#catSplash>div.row||cssSelector, div#bl_hp_main>div.row",
+	"middle_banner": 						"id, KWS_MIDDLE_BANNER",
+	"top_banner": 							"id, KWS_TOP_BANNER",
+	"bottom_banner": 						"id, globalBodyFooterBannerContent",
+	"back_to_top": 							"id, backToTop",
+	"alternate_top_banner": 				"xpath, //div[@id='globalContentContainer']/div/img",
+	"alternate_top_banner_href": 			"xpath, //div[@id='globalContentContainer']/div/map/area",
+	"default_container": 					"id, homeDefaultPageContainer",
+	"page_id": 								"id, pageId"
+}

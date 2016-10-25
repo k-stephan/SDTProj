@@ -1,0 +1,26 @@
+{
+  "include": [
+    "panel.navigation",
+    "panel.header_and_footer"
+  ],
+  "url": "/account/addressbook",
+  "verify_page": "id, firstName",
+
+  "first_name": "id, firstName",
+  "last_name": "id, lastName",
+  "address_line_1": "id, shippingContact.address.addressLine1",
+  "address_line_2": "id, addressLine2||id, shippingContact.address.addressLine2",
+  "address_city": "id, city",
+  "address_state": "id, shippingContact.address.state",
+  "address_zip_code": "id, postalCode",
+  "phone_area_code": "id, areaCode",
+  "phone_exchange": "id, exchangeNbr",
+  "phone_subscriber": "id, subscriberNbr",
+  "add_address_button": "name, processShippingAddress",
+  "update_address": "name, processShippingAddress",
+  "primary_address": "id, primaryAddress",
+  "status_message": "id, addressBookStatusMsg",
+  "error_message": "className, generalError",
+  "breadcrumb_content": "className, bl_breadCrumbContainer",
+  "addresses": "className, myAddressBookList"
+}

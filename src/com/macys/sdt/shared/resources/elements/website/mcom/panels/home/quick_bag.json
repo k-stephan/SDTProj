@@ -1,0 +1,23 @@
+{
+    "quickbag": "id, quickBag_c",
+    "quickbag_items_list": "id, quickBagContent",
+    "quickbag_individual_prices": "className, quickBagMemberPrice",
+    "quickbag_edit_links": "className, editItem",
+    "quickbag_product_images": "className, quickBagImage",
+    "remove_first_item": "className, quickBagRemoveButton",
+    "first_item_container": "className, quickBagItem",
+    "edit_first_item": "className, editItem",
+    "price_first_item": "className, quickBagMemberPrice",
+    "quick_bag_item_color": "className, quickBagItemDetails",
+    "registry_item_product": "className, registryQuickBagItem",
+    "quickbag_saved_price": "id, quickBagYouSavedTotal",
+    "quickbag_promo": "id, orderLevelPromo",
+    "error_msg_first_item": "className, quickBagAlertMessage",
+    "quickbag_remove_links": "className, secondary",
+    "quickbag_item_names": "className, quickBagItemText",
+    "quickbag_checkout": "xpath, //*[@class='checkoutButton']/a",
+    "quickbag_hover": "id, itemInfo",
+    "quickbag_item_quantities": "className, quickBagMemberPrice",
+    "price_bag_total": "id, quickBagSubTotal",
+    "quickbag_header": "id, quickBagHeader"
+}

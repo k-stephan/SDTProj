@@ -1,0 +1,28 @@
+{
+  "include": [
+    "panel.header",
+    "panel.footer",
+    "panel.offer_details"
+  ],
+  "url": "/shop/coupons-deals",
+  "verify_page": "id, m-dealsandpromotions-header",
+  "offers": "id, mb-j-content-container",
+  "category": "cssSelector, .mb-j-toggleselect-item.value-1.left.active.mb-j-dealsandpromotions-latchkey.current",
+  "expiring_soon": "cssSelector, .mb-j-toggleselect-item.value-2.right.mb-j-dealsandpromotions-latchkey",
+  "selected_filter": "cssSelector, mb-j-toggleselect-item.value-2.right.mb-j-dealsandpromotions-latchkey.active",
+  "deals_and_promotions_items": "id, mb-j-dealsandpromotions-items",
+  "standard_header": "id, mb-region-header",
+  "standard_footer": "id, mb-footer-container",
+  "offer_title": "className, m-dealsandpromotions-category",
+  "offer_heading": "className, m-dealsandpromotions-heading",
+  "offer_valid_dates": "className, m-dealsandpromotions-expiration",
+  "offer_sub_heading": "className, m-dealsandpromotions-subheading",
+  "offers_list_container": "className, mb-dealsandpromotions-list",
+  "green_check_mark": "cssSelector, .small-1.offer-in-wallet",
+  "select_category": "className, b-select-wrapper",
+  "fob_category_name": "className, fob-category",
+  "promo_name": "className, b-promo-name",
+  "promo_description": "className, promo-desc",
+  "right_arrow": "className, b-sales-promotions-right-arrow",
+  "valid_dates": "className, promo-expiry"
+}

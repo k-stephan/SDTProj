@@ -1,0 +1,18 @@
+{
+
+  "include": [
+    "panel.header",
+    "panel.footer",
+    "panel.credit_card",
+    "panel.add_offers"
+  ],
+
+  "url": "/account/wallet",
+  "add_credit_card": "id, mb-j-add-credit-card",
+  "cc_container": "className, mb-wallet-credit-cards",
+  "credit_cards": "className, m-wallet-credit-cards-icon",
+  "available_offers": "className, m-wallet-offers-data",
+  "add_offer_btn": "id, mb-j-add-offers",
+  "offers_list": "cssSelector, ul.mb-wallet-offers>li",
+  "view_all_saved_offers": "className, mb-wallet-view-all-offers"
+}

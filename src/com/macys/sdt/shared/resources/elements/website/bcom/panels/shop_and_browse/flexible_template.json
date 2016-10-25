@@ -1,0 +1,24 @@
+{
+    "splash_reviews":                   "id, splashReviews",
+    "row_one_point_zero":               "xpath, //div[contains(@id, 'row_0')]",
+    "row_one_point_one":                "xpath, //div[contains(@id, 'row_101_1')]",
+    "row_one_point_two":                "xpath, //div[contains(@id, 'row_101_2')]",
+    "row_one_point_three":              "xpath, //div[contains(@id, 'row_101_3')]",
+    "row_one_point_four":               "xpath, //div[contains(@id, 'row_101_4')]",
+    "row_one_point_five":               "xpath, //div[contains(@id, 'row_101_5')]",
+    "row_one_point_six":                "xpath, //div[contains(@id, 'row_106')]",
+    "top_banner_container":             "css, ul.nospacing:nth-child(1)",
+    "script":                           "xpath, //ul[contains(@class, 'columned')]/li/script",
+    "current_category_id":              "id, currentCategoryId",
+    "search_banner_machine_sections":   "className, canvas",
+
+    "main_global_container":            "id, bl_main_container",
+    "right_content_container":          "className, bl_mainContent_no_bottom_padding",
+    "global_container":                 "id, bl_main_container",
+    "default_page_id":                  "id, pageId",
+        
+    "middle_banner":                    "id, categoryBannerMiddle",
+    "top_banner":                       "id, categoryBannerTop",
+    "bottom_banner":                    "id, categoryBannerBottom",
+    "back_to_top":                      "className, btt-btn"
+}

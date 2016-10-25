@@ -1,0 +1,6 @@
+{
+  "use_usl": "id,rc-use-plenti",
+  "usl_rc_redeem_amount": "id,rc-plenti-redeem-value",
+  "usl_rc_redeem_pin": "id,rc-plenti-redeem-pin",
+  "usl_rc_apply_points": "id,rc-apply-plenti-points"
+}

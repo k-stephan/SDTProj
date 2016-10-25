@@ -1,0 +1,7 @@
+{
+  "promo_code":   "id, promoCode",
+  "save_offer":   "id, addOfferBtn",
+  "cancel":       "id, overalyCancelBtn",
+  "close":        "className, ui-dialog-titlebar-close",
+  "offer_error":  "className, formMsgs"
+}

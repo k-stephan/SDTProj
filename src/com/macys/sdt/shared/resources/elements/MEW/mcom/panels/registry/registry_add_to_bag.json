@@ -1,0 +1,6 @@
+{
+  "registry_atb_overlay":       "id, pdpAddToBagPanel",
+  "registry_continue_shopping": "id, btnContinueShopping",
+  "registry_chkout_button":     "id, btnCheckout || className, checkout",
+  "registry_close_overlay":     "id, closeModal"
+}

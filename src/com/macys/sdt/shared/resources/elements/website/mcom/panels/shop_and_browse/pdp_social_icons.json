@@ -1,0 +1,8 @@
+{
+  "social_icon_facebook": "className, socialIcon_fb",
+  "social_icon_twitter": "className, socialIcon_tw",
+  "social_icon_pinterest": "id, socialIcon_pi2||id, socialIcon_pi",
+  "social_icon_google_plus": "className, socialIcon_gp",
+  "social_icon_email": "id, socialIcon_email2||className, socialIcon_email",
+  "social_banner_close": "cssSelector, .ui-button"
+}

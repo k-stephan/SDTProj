@@ -1,0 +1,15 @@
+{
+  "registry_navigation_container": "id, managerNavigation",
+  "goto_view_and_add_gifts": "linkText, View & Add Gifts",
+  "goto_edit_account": "linkText, Edit Account",
+  "goto_registry_checklist": "linkText, Registry Checklist",
+  "goto_go_green": "linkText, Go Green",
+  "goto_thank_you_card_manager": "id, thankyouMgrLink",
+  "goto_wedding_website": "linkText, Wedding Website",
+  "goto_gifts_with_registry,": "linkText, Gifts with Completion",
+  "tool_header_container": "id, regToolsleftSection",
+  "registry_perks_header_container": "id, regOffersleftSection",
+  "goto_enclosure_cards": "linkText, Enclosure Cards",
+  "goto_benefits_of_registering": "linkText, Benefits of Registering",
+  "goto_registry_star_awards": "linkText, Registry Star Rewards"
+}

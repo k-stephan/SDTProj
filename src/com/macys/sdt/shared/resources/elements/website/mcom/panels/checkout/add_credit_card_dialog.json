@@ -1,0 +1,7 @@
+{
+  "add_card_overlay_no_thanks_button": "id, overalyCancelBtn",
+  "add_card_overlay_add_card_button": "id, addBumpBtn",
+  "add_card_overlay_close_button": "xpath, //div[@class = 'ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix']//following-sibling::button",
+  "add_card_overlay_apply_today_link": "id, oneTimeApplyTodayLnk",
+  "one_time_add_card_overlay": "className, creditSection"
+}

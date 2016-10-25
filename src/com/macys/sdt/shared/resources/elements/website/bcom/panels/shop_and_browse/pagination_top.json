@@ -1,0 +1,10 @@
+{
+    "pagination_container":             "id, paginateTop",
+    "goto_current_page_number":         "xpath, //*[@id='paginationColumn']/*/*[contains(@class,'currentPage')]",
+    "goto_previous_page_via_arrow":     "xpath, //*[@id='paginationColumn']/*/*[contains(@class,'prevArrow')]",
+    "goto_next_page_via_arrow":         "xpath, //*[@id='paginationColumn']/*/*[contains(@class,'nextArrow')]",
+    "last_page_number":                 "xpath, //*[@id='paginationColumn']/*/*[contains(@class,'lastPage')]",
+    "goto_previous_page_via_link":      "xpath, //*[@id='paginateTop']/a[contains(@class,'previousClass')]",
+    "goto_next_page_via_link":          "xpath, //*[@id='paginateTop']/a[contains(@class,'nextClass')]",
+    "show_all_items":                   "class, howAllItems"
+}

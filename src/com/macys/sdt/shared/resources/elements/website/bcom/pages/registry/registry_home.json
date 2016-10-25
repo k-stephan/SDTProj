@@ -1,0 +1,19 @@
+{
+  "include": [
+    "panel.header_and_footer",
+    "panel.category_menu",
+    "panel.flexible_template",
+    "panel.category_splash"
+  ],
+  "url": "/wedding-registry",
+  "verify_page": "id, reg_home_goToCreatePageBtn",
+
+  "goto_create_registry": "id, reg_home_goToCreatePageBtn",
+  "sign_in_button": "id, reg_home_manage_submite",
+  "find_button": "id, reg_home_find_submit",
+  "sign_in_email": "id, reg_home_manage_username",
+  "sign_in_password": "id, reg_home_manage_password",
+  "search_first_name": "id, reg_home_find_firstName",
+  "search_last_name": "id, reg_home_find_lastName",
+  "goto_start_here": "id, reg_home_createdInStore_startHere"
+}

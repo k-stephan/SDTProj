@@ -1,0 +1,49 @@
+{
+    "goto_customer_service":            "linkText, CUSTOMER SERVICE",
+    "goto_our_stores":                  "linkText, Stores",
+    "footer_menu_section":              "id, bloomiesMainFooter",
+    "goto_footer_banner":               "id, footerBanner",
+    "easy_web_banner":                  "className, banne",
+    "footer_section":                   "id, cmFooterBar",
+    "global_footer":                    "xpath, //html/body/footer",
+    "footer_bottom":                    "className, footerBottom",
+
+    "goto_credit_services":             "linkText, MY CREDIT CARD",
+    "goto_credit_pay_bill_online":      "id, payBillOnline",
+    "goto_credit_cardholder_benefits":  "linkText, Cardholder Benefits",
+    "goto_credit_apply_now":            "linkText, Apply & Learn More",
+
+    "goto_shipping_and_delivery":       "linkText, Shipping Policy",
+    "goto_returns":                     "linkText, Returns & Exchanges",
+    "goto_international":               "linkText, International",
+    "goto_domestic":                    "linkText, Domestic",
+    "goto_product_recall":              "linkText, Product Recall",
+        
+    "goto_my_account":                  "linkText, MY ACCOUNT",
+    "goto_order_status":                "linkText, Order Status",
+    "goto_loyallist":                   "linkText, My Loyallist",
+    "goto_my_profile":                  "linkText, My Profile",
+        
+    "goto_manage_my_credit_account":    "linkText, Cardholder Benefits",
+    "goto_company":                     "linkText, COMPANY",
+    "goto_about_us":                    "linkText, About Us",
+    "goto_b_cause":                     "linkText, b.cause",
+    "goto_careers":                     "linkText, Careers",
+        
+    "goto_ways_to_shop":                "linkText, WAYS TO SHOP",
+    "goto_online_and_mobile":           "linkText, Online & Mobile",
+    "goto_stores":                      "linkText, Stores",
+    "goto_outlets":                     "linkText, Outlets",
+        
+    "goto_terms_of_use":                "linkText, Terms of Use",
+    "goto_privacy":                     "linkText, Privacy",
+    "goto_ca_privacy_rights":           "linkText, CA Privacy Rights",
+    "goto_my_ca_transparency":          "linkText, CA Transparency in Supply Chains Act",
+        
+    "goto_email_sign_up":               "xpath, //div[contains(@class, 'signUp')]/a",
+    "global_footer_ad":                 "className, footerSocialMedia",
+    "customer_service_header":          "linkText, CUSTOMER SERVICE",
+        
+    "goto_visually_impaired":           "linkText, Visually Impaired Customers",
+    "social_icons":                     "xpath, //*[alt='Connect With Us']"
+}

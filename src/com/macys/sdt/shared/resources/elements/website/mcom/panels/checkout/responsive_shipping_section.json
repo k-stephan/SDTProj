@@ -1,0 +1,22 @@
+{
+  "shipping_summary":        "id, rc-shipping-summary",
+  "shipping_section":        "cssSelector, div#rc-shipping-summary > div",
+  "edit_shipping_section":   "id, rc-shipping-edit",
+  "shipping_methods_set":    "className, rc-shipping-method-set",
+  "shipping_address_state": "id, rc-shipping-state",
+
+  "gift_options_set":        "className, rc-gift-option-set",
+  "vgc_shipping_info":       "className, rc-vgc-message",
+  "gift_message":            "id, rc-at-gift-message-summary",
+  "gift_message_line1":      "id, rc-at-giftoption-sender",
+  "gift_message_line2":      "id, rc-at-giftoption-message1",
+  "gift_message_line3":      "id, rc-at-giftoption-message2",
+  "gift_box":                "id, rc-at-gift-box",
+  "hide_prices":             "id, rc-at-gift-hide-prices",
+
+  "sdd_shipping_note":       "id, rc-sdd-note",
+  "shipping_method_summary": "id, rc-at-shipping-method",
+  "shipping_address":        "id, rc-at-shipping-address",
+  "est_arrival_date":        "id, rc-estimated-arrival",
+  "estimated_delivery":      "id, rc-estimated-delivery"
+}

@@ -1,0 +1,105 @@
+{
+    "include": [
+        "panel.responsive_shipping_options",
+        "panel.responsive_shipping_section",
+        "panel.responsive_order_summary"
+    ],
+    "url":                                  "/chkout/rc",
+
+    "international_shipping_link":          "id, internationalShippingLink",
+
+    "shipping_address_names":               "className, rc-swap-container",
+    "shipping_address_line1s":              "className, rc-summary-line",
+    "change_shipping_address":              "id, rc-shipping-address-change",
+    "edit_shipping_address":                "className, bl_tileIgnore",
+    "save_shipping_address":                "id, rc-shipping-address-use",
+    "change_shipping_method":               "id, rc-shipping-method-edit",
+    "save_shipping_method":                 "id, rc-shipping-method-use",
+
+    "shipping_address_line2s":              "className, addressLine2",
+    "select_shipping_addresses":            "id, rc-shipping-addressbook-1_cover",
+
+    "select_credit_cards":                  "id, payment.type_cover",
+    "security_code":                        "id, creditCard.securityCode",
+
+    "email":                                "id, user.email",
+    "phone_area_code":                      "id, paymentAreaCode",
+    "phone_exchange":                       "id, paymentExchNum",
+    "phone_subscriber":                     "id, paymentSubNum",
+
+    "egift_card_section":                   "className, plus-sign",
+    "shipping_address_section":             "id, rc-shipping-address-info",
+    "payment_section":                      "id, rc-payment",
+    "shipping_method_section":              "id, rc-shipping-methods-info",
+    "shipping_gift_section":                "id, rc-gift-options-info",
+    "contact_info_section":                 "id, rc-contact-info",
+    "select_registry_address":              "xpath, //div[@class='registryTileUserDetails']/input",
+    "shipping_registry_address_title":      "className, className, registryTileHeader'",
+    "registry_address":                     "xpath, //div[@class='registryTileUserDetails']/input",
+    "registry_title":                       "className, className, registryTileHeader",
+    "mask_layer":                           "id, maskLayer",
+    "mbmoney_reward_card_numbers":          "className, rewardCardNumber",
+    "mbmoney_reward_cards_container":       "id, giftCardContainer",
+
+    "shipping_address_cities_states":       "className, addressCityState",
+    "shipping_address_zips":                "className, Zip",
+    "shipping_address_tiles":               "cssSelector, ul#rc-shipping-addresses-list > li",
+    "credit_card_tiles":                    "cssSelector, ul#rc-payments-list > li",
+    "shipping_address_edit_buttons":        "className, addressEdit",
+    "credit_card_edit_buttons":             "className, creditCardEdit",
+    "credit_card_names":                    "className, creditCardFlag",
+    "credit_card_numbers":                  "className, creditCardNumber",
+    "credit_card_expirations":              "className, creditCardExpiration",
+
+    "add_shipping_address_button":          "id, rc-shipping-address-add",
+
+    "add_gift_card_button":                 "id, rc-apply-gift-cards",
+    "add_credit_card_button":               "id, rc-payment-add",
+    "change_credit_card_button":            "id, rc-payment-change",
+    "payment_info":                         "id, rc-payment-cc-info",
+    "credit_section_blocker":               "id, maskBlock",
+    "egc_gift_card_shipping_info":          "className, vgcText",
+    "same_as_pickup_person":                "id, sameAsPickUpPerson",
+    "gift_card_heading":                    "id, giftCardOverlayHeadingShippingPayment",
+    "gift_card_info":                       "id, gcInfo",
+    "registrant_name":                      "className, registrantBag",
+    "my_wallet_header":                     "id, myWallet",
+
+    "use_billing_address":                  "id, useMyBillingAddress",
+    "first_name":                           "id, rc-bc-firstName",
+    "last_name":                            "id, rc-bc-lastName",
+    "address_line_1":                       "id, rc-bc-line1",
+    "billing_address_line_2":               "id, rc-bc-line2",
+    "address_city":                         "id, rc-bc-city",
+    "address_state":                        "id, rc-bc-state",
+    "address_zip_code":                     "id, rc-bc-zipCode",
+    "phone_number":                         "id, rc-contact-phoneNumber||id, user.phoneNumber",
+
+    "payment_email":                        "id, user.email",
+    "billing_phone_area_code":              "id, billingAreaCode",
+    "billing_phone_exchange":               "id, billingExchNum",
+    "billing_phone_subscriber":             "id, billingSubNum",
+    "mbmoney_reward_card_balances":         "className, amount",
+    "reward_card_names":                    "className, giftCardMaskedNumber",
+    "save_button":                          "id,rc-bc-use",
+
+    "place_order":                          "id, rc-place-order-btn",
+    "paypal_radio_button":                  "id, rc-paypal_cover",
+    "continue_with_paypal":                 "id, rc-paypal-continue",
+    "item_level_error":                     "cssSelector, div.rc-error-message>ul>li",
+    "error_container":                      "id, rc-error-list",
+    "pick_up_save":                         "id, rc-bops-pickup-save",
+    "premium_shipping":                     "id, rc-shipping-method-2",
+    "express_shipping":                     "id, rc-shipping-method-O",
+
+    "3d_secure_reviewIframe":"id,reviewIframe",
+    "3d_secure_authIframe":  "id, authWindow",
+    "3d_secure_password":    "name,external.field.password",
+    "3d_secure_submit":      "name,UsernamePasswordEntry",
+
+    "pickup_first_name":                 "id, bops.pickUpContact.firstName",
+    "pickup_last_name":                  "id, bops.pickUpContact.lastName",
+    "pickup_email_address":              "id, bops.pickUpContact.email",
+    "pickup_phone_number":               "id, bops.pickUpContact.phoneNumber"
+
+}

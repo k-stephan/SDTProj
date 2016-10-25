@@ -1,0 +1,21 @@
+{
+    "share_overlay":                    "id, emailshare-overlay-content",
+    "share_overlay_close":              "className, ui-dialog-titlebar-close",
+    "email_list_name":                  "className, ui-dialog-title",
+    "error_message":                    "id, genericShareErrorMsg",
+
+    "email_from_text":                  "id, from",
+    "email_to_text":                    "id, to",
+    "email_message_text":               "id, emailshare-message",
+
+    "email_from_text_error_message":    "id, from-error",
+    "email_to_text_error_message":      "id, to-error",
+    "email_share_url":                  "id, shareLink ",
+    "terms_condition_overlay":          "id, emailshareTermsOverlay",
+    "terms_condition_overlay_close":    "className, container-close",
+
+    "select_send_button":               "id, emailshare-send",
+    "email_confirmation_message":       "id, emailshare-send-confirmation",
+    "goto_terms_condition_link":        "id, emailshare-terms",
+    "terms_condition_content":          "id, shareemail-terms-content"
+}

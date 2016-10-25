@@ -1,0 +1,30 @@
+{
+  "include": [
+    "panel.header_and_footer"
+  ],
+  "url":                                 "/creditservice/marketing/benefits",
+  "verify_page":                         "id, star-benefits-title",
+
+  "cc_faqs":                             "className, contact-link",
+  "bank_privacy_notice":                 "linkText, DEPARTMENT STORES NATIONAL BANK PRIVACY NOTICE",
+  "credit_card_agreement":               "linkText, MACY'S CREDIT CARD AGREEMENT",
+  "amex_card_agreement":                 "linkText, MACY'S AMERICAN EXPRESS CARD AGREEMENT",
+  "benefits":                            "id, star-benefits-title",
+  "benefits_page_header":                "className, benefits-heading",
+  "macys_benefit_card":                  "xpath, //div[@class='row benefits-cards']//strong",
+  "macys_amex_card":                     "xpath, //div[@class='row benefits-cards']//div[@class='amex-content']//strong",
+  "how_to_apply":                        "linkText, HOW TO APPLY",
+  "apply_now":                           "linkText, APPLY NOW",
+  "join_now":                            "xpath, //area[@alt=\'join now\']",
+  "learn_more":                          "xpath, //area[@alt=\'learn more\']",
+  "special_offers":                      "xpath, //img[@alt='special offers']",
+  "find_out_more":                       "xpath, //a[text()='find out more']",
+  "more_great_offers":                   "xpath, //div[@id='learnandApply']//a[contains(text(), 'more great offers')]",
+  "exclusive_travel_benefits":           "xpath, //img[@alt='exclusive travel benefits']",
+  "get_started":                         "xpath, //div[@id='learnandApply']//a[contains(@href,'get started')]",
+  "exclusions_and_details":              "xpath, //div[@id='learnandApply']//a[@class='clr-excl p-small']",
+  "footer_payBill":                      "id, footerPayBill",
+  "footer_benefits":                     "className, signup",
+  "footer_learn_more":                   "id, footerApplySave",
+  "plenti":                              "xpath, //section[@id='star-benefits-sect']/following::section[@id='plenti']"
+}

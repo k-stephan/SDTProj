@@ -1,0 +1,37 @@
+{
+    "include": [
+        "panel.product_thumbnails",
+        "panel.header_and_footer",
+        "panel.left_facet",
+        "panel.pagination",
+        "panel.flexible_template",
+        "panel.browse_preview",
+        "panel.left_navigation_category",
+        "panel.popular_searches"
+    ],
+    "url":                          "/shop/",
+    "verify_page":                  "id, sortBy",
+
+    "random_dress":                 "xpath, //ul[@id='thumbnails']/li[1]",
+    "random_size":                  "xpath, //div[@class='pdpMemberSizes']/ul/li[1]",
+    "current_category":             "className, current",
+    "quick_view_close_dialog":      "className, container-close",
+    "current_category_heading":     "id, currentCatNavHeading",
+    "chanel_logo_banner":           "id, chanelLogoBannerBrowse",
+    "goto_view_all_category":       "id, categoryParent",
+    "recently_viewed_section":      "id, recentlyViewed",
+    "social_networking_section":    "id, socialLinks",
+    "tag_cloud":                    "className, seoContent",
+    "chanel_facet_links":           "className, gn_left_nav",
+    "ul_more_color":                "className, thumbnailSwatchesList",
+    "close_one_time_error_popup":   "className, container-close",
+    "quick_view_add_to_bag":        "id, quickviewATBIDImage",
+    "copy_block":                   "id, catalogCopyBlock",
+    "business_rule_id":             "id, businessRuleId",
+    "narrow_by":                    "id, narrowByLabel",
+    "view_items_per_page":          "xpath, //a[contains(text(), 'PER PAGE')]",
+    "fortune_cookie_link":          "xpath, //area[@alt='Fortune Cookie']",
+    "loading_mask":                 "id, loading",
+    "sort_by_list_for_chanel":      "id, sortBy",
+    "technical_error":              "className, brandPanelHeaderCloseBtn"
+}

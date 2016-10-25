@@ -1,0 +1,29 @@
+{
+  "include": [
+    "panel.header",
+    "panel.footer",
+    "panel.store_details"
+  ],
+  "url": "/shop/store/search",
+  "verify_page": "id, mb-j-location-input",
+  "search_box": "id, mb-j-location-input",
+  "header_container": "id, m-stores-header",
+  "search_near_me": "id, mb-j-stores-nearme",
+  "header": "className, m-header-title",
+  "go_back": "className, mb-j-back",
+  "clear_search": "id, mb-j-stores-search-clear",
+  "search_filter": "id, mb-filter-container",
+  "autocomplete_container": "id, mb-j-store-autocomplete-container",
+  "autocomplete_text": "className, mb-select-autocomplete",
+  "store_list": "className, mb-store-list",
+  "select_store": "cssSelector, li.mb-j-store-list-entry[data-name={arg1}]",
+  "store_favorite": "id, mb-j-stores-favorites",
+  "store_favorite_stores": "id, m-store-favorites",
+  "store_favorite_store_edit": "id, m-j-favorite-stores-edit",
+  "store_favorite_store_done": "id, m-j-favorite-stores-done",
+  "store_locator_error_message": "className, tt-content",
+  "view_toggle_container": "id, m-j-toggle-view",
+  "list_view_container": "id, mb-j-stores-list-view",
+  "map_container": "id, mb-j-stores-map-view",
+  "search_results_container": "id, mb-stores-results"
+}

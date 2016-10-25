@@ -1,0 +1,9 @@
+{
+  "include": [
+    "header_and_footer"
+  ],
+  "search_box": "id, searchField",
+  "search_button": "id, searchStore",
+  "more": "className, store-more",
+  "directions": "linkText, directions"
+}
