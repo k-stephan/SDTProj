@@ -1,5 +1,0 @@
-{
-    "url": "/service/order-details",
-    "verify_page": "id, orderDetailsHeader",
-    "order_details_container": "className, shipmentWrapper"
-}

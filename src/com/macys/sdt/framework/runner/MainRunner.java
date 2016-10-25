@@ -177,16 +177,6 @@ public class MainRunner {
      */
     public static void main(String[] argv) throws Throwable {
         getEnvVars();
-        String jarFile = null;
-        if (argv != null && argv.length > 0) {
-            // means we ran from command/maven, may need to extract resources from jar
-            for (String arg : argv) {
-                if (arg.endsWith(".jar")) {
-                    jarFile = arg;
-                    break;
-                }
-            }
-        }
 
         ArrayList<String> featureScenarios = getFeatureScenarios();
         if (featureScenarios == null) {
@@ -218,9 +208,6 @@ public class MainRunner {
             } else {
                 project = parts.get(index + 1) + "." + parts.get(index + 2);  // domain.project
             }
-        }
-        if (jarFile != null) {
-            Utils.extractResources(new File(workspace + jarFile), workspace, project.replace(".", "/"));
         }
         System.out.println("-->Current project: " + project);
         System.out.println("-->Running with parameters:\n" + featureScenarios);
@@ -282,7 +269,7 @@ public class MainRunner {
             runStatus = 1;
         } finally {
             close();
-            if (argv == null || Utils.getCallFromFunction("main").isEmpty()) {
+            if (argv != null) {
                 System.exit(runStatus);
             }
         }

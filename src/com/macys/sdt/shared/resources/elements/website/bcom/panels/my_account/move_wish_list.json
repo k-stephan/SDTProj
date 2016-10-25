@@ -1,9 +1,0 @@
-{
-    "wishlist_dialog":           "className, lists",
-
-    "product_image":             "id, moveProductImage",
-    "move_list_name_text":       "id, newlistInput",
-
-    "select_move_Button":        "id, moveOverlayNewList",
-    "move_error_message":        "className, errorMessageInline"
-}

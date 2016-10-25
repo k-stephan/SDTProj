@@ -1,7 +1,0 @@
-{
-  "wishlist_dialog": "className, uidialog",
-  "product_image": "id, moveProductImage",
-  "move_list_name_text": "id, moveNameInput",
-  "select_move_Button": "id, moveNewListButton",
-  "move_error_message": "id, msgMove"
-}

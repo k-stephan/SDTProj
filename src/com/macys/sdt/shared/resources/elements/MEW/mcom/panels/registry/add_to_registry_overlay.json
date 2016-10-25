@@ -1,5 +1,0 @@
-{
-  "add_to_registry_overlay": "id, m-addtoregistry-overlay",
-  "overlay_close": "className, mb-j-overlay-close m-modal-button",
-  "view_registry": "xpath, //a[text()='view registry']"
-}

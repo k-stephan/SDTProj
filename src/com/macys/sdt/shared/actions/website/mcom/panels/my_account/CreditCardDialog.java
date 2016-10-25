@@ -40,6 +40,7 @@ public class CreditCardDialog extends StepUtils{
         TextBoxes.typeTextbox("credit_card_dialog.first_name", address.getFirstName());
         TextBoxes.typeTextbox("credit_card_dialog.last_name", address.getLastName());
         TextBoxes.typeTextbox("credit_card_dialog.address_line_1", address.getAddressLine1());
+        TextBoxes.typeTextbox("credit_card_dialog.address_line_2", address.getAddressLine2());
         TextBoxes.typeTextbox("credit_card_dialog.address_city", address.getCity());
         if (bloomingdales())  {
             DropDowns.selectCustomText("credit_card_dialog.address_state_list", "credit_card_dialog.address_state_options", address.getState());

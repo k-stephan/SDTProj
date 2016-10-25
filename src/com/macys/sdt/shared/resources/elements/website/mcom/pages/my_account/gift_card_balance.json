@@ -1,7 +1,0 @@
-{
-  "include": [
-    "panel.navigation",
-    "panel.header_and_footer"
-  ],
-  "url":                              "/account/giftcardbalance"
-}

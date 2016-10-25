@@ -1,7 +1,0 @@
-{
-    "product_thumbnail_link":           "cssSelector, div.productThumbnail div.productImages > a",
-    "product_thumbnail_with_review":    "xpath, //div[@class='customerRating']/../div[contains(@class, productImages)]/a||xpath, //div[@class='b-pdp-rating']/../div[contains(@class,'productImages')]/a",
-    "color_swatch":                     "className, thumbnailSwatchesList",
-    "color_swatches":                   "className, color-swatch",
-    "product_short_description":        "cssSelector, .shortDescription>div>a"
-}

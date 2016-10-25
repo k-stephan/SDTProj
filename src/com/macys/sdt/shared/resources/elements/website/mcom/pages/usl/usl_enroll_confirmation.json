@@ -1,9 +1,0 @@
-{
-  "include": [
-    "panel.header_and_footer"
-  ],
-  "auto_redirect_link": "className, automatic-redirect-link",
-  "enrollment_success_container": "className, enrollment-success",
-  "sponsor_logo": "className, sponsor-logo",
-  "redirect_final_countdown": "className, automatic-redirect-counter"
-}

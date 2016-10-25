@@ -1,6 +1,0 @@
-{
-  "search_distance": "cssSelector, #mb-bops-distance",
-  "address_zip_code": "id, mb-bops-address",
-  "search_button": "id, mb-bops-search",
-  "back_button": "cssSelector, .mb-j-modalHeader-left.m-back"
-}

@@ -1,9 +1,0 @@
-{
-  "url": "/loyalty/summary",
-  "remove_usl_id": "id, removeCard",
-  "confirm_delete_button": "id, removeUslIdBtn",
-  "added_usl_id": "id, loyaltyMaskedNumber",
-  "goto_faq": "id, faqs",
-  "goto_learn_more": "id, learnMore",
-  "redeem_message": "id, redeemText"
-}

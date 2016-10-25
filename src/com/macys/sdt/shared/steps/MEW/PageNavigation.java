@@ -16,6 +16,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -264,15 +265,17 @@ public class PageNavigation extends StepUtils {
 
     @Then("^I should be able to navigate using pagination functionality using mobile website$")
     public void I_should_be_able_to_navigate_using_pagination_functionality_using_mobile_website() throws Throwable {
-        String selectedValue = DropDowns.getSelectedValue(Elements.element("pagination.select_page_no"));
-        Assert.assertNotNull("Not able to get page count", selectedValue);
-        String pageCount = selectedValue.replace("page 1 of ", "");
-        scrollToLazyLoadElement("pagination.next_page");
-        Clicks.click("pagination.next_page");
-        Assert.assertEquals("Not navigated to next page.", "page 2 of " + pageCount, DropDowns.getSelectedValue(Elements.element("pagination.select_page_no")));
-        scrollToLazyLoadElement("pagination.previous_page");
-        Clicks.click("pagination.previous_page");
-        Assert.assertEquals("Not navigated to previous page.", "page 1 of " + pageCount, DropDowns.getSelectedValue(Elements.element("pagination.select_page_no")));
+        if (Wait.untilElementPresent(Elements.element("pagination.select_page_no"))) {
+            String selectedValue = DropDowns.getSelectedValue(Elements.element("pagination.select_page_no"));
+            Assert.assertNotNull("Not able to get page count", selectedValue);
+            String pageCount = selectedValue.replace("page 1 of ", "");
+            scrollToLazyLoadElement("pagination.next_page");
+            Clicks.click("pagination.next_page");
+            Assert.assertEquals("Not navigated to next page.", "page 2 of " + pageCount, DropDowns.getSelectedValue(Elements.element("pagination.select_page_no")));
+            scrollToLazyLoadElement("pagination.previous_page");
+            Clicks.click("pagination.previous_page");
+            Assert.assertEquals("Not navigated to previous page.", "page 1 of " + pageCount, DropDowns.getSelectedValue(Elements.element("pagination.select_page_no")));
+        }
     }
 
     @And("^I navigate to brand index page in (registry|iship|domestic) mode using mobile website$")
@@ -290,5 +293,21 @@ public class PageNavigation extends StepUtils {
                 GlobalNav.navigateOnGnByName("ALL DESIGNERS");
                 GlobalNav.closeGlobalNav();
         }
+    }
+
+    @When("^I navigate to dynamic landing page in (registry|iship|domestic) mode using mobile website$")
+    public void I_navigate_to_dynamic_landing_page_using_mobile_website(String mode) throws Throwable {
+        I_navigate_to_brand_index_page_using_mobile_website(mode);
+        for (int i=0; i<5; i++) {
+            if (mode.equals("registry")) {
+                Clicks.clickRandomElement("brand_index.brand_alphabates");
+            }
+            Clicks.clickRandomElement("brand_index.brand_links", WebElement::isDisplayed);
+            if (onPage("dynamic_landing")) {
+                break;
+            }
+            Navigate.browserBack();
+        }
+        shouldBeOnPage("dynamic_landing");
     }
 }

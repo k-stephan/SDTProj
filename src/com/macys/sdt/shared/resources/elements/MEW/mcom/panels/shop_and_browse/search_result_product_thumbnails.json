@@ -1,5 +1,0 @@
-{
-  "product_thumbnail_link": "cssSelector, div.mb-j-search-image",
-  "search_results_thumbnail_wrapper": "id, m-search-results-list",
-  "product_thumbnail_list": "cssSelector, ul#m-search-results-list li"
-}

@@ -2,18 +2,13 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.model.GiftCard;
 import com.macys.sdt.framework.runner.MainRunner;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.ws.rs.core.Response;
 
 
 public class GiftCardService {
@@ -21,11 +16,10 @@ public class GiftCardService {
     /**
      * Returns valid gift card object
      *
-     * @return GiftCard object.
-     * @throws IOException
+     * @return GiftCard object
      */
     public static GiftCard getValidGiftCardDetails(GiftCard.CardType cardType) {
-        GiftCard giftCard = null;
+        GiftCard giftCard;
         try {
             String json = getGiftCardsResponse(cardType);
             JSONArray jsonObject = new JSONArray(json);
@@ -45,35 +39,32 @@ public class GiftCardService {
                 }
             }
 
-        } catch (JSONException | IOException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        return giftCard;
+        return null;
     }
 
     /**
      * Returns getGiftCardsResponse
      *
      * @return getGiftCardsResponse.
-     * @throws IOException
      */
-    public static String getGiftCardsResponse(GiftCard.CardType cardType) throws IOException {
-        String serviceUrl = getGiftCardServiceUrl(cardType);
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(serviceUrl);
-        CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-        while ((inputLine = reader.readLine()) != null)
-            response.append(inputLine);
-        reader.close();
-        httpClient.close();
-        return response.toString();
+    public static String getGiftCardsResponse(GiftCard.CardType cardType) {
+        try {
+            String serviceUrl = getGiftCardServiceUrl(cardType);
+            final Response response = RESTOperations.doGET(serviceUrl, null);
+            String responseBody = response.readEntity(String.class);
+            response.close();
+            return responseBody;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private static String getGiftCardServiceUrl(GiftCard.CardType cardType){
-        String environmentUrl = MainRunner.url.split("\\.")[1], cardPath = "Min Balance (<$50)", cardFullPath = null, requestUrl = null, tokenName = "N_GUrqG6Eq8oeCrvE0aZLA";
+        String environmentUrl = MainRunner.url.split("\\.")[1], cardPath = "Min Balance (<$50)", cardFullPath = null, requestUrl, tokenName = "N_GUrqG6Eq8oeCrvE0aZLA";
         switch (cardPath){
             case "Min Balance (<$50)":
                 cardFullPath = "/buckets/Gift%20Cards/Gift%20Cards::" + cardType + "::Min%20Balance%20(%3C$50)?auth_token=";

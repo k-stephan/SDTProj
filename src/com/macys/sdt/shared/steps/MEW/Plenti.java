@@ -32,8 +32,8 @@ public class Plenti extends StepUtils {
             case "join for free":
                 Clicks.clickIfPresent("plenti_home.learn_more");
                 Wait.untilElementPresent("plenti_home.btn_join_free");
-                Assert.assertTrue("ERROR-ENV: Unable to locate join for free element", Elements.elementPresent("plenti_home.btn_join_free"));
-                Clicks.click("plenti_home.btn_join_free");
+                Assert.assertTrue("ERROR-ENV: Unable to locate join for free element", !Elements.findElements("plenti_home.btn_join_free").isEmpty());
+                Clicks.click(Elements.findElements("plenti_home.btn_join_free").get(0));
                 break;
             case "join now":
                 Wait.untilElementPresent("plenti_join.btn_join_now");

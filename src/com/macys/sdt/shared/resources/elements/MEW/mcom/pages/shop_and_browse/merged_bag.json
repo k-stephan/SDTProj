@@ -1,6 +1,0 @@
-{
-  "url": "/bag/checkout/merge.ognc",
-  "verify_page": "id, mb-j-checkout-btn-top",
-
-  "merged_message": "id, m-bag-merged-message"
-}

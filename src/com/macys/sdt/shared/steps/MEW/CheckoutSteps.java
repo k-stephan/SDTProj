@@ -267,6 +267,9 @@ public class CheckoutSteps extends StepUtils {
         if (!Elements.elementPresent("responsive_checkout_signed_in.change_shipping_address"))  {
             Clicks.click("responsive_checkout_signed_in.add_shipping_address_button");
             CreateProfileMEW.addNewAddress();
+            if (onPage("my_address_book")) {
+                new CheckoutUtils().navigateToCheckout(true, false);
+            }
             Wait.untilElementPresent("responsive_checkout_signed_in.change_shipping_address");
         }
     }

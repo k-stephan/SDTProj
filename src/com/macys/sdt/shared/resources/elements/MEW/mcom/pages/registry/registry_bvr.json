@@ -1,5 +1,0 @@
-{
-"gift_registry_plus_btn": "xpath, //div[@id='giftRegistryTable']//span[text()='+ ']",
-"purchase_item": "xpath, //div[@class='UPCDetailsCell']//select",
-"add_to_bag_btn": "id, addToBag || className, atb"
-}

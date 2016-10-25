@@ -1,5 +1,0 @@
-{
-    "wishlist_link": "cssSelector, .m-wishlist-link.m-j-cm-link||className, m-wishlist-link",
-    "wish_list_overlay": "cssSelector, #m-addtowishlist-overlay",
-    "view_list": "cssSelector, .m-bag-buttons a"
-}

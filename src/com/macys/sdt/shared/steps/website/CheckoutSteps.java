@@ -616,7 +616,7 @@ public class CheckoutSteps extends StepUtils {
         Map<String, Object> mbmoneyEstimatedData = ShoppingBag.getMbmoneyEarnInformationBasedOnBagTotal(ShoppingBag.getAllProductDetails(), ShoppingBag.subtotal());
 
         if (mbmoneyEstimatedData.get("estimatedEarnAmount").equals(0)) {
-            Assert.assertTrue(((List) mbmoneyEstimatedData.get("mbmoneyEligibleItems")).isEmpty(), "All items in bag are not eligible for mbMoney!!");
+            Assert.assertFalse(((List) mbmoneyEstimatedData.get("mbmoneyEligibleItems")).isEmpty(), "All items in bag are not eligible for mbMoney!!");
             Object check = mbmoneyEstimatedData.get("mbmoneyEligibleItems");
             if (check instanceof List) {
                 List eligibleItems = (List) check;
@@ -625,7 +625,7 @@ public class CheckoutSteps extends StepUtils {
                     Random rand = new Random();
                     randomIndex = rand.nextInt(eligibleItems.size());
                 }
-                Product randomEligibleItem = (Product) eligibleItems.get(randomIndex - 1);
+                Product randomEligibleItem = (Product) eligibleItems.get(((randomIndex > 0) ? (randomIndex - 1) : randomIndex));
                 List<String> quantityOptions = ShoppingBag.quantityOptions(randomEligibleItem);
                 ShoppingBag.updateQuantity(randomEligibleItem, quantityOptions.get(quantityOptions.size() - 1));
             }

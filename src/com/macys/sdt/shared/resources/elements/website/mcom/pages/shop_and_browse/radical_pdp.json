@@ -1,5 +1,0 @@
-{
-    "verify_page":          "cssSelector, h1.productTitle",
-
-    "check_stores":         "id, checkotherstore"
-}

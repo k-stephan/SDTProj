@@ -1,4 +1,0 @@
-{
-  "url": "/RSnextgen/svc/launch",
-  "verify_page": "xpath, //div[contains(text(),'Add a Card')]"
-}

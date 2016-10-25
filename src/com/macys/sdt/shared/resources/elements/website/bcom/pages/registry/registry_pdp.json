@@ -1,7 +1,0 @@
-{
-    "include": [
-        "panel.product_display"
-    ],
-
-    "url":      "/shop/registry/wedding/product/"
-}

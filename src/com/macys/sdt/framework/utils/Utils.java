@@ -465,11 +465,11 @@ public class Utils {
                     trace.contains(from)) {
                 continue;
             }
-            if (trace.startsWith("com.macys.sdt.")) {
-                displayEls.add(trace);
-            }
             if (displayEls.size() == size) {
                 break;
+            }
+            if (trace.startsWith("com.macys.sdt.")) {
+                displayEls.add(trace);
             }
             if (--count <= 0) {
                 break;
@@ -995,18 +995,6 @@ public class Utils {
         if (redirectCallCount == 0) {
             System.setErr(originalErr);
         }
-    }
-
-    public static void extractResources(File repoJar, String workspace, String project) throws IOException {
-        System.out.println("com/macys/sdt/framework/resources");
-        outputJarFile(repoJar, "com/macys/sdt/framework/resources", workspace + "/com/macys/sdt/framework/resources");
-        System.out.println("/com/macys/sdt/shared/resources");
-        outputJarFile(repoJar, "com/macys/sdt/shared/resources", workspace + "/com/macys/sdt/shared/resources");
-        System.out.println("/com/macys/sdt/projects");
-        outputJarFile(repoJar, "com/macys/sdt/projects", workspace + "/com/macys/sdt/projects", ".feature");
-        String projectResources = "com/macys/sdt/projects/" + project + "/resources";
-        System.out.println("/" + projectResources);
-        outputJarFile(repoJar, projectResources, workspace + "/" + projectResources);
     }
 
 

@@ -1,5 +1,0 @@
-{
-  "product_thumbnail_link": "className, mb-j-browse-image||cssSelector, ul#m-browse-results-list a.m-browse-product-anchor>div>img||cssSelector, ul#thumbnails img.thumbnailImage",
-  "browse_thumbnail_wrapper": "id, m-browse-results-list",
-  "product_thumbnail_list": "cssSelector, ul#m-browse-results-list li"
-}

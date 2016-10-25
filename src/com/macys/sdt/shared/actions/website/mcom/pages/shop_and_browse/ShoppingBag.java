@@ -241,7 +241,7 @@ public class ShoppingBag extends StepUtils {
                 }
             }
         }
-
+        Navigate.browserRefresh();
         if (product.totalPrice == getAllProductDetails().get(index).totalPrice) {
             Assert.fail("Product quantity is not updated.");
         }

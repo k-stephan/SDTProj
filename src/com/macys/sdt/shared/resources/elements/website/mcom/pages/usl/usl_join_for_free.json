@@ -1,9 +1,0 @@
-{
-  "include": [
-    "panel.header_and_footer"
-  ],
-  "join_today_container": "id, plenti-join-hero-button",
-  "join_today_points_button": "id, plenti-join-points-button",
-  "learn_more_arrow": "id, plenti-learnmore-hero-arrow",
-  "join_now": "xpath, //div[@id='plenti-join-hero-button']/a[text()='join now']"
-}

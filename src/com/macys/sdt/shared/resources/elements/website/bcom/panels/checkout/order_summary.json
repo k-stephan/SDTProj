@@ -1,6 +1,0 @@
-{
-  "bmoney_earn_desc": "cssSelector, #checkout_totals_bMoneyEarned>.checkout_totals_desc",
-  "bmoney_earn_amount": "cssSelector, #checkout_totals_bMoneyEarned>.checkout_totals_price",
-  "bops_shipping": "id, checkout_minibag_bopsShippingMethod_description",
-  "normal_shipping": "id, checkout_minibag_shippingMethod_description"
-}

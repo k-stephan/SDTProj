@@ -1,8 +1,0 @@
-{
-  "social_icon_facebook":       "id, m-product-social-share-facebook||id, m-share-facebook",
-  "social_icon_twitter":        "id, m-social-share-twitter||id, m-share-twitter",
-  "social_icon_pinterest":      "id, m-social-share-pinterest||id, m-share-pinterest",
-  "social_icon_email":          "id, m-social-share-email||id, m-share-email",
-  "social_icon_google_plus":    "id, m-social-share-googleplus||id, m-share-googleplus",
-  "social_close":               "className, mb-j-overlay-close"
-}

@@ -1,8 +1,0 @@
-{
-  "header": "id, m-changecountry-header",
-  "content": "id, mb-changecountry-content",
-  "country": "id, mb-j-country-select",
-  "currency": "id, mb-j-currency-select",
-  "change_country_btn": "id, mb-j-changecountry-button",
-  "ship_to_us_btn": "id, mb-j-changecountry-ship-to-us"
-}

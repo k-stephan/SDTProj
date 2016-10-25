@@ -1,8 +1,0 @@
-{
-  "close_btn":      "cssSelector, div#wlt_offerPanel > a.container-close",
-  "promo_code":     "id, offerCode",
-  "save_offer":     "xpath, //input[@alt='Save']||cssSelector, .button.small.right.wlt_overlayOfferSaveButton",
-  "error_message":  "cssSelector, .b_errorMessage.small-24.columns||xpath, //div[contains(@class,'errorPanel')]",
-  "offer_text": "id, offerCode",
-  "save_btn": "cssSelector, .button.small.right.wlt_overlayOfferSaveButton"
-}

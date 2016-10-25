@@ -1,7 +1,0 @@
-{
-  "search_field": "cssSelector, #mb-j-search-field",
-  "go": "id, m-search-go",
-  "clear": "id, mb-j-search-clear",
-  "autocomplete_container": "id, mb-j-autocomplete-container",
-  "recent_search_container": "id, m-j-recent-searches-container"
-}

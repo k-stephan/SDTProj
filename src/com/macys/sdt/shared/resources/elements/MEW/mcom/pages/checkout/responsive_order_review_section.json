@@ -1,8 +1,0 @@
-{
-  "url":               "/chkout/rc",
-
-  "edit_payment_info": "id, rc-payment-edit",
-  "estimated_delivery": "id, rc-estimated-delivery",
-  "sdd_shipping_note": "id, rc-sdd-note"
-}
-
