@@ -13,8 +13,7 @@ import org.openqa.selenium.NoAlertPresentException;
 
 
 public class CreateProfile extends StepUtils {
-
-    public static void createProfile(UserProfile customer) {
+    public static void createProfile(UserProfile customer, boolean... edgeCase) {
         pausePageHangWatchDog();
         User user = customer.getUser();
         ProfileAddress profileAddress = user.getProfileAddress();
@@ -27,20 +26,44 @@ public class CreateProfile extends StepUtils {
 
         if (macys() || Elements.elementPresent("create_profile.address_state")) {
             selectDropDownIfPresent("create_profile.address_state", ((profileAddress.getState().length() == 2) ? StatesUtils.translateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
-            selectDropDownIfPresent("create_profile.dob_month", WordUtils.capitalize(user.getDateOfBirth(user.getDateOfBirth()).getMonth().name().toLowerCase()));
-            selectDropDownIfPresent("create_profile.dob_day", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getDayOfMonth()));
-            selectDropDownIfPresent("create_profile.dob_year", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getYear()));
+            if(edgeCase.length > 0 && edgeCase[0]) {
+                selectDropDownIfPresent("create_profile.dob_month", "February");
+                selectDropDownIfPresent("create_profile.dob_day", "31");//February doesn't have 31 days thereby making this date as invalid date.
+                selectDropDownIfPresent("create_profile.dob_year", "1960");//just any random year
+            }
+            else {
+                selectDropDownIfPresent("create_profile.dob_month", WordUtils.capitalize(user.getDateOfBirth(user.getDateOfBirth()).getMonth().name().toLowerCase()));
+                selectDropDownIfPresent("create_profile.dob_day", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getDayOfMonth()));
+                selectDropDownIfPresent("create_profile.dob_year", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getYear()));
+            }
             selectDropDownIfPresent("create_profile.security_question", user.getUserPasswordHint().getQuestion());
         } else {
+            //Bloomingdales
             selectCustomDropDownIfPresent("create_profile.address_state_list", "create_profile.state_options", ((profileAddress.getState().length() == 2) ? StatesUtils.translateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
-            if(Elements.elementPresent("create_profile.dob_month"))
-                DropDowns.selectByText("create_profile.dob_month", WordUtils.capitalize(user.getDateOfBirth(user.getDateOfBirth()).getMonth().name().toLowerCase()));
-            else
-                selectCustomDropDownIfPresent("create_profile.dob_month_list", "create_profile.dob_month_options", WordUtils.capitalize(user.getDateOfBirth(user.getDateOfBirth()).getMonth().name().toLowerCase()));
-            if(Elements.elementPresent("create_profile.dob_day"))
-                DropDowns.selectByText("create_profile.dob_day", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getDayOfMonth()));
-            else
-                selectCustomDropDownIfPresent("create_profile.dob_day_list", "create_profile.dob_day_options", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getDayOfMonth()));
+            if(Elements.elementPresent("create_profile.dob_month")) {
+                if (edgeCase.length > 0 && edgeCase[0])
+                    selectDropDownIfPresent("create_profile.dob_month", "February");
+                else
+                    DropDowns.selectByText("create_profile.dob_month", WordUtils.capitalize(user.getDateOfBirth(user.getDateOfBirth()).getMonth().name().toLowerCase()));
+            }
+            else {
+                if (edgeCase.length > 0 && edgeCase[0])
+                    selectCustomDropDownIfPresent("create_profile.dob_month_list", "create_profile.dob_month_options", "February");
+                else
+                    selectCustomDropDownIfPresent("create_profile.dob_month_list", "create_profile.dob_month_options", WordUtils.capitalize(user.getDateOfBirth(user.getDateOfBirth()).getMonth().name().toLowerCase()));
+            }
+            if(Elements.elementPresent("create_profile.dob_day")){
+                if (edgeCase.length > 0 && edgeCase[0])
+                    DropDowns.selectByText("create_profile.dob_day", "31");//February doesn't have 31 days thereby making this date as invalid date.
+                else
+                    DropDowns.selectByText("create_profile.dob_day", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getDayOfMonth()));
+            }
+            else {
+                if (edgeCase.length > 0 && edgeCase[0])
+                    selectCustomDropDownIfPresent("create_profile.dob_day_list", "create_profile.dob_day_options", "31");//February doesn't have 31 days thereby making this date as invalid date.
+                else
+                    selectCustomDropDownIfPresent("create_profile.dob_day_list", "create_profile.dob_day_options", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getDayOfMonth()));
+            }
             if(Elements.elementPresent("create_profile.dob_year"))
                 DropDowns.selectByText("create_profile.dob_year", String.valueOf(user.getDateOfBirth(user.getDateOfBirth()).getYear()));
             else
@@ -61,10 +84,25 @@ public class CreateProfile extends StepUtils {
         TextBoxes.typeTextbox("create_profile.email", profileAddress.getEmail());
         typeTextBoxIfPresent("create_profile.email_verify", profileAddress.getEmail());
         TextBoxes.typeTextbox("create_profile.password", user.getLoginCredentials().getPassword());
+
         if (Elements.elementPresent("create_profile.password_verify"))
             TextBoxes.typeTextbox("create_profile.password_verify", user.getLoginCredentials().getPassword());
 
         typeTextBoxIfPresent("create_profile.security_answer", user.getUserPasswordHint().getAnswer());
+
+        Clicks.selectCheckbox(Elements.element("create_profile.textme_yes"));
+        if(edgeCase.length > 0 && edgeCase[1]) {
+            typeTextBoxIfPresent("create_profile.phone_number", "");//missing phone
+        }
+        else if(edgeCase.length > 0 && edgeCase[2]) {
+            typeTextBoxIfPresent("create_profile.phone_number", "500");//invalid/incomplete phone
+        }
+        else if(edgeCase.length > 0 && edgeCase[3]) {
+            typeTextBoxIfPresent("create_profile.phone_number", "5555555555");//all same digits for phone
+        }
+        else {
+            typeTextBoxIfPresent("create_profile.phone_number", profileAddress.getBestPhone());//valid phone
+        }
 
         if (chrome())
             Clicks.click("create_profile.create_profile_button");
