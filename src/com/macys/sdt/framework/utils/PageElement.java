@@ -93,8 +93,9 @@ public class PageElement {
         }
     }
 
-    // make 'home' or 'panel.home' to 'website.mcom.page.home' or 'website.mcom.panel.home'
-    public static String getPageFullPath(String pageName) {
+    // make 'home' or 'panel.home' to 'website.mcom.page.home' or 'website.mcom.panel.home' based on
+    // current execution status & setup
+    private static String getPageFullPath(String pageName) {
         String pagePath;
         if (MainRunner.appTest) {
             pagePath = StepUtils.iOS() ? "iOS." : "android.";
@@ -110,5 +111,12 @@ public class PageElement {
             pagePath = pagePath + "page." + pageName;
         }
         return pagePath;
+    }
+
+    public static String getResponsivePath(String pagePath) {
+        if (!(pagePath.contains("website") || pagePath.contains("MEW"))) {
+            return pagePath;
+        }
+        return pagePath.replaceFirst("website", "responsive").replaceFirst("MEW", "responsive");
     }
 }

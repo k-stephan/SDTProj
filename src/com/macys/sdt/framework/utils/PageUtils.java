@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.macys.sdt.framework.utils.PageElement.getResponsivePath;
+import static com.macys.sdt.framework.utils.Utils.log;
 /**
  * This class pulls and manages data from page and panel JSON files
  */
@@ -41,6 +43,12 @@ public class PageUtils {
      * @param pagePath name of page to load
      */
     public static void loadPageJSON(String pagePath) {
+        String responsivePath = getResponsivePath(pagePath);
+        if (responsivePath.startsWith("responsive")) {
+            if (cachePagesProject.get(responsivePath) != null || cachePagesShared.get(responsivePath) != null) {
+                return;
+            }
+        }
         if (cachePagesProject.get(pagePath) != null || cachePagesShared.get(pagePath) != null) {
             return;
         }
@@ -48,29 +56,10 @@ public class PageUtils {
         String path = pagePath.replace(".page.", ".pages.").replace(".panel.", ".panels.").replace(".", "/");
         String resPath = "/resources/elements/" + path + ".json";
 
-        // project elements first
-        if (MainRunner.project != null) {
-            path = MainRunner.projectDir + resPath;
-            loadOnePageJSONFile(pagePath, path, "project");
+        // find & load files
+        loadJSONFiles(resPath, pagePath);
 
-            // also load panel elements
-            if (pagePath.contains(".page.")) {
-                path = path.replace("/pages/", "/panels/");
-                loadOnePageJSONFile(pagePath, path, "project");
-            }
-        }
-
-        // shared elements next
-        path = "shared" + resPath;
-        loadOnePageJSONFile(pagePath, path, "shared");
-
-        // also load panel elements
-        if (pagePath.contains(".page.")) {
-            path = path.replace("/pages/", "/panels/");
-            loadOnePageJSONFile(pagePath, path, "shared");
-        }
-
-        // on MCOM env, it is done
+        // on MCOM env, we're done done
         if (!pagePath.contains(".bcom.")) {
             return;
         }
@@ -78,31 +67,54 @@ public class PageUtils {
         // on BCOM env, fallback onto mcom elements
         resPath = resPath.replace("/bcom/", "/mcom/");
         pagePath = pagePath.replace(".bcom.", ".mcom.");
+        loadJSONFiles(resPath, pagePath);
 
+    }
+
+    private static void loadJSONFiles(String resPath, String page) {
+        String path;
+        String responsivePage = getResponsivePath(page);
+        String responsivePath;
         // project elements first
         if (MainRunner.project != null) {
             path = MainRunner.projectDir + resPath;
-            loadOnePageJSONFile(pagePath, path, "project");
+            responsivePath = getResponsivePath(path);
+            if (loadPageAndPanels(responsivePage, responsivePath, "project") ||
+                    loadPageAndPanels(page, path, "project")) {
+                return;
+            }
 
             // also load panel elements
-            if (pagePath.contains(".page.")) {
+            if (page.contains(".page.")) {
                 path = path.replace("/pages/", "/panels/");
-                loadOnePageJSONFile(pagePath, path, "project");
+                responsivePath = responsivePath.replace("/pages/", "/panels/");
+                if (loadPageAndPanels(responsivePage, responsivePath, "project") ||
+                        loadPageAndPanels(page, path, "project")) {
+                    return;
+                }
             }
         }
 
         // shared elements next
-        path = "src/com/macys/sdt/shared" + resPath;
-        loadOnePageJSONFile(pagePath, path, "shared");
+        path = "shared" + resPath;
+        responsivePath = getResponsivePath(path);
+        if (loadPageAndPanels(responsivePage, responsivePath, "shared") ||
+                loadPageAndPanels(page, path, "shared")) {
+            return;
+        }
 
         // also load panel elements
-        if (pagePath.contains(".page.")) {
+        if (page.contains(".page.")) {
             path = path.replace("/pages/", "/panels/");
-            loadOnePageJSONFile(pagePath, path, "shared");
+            responsivePath = responsivePath.replace("/pages/", "/panels/");
+            if (loadPageAndPanels(responsivePage, responsivePath, "shared")) {
+                return;
+            }
+            loadPageAndPanels(page, path, "shared");
         }
     }
 
-    private static boolean loadOnePageJSONFile(String pagePath, String filePath, String cache) {
+    private static boolean loadPageAndPanels(String pagePath, String filePath, String cache) {
         File f = new File(filePath);
         if (f.exists() && !f.isDirectory()) {
             loadPageJsonFiles(pagePath, f, cache);
@@ -112,7 +124,11 @@ public class PageUtils {
         // find file recursively under the directory
         String fName = f.getName();
         File dir = f.getParentFile();
-        f = findPage(dir, fName);
+        f = findFile(dir, fName);
+        if (filePath.startsWith("shared/") && f == null){
+        	dir = new File("com/macys/sdt/" + dir.getPath());
+        	f = findFile(dir, fName);
+        }
 
         if (f != null && f.exists() && !f.isDirectory()) {
             int fileCount = countFoundPage(dir, fName);
@@ -131,7 +147,7 @@ public class PageUtils {
     }
 
     // recursively checks all subdirectories for a file matching pageName
-    private static File findPage(File dir, String pageName) {
+    private static File findFile(File dir, String pageName) {
         File[] subDirs = dir.listFiles(File::isDirectory);
         File[] resources = dir.listFiles(File::isFile);
         if (resources != null) {
@@ -146,7 +162,7 @@ public class PageUtils {
         }
         File resource = null;
         for (File subDir : subDirs) {
-            resource = findPage(subDir, pageName);
+            resource = findFile(subDir, pageName);
             if (resource != null && resource.getName().equals(pageName)) {
                 break;
             }
@@ -178,12 +194,13 @@ public class PageUtils {
     }
 
     private static void loadPageJsonFiles(String pagePath, File file, String cache) {
+        String responsivePath = getResponsivePath(pagePath);
         if (cache.equals("project")) {
-            if (cachePagesProject.get(pagePath) != null) {
+            if (cachePagesProject.get(pagePath) != null || cachePagesProject.get(responsivePath) != null) {
                 return;
             }
         } else {
-            if (cachePagesShared.get(pagePath) != null) {
+            if (cachePagesShared.get(pagePath) != null || cachePagesShared.get(responsivePath) != null) {
                 return;
             }
         }
@@ -279,11 +296,22 @@ public class PageUtils {
 
     private static String findPageJSONValueInternal(String pagePath, String elementName, String cache) {
         String result = null;
-        JSONObject pageData;
+        String responsivePath = getResponsivePath(pagePath);
+        JSONObject pageData = null;
         if (cache.equals("project")) {
-            pageData = cachePagesProject.get(pagePath);
+            if (responsivePath.startsWith("responsive")) {
+                pageData = cachePagesProject.get(responsivePath);
+            }
+            if (pageData == null) {
+                pageData = cachePagesProject.get(pagePath);
+            }
         } else {
-            pageData = cachePagesShared.get(pagePath);
+            if (responsivePath.startsWith("responsive")) {
+                pageData = cachePagesShared.get(responsivePath);
+            }
+            if (pageData == null) {
+                pageData = cachePagesShared.get(pagePath);
+            }
         }
 
         try {
@@ -305,8 +333,8 @@ public class PageUtils {
         }
 
         if (includedDataFiles == null) {
-            // System.out.println("No value found for " + pageName + "." + elementName);
-            return result;
+            log.debug("No value found for " + pagePath + "." + elementName);
+            return null;
         }
 
         int count = includedDataFiles.length();
@@ -327,6 +355,6 @@ public class PageUtils {
             }
         }
         //System.out.println("No value found for " + pagePath + "." + elementName);
-        return result;
+        return null;
     }
 }

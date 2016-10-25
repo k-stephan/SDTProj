@@ -177,6 +177,16 @@ public class MainRunner {
      */
     public static void main(String[] argv) throws Throwable {
         getEnvVars();
+        String jarFile = null;
+        if (argv != null && argv.length > 0) {
+            // means we ran from command/maven, may need to extract resources from jar
+            for (String arg : argv) {
+                if (arg.endsWith(".jar")) {
+                    jarFile = arg;
+                    break;
+                }
+            }
+        }
 
         ArrayList<String> featureScenarios = getFeatureScenarios();
         if (featureScenarios == null) {
@@ -195,22 +205,24 @@ public class MainRunner {
 
         if (project == null) {
             String projectPath = featureScenarios.get(0).replace("/", ".").replace("\\", ".");
-            String[] parts = projectPath.split(Pattern.quote("."));
-            int sdtIndex = 0;
-            for (int i = 0; i < parts.length; i++) {
-                if (parts[i].equals("SDT")) {
-                    sdtIndex = i;
-                    break;
+            ArrayList<String> parts = new ArrayList<>(Arrays.asList((projectPath.split(Pattern.quote(".")))));
+            int index = parts.indexOf("SDT");
+            if (index == -1) {
+                index = parts.indexOf("features");
+                if (index == -1) {
+                    System.err.println("Unable to determine project by given environment variables. Please" +
+                            "add an environment variable \"project\" with project name in form \"domain.project\"");
+                    System.exit(-1);
                 }
-            }
-            if (sdtIndex != parts.length) {
-                project = parts[sdtIndex + 1] + "." +    // domain
-                        parts[sdtIndex + 2];             // project
+                project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
+            } else {
+                project = parts.get(index + 1) + "." + parts.get(index + 2);  // domain.project
             }
         }
-        if (project != null) {
-            System.out.println("-->Current project: " + project);
+        if (jarFile != null) {
+            Utils.extractResources(new File(workspace + jarFile), workspace, project.replace(".", "/"));
         }
+        System.out.println("-->Current project: " + project);
         System.out.println("-->Running with parameters:\n" + featureScenarios);
 
         // attempt to use workspace as relative path to feature file (if needed)
@@ -240,7 +252,7 @@ public class MainRunner {
         if (project != null) {
             featureScenarios.add("--glue");
             featureScenarios.add("com.macys.sdt.projects." + project);
-            projectDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project;
+            projectDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/");
         }
 
         featureScenarios.add("--glue");
@@ -270,7 +282,7 @@ public class MainRunner {
             runStatus = 1;
         } finally {
             close();
-            if (argv != null) {
+            if (argv == null || Utils.getCallFromFunction("main").isEmpty()) {
                 System.exit(runStatus);
             }
         }
@@ -706,6 +718,7 @@ public class MainRunner {
         if (curUrl.matches(".*?data.*?")) {
             return url;
         }
+        currentURL = curUrl;
 
         return curUrl;
     }

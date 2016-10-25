@@ -3,7 +3,7 @@ package com.macys.sdt.framework.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
-import com.macys.sdt.framework.resources.model.*;
+import com.macys.sdt.framework.model.*;
 import com.macys.sdt.framework.utils.rest.services.UserProfileService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;

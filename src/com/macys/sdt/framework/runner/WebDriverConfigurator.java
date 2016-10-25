@@ -50,9 +50,10 @@ public class WebDriverConfigurator {
             switch (MainRunner.browser) {
                 case "ie":
                     capabilities.setCapability("version", browserVersion);
-                    File file = new File(MainRunner.workspace + "src/com/macys/sdt/shared/resources/framework/selenium_drivers/IEDriverServer.exe");
+                    String path = "shared/resources/framework/selenium_drivers/IEDriverServer.exe";
+                    File file = new File(path);
                     if (!file.exists()) {
-                        file = new File(MainRunner.workspace + "com/macys/sdt/shared/resources/framework/selenium_drivers/IEDriverServer.exe");
+                        file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
                     }
                     System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
                     driver = new InternetExplorerDriver(capabilities);
@@ -78,9 +79,10 @@ public class WebDriverConfigurator {
                 default:
                     if (tagCollection) {
                         System.out.println("tag collection started");
-                        file = new File("src/com/macys/sdt/shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi");
+                        path = "shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
+                        file = new File(path);
                         if (!file.exists()) {
-                            file = new File("com/macys/sdt/shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi");
+                            file = new File("com/macys/sdt/" + path);
                         }
                         FirefoxProfile firefoxProfile = new FirefoxProfile();
                         try {
@@ -122,8 +124,12 @@ public class WebDriverConfigurator {
             if (Utils.isOSX()) {
                 fileName = "chromedriver";
             }
-            File file = new File(MainRunner.workspace + "shared/resources/framework/selenium_drivers/" + fileName);
-
+            String path = "shared/resources/framework/selenium_drivers/" + fileName;
+            File file = new File(MainRunner.workspace + path);
+            if (!file.exists()) {
+                file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+            }
+            
             System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
         }
     }

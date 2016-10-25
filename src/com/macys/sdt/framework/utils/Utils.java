@@ -36,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -64,6 +66,7 @@ public class Utils {
     private static File errFile = null;
     private static FileOutputStream errStream = null;
     public static PrintStream errLog = null;
+    public static Logger log = LoggerFactory.getLogger(Utils.class);
 
     /**
      * Executes a command on the command line (cmd for windows, else bash)
@@ -462,11 +465,11 @@ public class Utils {
                     trace.contains(from)) {
                 continue;
             }
-            if (displayEls.size() == size) {
-                break;
-            }
             if (trace.startsWith("com.macys.sdt.")) {
                 displayEls.add(trace);
+            }
+            if (displayEls.size() == size) {
+                break;
             }
             if (--count <= 0) {
                 break;
@@ -539,6 +542,20 @@ public class Utils {
 
         // shared data
         path = "shared/resources/data/" + full_path;
+        resource = new File(path);
+        if (resource.exists() && !resource.isDirectory()) {
+            return resource;
+        }
+        if (!resource.exists()) {
+            //fallback to website resources
+            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
+            if (resource.exists() && !resource.isDirectory()) {
+                return resource;
+            }
+        }
+
+        // shared data extracted from jar
+        path = "com/macys/sdt/shared/resources/data/" + full_path;
         resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
@@ -978,6 +995,18 @@ public class Utils {
         if (redirectCallCount == 0) {
             System.setErr(originalErr);
         }
+    }
+
+    public static void extractResources(File repoJar, String workspace, String project) throws IOException {
+        System.out.println("com/macys/sdt/framework/resources");
+        outputJarFile(repoJar, "com/macys/sdt/framework/resources", workspace + "/com/macys/sdt/framework/resources");
+        System.out.println("/com/macys/sdt/shared/resources");
+        outputJarFile(repoJar, "com/macys/sdt/shared/resources", workspace + "/com/macys/sdt/shared/resources");
+        System.out.println("/com/macys/sdt/projects");
+        outputJarFile(repoJar, "com/macys/sdt/projects", workspace + "/com/macys/sdt/projects", ".feature");
+        String projectResources = "com/macys/sdt/projects/" + project + "/resources";
+        System.out.println("/" + projectResources);
+        outputJarFile(repoJar, projectResources, workspace + "/" + projectResources);
     }
 
 

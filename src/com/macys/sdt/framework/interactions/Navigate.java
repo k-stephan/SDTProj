@@ -87,7 +87,7 @@ public class Navigate {
      */
     public static void runAfterNavigation() {
         afterNavigate.forEach(Runnable::run);
-        MainRunner.currentURL = MainRunner.getCurrentUrl();
+        MainRunner.getCurrentUrl();
     }
 
     /**

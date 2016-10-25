@@ -449,7 +449,7 @@ public abstract class StepUtils {
             Navigate.execJavascript("window.stop()");
             Utils.threadSleep(500, null);
             String res = Navigate.execJavascript("return document.readyState").toString();
-            return res != null && res.equals("complete") && Wait.ajaxInactive();
+            return res != null && res.equals("complete") && Wait.ajaxDone();
         } catch (Exception ex) {
             System.out.print(ex.getMessage());
         }

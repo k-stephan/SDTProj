@@ -52,7 +52,7 @@ public class DigitalAnalytics extends Analytics {
             tentries.add(e);
             hlastIds.put(tid, tentries);
             if (bcount) {
-                Integer count = (Integer) this.tag_histogram.get(tid);
+                Integer count = this.tag_histogram.get(tid);
                 if (count == null) {
                     count = 0;
                 }
@@ -77,7 +77,7 @@ public class DigitalAnalytics extends Analytics {
         }
     }
 
-    protected Map test() throws JsonSyntaxException, Exception {
+    protected Map test() throws Exception {
         HashMap hdiff = new HashMap();
         try {
             HashMap<String, List> hlgoldIds = getLastTagIds(getGoldStepHarEntries(), false);

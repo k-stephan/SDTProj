@@ -96,7 +96,7 @@ public abstract class Analytics {
                 Utils.writeSmallBinaryFile(new Gson().toJson(this.gold).getBytes(), fgold);
                 System.out.println("flushing recording as gold: " + fgold.getCanonicalPath());
             } else {
-                System.out.println("Scenario did not passed.  Skip gold recording.");
+                System.out.println("Scenario did not pass.  Skip gold recording.");
             }
             this.gold = null;
         } else {
@@ -151,8 +151,8 @@ public abstract class Analytics {
     }
 
     private Object compareElementClicks(String cval) {
-        Object res = null;
-        if (cval.isEmpty()) {
+        Object res;
+        if (cval == null || cval.isEmpty()) {
             return null;
         }
 

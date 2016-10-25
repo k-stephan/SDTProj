@@ -358,7 +358,7 @@ public class Wait {
                 if (StepUtils.safari()) {
                     Utils.threadSleep(100, null);
                 }
-                return ajaxInactive() && isPageLoaded();
+                return animationDone() && ajaxDone() && isPageLoaded();
             } catch (Exception e) {
                 // IE likes to throw a lot of garbage exceptions, don't bother printing them out
                 if (MainRunner.debugMode && !StepUtils.ie() && !StepUtils.safari()) {
@@ -368,6 +368,7 @@ public class Wait {
                 return false;
             }
         });
+
 
         if (pageName != null) {
             By verifyElement = Elements.element(pageName + ".verify_page");
@@ -382,12 +383,25 @@ public class Wait {
     }
 
     /**
+     * Checks if any JQuery animations are currently running
+     *
+     * @return true if an animation is running
+     */
+    public static boolean animationDone() {
+        if (StepUtils.safari()) {
+            return true;
+        }
+        Object done = Navigate.execJavascript("return $(\":animated\").length == 0;");
+        return done instanceof Boolean ? (Boolean)done : true;
+    }
+
+    /**
      * Checks if the document ready state is no longer loading
      *
      * @return true if page is loaded
      */
     public static boolean isPageLoaded() {
-        String state = (String) Navigate.execJavascript("return document.readyState");
+        String state = (String) Navigate.execJavascript("return document.readyState;");
         //System.out.print("." + ret);
         return state.matches("complete|loaded|interactive");
     }
@@ -397,7 +411,7 @@ public class Wait {
      *
      * @return true if no active ajax calls
      */
-    public static boolean ajaxInactive() {
+    public static boolean ajaxDone() {
         if (useAppium) {
             return true;
         }
@@ -417,10 +431,11 @@ public class Wait {
             }
             //System.out.print("." + queries + " AJAX");
 
-            // TEMPORARY - currently a bug in BCOM sign in & checkout that leaves AJAX calls hanging
-            if (StepUtils.bloomingdales()) {
-                MainRunner.currentURL = MainRunner.getCurrentUrl();
-                if (MainRunner.currentURL.contains("signin") || MainRunner.currentURL.contains("chkout") || MainRunner.currentURL.contains("profile")){
+            // TEMPORARY - currently a bug in BCOM sign in & checkout as well as MEW search that leaves AJAX calls hanging
+            if (StepUtils.bloomingdales() || StepUtils.MEW()) {
+                MainRunner.getCurrentUrl();
+                if (MainRunner.currentURL.matches(".*?(signin|chkout|profile).*?")
+                        || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop/search"))) {
                     return queries <= 1;
                 }
             }

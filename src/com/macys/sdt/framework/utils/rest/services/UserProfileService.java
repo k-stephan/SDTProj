@@ -2,9 +2,9 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.macys.sdt.framework.resources.model.ProfileAddress;
-import com.macys.sdt.framework.resources.model.User;
-import com.macys.sdt.framework.resources.model.UserProfile;
+import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.model.User;
+import com.macys.sdt.framework.model.UserProfile;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;

@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.rest.services;
 
-import com.macys.sdt.framework.resources.model.GiftCard;
+import com.macys.sdt.framework.model.GiftCard;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
