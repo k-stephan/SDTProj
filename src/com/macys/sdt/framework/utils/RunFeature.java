@@ -41,18 +41,10 @@ public class RunFeature {
         this.dumpEnvironmentVariables();
 
         System.out.println("\n\nPreparing workspace...");
-        System.out.println("com/macys/sdt/framework/resources");
-        Utils.outputJarFile(this.m_repo_jar, "com/macys/sdt/framework/resources", this.m_workspace + "/com/macys/sdt/framework/resources");
-        System.out.println("/com/macys/sdt/shared/resources");
-        Utils.outputJarFile(this.m_repo_jar, "com/macys/sdt/shared/resources", this.m_workspace + "/com/macys/sdt/shared/resources");
-        System.out.println("/com/macys/sdt/projects");
-        Utils.outputJarFile(this.m_repo_jar, "com/macys/sdt/projects", this.m_workspace + "/com/macys/sdt/projects", ".feature");
-        String projectResources = "com/macys/sdt/projects/" + System.getenv("sdt_project").trim().replace(".", "/") + "/resources";
-        System.out.println("/" + projectResources);
-        Utils.outputJarFile(this.m_repo_jar, projectResources, this.m_workspace + "/" + projectResources);
+        Utils.extractResources(this.m_repo_jar, this.m_workspace, System.getenv("sdt_project").trim().replace(".", "/"));
 
         if (MainRunner.scenarios != null) {
-            MainRunner.scenarios = MainRunner.scenarios.replaceAll("features/", "com/macys/sdt/projects/" + System.getenv("sdt_project").trim().replace(".", "/") + "/features/");
+            MainRunner.scenarios = MainRunner.scenarios.replaceAll("features/", System.getenv("sdt_project").trim().replace(".", "/") + "/features/");
         }
         System.out.println("\n\n.getAnalyticsGolds");
         getAnalyticsGolds();
@@ -149,7 +141,7 @@ public class RunFeature {
     }
 
     public void getAnalyticsGolds() {
-        String analytics = MainRunner.getExParams("analytics");
+        String analytics = MainRunner.getEnvOrExParam("analytics");
         if (analytics == null) {
             System.out.println("->non analytics run: skip analytics gold download.");
             return;

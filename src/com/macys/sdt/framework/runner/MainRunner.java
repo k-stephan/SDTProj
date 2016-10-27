@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.macys.sdt.framework.utils.StepUtils.*;
+import static com.macys.sdt.framework.utils.StepUtils.ie;
+import static com.macys.sdt.framework.utils.StepUtils.stopPageLoad;
 import static java.lang.Runtime.getRuntime;
 
 /**
@@ -38,22 +38,24 @@ public class MainRunner {
      */
     public static BrowserMobProxy browsermobServer = null;
     /**
-     * Will be true if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
+     * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
      */
-    public static boolean useSaucelabs;
+    public static boolean useSauceLabs;
     /**
      * Name of Sauce Connect tunnel to use
      */
-    public static String tunnelIdentifier = getExParams("tunnel_identifier");
+    public static String tunnelIdentifier = getEnvOrExParam("tunnel_identifier");
     /**
-     * Will be true if using chrome device emulation
+     * True if using chrome device emulation
      */
     public static boolean useChromeEmulation;
     /**
-     * Whether or not to use appium as set in "use_appium" env variable
+     * True if using appium to connect to a mobile device
      */
-    public static boolean useAppium = booleanExParam("use_appium");
-
+    public static boolean useAppium = booleanParam("use_appium");
+    /**
+     * True if testing a mobile application
+     */
     public static boolean appTest;
     /**
      * Contains OS to use when executing on sauce labs or os version for app as given in "remote_os" env variable
@@ -63,11 +65,11 @@ public class MainRunner {
      * You can use any version number that you want as long as you have an emulator or device with that OS version.
      * </p>
      */
-    public static String remoteOS;
+    public static String remoteOS = getEnvOrExParam("remote_os");
     /**
      * Workspace path as given in "WORKSPACE" env variable
      */
-    public static String workspace;
+    public static String workspace = getEnvVar("WORKSPACE");
     /**
      * Path to logging folder
      */
@@ -83,21 +85,21 @@ public class MainRunner {
     /**
      * Path to feature file to execute from
      */
-    public static String scenarios = getExParams("scenarios");
+    public static String scenarios = getEnvVar("scenarios");
     /**
      * Browser to use as given in "browser" env variable. Default firefox.
      */
-    public static String browser = "firefox";
+    public static String browser = getEnvVar("browser");
     /**
      * Version of browser to use as given in "browser_version" env variable
      */
-    public static String browserVersion = null;
+    public static String browserVersion = getEnvOrExParam("browser_version");
     /**
      * Analytics object
      */
     public static Analytics analytics;
     /**
-     * Whether to close browser after testing is complete. False if "DEBUG" env variable is present
+     * Whether to close browser or not after testing is complete. False if "DEBUG" env variable is true
      */
     public static Boolean closeBrowserAtExit = true;
     /**
@@ -105,17 +107,17 @@ public class MainRunner {
      */
     public static Boolean tagCollection = false;
     /**
-     * Whether to run on QA env in batch hmode in "batch_mode" env variable
+     * Whether to run on QA env in batch mode as given in "batch_mode" env variable
      */
-    public static Boolean batchMode = false;
+    public static Boolean batchMode = booleanParam("batch_mode");
     /**
      * URL to start at and use as a base as given in "website" env variable
      */
-    public static String url = "http://www.macys.com";
+    public static String url = getEnvVar("website");
     /**
      * Domain - MCOM or BCOM, only needed when resolving website with IP
      */
-    public static String brand;
+    public static String brand = getEnvOrExParam("brand");
     /**
      * Time the tests were started
      */
@@ -127,23 +129,25 @@ public class MainRunner {
     /**
      * Wait timeout as given in "timeout" env variable. Default 90 seconds (120 seconds for safari)
      */
-    public static int timeout;
+    public static int timeout = StepUtils.safari() ? 120 : 90;
     /**
      * Device in use as given by "device" env variable
      */
-    public static String device = getExParams("device");
+    public static String device = getEnvOrExParam("device");
     /**
      * List containing URL's that have been visited
      */
     public static ArrayList<String> URLStack = new ArrayList<>();
     /**
-     * Path to project currently being run
+     * Path to project currently being run optionally given by "sdt_project" env variable
      */
-    public static String project = null;
-
+    public static String project = getEnvVar("sdt_project");
+    /**
+     * Path to active project files on file system
+     */
     public static String projectDir = null;
     /**
-     * The current URL
+     * The current URL of the browser
      */
     public static String currentURL = "";
     /**
@@ -153,18 +157,20 @@ public class MainRunner {
     /**
      * Whether we're running in debug mode
      */
-    public static boolean debugMode = booleanExParam("debug");
+    public static boolean debugMode = booleanParam("debug");
     /**
      * The Sauce Labs username to use
      */
-    public static String sauceUser;
+    public static String sauceUser = getEnvOrExParam("sauce_user");
     /**
      * The Sauce Labs API key for the user
      */
-    public static String sauceKey;
+    public static String sauceKey = getEnvOrExParam("sauce_key");
 
     public static String browsermobServerHarTs = System.currentTimeMillis() + "";
 
+    protected static String appLocation = getEnvOrExParam("app_location");
+    private static String repoJar = getEnvOrExParam("repo_jar");
     private static WebDriver driver = null;
     private static long ieAuthenticationTs = System.currentTimeMillis() - 10000; // set authentication checking interval out of range
     //satish-macys:4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
@@ -178,42 +184,31 @@ public class MainRunner {
     public static void main(String[] argv) throws Throwable {
         getEnvVars();
 
+        if (repoJar != null) {
+            projectDir = project.replace(".", "/");
+            Utils.extractResources(new File(repoJar), workspace, projectDir);
+        } else {
+            projectDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/");
+        }
+
         ArrayList<String> featureScenarios = getFeatureScenarios();
         if (featureScenarios == null) {
             throw new Exception("Error getting scenarios");
         }
 
         // add any tags
-        String tags = getExParams("tags");
+        String tags = getEnvOrExParam("tags");
         if (tags != null) {
-            tags = tags.trim();
-            if (!tags.isEmpty()) {
-                featureScenarios.add("--tags");
-                featureScenarios.add(tags);
-            }
+            featureScenarios.add("--tags");
+            featureScenarios.add(tags);
         }
 
-        if (project == null) {
-            String projectPath = featureScenarios.get(0).replace("/", ".").replace("\\", ".");
-            ArrayList<String> parts = new ArrayList<>(Arrays.asList((projectPath.split(Pattern.quote(".")))));
-            int index = parts.indexOf("SDT");
-            if (index == -1) {
-                index = parts.indexOf("features");
-                if (index == -1) {
-                    System.err.println("Unable to determine project by given environment variables. Please" +
-                            "add an environment variable \"project\" with project name in form \"domain.project\"");
-                    System.exit(-1);
-                }
-                project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
-            } else {
-                project = parts.get(index + 1) + "." + parts.get(index + 2);  // domain.project
-            }
-        }
+
         System.out.println("-->Current project: " + project);
         System.out.println("-->Running with parameters:\n" + featureScenarios);
 
         // attempt to use workspace as relative path to feature file (if needed)
-        if (workspace != null && !workspace.isEmpty()) {
+        if (workspace != null) {
             for (int i = 0; i < featureScenarios.size(); i++) {
                 String value = featureScenarios.get(i);
                 if (value.equals("--tags")) {
@@ -239,7 +234,6 @@ public class MainRunner {
         if (project != null) {
             featureScenarios.add("--glue");
             featureScenarios.add("com.macys.sdt.projects." + project);
-            projectDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/");
         }
 
         featureScenarios.add("--glue");
@@ -251,7 +245,7 @@ public class MainRunner {
 
         System.out.println("-->Testing " + url + " using " +
                 (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
-                + (useSaucelabs ? " on Sauce Labs" : ""));
+                + (useSauceLabs ? " on Sauce Labs" : ""));
 
         driver = getWebDriver();
 
@@ -276,27 +270,33 @@ public class MainRunner {
     }
 
     private static void getEnvVars() {
-        workspace = getExParams("WORKSPACE");
         if (workspace == null) {
             workspace = ".";
         }
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
+
+        scenarios = scenarios.replace('\\', '/');
+
+        if (repoJar != null) {
+            if (!(new File(repoJar).exists())) {
+                if (!(new File(workspace + repoJar).exists())) {
+                    System.err.println("-->Warning: Could not find given repo jar. Attempting to run without.");
+                    repoJar = null;
+                } else {
+                    repoJar = workspace + repoJar;
+                }
+            }
+        }
         Utils.createDirectory(logs = workspace + "logs/", true);
         Utils.createDirectory(temp = workspace + "temp/", true);
 
-        url = getExParams("website");
-        brand = getExParams("brand");
-        remoteOS = getExParams("remote_os");
         if (remoteOS == null) {
-            System.out.println("Remote OS not specified.  Using default: Windows 7");
+            System.out.println("Remote OS not specified. Using default (Windows 7)");
             remoteOS = "Windows 7";
         }
-        browser = getExParams("browser") != null ? getExParams("browser") : browser;
-        browserVersion = getExParams("browser_version") != null ? getExParams("browser_version") : WebDriverConfigurator.defaultBrowserVersion();
-        timeout = StepUtils.safari() ? 120 : 90;
 
-        String analyticsClass = getExParams("analytics");
+        String analyticsClass = getEnvOrExParam("analytics");
         if (analyticsClass != null) {
             disableProxy = false;
             if (analyticsClass.equals("da")) {
@@ -308,43 +308,67 @@ public class MainRunner {
         }
 
         System.out.println("\n\n");
-        closeBrowserAtExit = !debugMode && !appTest;
 
         // tag_collection
-        tagCollection = booleanExParam("tag_collection");
+        tagCollection = booleanParam("tag_collection");
         if (tagCollection) {
             System.out.println("tag_collection is enabled");
         }
 
-        // batch mode run on QA environment. once QA env has batch_mode, it will enable all products available
-        batchMode = booleanExParam("batch_mode");
+        // batch mode run on QA environment. Batch mode causes all products to be available
         if (batchMode) {
             System.out.println("batch_mode is enabled");
         }
 
-        // use sauce labs
-        if (getExParams("saucelabs") != null) {
-            Assert.fail("This parameter is deprecated, please use sauce_user and sauce_key instead");
-        }
-        sauceUser = getExParams("sauce_user");
-        sauceKey = getExParams("sauce_key");
-        useSaucelabs = sauceUser != null && sauceKey != null;
-
+        useSauceLabs = sauceUser != null && sauceKey != null;
         useChromeEmulation = StepUtils.mobileDevice() && !useAppium;
 
-        String appLoc = getExParams("app_location");
-        appTest = useAppium && (appLoc != null && !appLoc.isEmpty());
+        appTest = useAppium && (appLocation != null);
 
+        closeBrowserAtExit = !debugMode && !appTest;
+        if (url == null && !appTest) {
+            Assert.fail("\"website\" variable required to test a website");
+        }
+        if (browser == null && !appTest) {
+            System.out.println("No browser given, using default (chrome)");
+            browser = "chrome";
+        }
+        if (browserVersion == null) {
+            browserVersion = WebDriverConfigurator.defaultBrowserVersion();
+        }
         // close the test browser at scenario exit
-        String envVal = getExParams("timeout");
+        String envVal = getEnvOrExParam("timeout");
         if (envVal != null) {
             timeout = Integer.parseInt(envVal);
         }
 
-        // set a project
-        envVal = getExParams("project");
-        if (envVal != null) {
-            project = envVal;
+        // get project from environment variables
+        if (project == null) {
+            getProject();
+        }
+    }
+
+    /**
+     * Retrieves project info either from "sdt_project" or "scenarios" env val if possible
+     */
+    private static void getProject() {
+        String projectPath = scenarios.replace("/", ".");
+        ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
+        int index = parts.indexOf("SDT");
+        if (index == -1) {
+            index = parts.indexOf("features");
+            if (index < 2) {
+                Assert.fail("Unable to determine project by given environment variables. Please" +
+                        "add an environment variable \"sdt_project\" (previously called \"project\") " +
+                        "with project name in format \"<domain>.<project>\"");
+            }
+            project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
+        } else {
+            project = parts.get(index + 1) + "." + parts.get(index + 2);  // domain.project
+        }
+        String[] check = project.split("\\.");
+        if (!(check.length == 2)) {
+            Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
         }
     }
 
@@ -464,16 +488,12 @@ public class MainRunner {
     }
 
     /**
-     * Retrieves an environment variable OR ex_param
+     * Retrieves a parameter value from "ex_params" environment variable
      *
-     * @param name name of parameter to retrieve
+     * @param name name of the parameter to retrieve
      * @return value of parameter or null if not found
      */
-    public static String getExParams(String name) {
-        String value = System.getenv(name);
-        if (value != null) {
-            return value.trim();
-        }
+    public static String getExParam(String name) {
         try {
             String exParams = URLDecoder.decode(System.getenv("ex_params"), "utf-8");
             if (exParams != null && !exParams.isEmpty()) {
@@ -511,13 +531,39 @@ public class MainRunner {
     }
 
     /**
+     * Retrieves an environment variable OR ex_param
+     *
+     * @param name name of parameter to retrieve
+     * @return value of parameter or null if not found
+     */
+    public static String getEnvOrExParam(String name) {
+        String val = getEnvVar(name);
+        return val != null ? val : getExParam(name);
+    }
+
+    /**
+     * Retrieves an environment variable
+     *
+     * @param name name of parameter to retrieve
+     * @return value of parameter or null if not found
+     */
+    public static String getEnvVar(String name) {
+        String value = System.getenv(name);
+        value = value == null ? null : value.trim();
+        if (value != null && !value.isEmpty()) {
+            return value;
+        }
+        return null;
+    }
+
+    /**
      * Matches an ex_param against t|true and converts it to a boolean
      *
      * @param name name of parameter
      * @return true if parameter exists and matches "t|true"
      */
-    public static boolean booleanExParam(String name) {
-        String param = getExParams(name);
+    public static boolean booleanParam(String name) {
+        String param = getEnvOrExParam(name);
         return param != null && param.matches("t|true");
     }
 
@@ -532,6 +578,9 @@ public class MainRunner {
             return scenarioList;
         }
         scenarios = scenarios.trim();
+        if (!scenarios.contains(project.replace('.', '/'))) {
+            scenarios = scenarios.replaceAll("features/", project.replace(".", "/") + "/features/");
+        }
         System.out.println("-> Parsing env scenarios:" + scenarios);
         String delimit = ".feature";
         int i = 0, end = scenarios.indexOf(delimit);
@@ -548,7 +597,7 @@ public class MainRunner {
 
         Collections.sort(scenarioList);
         ArrayList<Map> featureScenarios = null;
-        String workSpace = getExParams("WORKSPACE");
+        String workSpace = getEnvOrExParam("WORKSPACE");
         if (workSpace == null) {
             workSpace = "";
         }
@@ -655,7 +704,7 @@ public class MainRunner {
             DATagCollector.close();
         }
 
-        if (useSaucelabs) {
+        if (useSauceLabs) {
             if (driver instanceof RemoteWebDriver) {
                 System.out.println("Link to your job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
             }
@@ -680,7 +729,7 @@ public class MainRunner {
             }
         } catch (Exception e) {
             // skip error message on saucelab remote driver
-            if (!useSaucelabs) {
+            if (!useSauceLabs) {
                 System.err.println("Error closing driver. You may need to clean up execution machine. error: " + e);
             }
         }
@@ -721,7 +770,7 @@ public class MainRunner {
             long cs = System.currentTimeMillis();
             // check first 10 seconds only
             if (cs - ieAuthenticationTs < 10000) {
-                if (browser.equals("ie") && booleanExParam("require_authentication")) {
+                if (browser.equals("ie") && booleanParam("require_authentication")) {
                     // check IE window authentication popup
                     int exitValue = runIEMethod();
                     // IE authentication popup login successfully, no more checking for an hour
@@ -787,7 +836,7 @@ public class MainRunner {
 
         public AuthenticationDialog() {
             String osName = System.getProperty("os.name").toLowerCase();
-            if (getExParams("require_authentication") == null) {
+            if (getEnvOrExParam("require_authentication") == null) {
                 System.out.println("AuthenticationDialog not required");
                 return;
             }
@@ -795,7 +844,7 @@ public class MainRunner {
                     !(Utils.isWindows() && browser.equals("chrome")) &&
                     !(Utils.isOSX() && browser.equals("safari"))) {
                 System.out.println("AuthenticationDialog not required : "
-                        + getExParams("require_authentication")
+                        + getEnvOrExParam("require_authentication")
                         + " : " + osName
                         + " : " + browser);
                 return;

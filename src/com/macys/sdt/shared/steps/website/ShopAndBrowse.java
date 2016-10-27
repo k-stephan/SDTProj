@@ -237,7 +237,7 @@ public class ShopAndBrowse extends StepUtils {
 
     @When("^I select a \"([^\"]*)\" product$")
     public void I_select_a_product(String product) throws Throwable {
-        if (MainRunner.useSaucelabs)
+        if (MainRunner.useSauceLabs)
             Clicks.hover(By.xpath("//img[@title='" + product + "']"));
         Clicks.click(By.xpath("//img[@title='" + product + "']"));
     }

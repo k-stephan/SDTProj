@@ -184,15 +184,19 @@ public class Navigate {
                     pageURL += ".url";
                 }
                 // grab the first one on the list (if there are multiple)
-                String jsonURL = Elements.getValues(pageURL).get(0);
+                String jsonURL;
+                try {
+                    jsonURL= Elements.getValues(pageURL).get(0);
+                } catch (IndexOutOfBoundsException e) {
+                    jsonURL = "";
+                }
                 urlFromJSON = true;
 
                 if (givenURL == null) {
                     if (jsonURL == null) {
-                        Assert.fail("No URL is given");
-                    } else {
-                        givenURL = jsonURL;
+                        jsonURL = "";
                     }
+                    givenURL = jsonURL;
                 } else {
                     if (jsonURL != null) {
                         givenURL = givenURL + jsonURL;
@@ -208,7 +212,7 @@ public class Navigate {
 
             System.out.println("...Loading " + givenURL);
             // start checking IE windows authentication popup
-            if (StepUtils.ie() && MainRunner.booleanExParam("require_authentication")) {
+            if (StepUtils.ie() && MainRunner.booleanParam("require_authentication")) {
                 MainRunner.authenticationIeInit();
             }
             //Utils.ThreadWatchDog twd = new Utils.ThreadWatchDog(null, 60000, "ThreadWatchDog:visit(" + link + ")", () -> stopPageLoad());

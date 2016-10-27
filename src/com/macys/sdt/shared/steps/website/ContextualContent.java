@@ -474,9 +474,13 @@ public class ContextualContent extends StepUtils {
                             for (Map data : dbData)
                                 for (Object type : ((List) data.get("mediaInfo")))
                                     mediGridNames.add(((Map)type).get("mediaName").toString());
-                            for (Map data : uiData)
-                                uiMediGridNames.add(((List)((Map) data.get("mediaInfo")).get("thumbnailGridExists")).get(0).toString());
                             boolean dataFound = false;
+                            for (Map data : uiData)  {
+                                if(((Map)data.get("mediaInfo")).get("thumbnailGridExists").getClass().equals(Boolean.class))
+                                    dataFound = ((Boolean)((Map)data.get("mediaInfo")).get("thumbnailGridExists")).booleanValue();
+                                else
+                                    uiMediGridNames.add(((List)((Map) data.get("mediaInfo")).get("thumbnailGridExists")).get(0).toString());
+                            }
                             for (String grid : uiMediGridNames)
                                 if (mediGridNames.contains(grid))
                                     dataFound = true;

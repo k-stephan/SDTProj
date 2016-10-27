@@ -85,7 +85,8 @@ public class Checkout extends StepUtils {
                 if (!Elements.elementPresent(page + ".submit_order_button")) {
                     ishipCheckout("order review", opts);
                 }
-                switchToFrame("ishipCheckout.shipping_iFrame");
+                switchToFrame("default");
+                switchToFrame(page + ".shipping_iFrame");
                 if (prodEnv()) {
                     System.out.println("Cannot place orders on prod!!!");
                 } else {
@@ -106,8 +107,8 @@ public class Checkout extends StepUtils {
         CreditCard visaCard = TestUsers.getValidVisaCreditCard();
 
         TextBoxes.typeTextbox(page + ".card_number", visaCard.getCardNumber());
-        DropDowns.selectByText(page + ".expiry_month",
-                visaCard.getExpiryMonthIndex() + (responsive || iship ? "" : " - " + visaCard.getExpiryMonth()));
+        DropDowns.selectByText(page + ".expiry_month", (bloomingdales() && iship) ? visaCard.getExpiryMonthIndex().replaceFirst("^0","") :
+                (visaCard.getExpiryMonthIndex() + (responsive || iship ? "" : " - " + visaCard.getExpiryMonth())));
 
         DropDowns.selectByText(page + ".expiry_year", visaCard.getExpiryYear());
 

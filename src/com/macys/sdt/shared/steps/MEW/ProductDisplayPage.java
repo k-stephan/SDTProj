@@ -96,7 +96,14 @@ public class ProductDisplayPage extends StepUtils {
                 if (ProductDisplay.addedToBag())
                     return;
             } catch (IllegalArgumentException | NoSuchElementException e) {
+                if (MainRunner.debugMode)   {
+                    e.printStackTrace();
+                }
                 System.out.println("Failed to add product to bag, trying again. " + (4 - count) + " tries remaining.");
+            } catch (Exception e)   {
+                if (MainRunner.debugMode)   {
+                    e.printStackTrace();
+                }
             }
             Navigate.browserRefresh();
             closePopup();

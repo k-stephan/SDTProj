@@ -62,10 +62,15 @@ public class Utils {
 
     // use these to redirect unneeded error output
     private static PrintStream originalErr = System.err;
-    private static int redirectCallCount = 0;
+    private static PrintStream originalInfo = System.out;
+    private static int errRedirectCalls = 0;
+    private static int infoRedirectCalls = 0;
     private static File errFile = null;
+    private static File infoFile = null;
     private static FileOutputStream errStream = null;
+    private static FileOutputStream infoStream = null;
     public static PrintStream errLog = null;
+    public static PrintStream infoLog = null;
     public static Logger log = LoggerFactory.getLogger(Utils.class);
 
     /**
@@ -465,11 +470,11 @@ public class Utils {
                     trace.contains(from)) {
                 continue;
             }
-            if (displayEls.size() == size) {
-                break;
-            }
             if (trace.startsWith("com.macys.sdt.")) {
                 displayEls.add(trace);
+            }
+            if (displayEls.size() == size) {
+                break;
             }
             if (--count <= 0) {
                 break;
@@ -719,6 +724,22 @@ public class Utils {
         return false;
     }
 
+    private static boolean resourcesExctracted = false;
+    public static void extractResources(File repoJar, String workspace, String project) throws IOException {
+        if (resourcesExctracted) {
+            return;
+        }
+        redirectSOut();
+        System.out.println("com/macys/sdt/framework/resources");
+        outputJarFile(repoJar, "com/macys/sdt/framework/resources", workspace + "/com/macys/sdt/framework/resources");
+        System.out.println("/com/macys/sdt/shared/resources");
+        outputJarFile(repoJar, "com/macys/sdt/shared/resources", workspace + "/com/macys/sdt/shared/resources");
+        System.out.println("/com/macys/sdt/projects");
+        outputJarFile(repoJar, "com/macys/sdt/projects/" + project, workspace + "/" + project, "/resources", "/features");
+        resetSOut();
+        resourcesExctracted = true;
+    }
+
     protected static boolean outputJarFile(File ar, String tarFilePath, String outputPath, String... fileFilters) throws IOException {
         try (
                 FileInputStream fin = new FileInputStream(ar);
@@ -955,11 +976,48 @@ public class Utils {
         if (errStream == null) {
             try {
                 errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
+                infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");
                 errStream = new FileOutputStream(errFile);
+                infoStream = new FileOutputStream(infoFile);
                 errLog = new PrintStream(errStream);
+                infoLog = new PrintStream(infoStream);
             } catch (FileNotFoundException e) {
                 System.err.println("File not found: " + errFile);
             }
+        }
+    }
+
+    /**
+     * Redirects System.out prints to the log files to avoid console clutter
+     * <p>
+     *     Maintains a call count with resetSOut so redirects/resets below
+     *     each other don't mess each other up.
+     * </p>
+     */
+    public static void redirectSOut() {
+        if (infoLog == null) {
+            initRedirect();
+        }
+        if (infoLog != null) {
+            System.setOut(infoLog);
+            infoRedirectCalls++;
+        }
+    }
+
+    /**
+     * Sets System.Out back to the console
+     * <p>
+     *     Maintains a call count with redirectSOut so redirects/resets below
+     *     each other don't mess each other up.
+     * </p>
+     */
+    public static void resetSOut() {
+        infoRedirectCalls--;
+        if (infoRedirectCalls < 0) {
+            infoRedirectCalls = 0;
+        }
+        if (infoRedirectCalls == 0) {
+            System.setOut(originalInfo);
         }
     }
 
@@ -976,7 +1034,7 @@ public class Utils {
         }
         if (errLog != null) {
             System.setErr(errLog);
-            redirectCallCount++;
+            errRedirectCalls++;
         }
     }
 
@@ -988,11 +1046,11 @@ public class Utils {
      * </p>
      */
     public static void resetSErr() {
-        redirectCallCount--;
-        if (redirectCallCount < 0) {
-            redirectCallCount = 0;
+        errRedirectCalls--;
+        if (errRedirectCalls < 0) {
+            errRedirectCalls = 0;
         }
-        if (redirectCallCount == 0) {
+        if (errRedirectCalls == 0) {
             System.setErr(originalErr);
         }
     }

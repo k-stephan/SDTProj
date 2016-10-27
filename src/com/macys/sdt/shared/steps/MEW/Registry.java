@@ -362,18 +362,36 @@ public class Registry extends StepUtils {
 
     @And("^I add product to bag from GVR page using mobile website and select checkout$")
     public void iAddProductToBagFromGVRPageUsingMobileWebsite() throws Throwable {
-        I_navigate_to_wedding_registry_page();
+        if (macys()) {
+            I_navigate_to_wedding_registry_page();
+        } else {
+            GlobalNav.openGlobalNav();
+            GlobalNav.navigateOnGnByName("The Registry");
+            GlobalNav.navigateOnGnByName("Find");
+            GlobalNav.closeGlobalNav();
+        }
+
         i_search_for_the_existing_couple_s_registry();
-        i_should_find_the_couple_s_registry();
-        String capturedName = regUser.getUser().getProfileAddress().getFirstName() + " " +
+        String registrantName = regUser.getUser().getProfileAddress().getFirstName() + " " +
                 regUser.getUser().getProfileAddress().getLastName();
-        for (WebElement result : Elements.findElements("registry_search.registrant_name")) {
-            if (result.getText().equalsIgnoreCase(capturedName)) {
-                Clicks.click(result);
+        String coRegistrantName = regUser.getRegistry().getCoRegistrantFirstName() + " " +
+                regUser.getRegistry().getCoRegistrantLastName();
+        List<WebElement> registrantNamesUI = Elements.findElements("registry_search.registrant_name");
+        List<WebElement> coRegistrantNamesUI = Elements.findElements("registry_search.co_registrant_name");
+        for (int i = 0; i < registrantNamesUI.size(); i++) {
+            if (registrantNamesUI.get(i).getText().equalsIgnoreCase(registrantName) &&
+                    coRegistrantNamesUI.get(i).getText().equalsIgnoreCase(coRegistrantName)) {
+                Clicks.click(registrantNamesUI.get(i));
                 break;
             }
         }
         shouldBeOnPage("registry_gvr");
+
+        if (bloomingdales()) {
+            Clicks.click("registry_gvr.category_header");
+            Wait.untilElementPresent("registry_gvr.quantity");
+            DropDowns.selectByText("registry_gvr.quantity", "1");
+        }
         Wait.untilElementPresent("registry_gvr.add_to_bag");
         Clicks.click("registry_gvr.add_to_bag");
         Wait.untilElementPresent("registry_gvr.atb_checkout");

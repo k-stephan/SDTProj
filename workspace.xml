@@ -6,11 +6,11 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
 	<property name="build" value="classes"/>
-	<property name="dist" value="dist"/>
+	<property name="dist" value="dist2"/>
 	<property name="javadoc" value="javadoc/"/>
 	
 	<!-- version major.minor.build major and minor should be set manually, build is auto increment by EE test -->
-	<property name="version" value="0.0.3526"/>
+	<property name="version" value="0.0.3594"/>
 	<property name="jarName" value="sdt-framework-${version}.jar"/>
 	<property name="srcJarName" value="sdt-framework-${version}-sources.jar"/>
 	<property name="docJarName" value="sdt-framework-${version}-javadoc.jar"/>
@@ -49,7 +49,6 @@
 			<classpath refid="compile_classpath"/>
 			<src path="${src}" />
 			<exclude name="com/macys/sdt/projects/**" />
-			<exclude name="com/macys/sdt/shared/**" />
 		</javac>
 	</target>
 
@@ -62,8 +61,8 @@
 				doctitle="SDT Framework" >
 			<fileset dir="${src}" defaultexcludes="yes">
 				<include name="com/macys/sdt/framework/**/*.java"/>
+				<include name="com/macys/sdt/shared/**/*.java" />
 				<exclude name="com/macys/sdt/projects/**" />
-				<exclude name="com/macys/sdt/shared/**" />
 			</fileset>
 		</javadoc>
 		<!-- javadoc.jar -->
@@ -83,7 +82,7 @@
 		<jar destfile="${dist}/${srcJarName}">
 			<fileset dir="${src}"
 					 includes="**/*.java"
-					 excludes="**/*.json com/macys/sdt/shared/** com/macys/sdt/projects/**"
+					 excludes="com/macys/sdt/projects/**"
 					/>
 		</jar>
 	</target>
@@ -111,7 +110,6 @@
 			<classpath refid="master-classpath"/>
 			<src path="${src}" />
 			<exclude name="com/macys/sdt/projects/**" />
-			<exclude name="com/macys/sdt/shared/**" />
 		</javac>
 
 		<copy todir="${build}">

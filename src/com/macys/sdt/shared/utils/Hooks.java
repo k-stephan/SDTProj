@@ -17,13 +17,12 @@ import org.junit.Assert;
 
 import java.util.Map;
 
-import static com.macys.sdt.framework.runner.MainRunner.getIOSDriver;
 import static com.macys.sdt.framework.utils.ScenarioHelper.*;
 
 public class Hooks extends StepUtils {
 
     private SingletonScenario singletonScenario;
-    private boolean keepBrowser = MainRunner.booleanExParam("keep_browser");
+    private boolean keepBrowser = MainRunner.booleanParam("keep_browser");
     private long scenarioStartTime;
     private long stepStartTime;
     private boolean scenarioSetupComplete = false;

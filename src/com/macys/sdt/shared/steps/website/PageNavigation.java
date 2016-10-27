@@ -17,8 +17,6 @@ import cucumber.api.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Random;
 
@@ -30,13 +28,6 @@ public class PageNavigation extends StepUtils {
 
     @Given("^I visit the web site as a guest user$")
     public void I_visit_the_web_site_as_a_guest_user() throws Throwable {
-        ClassLoader cl = ClassLoader.getSystemClassLoader();
-
-        URL[] urls = ((URLClassLoader)cl).getURLs();
-
-        for(URL url: urls){
-            System.out.println(url.getFile());
-        }
         Navigate.visit("home");
         MyAccountSteps.iClearAllTheCookies();
         Clicks.clickIfPresent("home.popup_close");

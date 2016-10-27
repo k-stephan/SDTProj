@@ -50,7 +50,7 @@ public abstract class StepUtils {
      * @return true if using chrome
      */
     public static boolean chrome() {
-        return MainRunner.browser.equals("chrome");
+        return MainRunner.browser.equalsIgnoreCase("chrome");
     }
 
     /**
@@ -59,7 +59,7 @@ public abstract class StepUtils {
      * @return true if using firefox
      */
     public static boolean firefox() {
-        return MainRunner.browser.equals("firefox");
+        return MainRunner.browser.equalsIgnoreCase("firefox");
     }
 
     /**
@@ -68,7 +68,7 @@ public abstract class StepUtils {
      * @return true if using Internet Explorer
      */
     public static boolean ie() {
-        return MainRunner.browser.equals("ie");
+        return MainRunner.browser.equalsIgnoreCase("ie");
     }
 
     /**
@@ -77,7 +77,7 @@ public abstract class StepUtils {
      * @return true if using safari
      */
     public static boolean safari() {
-        return MainRunner.browser.equals("safari");
+        return MainRunner.browser.equalsIgnoreCase("safari");
     }
 
     /**
@@ -86,7 +86,7 @@ public abstract class StepUtils {
      * @return true if using edge browser
      */
     public static boolean edge() {
-        return MainRunner.browser.equals("edge");
+        return MainRunner.browser.equalsIgnoreCase("edge");
     }
 
     /**
@@ -618,7 +618,7 @@ public abstract class StepUtils {
         public SingletonScenario(Scenario scenario) throws Exception {
             this.scenario = scenario;
             this.lockName = this.scenario.getName();
-            if (MainRunner.useSaucelabs || firefox() ||
+            if (MainRunner.useSauceLabs || firefox() ||
                     !this.scenario.getSourceTagNames().contains(TAG_SINGLETON)) {
                 return;
             }

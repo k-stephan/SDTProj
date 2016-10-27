@@ -40,13 +40,13 @@ public class WebDriverConfigurator {
         if (capabilities == null) {
             capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initCapabilities();
         }
-        if (useChromeEmulation && !useSaucelabs) {
+        if (useChromeEmulation && !useSauceLabs) {
             if (MainRunner.device.equalsIgnoreCase("firefoxbrowser")) {
                 return new FirefoxDriver(capabilities);
             } else {
                 return new ChromeDriver(capabilities);
             }
-        } else if (!useAppium && !useSaucelabs) {
+        } else if (!useAppium && !useSauceLabs) {
             switch (MainRunner.browser) {
                 case "ie":
                     capabilities.setCapability("version", browserVersion);
@@ -100,7 +100,7 @@ public class WebDriverConfigurator {
             }
         }
 
-        if (useSaucelabs) {
+        if (useSauceLabs) {
             driver = initSauceLabs(capabilities);
         } else if (useAppium) {
             driver = createAppiumDevice(capabilities);
@@ -189,7 +189,7 @@ public class WebDriverConfigurator {
     private static DesiredCapabilities setupDevice() {
         DesiredCapabilities caps;
         // sauce requires device or emulator to be specified in device name
-        if (useSaucelabs && !(device.endsWith(" device") || device.endsWith(" emulator"))) {
+        if (useSauceLabs && !(device.endsWith(" device") || device.endsWith(" emulator"))) {
             device += " emulator";
         }
         if (StepUtils.iOS()) {
@@ -274,7 +274,7 @@ public class WebDriverConfigurator {
                 capabilities.setCapability("version", browserVersion);
                 capabilities.setCapability("idleTimeout", 240);
             }
-            capabilities.setCapability("tags", getExParams("tags"));
+            capabilities.setCapability("tags", getEnvOrExParam("tags"));
             capabilities.setCapability("name", (StepUtils.macys() ? "Macy's" : "Bloomingdales") +
                     " SDT " + (project != null ? project : "") + " test");
             capabilities.setCapability("maxDuration", 3600);
@@ -320,21 +320,21 @@ public class WebDriverConfigurator {
 
     private static WebDriver createAppiumDevice(DesiredCapabilities capabilities) {
         if (appTest) {
-            capabilities.setCapability(MobileCapabilityType.APP, getExParams("app_location"));
+            capabilities.setCapability(MobileCapabilityType.APP, MainRunner.appLocation);
             capabilities.setCapability("BROWSER_NAME", StepUtils.iOS() ? "IOS" : "Android");
         } else {
             capabilities.setCapability("BROWSER_NAME", MainRunner.browser);
         }
-        capabilities.setCapability("appiumVersion", "1.5.2");
+        capabilities.setCapability("appiumVersion", "1.6");
         if (appTest) {
             capabilities.setCapability(MobileCapabilityType.NO_RESET, true);
         }
         try {
             URL url;
-            if (useSaucelabs) {
+            if (useSauceLabs) {
                 url = new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub");
             } else {
-                String appiumURL = getExParams("appium_server");
+                String appiumURL = getEnvOrExParam("appium_server");
                 appiumURL = appiumURL == null ? "http://127.0.0.1" : appiumURL;
                 if (!appiumURL.startsWith("http://")) {
                     appiumURL = "http://" + appiumURL;
@@ -363,8 +363,6 @@ public class WebDriverConfigurator {
         switch (MainRunner.browser) {
             case "ie":
                 return "11.0";
-            case "chrome":
-                return "52.0";
             case "edge":
                 return "20.10240";
             case "safari":
@@ -383,9 +381,9 @@ public class WebDriverConfigurator {
                     version = "0";
                 }
                 return version;
+            case "chrome":
             default:
-                // assume firefox
-                return "45.0";
+                return "54.0";
         }
     }
 
