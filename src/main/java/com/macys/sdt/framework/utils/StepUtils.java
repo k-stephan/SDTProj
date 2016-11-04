@@ -315,6 +315,7 @@ public abstract class StepUtils {
         }
 
         ArrayList<String> expectedURLs = Elements.getValues(name + ".url");
+        expectedURLs.addAll(Elements.getValues(name + ".verify_url"));
 
         String currentURL = MainRunner.getCurrentUrl();
         if (MainRunner.debugMode) {

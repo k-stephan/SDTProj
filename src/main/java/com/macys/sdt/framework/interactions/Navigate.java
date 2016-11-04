@@ -9,6 +9,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 import java.util.ArrayList;
+import java.util.MissingFormatArgumentException;
 
 /**
  * A collection of ways to navigate between pages and handle navigation
@@ -164,8 +165,9 @@ public class Navigate {
      * </p>
      *
      * @param pageURL either valid url or JSON page file name
+     * @param urlFormatParams if JSON page url present as format string, these parameters must be given
      */
-    public static void visit(String pageURL) {
+    public static void visit(String pageURL, Object... urlFormatParams) {
         runBeforeNavigation();
         boolean urlFromJSON = false;
         if (pageURL == null) {
@@ -196,10 +198,10 @@ public class Navigate {
                     if (jsonURL == null) {
                         jsonURL = "";
                     }
-                    givenURL = jsonURL;
+                    givenURL = formatJsonURL(jsonURL, urlFormatParams);
                 } else {
                     if (jsonURL != null) {
-                        givenURL = givenURL + jsonURL;
+                        givenURL += formatJsonURL(jsonURL, urlFormatParams);
                     }
                 }
             } else {
@@ -229,6 +231,14 @@ public class Navigate {
             }
         }
         runAfterNavigation();
+    }
+
+    private static String formatJsonURL(String jsonURL, Object... urlFormatParams) {
+        try {
+            return String.format(jsonURL, urlFormatParams);
+        } catch (MissingFormatArgumentException e) {
+            throw new RuntimeException("Not enough url format arguments provided for string: " + jsonURL, e);
+        }
     }
 
     private static String getPageSource() {
