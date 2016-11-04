@@ -169,7 +169,7 @@ public class Navigate {
      */
     public static void visit(String pageURL, Object... urlFormatParams) {
         runBeforeNavigation();
-        boolean format = urlFormatParams != null || urlFormatParams.length > 0;
+        boolean format = urlFormatParams != null && urlFormatParams.length > 0;
         boolean urlFromJSON = false;
         if (pageURL == null) {
             return;
