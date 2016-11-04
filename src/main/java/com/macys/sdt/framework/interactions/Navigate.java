@@ -169,6 +169,7 @@ public class Navigate {
      */
     public static void visit(String pageURL, Object... urlFormatParams) {
         runBeforeNavigation();
+        boolean format = urlFormatParams == null || urlFormatParams.length == 0;
         boolean urlFromJSON = false;
         if (pageURL == null) {
             return;
@@ -183,7 +184,11 @@ public class Navigate {
 
             if (!pageURL.startsWith("http")) {
                 if (!(pageURL.matches(".*\\.url$"))) {
-                    pageURL += ".url";
+                    if (format) {
+                        pageURL += ".format_url";
+                    } else {
+                        pageURL += ".url";
+                    }
                 }
                 // grab the first one on the list (if there are multiple)
                 String jsonURL;
@@ -198,10 +203,10 @@ public class Navigate {
                     if (jsonURL == null) {
                         jsonURL = "";
                     }
-                    givenURL = formatJsonURL(jsonURL, urlFormatParams);
+                    givenURL = format ? formatJsonURL(jsonURL, urlFormatParams) : jsonURL;
                 } else {
                     if (jsonURL != null) {
-                        givenURL += formatJsonURL(jsonURL, urlFormatParams);
+                        givenURL += format ? formatJsonURL(jsonURL, urlFormatParams) : jsonURL;
                     }
                 }
             } else {
