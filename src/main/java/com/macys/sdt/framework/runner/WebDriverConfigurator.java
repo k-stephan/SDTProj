@@ -54,6 +54,8 @@ public class WebDriverConfigurator {
                     File file = new File(path);
                     if (!file.exists()) {
                         file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+                        if (!file.exists() && Utils.isWindows())
+                        	file = new File(System.getenv("HOME") + "/IEDriverServer.exe");
                     }
                     System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
                     driver = new InternetExplorerDriver(capabilities);
@@ -77,6 +79,8 @@ public class WebDriverConfigurator {
                     driver = new EdgeDriver(capabilities);
                     break;
                 default:
+                    FirefoxProfile firefoxProfile = new FirefoxProfile();
+                    ArrayList<File> extensions = new ArrayList<>();
                     if (tagCollection) {
                         System.out.println("tag collection started");
                         path = "shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
@@ -84,18 +88,29 @@ public class WebDriverConfigurator {
                         if (!file.exists()) {
                             file = new File("com/macys/sdt/" + path);
                         }
-                        FirefoxProfile firefoxProfile = new FirefoxProfile();
+                        extensions.add(file);
+                    }
+                    String envExtensions = MainRunner.getEnvOrExParam("firefox_extensions");
+                    if (envExtensions != null) {
+                        String[] extensionSplit = envExtensions.split(" ");
+                        for (String s : extensionSplit) {
+                            File f = new File(s);
+                            if (f.exists()) {
+                                extensions.add(f);
+                            }
+                        }
+                    }
+                    for (File f : extensions) {
                         try {
-                            firefoxProfile.addExtension(file);
-                            capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+                            firefoxProfile.addExtension(f);
                         } catch (Exception e) {
                             e.printStackTrace();
                             Assert.fail("Cannot load extension");
                         }
-                        driver = new FirefoxDriver(capabilities);
-                    } else {
-                        driver = new FirefoxDriver(capabilities);
                     }
+                    capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+
+                    driver = new FirefoxDriver(capabilities);
                     break;
             }
         }
@@ -128,6 +143,8 @@ public class WebDriverConfigurator {
             File file = new File(MainRunner.workspace + path);
             if (!file.exists()) {
                 file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+                if (!file.exists() && Utils.isWindows())
+                	file = new File(System.getenv("HOME") + "/" + fileName);
             }
             
             System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
