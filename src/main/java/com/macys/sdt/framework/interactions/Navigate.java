@@ -4,7 +4,6 @@ package com.macys.sdt.framework.interactions;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
-import org.junit.Assert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 

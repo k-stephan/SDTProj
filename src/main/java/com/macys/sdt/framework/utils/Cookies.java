@@ -177,7 +177,7 @@ public class Cookies {
             expiry = calendar.getTime();
         }
         try {
-            Navigate.execJavascript("document.cookie = '" + name + "=" + encodedValue + "; path=" + path + "; expires=" + expiry.toGMTString() + "; domain=" + domain + "'");
+            Navigate.execJavascript("document.cookie = '" + name + "=" + encodedValue + "; path=" + path + "; expires=" + expiry.toString() + "; domain=" + domain + "'");
             return true;
         } catch (Exception e) {
             return false;
