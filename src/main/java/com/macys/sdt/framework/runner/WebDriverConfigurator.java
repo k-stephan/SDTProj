@@ -110,7 +110,12 @@ public class WebDriverConfigurator {
                     }
                     capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
 
-                    driver = new FirefoxDriver(capabilities);
+                    try {
+                        driver = new FirefoxDriver(capabilities);
+                    } catch (IllegalStateException e) {
+                        capabilities.setCapability("marionette", false);
+                        driver = new FirefoxDriver(capabilities);
+                    }
                     break;
             }
         }

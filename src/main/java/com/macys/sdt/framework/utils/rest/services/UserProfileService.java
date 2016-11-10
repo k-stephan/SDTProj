@@ -34,7 +34,7 @@ public class UserProfileService {
      */
     public static UserProfile createUserProfile(String userProfileDetailInJson) {
         try {
-            Response response = RESTOperations.doPOST(RESTEndPoints.CREATE_USER_PROFILE, MediaType.APPLICATION_JSON, userProfileDetailInJson);
+            Response response = RESTOperations.doPOST(RESTEndPoints.CREATE_USER_PROFILE, MediaType.APPLICATION_JSON, userProfileDetailInJson, null);
             System.out.println("response : " + response);
             Assert.assertEquals(response.getStatus(), 201);
             LOGGER.info("User profile created successfully");
