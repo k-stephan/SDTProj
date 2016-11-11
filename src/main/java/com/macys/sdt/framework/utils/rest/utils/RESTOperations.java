@@ -28,8 +28,6 @@ public class RESTOperations {
             response = webTarget.request(mediaType).post(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
@@ -39,7 +37,7 @@ public class RESTOperations {
      *
      * @param resource       : REST uri
      * @param mediaType      : media type (eg: application/json)
-     * @param headers        : headers
+     * @param headers        : headers (put null if no data)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response
      */
@@ -58,8 +56,6 @@ public class RESTOperations {
             response = requestBuilder.post(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
@@ -79,8 +75,6 @@ public class RESTOperations {
             response = webTarget.request().get();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
@@ -89,7 +83,7 @@ public class RESTOperations {
      * GET operation
      *
      * @param resource : REST uri
-     * @param headers  : headers
+     * @param headers  : headers (put null if no data)
      * @return REST response
      */
     public static Response doGET(String resource, Map<String, String> headers) {
@@ -106,8 +100,6 @@ public class RESTOperations {
             response = requestBuilder.get();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
@@ -127,8 +119,6 @@ public class RESTOperations {
             response = webTarget.request().delete();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
@@ -137,7 +127,7 @@ public class RESTOperations {
      * DELETE operation
      *
      * @param resource : REST uri
-     * @param headers  : headers
+     * @param headers  : headers (put null if no data)
      * @return REST response
      */
     public static Response doDELETE(String resource, Map<String, String> headers) {
@@ -154,8 +144,6 @@ public class RESTOperations {
             response = requestBuilder.delete();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
@@ -178,8 +166,6 @@ public class RESTOperations {
             response = webTarget.request(mediaType).put(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
@@ -189,7 +175,7 @@ public class RESTOperations {
      *
      * @param resource       : REST uri
      * @param mediaType      : media type (eg: application/json)
-     * @param headers        : headers
+     * @param headers        : headers (put null if no data)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response
      */
@@ -208,8 +194,6 @@ public class RESTOperations {
             response = requestBuilder.put(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            client.close();
         }
         return response;
     }
