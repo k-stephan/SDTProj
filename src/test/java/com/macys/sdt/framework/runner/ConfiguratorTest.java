@@ -13,7 +13,7 @@ public class ConfiguratorTest {
         final String FF = "firefox";
 
         MainRunner.browser = FF;
-        DesiredCapabilities caps = WebDriverConfigurator.initCapabilities();
+        DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
 
         Assert.assertEquals(caps.getBrowserName(), FF);
 

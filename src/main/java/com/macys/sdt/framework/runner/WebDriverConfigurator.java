@@ -36,94 +36,17 @@ import static com.macys.sdt.framework.runner.MainRunner.*;
 public class WebDriverConfigurator {
 
     public static WebDriver initDriver(DesiredCapabilities capabilities) {
-        WebDriver driver = null;
         if (capabilities == null) {
-            capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initCapabilities();
-        }
-        if (useChromeEmulation && !useSauceLabs) {
-            if (MainRunner.device.equalsIgnoreCase("firefoxbrowser")) {
-                return new FirefoxDriver(capabilities);
-            } else {
-                return new ChromeDriver(capabilities);
-            }
-        } else if (!useAppium && !useSauceLabs) {
-            switch (MainRunner.browser) {
-                case "ie":
-                    capabilities.setCapability("version", browserVersion);
-                    String path = "shared/resources/framework/selenium_drivers/IEDriverServer.exe";
-                    File file = new File(path);
-                    if (!file.exists()) {
-                        file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
-                        if (!file.exists() && Utils.isWindows())
-                        	file = new File(System.getenv("HOME") + "/IEDriverServer.exe");
-                    }
-                    System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
-                    driver = new InternetExplorerDriver(capabilities);
-                    break;
-                case "chrome":
-                    setChromeDriverLocation(capabilities);
-                    driver = new ChromeDriver(capabilities);
-                    break;
-                case "safari":
-                    capabilities.setCapability("version", browserVersion);
-                    // safari driver is not stable, retry 3 times
-                    int count = 0;
-                    while (driver == null && count++ < 3)
-                        try {
-                            driver = new SafariDriver(capabilities);
-                        } catch (Exception e) {
-                            Utils.threadSleep(5000, null);
-                        }
-                    break;
-                case "edge":
-                    driver = new EdgeDriver(capabilities);
-                    break;
-                default:
-                    FirefoxProfile firefoxProfile = new FirefoxProfile();
-                    ArrayList<File> extensions = new ArrayList<>();
-                    if (tagCollection) {
-                        System.out.println("tag collection started");
-                        path = "shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
-                        file = new File(path);
-                        if (!file.exists()) {
-                            file = new File("com/macys/sdt/" + path);
-                        }
-                        extensions.add(file);
-                    }
-                    String envExtensions = MainRunner.getEnvOrExParam("firefox_extensions");
-                    if (envExtensions != null) {
-                        String[] extensionSplit = envExtensions.split(" ");
-                        for (String s : extensionSplit) {
-                            File f = new File(s);
-                            if (f.exists()) {
-                                extensions.add(f);
-                            }
-                        }
-                    }
-                    for (File f : extensions) {
-                        try {
-                            firefoxProfile.addExtension(f);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Assert.fail("Cannot load extension");
-                        }
-                    }
-                    capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
-
-                    try {
-                        driver = new FirefoxDriver(capabilities);
-                    } catch (IllegalStateException e) {
-                        capabilities.setCapability("marionette", false);
-                        driver = new FirefoxDriver(capabilities);
-                    }
-                    break;
-            }
+            capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initBrowserCapabilities();
         }
 
+        WebDriver driver;
         if (useSauceLabs) {
             driver = initSauceLabs(capabilities);
         } else if (useAppium) {
-            driver = createAppiumDevice(capabilities);
+            driver = initAppiumDevice(capabilities);
+        } else {
+            driver = initBrowser(capabilities);
         }
 
         Assert.assertNotNull("Driver should have been initialized by now", driver);
@@ -135,6 +58,110 @@ public class WebDriverConfigurator {
         }
 
         return driver;
+    }
+
+    private static WebDriver initBrowser(DesiredCapabilities capabilities) {
+        WebDriver driver = null;
+        switch (MainRunner.browser.toLowerCase()) {
+            case "ie":
+            case "internetexplorer":
+                return new InternetExplorerDriver(capabilities);
+            case "chrome":
+                return new ChromeDriver(capabilities);
+            case "safari":
+                int count = 0;
+                while (driver == null && count++ < 3)
+                    try {
+                        driver = new SafariDriver(capabilities);
+                    } catch (Exception e) {
+                        Utils.threadSleep(5000, null);
+                    }
+                return driver;
+            case "edge":
+                return new EdgeDriver(capabilities);
+            default:
+                return new FirefoxDriver(capabilities);
+        }
+
+    }
+
+    public static DesiredCapabilities initBrowserCapabilities() {
+        DesiredCapabilities capabilities;
+
+        switch (MainRunner.browser.toLowerCase()) {
+            case "ie":
+            case "internetexplorer":
+                capabilities = DesiredCapabilities.internetExplorer();
+                String path = "shared/resources/framework/selenium_drivers/IEDriverServer.exe";
+                File file = new File(path);
+                if (!file.exists()) {
+                    file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+                    if (!file.exists() && Utils.isWindows())
+                        file = new File(System.getenv("HOME") + "/IEDriverServer.exe");
+                }
+                if (file.exists()) {
+                    System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
+                } else {
+                    System.out.println("Unable to use built-in IE driver, will use machine's IE driver if it exists");
+                }
+                capabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, true);
+                capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                capabilities.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+                // changing requireWindowFocus to default value 'false' to avoid window or
+                // page freeze issue when the focus is not on the window
+                capabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, false);
+                capabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+                return disabledProxyCap(capabilities);
+            case "chrome":
+                capabilities = DesiredCapabilities.chrome();
+                setChromeDriverLocation(capabilities);
+                ChromeOptions chrome = new ChromeOptions();
+                chrome.addArguments("test-type");
+                chrome.addArguments("--disable-extensions");
+                capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
+                return disabledProxyCap(capabilities);
+            case "safari":
+                capabilities = DesiredCapabilities.safari();
+                capabilities.setCapability("unexpectedAlertBehaviour", "accept");
+                return disabledProxyCap(capabilities);
+            case "edge":
+                capabilities = DesiredCapabilities.edge();
+                return disabledProxyCap(capabilities);
+            default:
+                capabilities = DesiredCapabilities.firefox();
+                FirefoxProfile firefoxProfile = new FirefoxProfile();
+                ArrayList<File> extensions = new ArrayList<>();
+                if (tagCollection) {
+                    System.out.println("tag collection started");
+                    path = "shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
+                    file = new File(path);
+                    if (!file.exists()) {
+                        file = new File("com/macys/sdt/" + path);
+                    }
+                    extensions.add(file);
+                }
+                String envExtensions = MainRunner.getEnvOrExParam("firefox_extensions");
+                if (envExtensions != null) {
+                    String[] extensionSplit = envExtensions.split(" ");
+                    for (String s : extensionSplit) {
+                        File f = new File(s);
+                        if (f.exists()) {
+                            extensions.add(f);
+                        }
+                    }
+                }
+                for (File f : extensions) {
+                    try {
+                        firefoxProfile.addExtension(f);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Assert.fail("Cannot load extension");
+                    }
+                }
+                capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+
+                return disabledProxyCap(capabilities);
+        }
     }
 
     private static void setChromeDriverLocation(DesiredCapabilities capabilities) {
@@ -151,49 +178,24 @@ public class WebDriverConfigurator {
                 if (!file.exists() && Utils.isWindows())
                 	file = new File(System.getenv("HOME") + "/" + fileName);
             }
-            
-            System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
+            if (file.exists()) {
+                System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
+            } else {
+                System.out.println("Unable to use built-in chromedriver, will use machine's chromedriver if it exists");
+            }
         }
     }
 
-    public static DesiredCapabilities disabledProxyCap(DesiredCapabilities desiredCap) {
+    public static DesiredCapabilities disabledProxyCap(DesiredCapabilities capabilities) {
         if (MainRunner.disableProxy) {
             //			Proxy py = new Proxy();
             //			py.setNoProxy( "DIRECT" );
-            desiredCap.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
-            desiredCap.setCapability(CapabilityType.ForSeleniumServer.PROXYING_EVERYTHING, false);
+            capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
+            capabilities.setCapability(CapabilityType.ForSeleniumServer.PROXYING_EVERYTHING, false);
             //			desiredCap.setCapability ( CapabilityType.PROXY, py );
         }
-        return desiredCap;
-    }
-
-    public static DesiredCapabilities initCapabilities() {
-        switch (MainRunner.browser) {
-            case "ie":
-                DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
-                ieCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, true);
-                ieCapabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-                ieCapabilities.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-                // changing requireWindowFocus to default value 'false' to avoid window / page freeze issue when the focus is not on the window
-                ieCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, false);
-                ieCapabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
-                return disabledProxyCap(ieCapabilities);
-            case "chrome":
-                DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-                ChromeOptions chrome = new ChromeOptions();
-                chrome.addArguments("test-type");
-                chrome.addArguments("--disable-extensions");
-                capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
-                return disabledProxyCap(capabilities);
-            case "safari":
-                DesiredCapabilities sfCapabilities = DesiredCapabilities.safari();
-                sfCapabilities.setCapability("unexpectedAlertBehaviour", "accept");
-                return disabledProxyCap(sfCapabilities);
-            case "edge":
-                return DesiredCapabilities.edge();
-            default:
-                return disabledProxyCap(DesiredCapabilities.firefox());
-        }
+        capabilities.setCapability("version", browserVersion);
+        return capabilities;
     }
 
     private static DesiredCapabilities initDeviceCapabilities() {
@@ -324,7 +326,7 @@ public class WebDriverConfigurator {
                         }
                     }
             } else if (useAppium) {
-                return createAppiumDevice(capabilities);
+                return initAppiumDevice(capabilities);
             } else {
                 return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
             }
@@ -336,7 +338,7 @@ public class WebDriverConfigurator {
         return null;
     }
 
-    private static WebDriver createAppiumDevice(DesiredCapabilities capabilities) {
+    private static WebDriver initAppiumDevice(DesiredCapabilities capabilities) {
         if (appTest) {
             capabilities.setCapability(MobileCapabilityType.APP, MainRunner.appLocation);
             capabilities.setCapability("BROWSER_NAME", StepUtils.iOS() ? "IOS" : "Android");
@@ -439,7 +441,7 @@ public class WebDriverConfigurator {
         }
 
         Proxy seleniumProxy = ClientUtil.createSeleniumProxy(browsermobServer);
-        DesiredCapabilities capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initCapabilities();
+        DesiredCapabilities capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initBrowserCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
         WebDriver driver = initDriver(capabilities);
         browsermobServer.newHar(browsermobServerHarTs);
