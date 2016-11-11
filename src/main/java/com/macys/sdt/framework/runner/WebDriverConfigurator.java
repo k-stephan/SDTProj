@@ -167,7 +167,7 @@ public class WebDriverConfigurator {
         return desiredCap;
     }
 
-    private static DesiredCapabilities initCapabilities() {
+    public static DesiredCapabilities initCapabilities() {
         switch (MainRunner.browser) {
             case "ie":
                 DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();

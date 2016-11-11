@@ -129,7 +129,7 @@ public class MainRunner {
     /**
      * Wait timeout as given in "timeout" env variable. Default 90 seconds (120 seconds for safari)
      */
-    public static int timeout = StepUtils.safari() ? 120 : 90;
+    public static int timeout;
     /**
      * Device in use as given by "device" env variable
      */
@@ -343,6 +343,8 @@ public class MainRunner {
         String envVal = getEnvOrExParam("timeout");
         if (envVal != null) {
             timeout = Integer.parseInt(envVal);
+        } else {
+            timeout = StepUtils.safari() ? 120 : 90;
         }
 
         // get project from environment variables
