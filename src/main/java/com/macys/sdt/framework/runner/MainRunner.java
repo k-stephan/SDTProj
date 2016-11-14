@@ -272,7 +272,7 @@ public class MainRunner {
         }
     }
 
-    private static void getEnvVars() {
+    public static void getEnvVars() {
         if (workspace == null) {
             workspace = ".";
         }

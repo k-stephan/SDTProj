@@ -139,7 +139,7 @@ public abstract class StepUtils {
      * @return true if using a mobile device
      */
     public static boolean mobileDevice() {
-        return MainRunner.device != null && !MainRunner.device.isEmpty();
+        return MainRunner.device != null;
     }
 
     /**

@@ -35,7 +35,7 @@ import static com.macys.sdt.framework.runner.MainRunner.*;
 
 public class WebDriverConfigurator {
 
-    public static WebDriver initDriver(DesiredCapabilities capabilities) {
+    static WebDriver initDriver(DesiredCapabilities capabilities) {
         if (capabilities == null) {
             capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initBrowserCapabilities();
         }
@@ -85,7 +85,7 @@ public class WebDriverConfigurator {
 
     }
 
-    public static DesiredCapabilities initBrowserCapabilities() {
+    static DesiredCapabilities initBrowserCapabilities() {
         DesiredCapabilities capabilities;
 
         switch (MainRunner.browser.toLowerCase()) {
@@ -125,6 +125,8 @@ public class WebDriverConfigurator {
                 capabilities.setCapability("unexpectedAlertBehaviour", "accept");
                 return disabledProxyCap(capabilities);
             case "edge":
+                System.err.println("WARNING: Microsoft's Edge Driver is not fully implemented yet. There may" +
+                    " be strange or unexpected errors.");
                 capabilities = DesiredCapabilities.edge();
                 return disabledProxyCap(capabilities);
             default:
@@ -142,7 +144,7 @@ public class WebDriverConfigurator {
                 }
                 String envExtensions = MainRunner.getEnvOrExParam("firefox_extensions");
                 if (envExtensions != null) {
-                    String[] extensionSplit = envExtensions.split(" ");
+                    String[] extensionSplit = envExtensions.split(";");
                     for (String s : extensionSplit) {
                         File f = new File(s);
                         if (f.exists()) {
@@ -186,7 +188,7 @@ public class WebDriverConfigurator {
         }
     }
 
-    public static DesiredCapabilities disabledProxyCap(DesiredCapabilities capabilities) {
+    private static DesiredCapabilities disabledProxyCap(DesiredCapabilities capabilities) {
         if (MainRunner.disableProxy) {
             //			Proxy py = new Proxy();
             //			py.setNoProxy( "DIRECT" );
@@ -198,7 +200,7 @@ public class WebDriverConfigurator {
         return capabilities;
     }
 
-    private static DesiredCapabilities initDeviceCapabilities() {
+    static DesiredCapabilities initDeviceCapabilities() {
         if (device == null) {
             device = "";
         }
@@ -309,10 +311,6 @@ public class WebDriverConfigurator {
             if (!StepUtils.mobileDevice() && !remoteOS.matches("^Windows 10|(.*?)10.11$")) {
                 capabilities.setCapability("screenResolution", "1280x1024");
             }
-            if (StepUtils.edge()) {
-                System.err.println("WARNING: Microsoft's Edge Driver is not fully implemented yet. There may" +
-                        " be strange or unexpected errors.");
-            }
             if (StepUtils.safari()) {
                 // safari driver is not stable, try up to 3 times
                 int count = 0;
@@ -379,7 +377,7 @@ public class WebDriverConfigurator {
         return null;
     }
 
-    public static String defaultBrowserVersion() {
+    static String defaultBrowserVersion() {
         switch (MainRunner.browser) {
             case "ie":
                 return "11.0";
@@ -409,7 +407,7 @@ public class WebDriverConfigurator {
         }
     }
 
-    public static WebDriver initDriverWithProxy() {
+    static WebDriver initDriverWithProxy() {
         if (browsermobServer != null) {
             System.err.println("-->Aborting prev proxy server:" + browsermobServer.getPort());
             try {
