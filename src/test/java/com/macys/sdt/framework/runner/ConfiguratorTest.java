@@ -16,7 +16,7 @@ public class ConfiguratorTest {
 
     private final String SCENARIOS = "SolutionDevelopment/SampleProject/features/website/mcom/sample.feature";
 
-    @Test
+  /*  @Test
     public void testBasicChrome() {
         final String WEBSITE = "http://www.macys.com";
         final String BROWSER = "chrome";
@@ -37,9 +37,9 @@ public class ConfiguratorTest {
         Assert.assertFalse(StepUtils.iOS());
         Assert.assertFalse(StepUtils.MEW());
         Assert.assertFalse(StepUtils.mobileDevice());
-    }
+    }*/
 
-    @Test
+ /*   @Test
     public void testBasicChromeMEW() {
         final String WEBSITE = "m.macys.com";
         final String BROWSER = "chrome";
@@ -61,9 +61,9 @@ public class ConfiguratorTest {
         Assert.assertTrue(StepUtils.mobileDevice());
         Assert.assertFalse(StepUtils.firefox());
         Assert.assertFalse(StepUtils.iOS());
-    }
+    }*/
 
-    @Test
+  /*  @Test
     public void testBasicAndroid() {
         final String BRAND = "mcom";
         final String BROWSER = "chrome";
@@ -89,5 +89,5 @@ public class ConfiguratorTest {
         Assert.assertTrue(StepUtils.macys());
         Assert.assertTrue(StepUtils.mobileDevice());
         Assert.assertFalse(StepUtils.iOS());
-    }
+    }*/
 }
