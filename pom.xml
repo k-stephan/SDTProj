@@ -148,7 +148,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         </dependency>
         <dependency>
             <groupId>net.lightbody.bmp</groupId>
-            <artifactId>browsermob-proxy</artifactId>
+            <artifactId>browsermob-dist</artifactId>
             <version>2.1.0-beta-2</version>
         </dependency>
     </dependencies>
