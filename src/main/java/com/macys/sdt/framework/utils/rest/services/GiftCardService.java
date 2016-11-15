@@ -22,7 +22,6 @@ public class GiftCardService {
      * Returns valid gift card object
      *
      * @return GiftCard object.
-     * @throws IOException
      */
     public static GiftCard getValidGiftCardDetails(GiftCard.CardType cardType) {
         GiftCard giftCard = null;

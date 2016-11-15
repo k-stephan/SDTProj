@@ -518,7 +518,7 @@ public abstract class CommonUtils extends StepUtils {
     /**
      * Runs an action until either the action is successful or maxTries is reached.
      *
-     * @param action   action to be performed (lambda with no args & boolean return value)
+     * @param action   action to be performed (lambda with no args and boolean return value)
      * @param maxTries maximum number of tries - 0 for default (5)
      * @param message  error message to print on failure
      */
