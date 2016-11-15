@@ -435,7 +435,7 @@ public class Wait {
             MainRunner.getCurrentUrl();
             if ((StepUtils.bloomingdales() || StepUtils.MEW()) || (StepUtils.macys() && MainRunner.currentURL.contains("product")))
                 if (MainRunner.currentURL.matches(".*?(signin|chkout|profile|product).*?")
-                        || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop/search"))) {
+                        || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop"))) {
                     return queries <= 1;
                 }
             // END TEMPORARY FIX
