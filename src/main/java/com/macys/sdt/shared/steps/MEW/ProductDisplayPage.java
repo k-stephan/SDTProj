@@ -93,6 +93,7 @@ public class ProductDisplayPage extends StepUtils {
                 if (isErrorPaneVisible()) {
                     Clicks.click("home.popup_close");
                 }
+                Wait.untilElementPresent("add_to_bag.checkout");
                 if (ProductDisplay.addedToBag())
                     return;
             } catch (IllegalArgumentException | NoSuchElementException e) {

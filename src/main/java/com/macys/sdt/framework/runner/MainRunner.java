@@ -847,7 +847,7 @@ public class MainRunner {
             }
             if (!(Utils.isWindows() && browser.equals("firefox")) &&
                     !(Utils.isWindows() && browser.equals("chrome")) &&
-                    !(Utils.isOSX() && browser.equals("safari"))) {
+                    !((Utils.isOSX() || (remoteOS != null && remoteOS.contains("OS X"))) && browser.equals("safari"))) {
                 System.out.println("AuthenticationDialog not required : "
                         + getEnvOrExParam("require_authentication")
                         + " : " + osName

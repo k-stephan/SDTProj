@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -47,27 +48,6 @@ public class TestUsers {
     private static User user = null;
 
     /**
-     * Gets the URL of execution engine
-     *
-     * @return String url pointing to EE
-     */
-    public static String getEEUrl() {
-        String EE = "11.142.14.56:9097";
-        if (System.getenv("EE") != null) {
-            EE = System.getenv("EE");
-        } else if (System.getenv("meta_data") != null) {
-            try {
-                Map metaData = new Gson().fromJson(System.getenv("meta_data"), Map.class);
-                EE = metaData.get("EE").toString();
-            } catch (Exception ex) {
-                System.err.println("Unable to get EE URL");
-            }
-        }
-
-        return "http://" + EE;
-    }
-
-    /**
      * Checks whether you're on macy's or bloomingdales website
      *
      * @return "mcom" if on macys, "bcom" if on bloomingdales
@@ -84,7 +64,7 @@ public class TestUsers {
             return;
         }
         try {
-            Utils.httpGet(getEEUrl() + "/sdt/releaseProductionCustomer/" + lockedProductionCustomer, null);
+            Utils.httpGet(Utils.getEEUrl() + "/sdt/releaseProductionCustomer/" + lockedProductionCustomer, null);
         } catch (Exception e) {
             System.err.println("Cannot release production customer:" + lockedProductionCustomer);
         }
@@ -97,7 +77,7 @@ public class TestUsers {
      * @throws Exceptions.UserException thrown if prod customer retrieval failed
      */
     public static UserProfile getProdCustomer() throws Exceptions.UserException {
-        String url = getEEUrl() + "/sdt/lockProductionCustomer/" + getSiteType();
+        String url = Utils.getEEUrl() + "/sdt/lockProductionCustomer/" + getSiteType();
         try {
             if (prodCustomer == null) {
                 User user1 = new User(null, null, null, new UserPasswordHint(), new ProfileAddress(), new LoginCredentials());

@@ -43,12 +43,12 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I close the bops change store dialog$")
     public static void I_save_close_the_bops_change_store_dialog() throws Throwable {
+        Clicks.click("change_pickup_store_dialog.save");
         if (bloomingdales()) {
-            Clicks.click("change_pickup_store_dialog.save");
             if (Elements.elementPresent("change_pickup_store_dialog.close"))
                 Clicks.click("change_pickup_store_dialog.close");
         } else {
-            Clicks.click("change_pickup_store_dialog.overlay_close_button");
+            Clicks.clickIfPresent("change_pickup_store_dialog.overlay_close_button");
         }
 
     }
@@ -56,6 +56,7 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I add registry product to BVR page from standard PDP Page$")
     public void I_add_registry_product_to_BVR_page_from_standard_PDP_Page() throws Throwable {
         pausePageHangWatchDog();
+        Assert.assertFalse("ERROR - DATA : Product ( "+ String.valueOf(recentProduct.id) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_registry") && Elements.elementPresent("product_display.availability_error"));
         if (macys()) {
             int retries = 5;
             for (int count = 0; count < retries && !Elements.elementPresent("add_to_registry_dialog.add_to_bag_view_registry"); count++) {
@@ -69,6 +70,8 @@ public class ShopAndBrowse extends StepUtils {
                 Clicks.clickIfPresent("product_display.technical_error");
                 if (isErrorPaneVisible())
                     Clicks.click("home.popup_close");
+                if (macys() && Elements.anyPresent(By.className("close-grey-tiny")))
+                    Assert.assertTrue("ERROR - DATA : Product is not eligible to add to registry !!", Elements.findElement(By.className("close-grey-tiny")).getText().contains("This item is not registrable"));
             }
             try {
                 Wait.forPageReady();
@@ -109,6 +112,7 @@ public class ShopAndBrowse extends StepUtils {
         try {
             int retries = 5;
             pausePageHangWatchDog();
+            Assert.assertFalse("ERROR - DATA : Product ( "+ String.valueOf(recentProduct.id) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_bag_button") && Elements.elementPresent("product_display.availability_error"));
             for (int count = 0; count < retries && !addedToBag; count++) {
                 try {
                     ProductDisplay.selectRandomColor();
@@ -204,7 +208,7 @@ public class ShopAndBrowse extends StepUtils {
 
     @When("^I change country to \"([^\"]*)\"$")
     public void I_change_country_to(String country) throws Throwable {
-        Assert.assertTrue("Not on international context page.", Wait.secondsUntilElementPresent("international_shipping.country", (safari() ? 20 : 2)));
+        Assert.assertTrue("Not on international context page.", Wait.secondsUntilElementPresent("international_shipping.country", (safari() ? 20 : 5)));
         if (country.equals("a random country")) {
             DropDowns.selectRandomValue("international_shipping.country");
         } else {

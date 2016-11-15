@@ -29,6 +29,7 @@ public class Hooks extends StepUtils {
     private boolean mewFixSet = false;
     private static boolean firstScenario = true;
     private static boolean foreseeFlag = true;
+    private static boolean isBackground = false;
 
     private static void checkForErrorPage() {
         if (MainRunner.useAppium) {
@@ -174,6 +175,13 @@ public class Hooks extends StepUtils {
 
     @Before("@Step")
     public void before_step() {
+        stepStartTime = System.currentTimeMillis();
+        isBackground = ScenarioHelper.isBackground();
+        if (isBackground) {
+            ScenarioHelper.incrementBackgroundStepCount();
+            System.out.println("--->Running background step...");
+            return;
+        }
         // an extra result is added by every @Before hook. Need to adjust for this.
         if (!scenarioSetupComplete) {
             resetScenarioOffset();
@@ -205,7 +213,6 @@ public class Hooks extends StepUtils {
             }
             scenarioSetupComplete = true;
         }
-        stepStartTime = System.currentTimeMillis();
         String stepName = getScenarioStepName(getScenarioIndex());
         System.out.println("\n--->Step " + stepName);
 
@@ -214,7 +221,7 @@ public class Hooks extends StepUtils {
 
     @After("@Step")
     public void after_step(Scenario scenario) {
-        if (!MainRunner.disableProxy) {
+        if (!MainRunner.disableProxy && !isBackground) {
             this.analyticsTest();
             if (MainRunner.tagCollection) {
                 DATagCollector.capture(getScenarioStepName(getScenarioIndex()));

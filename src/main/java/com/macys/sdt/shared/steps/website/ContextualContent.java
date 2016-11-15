@@ -6,7 +6,7 @@ import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.db.models.MediaService;
-import com.macys.sdt.shared.actions.website.mcom.pages.shop_and_browse.WebsiteMcomFlexTemplatePage;
+import com.macys.sdt.shared.actions.website.mcom.panels.shop_and_browse.FlexTemplatePanel;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -15,10 +15,11 @@ import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ContextualContent extends StepUtils {
 
-    WebsiteMcomFlexTemplatePage flexPage = new WebsiteMcomFlexTemplatePage();
+    FlexTemplatePanel flexPanel = new FlexTemplatePanel();
     private String componentId, mainPageType, mainRowType, mainRowTypeId;
     private List<Map> finalExpectedData;
     private String[] mediaNamesArray;
@@ -34,10 +35,8 @@ public class ContextualContent extends StepUtils {
         String[] mediaNamesArray = mediaNames.split(", ");
         String site = macys() ? "mcom" : "bcom";
         String mode = null, regionCode = null;
-        for (Map<String, String> set : context) {
-            mode = set.get("SHOPPING_MODE");
-            regionCode = set.get("REGION_CODE");
-        }
+        mode = context.stream().filter(con -> con.containsKey("SHOPPING_MODE")).map(con -> con.get("SHOPPING_MODE")).findFirst().get();
+        regionCode = context.stream().filter(con -> con.containsKey("SHOPPING_MODE")).map(con -> con.get("REGION_CODE")).findFirst().get();
         String[] contextAttrNames = context.get(0).keySet().toArray(new String[context.get(0).keySet().size()]);
         String[] contextAttrValues = context.get(0).values().toArray(new String[context.get(0).values().size()]);
         String[] tempMediaNames = mediaNamesArray.clone();
@@ -46,27 +45,18 @@ public class ContextualContent extends StepUtils {
         // as a workaround pause the pagehangwatchdog and resume after this task
         StepUtils.pausePageHangWatchDog();
         finalMediaData = MediaService.getFinalContextualizeCanvasData(mediaNamesArray.clone(), rowType, contextAttrNames, contextAttrValues);
-        StepUtils.resumePageHangWatchDog();
+        System.out.println("--> Captured required media data from database!!");
         for (int index = 0; index < mediaNamesArray.length; index++) {
             mediaNamesArray[index] = ((mediaNamesArray[index].equals("MEDIA_ADS")) ? "THUMBNAIL_GRID" : mediaNamesArray[index]);
             mediaNamesArray[index] = ((mediaNamesArray[index].equals("BANNER_MACHINE_WIDGET")) ? "WIDGET" : mediaNamesArray[index]);
             mediaNamesArray[index] = ((mediaNamesArray[index].equals("BANNER_MACHINE_SLIDESHOW")) ? "SLIDESHOW" : mediaNamesArray[index]);
         }
         List<Map> canvasRowData = new ArrayList<>();
-        for (Map media : finalMediaData) {
-            boolean isRowFound = false;
-            int rowIndex = 0;
-            for (Map row : canvasRowData) {
-                if (row.containsKey("rowId")) {
-                    if (row.get("rowId").toString().equals(media.get("canvasRowId").toString())) {
-                        isRowFound = true;
-                        rowIndex = canvasRowData.indexOf(row);
-                        break;
-                    }
-                }
-            }
-            if (isRowFound) {
-                ((List) canvasRowData.get(rowIndex).get("mediaTypes")).add(media.get("mediaTypeDesc").toString());
+        finalMediaData.stream().forEach(media -> {
+            if(canvasRowData.stream().anyMatch(row -> (row.get("rowId").toString().equals(media.get("canvasRowId").toString())))){
+                ((List)canvasRowData.stream()
+                        .filter(row -> (row.get("rowId").toString().equals(media.get("canvasRowId").toString())))
+                        .findFirst().get().get("mediaTypes")).add(media.get("mediaTypeDesc").toString());;
             } else {
                 Map dummy = new HashMap();
                 dummy.put("rowId", media.get("canvasRowId").toString());
@@ -75,34 +65,20 @@ public class ContextualContent extends StepUtils {
                 dummy.put("mediaTypes", dummyList);
                 canvasRowData.add(dummy);
             }
-        }
-        List<Map> expectedRowData = new ArrayList<>();
-        for (Map canvas : canvasRowData) {
-            boolean isMediaFlag = false;
-            for (String name : ((List<String>) canvas.get("mediaTypes")))
-                if (name.equals("PRODUCT_PANEL_CATEGORY") || Arrays.asList(mediaNamesArray).contains(name))
-                    isMediaFlag = true;
-            if ((Arrays.asList(mediaNamesArray).contains("PRODUCT_PANEL_NA") || Arrays.asList(mediaNamesArray).contains("PRODUCT_PANEL_BAZAAR")) ? isMediaFlag : ((ListUtils.subtract(Arrays.asList(mediaNamesArray), (List) canvas.get("mediaTypes"))).size() == 0))
-                expectedRowData.add(canvas);
-        }
-        List<Map> tempData = new ArrayList<>();
-        for (Map data : finalMediaData) {
-            for (Map mdata : expectedRowData) {
-                if (mdata.get("rowId").toString().equals(data.get("canvasRowId").toString())) {
-                    tempData.add(data);
-                    break;
-                }
-            }
-        }
-        finalMediaData = tempData;
+        });
+        List<Map> expectedRowData = canvasRowData.stream()
+                .filter(canvas -> ((Arrays.asList(mediaNamesArray).contains("PRODUCT_PANEL_CATEGORY") || Arrays.asList(mediaNamesArray).contains("PRODUCT_PANEL_NA")) ? (((List<String>)canvas.get("mediaTypes")).stream().anyMatch(type -> type.equals("PRODUCT_PANEL_CATEGORY") || Arrays.asList(mediaNamesArray).contains(type))) : (ListUtils.subtract(Arrays.asList(mediaNamesArray), ((List<String>) canvas.get("mediaTypes")))).isEmpty()))
+                .collect(Collectors.toList());
+        finalMediaData = finalMediaData.stream()
+                .filter(data -> (expectedRowData.stream().anyMatch(mdata -> (mdata.get("rowId").toString().equals(data.get("canvasRowId").toString())))))
+                .collect(Collectors.toList());
         List<Map> newTempData = new ArrayList<>();
         if (pageType.equals("Home Page")) {
-            for (Map data : finalMediaData)
-                if (Arrays.asList(mediaNamesArray).contains(data.get("mediaTypeDesc").toString()) && mediaNamesArray.length == 1)
-                    newTempData.add(data);
-            finalMediaData = newTempData;
+            finalMediaData = finalMediaData.stream()
+                    .filter(data -> (Arrays.asList(mediaNamesArray).contains(data.get("mediaTypeDesc").toString()) && mediaNamesArray.length == 1))
+                    .collect(Collectors.toList());
         } else {
-            for (Map data : finalMediaData) {
+            finalMediaData.forEach(data -> {
                 for (String name : mediaNamesArray) {
                     if (Arrays.asList(mediaNamesArray).contains("PRODUCT_PANEL_NA") || Arrays.asList(mediaNamesArray).contains("PRODUCT_PANEL_BAZAAR")) {
                         if (name.equals(data.get("mediaTypeDesc").toString()) || data.get("mediaTypeDesc").toString().equals("PRODUCT_PANEL_CATEGORY"))
@@ -110,15 +86,13 @@ public class ContextualContent extends StepUtils {
                     } else if (name.equals(data.get("mediaTypeDesc").toString()))
                         newTempData.add(data);
                 }
-            }
+            });
             finalMediaData = newTempData;
         }
-        List<String> canvasIds = new ArrayList<>();
-        for (Map data : finalMediaData)
-            canvasIds.add(data.get("canvasId").toString());
-        if (canvasIds.isEmpty())
-            Assert.fail("ERROR - DATA: Data is not available for expected media:'" + mediaNames + "' in site database");
+        List<String> canvasIds = finalMediaData.stream().map(data -> data.get("canvasId").toString()).distinct().collect(Collectors.toList());
+        Assert.assertFalse("ERROR - DATA: Data is not available for expected media:'" + mediaNames + "' in site database", canvasIds.isEmpty());
         List<List> categoryAndCanvasIds = MediaService.getCategoryId(canvasIds, pageType, context, site, tempMediaNames);
+        System.out.println("--> Captured required media data from FCC service!!");
         String categoryId = null;
         for (List categoryAndCanvasId : categoryAndCanvasIds) {
             categoryId = categoryAndCanvasId.get(0).toString();
@@ -126,13 +100,9 @@ public class ContextualContent extends StepUtils {
             if (categoryAndCanvasId.get(2) != null)
                 componentId = categoryAndCanvasId.get(2).toString();
             finalExpectedData = new ArrayList<>();
-            for (Map data : finalMediaData)
-                if (data.get("canvasId").toString().equals(canvasId))
-                    finalExpectedData.add(data);
+            finalExpectedData = finalMediaData.stream().filter(data -> (data.get("canvasId").toString().equals(canvasId))).collect(Collectors.toList());
             if (pageType.equals("Home Page")) {
-                if (regionCode.equals("INTL"))
-                    if (!Elements.elementPresent("home.goto_us_site"))
-                        Assert.fail("User is not in international site!!");
+                Assert.assertTrue("User is not in international site!!", (regionCode.equals("INTL") && Elements.anyPresent("home.goto_us_site")));
             } else {
                 if (mode.equals("SITE"))
                     Navigate.visit("http://www." + MainRunner.url.split("\\.")[1] + ".fds.com/shop/?id=" + categoryId);
@@ -142,11 +112,9 @@ public class ContextualContent extends StepUtils {
             Wait.forPageReady();
             try {
                 pageVerifications(pageType);
-                if (!url().contains(categoryId))
-                    Assert.fail("ERROR - ENV: Redirected to some other category instead:'" + categoryId + "' category");
+                Assert.assertTrue("ERROR - ENV: Redirected to some other category instead:'" + categoryId + "' category", url().contains(categoryId));
                 if (String.join(" ", tempMediaNames).contains("MEDIA_ADS") && (pageType.equals("Sub Splash") || pageType.equals("Browse")))
-                    if (flexPage.getMediaAdDetails().isEmpty())
-                        Assert.fail("ERROR - DATA: Media Ads are not available on thumbnail grid");
+                    Assert.assertFalse("ERROR - DATA: Media Ads are not available on thumbnail grid", flexPanel.getMediaAdDetails().isEmpty());
                 break;
             } catch (AssertionError e) {
                 System.out.println(pageType + " page is not loaded for category:" + categoryId + " in context: " + context.toString() + " ");
@@ -155,10 +123,12 @@ public class ContextualContent extends StepUtils {
         if (!pageType.equals("Home Page"))
             pageVerifications(pageType);
         mainPageType = pageType;
+        StepUtils.resumePageHangWatchDog();
     }
 
     @Then("^I should see \"([^\"]*)\" on the page in \"([^\"]*)\" row$")
     public void I_should_see_on_the_page_in_row(String mediaNames, String rowType) throws Throwable {
+        StepUtils.pausePageHangWatchDog();
         mediaNamesArray = mediaNames.split(", ");
         if (mediaNames.contains("MEDIA_ADS")) {
             for (int index = 0; index < mediaNamesArray.length; index++)
@@ -166,10 +136,10 @@ public class ContextualContent extends StepUtils {
                     mediaNamesArray[index] = "THUMBNAIL_GRID";
             mediaAdsFlag = true;
         }
-        seqNumbers = flexPage.getSequenceByRowTypes(rowType);
+        seqNumbers = flexPanel.getSequenceByRowTypes(rowType);
         boolean sequenceSet = false;
         for (Object seqNumber : seqNumbers) {
-            actualMediaType = flexPage.getRowMediaByRowTypeSeqNumber(rowType, seqNumber.toString(), true, false);
+            actualMediaType = flexPanel.getRowMediaByRowTypeSeqNumber(rowType, seqNumber.toString(), true, false);
             // Below code is to skip empty rows.
             if(((Map)actualMediaType.get(0)).get("mediaType") == null)
                 continue;
@@ -204,38 +174,37 @@ public class ContextualContent extends StepUtils {
         mainRowTypeId = "row_" + rowType + "_" + String.valueOf(sequence);
         if (!sequenceSet)
             Assert.fail("ERROR - DATA: Navigated category may have inherited canvas id, so we cannot find row type:'" + rowType + "' with media:'" + mediaNames + "' on the page");
+        System.out.println("--> Required media is present in page!!");
+        StepUtils.resumePageHangWatchDog();
     }
 
     @And("^I should see respective media as per astra data$")
     public void I_should_see_respective_media_as_per_astra_data() throws Throwable {
+        StepUtils.pausePageHangWatchDog();
         if (sequence != -1) {
-            Iterator iterator = finalExpectedData.iterator();
-            while (iterator.hasNext()) {
-                Map data = (Map) iterator.next();
+            finalExpectedData.stream().forEach(data -> {
                 if (data.get("mediaTypeDesc").toString().toLowerCase().contains("product"))
                     data.put("mediaTypeDesc", "PRODUCT_POOL");
                 if (data.get("mediaTypeDesc").toString().contains("MEDIA_ADS"))
                     data.put("mediaTypeDesc", "THUMBNAIL_GRID");
-                if (data.containsKey("mediaKey") && !data.get("mediaKey").toString().equals(componentId) && data.get("mediaTypeDesc").toString().equals("PRODUCT_POOL"))
-                    iterator.remove();
-            }
+            });
+            finalExpectedData.removeIf(data -> (data.containsKey("mediaKey") && !data.get("mediaKey").toString().equals(componentId) && data.get("mediaTypeDesc").toString().equals("PRODUCT_POOL")));
             Map<String, List<Map>> groupResults = groupBy(finalExpectedData, "canvasRowId");
             boolean isSequenceExists = false;
             List<Integer> dbSequences = new ArrayList<>();
             int dbSequence = -1;
-            for (List<Map> data : groupResults.values())
-                for (Map type : data)
-                    if (type.containsKey("canvasRowSeq"))
-                        dbSequences.add(Integer.parseInt(type.get("canvasRowSeq").toString()));
+            groupResults.values().forEach(data -> {
+                dbSequences.addAll(data.stream().filter(type -> (type.containsKey("canvasRowSeq")))
+                        .map(type -> Integer.parseInt(type.get("canvasRowSeq").toString()))
+                        .collect(Collectors.toList()));
+            });
             if (dbSequences.size() > 0){
                 dbSequence = dbSequences.indexOf(Collections.min(dbSequences));
                 isSequenceExists = true;
             }
             int index = 0;
             for (List<Map> data : groupResults.values()) {
-                List names = new ArrayList<>();
-                for (Map type : data)
-                    names.add(type.get("mediaTypeDesc").toString());
+                List names = data.stream().map(type -> type.get("mediaTypeDesc").toString()).collect(Collectors.toList());
                 boolean seqCondition = (isSequenceExists ? (dbSequence == index) : true);
                 if (ListUtils.subtract(names, Arrays.asList(mediaNamesArray)).isEmpty() && seqCondition) {
                     finalExpectedData = data;
@@ -243,81 +212,40 @@ public class ContextualContent extends StepUtils {
                 }
                 index++;
             }
-            if (finalExpectedData.isEmpty())
-                Assert.fail("ERROR - DATA : Unable to find data in site database");
+            Assert.assertFalse("ERROR - DATA : Unable to find data in site database", finalExpectedData.isEmpty());
             List<Map> mediaDetails = new ArrayList<>();
             if (mainRowType.equals("0") || (Arrays.asList(mediaNamesArray).contains("PRODUCT_POOL"))) {
-                for (String seq : seqNumbers) {
-                    for (Map one : flexPage.getRowMediaByRowTypeSeqNumber(mainRowType, seq, true, true))
-                        mediaDetails.add(one);
-                }
+                for (String seq : seqNumbers)
+                    mediaDetails = ((List<Map>)flexPanel.getRowMediaByRowTypeSeqNumber(mainRowType, seq, true, true)).stream().collect(Collectors.toList());
             } else {
-                for (Map one : flexPage.getRowMediaByRowTypeSeqNumber(mainRowType, String.valueOf(sequence), true, true))
-                    mediaDetails.add(one);
+                mediaDetails = ((List<Map>)flexPanel.getRowMediaByRowTypeSeqNumber(mainRowType, String.valueOf(sequence), true, true)).stream().collect(Collectors.toList());
             }
-            boolean isBannerMachineSlide = false;
-            for (Map data : mediaDetails)
-                if (data.get("mediaType").toString().equals("banner_machine_slideshow") && ((Arrays.asList(mediaNamesArray).contains("BANNER_MACHINE_SLIDESHOW")) || (Arrays.asList(mediaNamesArray).contains("SLIDESHOW"))))
-                    isBannerMachineSlide = true;
+            boolean isBannerMachineSlide = mediaDetails.stream().anyMatch(data -> (data.get("mediaType").toString().equals("banner_machine_slideshow") && ((Arrays.asList(mediaNamesArray).contains("BANNER_MACHINE_SLIDESHOW")) || (Arrays.asList(mediaNamesArray).contains("SLIDESHOW")))));
             verifyMediaNames(isBannerMachineSlide, mediaDetails);
-            List<String> names = new ArrayList<>();
-            for (Map type : finalExpectedData)
-                names.add(type.get("mediaTypeDesc").toString().replace(" ", "_").toLowerCase());
+            List<String> names = mediaDetails.stream().map(type -> type.get("mediaType").toString().replace(" ", "_").toLowerCase()).collect(Collectors.toList());
             for (String name : names) {
                 List<Map> uiData = new ArrayList<>();
                 List<Map> dbData = new ArrayList<>();
-                if (isBannerMachineSlide) {
-                    iterator = mediaDetails.iterator();
-                    while (iterator.hasNext()) {
-                        Map type = (Map) iterator.next();
-                        if (!type.get("mediaType").toString().equals("banner_machine_slideshow"))
-                            iterator.remove();
-                    }
-                    uiData = mediaDetails;
-                } else {
-                    iterator = mediaDetails.iterator();
-                    while (iterator.hasNext()) {
-                        Map type = (Map) iterator.next();
-                        if (!type.get("mediaType").toString().equals(name))
-                            iterator.remove();
-                    }
-                    uiData = mediaDetails;
-                }
-                iterator = finalExpectedData.iterator();
-                while (iterator.hasNext()) {
-                    Map type = (Map) iterator.next();
-                    if (!type.get("mediaTypeDesc").toString().toLowerCase().replace(" ", "_").equals(name))
-                        iterator.remove();
-                }
+                mediaDetails.removeIf(type -> (!type.get("mediaType").toString().equals((isBannerMachineSlide ? "banner_machine_slideshow" : name))));
+                uiData = mediaDetails;
+                finalExpectedData.removeIf(type -> (!type.get("mediaTypeDesc").toString().toLowerCase().replace(" ", "_").equals(name)));
                 dbData = finalExpectedData;
                 String errorMessage = "ERROR - APP: Expected media type: '" + name + "' is not displayed";
                 switch (name) {
                     case "widget":
-                        int counter = 0;
-                        for (Map data : uiData)
-                            if (((Map)data.get("mediaInfo")).isEmpty())
-                                counter++;
+                        int counter = (int)uiData.stream().filter(data -> (((Map)data.get("mediaInfo")).isEmpty())).count();
                         if (counter == uiData.size())
                             System.out.println("Widget is collapsed due to time constraint");
                         else {
                             List<String> media = new ArrayList<>();
                             for (Map data : dbData)
-                                for (Map info : (List<Map>) data.get("mediaInfo"))
-                                    media.add(info.get("mediaTypeDesc").toString());
+                                media.addAll(((List<Map>) data.get("mediaInfo")).stream().map(info -> info.get("mediaTypeDesc").toString()).collect(Collectors.toList()));
                             List<String> actualMedia = new ArrayList<>();
-                            for (Map data : uiData) {
-                                for (Map type : ((List<Map>) data.get("mediaInfo"))) {
-                                    if (type.get("panelType").toString().equals("IMAGE"))
-                                        actualMedia.add("AD");
-                                    else
-                                        actualMedia.add(type.get("panelType").toString());
-                                }
+                            for (Map data : uiData){
+                                actualMedia.addAll(((List<Map>) data.get("mediaInfo")).stream().map(type -> type.get("panelType").toString()).collect(Collectors.toList()));
+                                actualMedia.stream().filter(type -> type.equals("IMAGE")).map(type -> "AD");
                             }
-                            for (String mediaName : actualMedia) {
-                                if (!media.contains(mediaName))
-                                    Assert.fail(errorMessage);
-
-                            }
+                            actualMedia.stream().forEach(mediaName -> Assert.assertTrue(errorMessage, media.contains(mediaName)));
                         }
                         break;
                     case "category_icon":
@@ -327,50 +255,52 @@ public class ContextualContent extends StepUtils {
                         List<String> catIconText = new ArrayList<>();
                         List<String> dbImageNames = new ArrayList<>();
                         List<String> uiImageNames = new ArrayList<>();
-                        for (Map data : dbData) {
-                            for (Map type : ((List<Map>) data.get("mediaInfo"))) {
-                                dbText.add(type.get("text").toString().toLowerCase().replace(" and ", " ").replace(" & ", " "));
-                                dbImageNames.add(type.get("mediaName").toString().toLowerCase());
-                            }
-                        }
-                        for (Map data : uiData) {
-                            for (Map type : ((List<Map>) data.get("mediaInfo"))) {
-                                if (!type.get("text").equals(null))
-                                    catIconText.add(type.get("text").toString().toLowerCase().replace(" and ", " ").replace(" & ", " "));
-                                uiImageNames.add(type.get("image").toString().toLowerCase());
-                            }
-                        }
-                        for (String text : catIconText)
-                            if (!dbText.contains(text))
-                                Assert.fail(textErrorMessage);
-                        if (!ListUtils.subtract(dbImageNames, uiImageNames).isEmpty())
-                            Assert.fail(imageErrorMessage);
+                        dbData.stream().forEach(data -> {
+                            dbText.addAll(((List<Map>) data.get("mediaInfo")).stream()
+                                    .map(type -> type.get("text").toString().toLowerCase().replace(" and ", " ").replace(" & ", " "))
+                                    .collect(Collectors.toList()));
+                            dbText.addAll(((List<Map>) data.get("mediaInfo")).stream()
+                                    .map(type -> type.get("mediaName").toString().toLowerCase())
+                                    .collect(Collectors.toList()));
+                        });
+                        uiData.stream().forEach(data -> {
+                            catIconText.addAll(((List<Map>) data.get("mediaInfo")).stream()
+                                    .filter(type -> type.get("text") != null)
+                                    .map(type -> (type.get("text").toString().toLowerCase().replace(" and ", " ").replace(" & ", " ")))
+                                    .collect(Collectors.toList()));
+                            uiImageNames.addAll(((List<Map>) data.get("mediaInfo")).stream()
+                                    .map(type -> type.get("image").toString().toLowerCase())
+                                    .collect(Collectors.toList()));
+                        });
+                        catIconText.forEach(text -> Assert.assertTrue(textErrorMessage, dbText.contains(text)));
+                        Assert.assertTrue(imageErrorMessage, ListUtils.subtract(dbImageNames, uiImageNames).isEmpty());
                         break;
                     case "slideshow":
                         if (isBannerMachineSlide) {
                             List<String> actualC2Slides = new ArrayList<>();
                             List<String> expectedSlides = new ArrayList<>();
-                            for(Map data : uiData)
-                                for(Map type : (List<Map>)((Map)data.get("mediaInfo")).get("bannerMachineSlideData"))
-                                    if(type.containsKey("c2SlideData"))
-                                        actualC2Slides.add(((HashMap)type.get("c2SlideData")).get("imageName").toString());
-                            for(Map data : dbData)
-                                for(Map type : (List<Map>)data.get("mediaInfo"))
-                                    expectedSlides.add(type.get("mediaName").toString().split(".jsp")[0]);
-                            for (String slide : actualC2Slides)
-                                if (!expectedSlides.contains(slide))
-                                    Assert.fail("ERROR - APP: Slide Show is not displayed with valid media resource:'" + slide + "' as per DB:'" + expectedSlides + "'");
+                            uiData.stream().forEach(data -> {
+                                actualC2Slides.addAll(((List<Map>)((Map)data.get("mediaInfo")).get("bannerMachineSlideData")).stream()
+                                        .filter(type -> type.containsKey("c2SlideData"))
+                                        .map(type -> ((HashMap)type.get("c2SlideData")).get("imageName").toString())
+                                        .collect(Collectors.toList()));
+                            });
+                            dbData.stream().forEach(data -> {
+                                expectedSlides.addAll(((List<Map>)data.get("mediaInfo")).stream()
+                                        .map(type -> type.get("mediaName").toString().split(".jsp")[0])
+                                        .collect(Collectors.toList()));
+                            });
+                            actualC2Slides.forEach(slide -> Assert.assertTrue("ERROR - APP: Slide Show is not displayed with valid media resource:'" + slide + "' as per DB:'" + expectedSlides + "'", expectedSlides.contains(slide)));
                         } else {
                             List<String> uiInfo = new ArrayList<>();
                             List<String> dbInfo = new ArrayList<>();
-                            for (Map data : uiData)
-                                for (String image : ((List<String>) ((Map) data.get("mediaInfo")).get("slideshowImages")))
-                                    uiInfo.add(image);
-                            for (Map data : dbData)
-                                for (Map image : ((List<Map>) data.get("mediaInfo")))
-                                    dbInfo.add(image.get("mediaName").toString());
-                            if (!ListUtils.subtract(uiInfo, dbInfo).isEmpty())
-                                Assert.fail(errorMessage);
+                            uiData.forEach(data -> {
+                                uiInfo.addAll((((List<String>) ((Map) data.get("mediaInfo")).get("slideshowImages"))).stream().map(image -> image).collect(Collectors.toList()));
+                            });
+                            dbData.forEach(data -> {
+                                dbInfo.addAll(((List<Map>) data.get("mediaInfo")).stream().map(image -> image.get("mediaName").toString()).collect(Collectors.toList()));
+                            });
+                            Assert.assertTrue(errorMessage, ListUtils.subtract(uiInfo, dbInfo).isEmpty());
                         }
                         break;
                     case "flexible_pool":
@@ -380,157 +310,134 @@ public class ContextualContent extends StepUtils {
                         List<String> dbTitleList = new ArrayList<>();
                         List<String> uiHeaderList = new ArrayList<>();
                         List<String> dbHeaderList = new ArrayList<>();
-                        for (Map data : dbData)
-                            for (Map one : ((List<Map>) data.get("mediaInfo")))
-                                if (!one.get("mediaName").equals(""))
-                                    dbTitleList.add(one.get("description").toString());
-                        for (Map data : dbData)
-                            for (Map one : ((List<Map>) data.get("mediaInfo")))
-                                if (one.get("mediaName").equals(""))
-                                    dbHeaderList.add(one.get("description").toString());
-                        for (Map data : uiData)
-                            for (WebElement type : ((List<WebElement>) ((Map) data.get("mediaInfo")).get("flexTitle")))
-                                uiTitleList.add(type.getText());
-                        for (Map data : uiData)
+                        dbData.forEach(data -> {
+                            dbTitleList.addAll(((List<Map>) data.get("mediaInfo")).stream()
+                                    .filter(one -> !one.get("mediaName").equals(""))
+                                    .map(one -> one.get("description").toString())
+                                    .collect(Collectors.toList()));
+                            dbHeaderList.addAll((((List<Map>) data.get("mediaInfo"))).stream()
+                                    .filter(one -> one.get("mediaName").equals(""))
+                                    .map(one -> one.get("description").toString())
+                                    .collect(Collectors.toList()));
+                        });
+                        uiData.forEach(data -> {
+                            uiTitleList.addAll((((List<WebElement>) ((Map) data.get("mediaInfo")).get("flexTitle"))).stream()
+                                    .map(type -> type.getText()).collect(Collectors.toList()));
                             uiHeaderList.add(((WebElement) (((Map) data.get("mediaInfo")).get("flexHeader"))).getText().split("\n")[0]);
-                        if (!ListUtils.subtract(dbTitleList, uiTitleList).isEmpty())
-                            Assert.fail(titleErrorMessage);
-                        if (!ListUtils.subtract(dbHeaderList, uiHeaderList).isEmpty())
-                            Assert.fail(headerErrorMessage);
+                        });
+                        Assert.assertTrue(titleErrorMessage, ListUtils.subtract(dbTitleList, uiTitleList).isEmpty());
+                        Assert.assertTrue(headerErrorMessage, ListUtils.subtract(dbHeaderList, uiHeaderList).isEmpty());
                         break;
                     case "ad":
                         List<String> mediaNamesList = new ArrayList<>();
                         List<String> uiMediaNamesList = new ArrayList<>();
-                        for (Map data : dbData)
-                            for (Map type : ((List<Map>) data.get("mediaInfo")))
-                                mediaNamesList.add(type.get("mediaName").toString());
+                        dbData.forEach(data -> {
+                            mediaNamesList.addAll(((List<Map>) data.get("mediaInfo")).stream()
+                                    .map(type -> type.get("mediaName").toString())
+                                    .collect(Collectors.toList()));
+                        });
                         String dbAdSource = mediaNamesList.get(0);
                         String adErrorMessage = "ERROR - APP: Expected media type:'ad' source:'" + dbAdSource + "' is not displayed as per astra";
-                        for (Map data : uiData)
-                            uiMediaNamesList.add(((Map) data.get("mediaInfo")).get("imageName").toString());
+                        uiMediaNamesList = uiData.stream()
+                                .map(data -> ((Map) data.get("mediaInfo")).get("imageName").toString())
+                                .collect(Collectors.toList());
                         if (dbAdSource != null)
-                            if (!uiMediaNamesList.contains(dbAdSource))
-                                Assert.fail(adErrorMessage);
+                            Assert.assertTrue(adErrorMessage, uiMediaNamesList.contains(dbAdSource));
                         break;
                     case "recently_reviewed":
                         List<String> textList = new ArrayList<>();
-                        for (Map data : dbData)
-                            textList.add(data.get("text").toString());
-                        if (textList.contains("Recently Reviewed"))
-                            if (uiData.isEmpty())
-                                Assert.fail("ERROR - APP: Recently review data is not displayed");
+                        textList = dbData.stream().map(data -> data.get("text").toString()).collect(Collectors.toList());
+                        Assert.assertFalse("ERROR - APP: Recently review data is not displayed", (textList.contains("Recently Reviewed") && uiData.isEmpty()));
                         break;
                     case "image_map":
                     case "custom_popup":
                         List<String> dbImageMapNames = new ArrayList<>();
                         List<String> uiImageMapNames = new ArrayList<>();
-                        for (Map data : dbData)
-                            for (Map type : ((List<Map>) data.get("mediaInfo")))
-                                dbImageMapNames.add(type.get("mediaName").toString());
-                        for (Map data : uiData)
-                            uiImageMapNames.add(((Map) data.get("mediaInfo")).get("imageName").toString());
-                        if (!ListUtils.subtract(dbImageMapNames, uiImageMapNames).isEmpty())
-                            Assert.fail(errorMessage);
+                        dbData.forEach(data -> {
+                            dbImageMapNames.addAll(((List<Map>) data.get("mediaInfo")).stream().map(type -> type.get("mediaName").toString()).collect(Collectors.toList()));
+                        });
+                        uiImageMapNames = uiData.stream().map(data -> ((Map) data.get("mediaInfo")).get("imageName").toString()).collect(Collectors.toList());
+                        Assert.assertTrue(errorMessage, ListUtils.subtract(dbImageMapNames, uiImageMapNames).isEmpty());
                         break;
                     case "video":
                         List dbVideoTitles = new ArrayList<>();
                         List uiVideoTitles = new ArrayList<>();
-                        for (Map data : dbData)
-                            for (Map type : ((List<Map>) data.get("mediaInfo")))
-                                if (type.get("description").toString().equals("VIDEO_TITLE"))
-                                    dbVideoTitles.add(type.get("text").toString());
-                        for (Map data : uiData)
-                            uiVideoTitles.add(((Map)data.get("mediaInfo")).get("videoTitle").toString());
-                        if (!ListUtils.subtract(dbVideoTitles, uiVideoTitles).isEmpty())
-                            Assert.fail(errorMessage);
+                        dbData.forEach(data -> {
+                            dbVideoTitles.addAll(((List<Map>) data.get("mediaInfo")).stream()
+                                    .filter(type -> type.get("description").toString().equals("VIDEO_TITLE"))
+                                    .map(type -> type.get("text").toString())
+                                    .collect(Collectors.toList()));
+                        });
+                        uiVideoTitles = uiData.stream().map(data -> ((Map)data.get("mediaInfo")).get("videoTitle").toString()).collect(Collectors.toList());
+                        Assert.assertTrue(errorMessage, ListUtils.subtract(dbVideoTitles, uiVideoTitles).isEmpty());
                         break;
                     case "text":
                         List<String> dbTextData = new ArrayList<>();
                         List<String> uiTextData = new ArrayList<>();
-                        for (Map data : dbData)
-                            dbTextData.add(data.get("text").toString().toLowerCase());
-                        for (Map data : uiData)
-                            uiTextData.add(((Map) data.get("mediaInfo")).get("text").toString().toLowerCase());
+                        dbTextData = dbData.stream().map(data -> data.get("text").toString().toLowerCase()).collect(Collectors.toList());
+                        uiTextData = uiData.stream().map(data -> ((Map) data.get("mediaInfo")).get("text").toString().toLowerCase()).collect(Collectors.toList());
                         if (dbTextData.size() == 0)
-                            for (Map data : dbData)
-                                dbTextData.add(data.get("text").toString().toLowerCase());
-                        if (!ListUtils.subtract(dbTextData, uiTextData).isEmpty())
-                            Assert.fail(errorMessage);
+                            dbTextData = dbData.stream().map(data -> data.get("text").toString().toLowerCase()).collect(Collectors.toList());
+                        Assert.assertTrue(errorMessage, ListUtils.subtract(dbTextData, uiTextData).isEmpty());
                         break;
                     case "copy_block":
                         List<String> dbCopyData = new ArrayList<>();
                         List<String> uiCopyData = new ArrayList<>();
-                        for (Map data : dbData)
-                            dbCopyData.add(data.get("text").toString().toLowerCase());
-                        for (Map data : uiData)
-                            uiCopyData.add(((Map) data.get("mediaInfo")).get("text").toString().toLowerCase());
-                        if (!ListUtils.subtract(dbCopyData, uiCopyData).isEmpty())
-                            Assert.fail(errorMessage);
+                        dbCopyData = dbData.stream().map(data -> data.get("text").toString().toLowerCase()).collect(Collectors.toList());
+                        uiCopyData = uiData.stream().map(data -> ((Map) data.get("mediaInfo")).get("text").toString().toLowerCase()).collect(Collectors.toList());
+                        Assert.assertTrue(errorMessage, ListUtils.subtract(dbCopyData, uiCopyData).isEmpty());
                         break;
                     case "thumbnail_grid":
                         if (mediaAdsFlag) {
                             List<String> mediGridNames = new ArrayList<>();
                             List<String> uiMediGridNames = new ArrayList<>();
-                            for (Map data : dbData)
-                                for (Object type : ((List) data.get("mediaInfo")))
-                                    mediGridNames.add(((Map)type).get("mediaName").toString());
+                            dbData.forEach(data -> {
+                                mediGridNames.addAll(((List<Object>) data.get("mediaInfo")).stream()
+                                        .map(type -> ((Map)type).get("mediaName").toString())
+                                        .collect(Collectors.toList()));
+                            });
                             boolean dataFound = false;
-                            for (Map data : uiData)  {
-                                if(((Map)data.get("mediaInfo")).get("thumbnailGridExists").getClass().equals(Boolean.class))
-                                    dataFound = ((Boolean)((Map)data.get("mediaInfo")).get("thumbnailGridExists")).booleanValue();
-                                else
-                                    uiMediGridNames.add(((List)((Map) data.get("mediaInfo")).get("thumbnailGridExists")).get(0).toString());
+                            if(uiData.stream().anyMatch(data -> (((Map)data.get("mediaInfo")).get("thumbnailGridExists").getClass().equals(Boolean.class))))
+                                dataFound = uiData.stream().map(data -> (Boolean)((Map)data.get("mediaInfo")).get("thumbnailGridExists")).findFirst().get();
+                            else {
+                                uiMediGridNames = uiData.stream()
+                                        .map(data -> ((List)((Map) data.get("mediaInfo")).get("thumbnailGridExists")).get(0).toString())
+                                        .collect(Collectors.toList());
+                                dataFound = uiMediGridNames.stream().anyMatch(grid -> mediGridNames.contains(grid));
                             }
-                            for (String grid : uiMediGridNames)
-                                if (mediGridNames.contains(grid))
-                                    dataFound = true;
-                            if (!dataFound)
-                                Assert.fail(errorMessage);
+                            Assert.assertTrue(errorMessage, dataFound);
                         } else {
                             List<String> uiMediaTypeDesc = new ArrayList<>();
                             List<String> dbMediaTypeDesc = new ArrayList<>();
-                            for (Map data : dbData)
-                                dbMediaTypeDesc.add(data.get("mediaTypeDesc").toString().toLowerCase());
-                            for (Map data : uiData)
-                                uiMediaTypeDesc.add(data.get("mediaType").toString().toLowerCase());
-                            if (!ListUtils.subtract(dbMediaTypeDesc, uiMediaTypeDesc).isEmpty())
-                                Assert.fail(errorMessage);
+                            dbMediaTypeDesc = dbData.stream()
+                                    .map(data -> data.get("mediaTypeDesc").toString().toLowerCase())
+                                    .collect(Collectors.toList());
+                            uiMediaTypeDesc = uiData.stream()
+                                    .map(data -> data.get("mediaType").toString().toLowerCase())
+                                    .collect(Collectors.toList());
+                            Assert.assertTrue(errorMessage, ListUtils.subtract(dbMediaTypeDesc, uiMediaTypeDesc).isEmpty());
                         }
                         break;
                     case "horizontal_rule":
                         Map horizontalRule = new HashMap<>();
-                        for (Map data : dbData)
-                            if (data.containsKey("text") || !data.get("text").equals(null) || data.get("text").toString().contains("Horizontal Rule")) {
-                                horizontalRule = data;
-                                break;
-                            }
+                        horizontalRule = dbData.stream()
+                                .filter(data -> (data.containsKey("text") || data.get("text") != null || data.get("text").toString().contains("Horizontal Rule")))
+                                .findFirst().get();
                         if (horizontalRule.isEmpty())
-                            for (Map data : uiData)
-                                if (!((boolean) ((Map) data.get("mediaInfo")).get("horizontalRuleExists")))
-                                    Assert.fail(errorMessage);
+                            uiData.forEach(data -> Assert.assertTrue(errorMessage, ((boolean) ((Map) data.get("mediaInfo")).get("horizontalRuleExists"))));
                         break;
                     case "product_pool":
                         List<String> poolData = new ArrayList<>();
                         List<String> uiPoolData = new ArrayList<>();
-                        for (Map data : dbData)
-                            for (Map type : ((List<Map>) data.get("mediaInfo")))
-                                poolData.add(type.get("text").toString().toLowerCase());
-                        for (Map data : uiData)
-                            uiPoolData.add(((Map) data.get("mediaInfo")).get("title").toString().toLowerCase());
-                        if (!uiPoolData.contains(poolData.get(0)))
-                            Assert.fail(errorMessage);
+                        dbData.forEach(data -> {
+                            poolData.addAll(((List<Map>) data.get("mediaInfo")).stream().map(type -> type.get("text").toString().toLowerCase()).collect(Collectors.toList()));
+                        });
+                        uiPoolData = uiData.stream().map(data -> ((Map) data.get("mediaInfo")).get("title").toString().toLowerCase()).collect(Collectors.toList());
+                        Assert.assertTrue(errorMessage, uiPoolData.contains(poolData.get(0)));
                         break;
                     case "jsp":
-                        Map jspData = new HashMap<>();
-                        for (Map data : dbData)
-                            if (data.get("mediaTypeDesc").toString().contains("JSP")) {
-                                jspData = data;
-                                break;
-                            }
-                        if (jspData.equals(null))
-                            for (Map data : uiData)
-                                if (!((boolean) ((Map) data.get("mediaInfo")).get("jspExists")))
-                                    Assert.fail(errorMessage);
+                        if(!dbData.stream().anyMatch(data -> data.get("mediaTypeDesc").toString().contains("JSP")))
+                            uiData.forEach(data -> Assert.assertTrue(errorMessage, ((boolean) ((Map) data.get("mediaInfo")).get("jspExists"))));
                         break;
                     default:
                         Assert.fail("ERROR -ENV : Invalid media type!!");
@@ -539,21 +446,21 @@ public class ContextualContent extends StepUtils {
         } else {
             System.out.println("Widget is collapsed");
         }
+        System.out.println("--> Required media data is present in page!!");
+        StepUtils.resumePageHangWatchDog();
     }
 
     public void verifyMediaNames(boolean isBannerMachineSlide, List<Map> mediaDetails) throws Throwable {
         List<String> names = new ArrayList<>();
-        for (Map type : finalExpectedData)
-            names.add(type.get("mediaTypeDesc").toString().replace(" ", "_").toLowerCase());
+        names = finalExpectedData.stream().map(type -> type.get("mediaTypeDesc").toString().replace(" ", "_").toLowerCase()).collect(Collectors.toList());
         List<String> mediaNames = new ArrayList<>();
-        for (Map type : mediaDetails) {
+        mediaDetails.forEach(type -> {
             if (isBannerMachineSlide)
                 mediaNames.add(((type.get("mediaType").toString().equals("banner_machine_slideshow")) ? "slideshow" : type.get("mediaType").toString()));
             else
                 mediaNames.add(((type.get("mediaType").toString().equals("banner_machine_widget")) ? "widget" : type.get("mediaType").toString()));
-        }
-        if (!ListUtils.subtract(names, mediaNames).isEmpty())
-            Assert.fail("Media are mismatch in DB and UI");
+        });
+        Assert.assertTrue("Media are mismatch in DB and UI", ListUtils.subtract(names, mediaNames).isEmpty());
     }
 
     public Map<String, List<Map>> groupBy(List<Map> originalData, String key) throws Throwable {

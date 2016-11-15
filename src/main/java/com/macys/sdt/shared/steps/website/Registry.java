@@ -375,6 +375,18 @@ public class Registry extends StepUtils {
         regUser.getRegistry().setEventDay(day);
         regUser.getRegistry().setEventYear(year);
         sign_in_or_create_registry(regUser);
+        // update the event date if the event date is not updated in update registry page.
+        I_click_on_edit_profile_link_on_registry_manager_page();
+        Wait.forPageReady();
+        shouldBeOnPage("edit_registry");
+        Wait.untilElementPresent("edit_registry.event_month");
+        DropDowns.selectByText("edit_registry.event_month", month_name);
+        DropDowns.selectByText("edit_registry.event_day", day);
+        DropDowns.selectByText("edit_registry.event_year", year);
+        Clicks.click("edit_registry.update_registry_button");
+        Wait.untilElementPresent("create_registry.close_overlay_chat");
+        if (Elements.elementPresent("create_registry.close_overlay_chat"))
+            Clicks.click("create_registry.close_overlay_chat");
         Wait.forPageReady();
     }
 
@@ -402,6 +414,7 @@ public class Registry extends StepUtils {
 
     @Then("^I should see updated order total on the shopping bag page$")
     public void I_should_see_I_should_see_updated_order_total_on_the_shopping_bag_page() throws Throwable {
+        pausePageHangWatchDog();
         Wait.secondsUntilElementPresent("shopping_bag.promo_text", 5);
         List<WebElement> discountTexts = Elements.findElements("shopping_bag.promo_text");
         String discount = "";
@@ -415,10 +428,10 @@ public class Registry extends StepUtils {
         discount = discount.replaceAll("[-$.]", "").replaceAll("\\s+", "");
         String after_price = Elements.getText("shopping_bag.order_total");
         after_price = after_price.replaceAll("[$.]", "").replaceAll("\\s+", "");
-        if (Integer.parseInt(after_price) <= (Integer.parseInt(beforePrice) - Integer.parseInt(discount))) {
+        if (Integer.parseInt(after_price) <= (Integer.parseInt(beforePrice) - Integer.parseInt(discount)))
             System.out.println("Registry Promotion is applied successfully");
-        } else {
+        else
             Assert.fail("Unable to apply registry promotion");
-        }
+        resumePageHangWatchDog();
     }
 }

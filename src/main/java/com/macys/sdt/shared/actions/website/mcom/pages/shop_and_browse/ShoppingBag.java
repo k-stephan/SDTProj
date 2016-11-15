@@ -233,7 +233,7 @@ public class ShoppingBag extends StepUtils {
             Wait.secondsUntilElementNotPresent("shopping_bag.loading_mask", 10);
         } else {
             Clicks.click(Elements.findElements("shopping_bag.quantities_list").get(index));
-            List<WebElement> quantityList = Elements.findElements("shopping_bag.quantities_options").get(index).findElements(By.cssSelector("li"));
+            List<WebElement> quantityList = Elements.findElements("shopping_bag.quantities_list").get(index).findElements(By.xpath("../ul/li"));
             for (WebElement el : quantityList) {
                 if (el.getText().equalsIgnoreCase(quantity)) {
                     Clicks.click(el);
@@ -263,7 +263,7 @@ public class ShoppingBag extends StepUtils {
             options = select.getOptions();
         } else {
             Clicks.click(Elements.findElements(Elements.element("shopping_bag.quantities_list")).get(index));
-            options = Elements.findElements(Elements.element("shopping_bag.quantities_options")).get(index).findElements(By.cssSelector("li"));
+            options = Elements.findElements(Elements.element("shopping_bag.quantities_list")).get(index).findElements(By.xpath("../ul/li"));
         }
 
         for (WebElement o : options) {

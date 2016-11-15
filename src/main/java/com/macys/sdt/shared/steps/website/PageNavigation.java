@@ -97,6 +97,7 @@ public class PageNavigation extends StepUtils {
 
     @When("^I visit the deals and promotions page$")
     public void I_visit_the_deals_and_promotions_page() throws Throwable {
+        i_goto_home_page();
         Clicks.click("my_account.goto_deals_promotions");
         CreateProfile.closeSecurityAlertPopUp();
     }
@@ -361,14 +362,15 @@ public class PageNavigation extends StepUtils {
 
     @Given("^I am on the USL loyalty home page$")
     public void I_am_on_the_USL_loyalty_home_page() throws Throwable {
+        // Now we have new USL home page in qa environment which is pointing to production, So we are directly visit USL sign in page instead of USL home.
         if (!signedIn()) {
-            Navigate.visit("usl_home");
+            Navigate.visit("usl_sign_in");
         } else {
             Clicks.hoverForSelection("my_account.goto_my_account");
             Wait.untilElementPresent("my_account.goto_my_plenti");
             Clicks.click("my_account.goto_my_plenti");
         }
-        if (!onPage("usl_home")) {
+        if (!onPage("usl_home, usl_sign_in".split(", "))) {
             Assert.fail("Not navigated to USL home page");
         }
     }

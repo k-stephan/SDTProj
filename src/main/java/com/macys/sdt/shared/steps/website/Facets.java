@@ -35,7 +35,7 @@ public class Facets extends StepUtils {
                 Clicks.click(Elements.paramElement("category_browse.facet", "Pick Up In Store"));
             }
 
-            if (!Elements.elementPresent(panel + ".bops_facet_store_overlay")) {
+            if (!onPage("shopping_bag") && !Elements.elementPresent(panel + ".bops_facet_store_overlay")) {
                 LeftFacet.expandFacet("Pick Up In-Store");
                 Clicks.click("category_browse.bops_location");
                 TextBoxes.typeTextbox(panel + ".address_zip_code", zipCode);

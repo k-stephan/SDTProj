@@ -224,6 +224,7 @@ public class MyAccount extends StepUtils {
         if (prodEnv())
             throw new Exceptions.ProductionException("I_add_fully_enrolled_usl_id_on_my_account_page_using_mobile_website()");
 
+        Clicks.click("my_account.plenti_id");
         String plenti_id = TestUsers.getEnrolledUslId().getPlentiId();
         TextBoxes.typeTextbox("my_account.usl_id", plenti_id);
         Clicks.click("my_account.apply_usl_id_button");

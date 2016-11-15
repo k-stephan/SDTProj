@@ -15,10 +15,15 @@ import java.io.InputStreamReader;
 public class Categories {
     private static final String SERVICE_ENDPOINT = "catalog/v2/categories/";
     private static final int MAX_ACTIVE_CATEGORY_LIMIT = 1000;
+    private static boolean useParasoftHost = true;
 
     public static JSONObject category(String cat) {
         JSONObject jsonResponse;
-        String serviceUrl = getServiceURL() + cat + "?_fields=id,name,parentCategoryId,externalHostUrl,attributes,leaf,canvasIds&_expand=id,live,countryEligible,subCategories(name,leaf).depth%3D2,parentCategory(live).depth%3D2147483647&sdpGrid=primary";
+        String serviceUrl = null;
+        if (useParasoftHost)
+            serviceUrl = getServiceURL() + cat + "?_fields=id,name,parentCategoryId,externalHostUrl,attributes,leaf,canvasIds&_expand=id,live,countryEligible,subCategories(name,leaf).depth%3D2,parentCategory(live).depth%3D2147483647&sdpGrid=primary&ip=" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080";
+        else
+            serviceUrl = getServiceURL() + cat + "?_fields=id,name,parentCategoryId,externalHostUrl,attributes,leaf,canvasIds&_expand=id,live,countryEligible,subCategories(name,leaf).depth%3D2,parentCategory(live).depth%3D2147483647&sdpGrid=primary";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(serviceUrl);
         httpGet.addHeader("X-Macys-ClientId", "NavApp");
@@ -45,7 +50,11 @@ public class Categories {
 
     public static boolean activeCategory(String cat) {
         JSONObject jsonResponse;
-        String serviceUrl = getServiceURL() + cat + "?_fields=live";
+        String serviceUrl = null;
+        if (useParasoftHost)
+            serviceUrl = getServiceURL() + cat + "?_fields=live&ip=" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080";
+        else
+            serviceUrl = getServiceURL() + cat + "?_fields=live";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(serviceUrl);
         httpGet.addHeader("X-Macys-ClientId", "NavApp");
@@ -72,6 +81,6 @@ public class Categories {
     }
 
     private static String getServiceURL() {
-        return "http://" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080/api/" + SERVICE_ENDPOINT;
+        return (useParasoftHost ? ("http://esu2v293:9080/api/" + SERVICE_ENDPOINT) : ("http://" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080/api/" + SERVICE_ENDPOINT));
     }
 }

@@ -419,6 +419,7 @@ public class Elements {
             case "class":
                 return By.className(value);
             case "cssSelector":
+            case "css":
                 return By.cssSelector(value);
             case "UIAutomator":
                 if (StepUtils.iOS()) {

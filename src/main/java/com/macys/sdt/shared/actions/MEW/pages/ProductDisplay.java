@@ -33,7 +33,7 @@ public class ProductDisplay extends StepUtils {
             Clicks.clickRandomElement(sizeEl);
             closeTechnicalErrorDialog();
             for (int i = 0; i < 10; i++) {
-                if (!Elements.elementPresent("product_display.validation_error") && !Elements.elementPresent("product_display.out_of_stock"))
+                if (!Elements.elementPresent("product_display.validation_error") && !Elements.elementPresent("product_display.out_of_stock") && Elements.elementPresent("product_display.size_selected"))
                     return;
                 Clicks.clickRandomElement(sizeEl);
             }

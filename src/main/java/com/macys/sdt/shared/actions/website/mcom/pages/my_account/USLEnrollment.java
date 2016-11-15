@@ -11,6 +11,8 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Random;
 
@@ -66,9 +68,10 @@ public class USLEnrollment extends StepUtils {
      * Method to enroll into USL from Plenti Site - Step 1
      */
     public static void enrollStep1(UserProfile customer) {
-        Wait.secondsUntilElementNotPresent(Elements.element("usl_enrollment.site_leaving_popup"), 30);
+//        Wait.secondsUntilElementNotPresent(Elements.element("usl_enrollment.site_leaving_popup"), 30);
+        acceptPlentiAuthenticationPopup();
         Wait.forPageReady();
-        Wait.secondsUntilElementPresent(Elements.element("usl_enroll_step1.first_name"), 5);
+        Wait.secondsUntilElementPresent(Elements.element("usl_enroll_step1.first_name"), 30);
 
         selectRandomSalutation();
         String password = "Password123";
@@ -90,8 +93,7 @@ public class USLEnrollment extends StepUtils {
     public static void completeEnrollment() {
         Wait.forPageReady();
         Wait.secondsUntilElementPresent(Elements.element("usl_enroll_step2.marketing_checkbox"), 2);
-
-        Elements.findElements("usl_enroll_step2.marketing_checkbox").forEach(Clicks::click);
+        Elements.findElements("usl_enroll_step2.marketing_checkbox").stream().limit(2).forEach(Clicks::click);
 
         if (firefox())
             Clicks.javascriptClick("usl_enroll_step2.next_button");
@@ -123,6 +125,73 @@ public class USLEnrollment extends StepUtils {
         else
             Clicks.click(Elements.element("usl_enroll_step1.salutation"));
         Clicks.click(By.xpath("//li[@data-option-array-index='" + index + "']"));
+    }
+
+    /**
+     * Private method for entering credentials in USL authentication popup
+     */
+    private static void acceptPlentiAuthenticationPopup() {
+        try {
+            Robot robot = new Robot();
+            // Wait for authentication popup to display
+            Thread.sleep(10000);
+            robot.keyPress(KeyEvent.VK_O);
+            robot.keyRelease(KeyEvent.VK_O);
+            robot.keyPress(KeyEvent.VK_N);
+            robot.keyRelease(KeyEvent.VK_N);
+            robot.keyPress(KeyEvent.VK_L);
+            robot.keyRelease(KeyEvent.VK_L);
+            robot.keyPress(KeyEvent.VK_I);
+            robot.keyRelease(KeyEvent.VK_I);
+            robot.keyPress(KeyEvent.VK_N);
+            robot.keyRelease(KeyEvent.VK_N);
+            robot.keyPress(KeyEvent.VK_E);
+            robot.keyRelease(KeyEvent.VK_E);
+            robot.keyPress(KeyEvent.VK_SHIFT);
+            robot.keyPress(KeyEvent.VK_MINUS);
+            robot.keyRelease(KeyEvent.VK_MINUS);
+            robot.keyRelease(KeyEvent.VK_SHIFT);
+            robot.keyPress(KeyEvent.VK_P);
+            robot.keyRelease(KeyEvent.VK_P);
+            robot.keyPress(KeyEvent.VK_P);
+            robot.keyRelease(KeyEvent.VK_P);
+            robot.keyPress(KeyEvent.VK_U);
+            robot.keyRelease(KeyEvent.VK_U);
+
+            robot.keyPress(KeyEvent.VK_TAB);
+            Thread.sleep(100);
+            robot.keyRelease(KeyEvent.VK_TAB);
+            // Enter password
+            robot.keyPress(KeyEvent.VK_SHIFT);
+            robot.keyPress(KeyEvent.VK_O);
+            robot.keyRelease(KeyEvent.VK_SHIFT);
+            robot.keyRelease(KeyEvent.VK_O);
+            robot.keyPress(KeyEvent.VK_N);
+            robot.keyRelease(KeyEvent.VK_N);
+            robot.keyPress(KeyEvent.VK_L);
+            robot.keyRelease(KeyEvent.VK_L);
+            robot.keyPress(KeyEvent.VK_2);
+            robot.keyRelease(KeyEvent.VK_2);
+            robot.keyPress(KeyEvent.VK_0);
+            robot.keyRelease(KeyEvent.VK_0);
+            robot.keyPress(KeyEvent.VK_1);
+            robot.keyRelease(KeyEvent.VK_1);
+            robot.keyPress(KeyEvent.VK_4);
+            robot.keyRelease(KeyEvent.VK_4);
+            robot.keyPress(KeyEvent.VK_SHIFT);
+            robot.keyPress(KeyEvent.VK_SLASH);
+            robot.keyRelease(KeyEvent.VK_SLASH);
+            robot.keyRelease(KeyEvent.VK_SLASH);
+            robot.keyPress(KeyEvent.VK_P);
+            robot.keyRelease(KeyEvent.VK_P);
+            robot.keyRelease(KeyEvent.VK_SHIFT);
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+            // Wait for authentication popup to close and redirect to plenti site
+            Thread.sleep(10000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

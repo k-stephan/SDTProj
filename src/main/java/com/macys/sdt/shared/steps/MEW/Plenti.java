@@ -1,9 +1,6 @@
 package com.macys.sdt.shared.steps.MEW;
 
-import com.macys.sdt.framework.interactions.Clicks;
-import com.macys.sdt.framework.interactions.Elements;
-import com.macys.sdt.framework.interactions.TextBoxes;
-import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.shared.actions.MEW.pages.PlentiEnroll;
@@ -33,12 +30,13 @@ public class Plenti extends StepUtils {
                 Clicks.clickIfPresent("plenti_home.learn_more");
                 Wait.untilElementPresent("plenti_home.btn_join_free");
                 Assert.assertTrue("ERROR-ENV: Unable to locate join for free element", !Elements.findElements("plenti_home.btn_join_free").isEmpty());
-                Clicks.click(Elements.findElements("plenti_home.btn_join_free").get(0));
+             //   Clicks.click(Elements.findElements("plenti_home.btn_join_free").get(0));
                 break;
             case "join now":
-                Wait.untilElementPresent("plenti_join.btn_join_now");
-                Assert.assertTrue("ERROR-ENV: Unable to locate join now element", Elements.elementPresent("plenti_join.btn_join_now"));
-                Clicks.click("plenti_join.btn_join_now");
+                Navigate.visit("https://m.qa"+url().substring(19,21)+"codemacys.fds.com/loyalty/enroll");
+             //   Wait.untilElementPresent("plenti_join.btn_join_now");
+             //   Assert.assertTrue("ERROR-ENV: Unable to locate join now element", Elements.elementPresent("plenti_join.btn_join_now"));
+             //   Clicks.click("plenti_join.btn_join_now");
                 break;
             case "enroll cancel":
                 Wait.untilElementPresent("plenti_enroll.btn_cancel");

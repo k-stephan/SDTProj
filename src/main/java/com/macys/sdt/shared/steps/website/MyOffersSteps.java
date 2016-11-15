@@ -29,10 +29,12 @@ public class MyOffersSteps extends StepUtils {
                 if (ol.get("isOfferAvailableToAddToWallet").equals(true)) {
                     offer.putAll(ol);
                     offers.add(offer);
+                    break;
                 }
             }
+            MyOffers.addOfferToWallet(offers.get(0));
 
-            for (Map<String, Object> o : offers) {
+            /*for (Map<String, Object> o : offers) {
                 MyOffers.addOfferToWallet(o);
 
                 List<Map<String, Object>> offersListAfterAddingOffers = MyOffers.offerList();
@@ -47,9 +49,9 @@ public class MyOffersSteps extends StepUtils {
                         //                  Assert.fail("Add to wallet button is not disabled");
                     }
                 }
-            }
+            }*/
         } else
-            System.out.println("There are no wallet eligible offers on deals & promotions page");
+            Assert.fail("ERROR - DATA : Eligible Wallet Offers not present Deals and Promotion Page!!");
     }
 
     @Then("^I should see the added offers in my wallet page$")
@@ -69,18 +71,19 @@ public class MyOffersSteps extends StepUtils {
                     if (o.get("offerName").toString().contains(w.get("offerTitle").toString()) || o.get("offerName").toString().contains(w.get("offerSubHeaderPromo").toString())) {
                         if (!o.get("specialRedemptionCode").toString().contains(w.get("offerPromoCode").toString()))
                             Assert.fail("Offer code does not match");
-                        String walletOfferEndDate = o.get("offerDate").toString().split("- ")[1];
-
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
-                        Calendar c = Calendar.getInstance();
-                        c.setTime(new Date());
-                        c.add(Calendar.DATE, 730);
-                        String dateMoreThanTwoYears = sdf.format(c.getTime());
-
-                        String addedOfferEndDate = sdf.format(sdf.parse(w.get("offerEndDate").toString()));
-
-                        if ((sdf.parse(walletOfferEndDate).compareTo(sdf.parse(dateMoreThanTwoYears)) > 0) && !(walletOfferEndDate.equals(addedOfferEndDate)))
-                            Assert.fail("End dates does not match");
+                        if((w.get("offerEndDate")!=null)) {
+                            if(!w.get("offerEndDate").toString().isEmpty()) {
+                                String walletOfferEndDate = o.get("offerDate").toString().split("- ")[1];
+                                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+                                Calendar c = Calendar.getInstance();
+                                c.setTime(new Date());
+                                c.add(Calendar.DATE, 730);
+                                String dateMoreThanTwoYears = sdf.format(c.getTime());
+                                String addedOfferEndDate = sdf.format(sdf.parse(w.get("offerEndDate").toString()));
+                                if ((sdf.parse(walletOfferEndDate).compareTo(sdf.parse(dateMoreThanTwoYears)) > 0) && !(walletOfferEndDate.equals(addedOfferEndDate)))
+                                    Assert.assertFalse("End dates does not match!!", ((sdf.parse(walletOfferEndDate).compareTo(sdf.parse(dateMoreThanTwoYears)) > 0) && !(walletOfferEndDate.equals(addedOfferEndDate))));
+                            }
+                        }
                         found = true;
                         break;
                     }

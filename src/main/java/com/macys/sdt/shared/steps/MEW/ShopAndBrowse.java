@@ -200,7 +200,7 @@ public class ShopAndBrowse extends StepUtils {
         }
         Wait.secondsUntilElementPresent(pageName + ".sort_by_select", 10);
         List<String> sortByOptionsUI = DropDowns.getAllValues(pageName + ".sort_by_select");
-        Assert.assertTrue("Sort by options are not displayed correctly!!", sortByOptionsUI.size() == sortByOptions.size());
+        Assert.assertTrue("Sort by options are not displayed correctly!!", (sortByOptionsUI.size() == sortByOptions.size()));
         for (String option : sortByOptions) {
             Assert.assertTrue("Sort by (" + option + ") option is not displayed in page!!", CommonUtils.isMatchFound(sortByOptionsUI, option));
         }
@@ -221,7 +221,7 @@ public class ShopAndBrowse extends StepUtils {
         String productCount = Elements.getText(page + ".total_products");
         Wait.secondsUntilElementPresent(page + ".sort_by_button", 10);
         List<String> sortByOptionsUI = Elements.findElements(page + ".sort_by_button").stream().map(WebElement::getText).collect(Collectors.toList());
-        Assert.assertTrue("Sort by options are not displayed correctly!!", sortByOptionsUI.size() == sortByOptions.size());
+        Assert.assertTrue("Sort by options are not displayed correctly!!", (sortByOptionsUI.size() == sortByOptions.size()));
         for (String option : sortByOptionsUI) {
             Assert.assertTrue("Sort by (" + option + ") option is not displayed in page!!", CommonUtils.isMatchFound(sortByOptionsUI, option));
         }

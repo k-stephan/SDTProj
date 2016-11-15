@@ -108,7 +108,7 @@ public abstract class CommonUtils extends StepUtils {
     public static void quickViewMasterMemberProduct(String el, boolean master) {
         boolean found = false;
         List<WebElement> elements = Elements.findElements(el, element -> {
-            WebElement price = element.findElement(By.xpath("src/main/java/com")).findElement(By.cssSelector("div.prices"));
+            WebElement price = element.findElement(By.xpath("../..")).findElement(By.cssSelector("div.prices"));
             return master && price.getText().contains(" - ");
         });
         WebElement selected = elements.get(new Random().nextInt(elements.size()));
@@ -184,7 +184,7 @@ public abstract class CommonUtils extends StepUtils {
                 WebElement parent;
                 WebElement price = null;
                 if (MEW()) {
-                    parent = element.findElement(By.xpath("src/main/java/com/macys"));
+                    parent = element.findElement(By.xpath(".."));
                     try {
                         if (Elements.elementPresent("category_browse.browse_thumbnail_wrapper")) {
                             price = parent.findElement(By.cssSelector(".m-browse-price-regular.m-product-grid-price-regular"));
@@ -195,7 +195,7 @@ public abstract class CommonUtils extends StepUtils {
                         return true;
                     }
                 } else {
-                    parent = element.findElement(By.xpath("src/main/java/com"));
+                    parent = element.findElement(By.xpath("../.."));
                     price = parent.findElement(By.cssSelector("div.prices"));
                 }
                 return price != null && price.getText().contains(" - ");
@@ -518,7 +518,7 @@ public abstract class CommonUtils extends StepUtils {
     /**
      * Runs an action until either the action is successful or maxTries is reached.
      *
-     * @param action   action to be performed (lambda with no args and boolean return value)
+     * @param action   action to be performed (lambda with no args & boolean return value)
      * @param maxTries maximum number of tries - 0 for default (5)
      * @param message  error message to print on failure
      */

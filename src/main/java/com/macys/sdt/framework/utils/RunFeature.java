@@ -3,6 +3,7 @@ package com.macys.sdt.framework.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.model.KillSwitch;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -85,12 +86,17 @@ public class RunFeature {
                 if (f.getName().equals(this.m_repo_jar.getName())) {
                     continue;
                 }
-                System.out.println("--> removing " + f.getCanonicalPath());
+                System.out.println("--> removing " + f.getPath());
                 if (f.isDirectory()) {
-                    FileUtils.cleanDirectory(f);
+                	try{
+                		FileUtils.cleanDirectory(f);
+                	}catch(IOException iex){
+                		System.err.println("-->Cannot clean " + f.getPath() + ":" + iex.getMessage());
+                		continue;
+                	}
                 }
                 if (!f.delete()) {
-                    System.err.println("Failed to delete file: " + f.getCanonicalPath());
+                    System.err.println("Failed to delete file: " + f.getPath());
                 }
             }
         } catch (Exception ex) {
@@ -185,6 +191,7 @@ public class RunFeature {
         Hashtable<String, String> h = new Hashtable<>();
         h.putAll(System.getenv());
         h.put("pid", Utils.getProcessId() + "");
+        h.put("kill_switch", KillSwitch.dump());
         String json = new GsonBuilder().setPrettyPrinting().create().toJson(h);
         System.out.println(json);
         System.out.println();

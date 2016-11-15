@@ -202,7 +202,7 @@ public class ReturnsPage extends StepUtils {
             details.put("quantitySelected", quantitySelected);
             details.put("reasonForReturnDescription", (vrFlag ? "NA" : (DropDowns.getAllValues(By.name("returnDetails.returnShipment.lineItemList[" + index + "].reasonForReturnCode")))));
             details.put("isQuantityDisabled", (vrFlag ? "NA" : (Elements.findElement(By.name("returnDetails.returnShipment.lineItemList[" + index + "].selectedQuantity"))).getAttribute((macys() ? "disabled" : "aria-disabled"))));
-            details.put("reasonSelected", (vrFlag ? (Elements.findElement(By.name("returnDetails.returnShipment.lineItemList[" + index + "].reasonForReturnCode")).findElement(By.xpath("src/main/java/com/macys")).getText()) : (Elements.getText(By.name("returnDetails.returnShipment.lineItemList[" + index + "].reasonForReturnCode")))));
+            details.put("reasonSelected", (vrFlag ? (Elements.findElement(By.name("returnDetails.returnShipment.lineItemList[" + index + "].reasonForReturnCode")).findElement(By.xpath("..")).getText()) : (Elements.getText(By.name("returnDetails.returnShipment.lineItemList[" + index + "].reasonForReturnCode")))));
             details.put("productImgSrc", ((Elements.findElements(Elements.element("return_selection.line_item")).size() > index) ? (Elements.findElements(Elements.element("return_selection.line_item")).get(index).findElement(By.tagName("img")).getAttribute("src")) : null));
             details.put("callToAction", callToAction);
             itemDetails.add(details);
@@ -559,8 +559,8 @@ public class ReturnsPage extends StepUtils {
                 items.put("itemPrice", (price == null ? "" : price.split("\n")[price.split("\n").length - 1]));
                 items.put("lineItemText", lineItemText);
                 items.put("writeAReview", (name.contains("write a review") ? true : false));
-                if (container.findElement(By.xpath("src/main/java/com/macys")).findElements(By.className("returnReminderInfo")).size() > 0) {
-                    String[] remainderText = container.findElement(By.xpath("src/main/java/com/macys")).findElements(By.className("returnReminderInfo")).get(index).getText().split("\n");
+                if (container.findElement(By.xpath("..")).findElements(By.className("returnReminderInfo")).size() > 0) {
+                    String[] remainderText = container.findElement(By.xpath("..")).findElements(By.className("returnReminderInfo")).get(index).getText().split("\n");
                     items.put("callToActionLine1", (isVrItem ? remainderText[2] : "NA"));
                     items.put("callToActionLine2", (isVrItem ? remainderText[3] : "NA"));
                     items.put("reasonCode", (isVrItem ? remainderText[0] : "NA"));

@@ -80,13 +80,14 @@ public class Wishlist extends StepUtils {
     public void I_add_product_to_wishlist() throws Throwable {
         Wait.secondsUntilElementPresentAndClick("product_display.add_to_wishlist_image", 2);
         if (bloomingdales())
-            Wait.secondsUntilElementPresentAndClick("quick_view.default_wishlist", 2);
+            Wait.secondsUntilElementPresentAndClick("quick_view.default_wishlist", 5);
         else
             Wait.untilElementPresent("product_display.wishlist_overlay");
     }
 
     @Then("^I should see \"([^\"]*)\" in product line items in wishlist page$")
     public void i_should_see_in_product_line_items_in_wishlist_page(String product) throws Throwable {
+        pausePageHangWatchDog();
         List<WebElement> plist = Elements.findElements("wish_list.item_links");
         Boolean found = false;
         for (WebElement link : plist) {
@@ -96,8 +97,8 @@ public class Wishlist extends StepUtils {
                 break;
             }
         }
-        if (!found)
-            Assert.fail("Product is not added to wishlist");
+        Assert.assertTrue("Product is not added to wishlist", found);
+        resumePageHangWatchDog();
     }
 
     @When("^I select a \"([^\"]*)\" product on wishlist page$")

@@ -22,7 +22,7 @@ public class MyOffers extends StepUtils {
     public static List<Map<String, Object>> offerList() {
 
         List<Map<String, Object>> offersList = new ArrayList<>();
-
+        pausePageHangWatchDog();
         if (macys()) {
             for (WebElement el : offerElements()) {
                 Map<String, Object> offer = new HashMap<>();
@@ -128,6 +128,7 @@ public class MyOffers extends StepUtils {
                 offersList.add(offer);
             }
         }
+        resumePageHangWatchDog();
         return offersList;
     }
 
@@ -139,6 +140,7 @@ public class MyOffers extends StepUtils {
      */
     public static void addOfferToWallet(Map<String, Object> offer) {
         int index = 0;
+        pausePageHangWatchDog();
         if (offer == null) {
             List<Map<String, Object>> offersList = MyOffers.offerList();
             for (Map<String, Object> ol : offersList) {
@@ -159,6 +161,7 @@ public class MyOffers extends StepUtils {
         Wait.attributeChanged(elements.get(index).findElement(By.cssSelector(".add-to-wallet")), "class", ".*disabled.*");
         if (signedIn() && !(elements.get(index).findElement(By.cssSelector(".add-to-wallet")).getAttribute("class").contains("disabled")))
             Assert.fail("The add offer to bag element did not become disabled after use");
+        resumePageHangWatchDog();
     }
 
     /**

@@ -22,9 +22,10 @@ public class GiftCardService {
      * Returns valid gift card object
      *
      * @return GiftCard object.
+     * @throws IOException
      */
     public static GiftCard getValidGiftCardDetails(GiftCard.CardType cardType) {
-        GiftCard giftCard;
+        GiftCard giftCard = null;
         try {
             String json = getGiftCardsResponse(cardType);
             JSONArray jsonObject = new JSONArray(json);
@@ -47,7 +48,7 @@ public class GiftCardService {
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return giftCard;
     }
 
     /**

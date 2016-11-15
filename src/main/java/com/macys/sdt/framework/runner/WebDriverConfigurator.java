@@ -80,7 +80,12 @@ public class WebDriverConfigurator {
             case "edge":
                 return new EdgeDriver(capabilities);
             default:
-                return new FirefoxDriver(capabilities);
+                try {
+                    return new FirefoxDriver(capabilities);
+                } catch (IllegalStateException e) {
+                    capabilities.setCapability("marionette", false);
+                    return new FirefoxDriver(capabilities);
+                }
         }
 
     }
@@ -126,7 +131,7 @@ public class WebDriverConfigurator {
                 return disabledProxyCap(capabilities);
             case "edge":
                 System.err.println("WARNING: Microsoft's Edge Driver is not fully implemented yet. There may" +
-                    " be strange or unexpected errors.");
+                        " be strange or unexpected errors.");
                 capabilities = DesiredCapabilities.edge();
                 return disabledProxyCap(capabilities);
             default:
@@ -178,7 +183,7 @@ public class WebDriverConfigurator {
             if (!file.exists()) {
                 file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
                 if (!file.exists() && Utils.isWindows())
-                	file = new File(System.getenv("HOME") + "/" + fileName);
+                    file = new File(System.getenv("HOME") + "/" + fileName);
             }
             if (file.exists()) {
                 System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());

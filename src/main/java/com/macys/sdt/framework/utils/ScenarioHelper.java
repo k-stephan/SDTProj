@@ -15,6 +15,7 @@ public class ScenarioHelper {
     public static int outlineCount = 1;
     private static LinkedTreeMap scenarioInfo = new LinkedTreeMap();
     private static int stepOffset = 1;
+    private static int backgroundStepCount = 0;
 
 
     /**
@@ -41,13 +42,27 @@ public class ScenarioHelper {
         MainRunner.URLStack = new ArrayList<>();
     }
 
+    public static void incrementBackgroundStepCount() {
+        backgroundStepCount++;
+    }
+
+    public static boolean isBackground() {
+        StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+        for (StackTraceElement element : stack) {
+            if (element.toString().contains("runBackground")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Gets the index of the current step in the scenario
      *
      * @return the index of the current step in the scenario
      */
     public static int getScenarioIndex() {
-        return scenario.getStepResuls().size() - stepOffset;
+        return scenario.getStepResuls().size() - stepOffset - backgroundStepCount;
     }
 
     /**
@@ -64,9 +79,12 @@ public class ScenarioHelper {
 
     /**
      * Increments the offset of the step index
+     * <p>
+     * <p>
      * The list of results includes not only steps and scenario names,
      * but also a result for each pre-run hook. We need to adjust for
      * this offset.
+     * </p>
      */
     public static void incrementStepIndexOffset() {
         stepOffset++;

@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.utils.db.utils;
 
+import org.junit.Assert;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,6 +30,7 @@ public class DBConnection {
             try {
                 Class.forName(config.getDriver());
                 System.out.println("Connecting to database...");
+                Assert.assertFalse("ERROR - ENV : Unable to fetch database details from REAPPS URL", (config.getDBUrl() == null || config.getUserName() == null || config.getPassword() == null));
                 con = DriverManager.getConnection(config.getDBUrl(), config.getUserName(), config.getPassword());
                 System.out.println("Connection complete");
             } catch (Exception e) {

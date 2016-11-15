@@ -47,6 +47,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.List;
@@ -223,7 +224,7 @@ public class Utils {
      */
     public static String getScenarioShaKey(String feature, String scenario) {
         String path = (feature + scenario).replaceAll("\\s", "");
-        String key = DigestUtils.shaHex(path);
+        String key = DigestUtils.sha256Hex(path);
         System.err.println("...key generation:" + path + ":" + key);
         return key;
     }
@@ -738,17 +739,42 @@ public class Utils {
     }
 
     private static boolean resourcesExctracted = false;
+    private static boolean saveDriver(String driver, String rpath){
+    	if (Utils.isWindows()){
+    		System.out.println(new Date() + " --> Saving driver: " + driver);
+        	File fcdriver = new File(System.getenv("HOME") + "/" + driver);
+        	File fdriver = new File(rpath + "/framework/selenium_drivers/" + driver);
+        	if (fdriver.exists() && (!fcdriver.exists() || fcdriver.length() != fdriver.length())){
+        		try {
+					Files.copy(fdriver.toPath(), fcdriver.toPath(), StandardCopyOption.REPLACE_EXISTING);
+					System.out.println(new Date() + " --> Saved driver to: " + fcdriver.getPath());
+				} catch (IOException e) {
+					e.printStackTrace();
+					return false;
+				}
+        	}
+        }
+    	return true; 
+    }
+    
     public static void extractResources(File repoJar, String workspace, String project) throws IOException {
         if (resourcesExctracted) {
             return;
         }
         redirectSOut();
-        System.out.println("com/macys/sdt/framework/resources");
-        outputJarFile(repoJar, "com/macys/sdt/framework/resources", workspace + "/com/macys/sdt/framework/resources");
-        System.out.println("/com/macys/sdt/shared/resources");
-        outputJarFile(repoJar, "com/macys/sdt/shared/resources", workspace + "/com/macys/sdt/shared/resources");
-        System.out.println("/com/macys/sdt/projects");
-        outputJarFile(repoJar, "com/macys/sdt/projects/" + project, workspace + "/" + project, "/resources", "/features");
+        String rpath = "com/macys/sdt/framework/resources";
+        System.out.println(rpath);
+        outputJarFile(repoJar, rpath, workspace + "/" + rpath);
+        
+        rpath = "com/macys/sdt/shared/resources";
+        System.out.println(rpath);
+        outputJarFile(repoJar, rpath, workspace + "/" + rpath);
+        saveDriver("chromedriver.exe", rpath);
+        saveDriver("IEDriverServer.exe", rpath);
+        
+        rpath = "com/macys/sdt/projects/";
+        System.out.println(rpath);
+        outputJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features");
         resetSOut();
         resourcesExctracted = true;
     }
@@ -820,51 +846,51 @@ public class Utils {
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
                 for (int i=0; i<100; i++){
                 	if (writeSmallBinaryFile(bout.toByteArray(), ftemp)){
-                		renameFile(ftemp, fOut, 100);
+                		renameFile(ftemp, fOut, 10);
                 		break;
                 	}
                 	System.out.println("--> retry outputCompressFile:" + i);
-                	threadSleep(3000, null);
+                	threadSleep(3000l, null);
                 }
             }
         }
     }
 
     private static boolean renameFile(File src, File dest, int retryCount){
-        for (int i=0; i<retryCount; i++){
-            if(src.renameTo(dest)){
-                System.err.println("--> renameFile with java.rename()");
-                return true;
-            }
-            threadSleep(3000, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
-        }
-
-        if (isWindows()){
-            for (int i=0; i<retryCount; i++){
-                String res = executeCMD("ren \"\"" + src.getPath() + "\"\" \"\"" + dest.getPath() + "\"\"");
-
-                if (res != null && res.trim().isEmpty() && dest.exists()){
-                    System.err.println("--> renameFile with CMD");
-                    return true;
-                }
-                threadSleep(3000, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
-            }
-        }
-
-        try {
-            FileUtils.copyFile(src, dest);
-            if (!src.delete()) {
-                System.err.println("--> Failed to delete original file!");
-            }
-            System.err.println("--> renameFile with FileUtils.copyFile()");
-            if (dest.exists())
-                return true;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
+		for (int i=0; i<retryCount; i++){
+			if(src.renameTo(dest)){
+				System.err.print(".");
+				return true;
+			}
+			threadSleep(3000l, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
+		}
+		
+		if (isWindows()){
+			for (int i=0; i<retryCount; i++){
+				String res = executeCMD("ren \"\"" + src.getPath() + "\"\" \"\"" + dest.getPath() + "\"\"");
+				if (res.trim().isEmpty() && dest.exists()){
+					System.err.print("--> used CMD");
+					return true;
+				}
+				threadSleep(3000l, "*" + src.getName() + ":" + dest.getName() + ":" + i);
+			}
+		}else{
+			
+		}
+		
+		try {
+			FileUtils.copyFile(src, dest);
+			src.delete();
+			if (dest.exists()){
+				System.err.print("!");
+				return true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
     
     private static boolean closeIoOutput(OutputStream st) {
         if (st == null) {
@@ -928,7 +954,7 @@ public class Utils {
         return sb;
     }
 
-    protected static String httpGet(String url, StringBuilder cookies) throws Exception {
+    public static String httpGet(String url, StringBuilder cookies) throws Exception {
         HttpClient client = new HttpClient();
         CookieStore cookieStore = new BasicCookieStore();
         HttpContext httpContext = new BasicHttpContext();
@@ -1112,6 +1138,27 @@ public class Utils {
         if (errRedirectCalls == 0) {
             System.setErr(originalErr);
         }
+    }
+
+    /**
+     * Gets the URL of execution engine
+     *
+     * @return String url pointing to EE
+     */
+    public static String getEEUrl() {
+        String ee = "11.142.14.56:9097";
+        if (System.getenv("EE") != null) {
+            ee = System.getenv("EE");
+        } else if (System.getenv("meta_data") != null) {
+            try {
+                Map metaData = new Gson().fromJson(System.getenv("meta_data"), Map.class);
+                ee = metaData.get("EE").toString();
+            } catch (Exception ex) {
+                System.err.println("Unable to get EE URL");
+            }
+        }
+
+        return "http://" + ee;
     }
 
 

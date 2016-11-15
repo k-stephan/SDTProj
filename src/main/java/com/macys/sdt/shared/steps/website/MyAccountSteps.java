@@ -403,6 +403,9 @@ public class MyAccountSteps extends StepUtils {
         String plenti_id = TestUsers.getEnrolledUslId().getPlentiId();
         TextBoxes.typeTextbox("my_account.usl_id", plenti_id);
         Clicks.click("my_account.apply_usl_id_button");
+        if (Elements.elementPresent("my_account.error_message")) {
+            Assert.fail("ERROR - ENV: Unable to look up Plenti ID");
+        }
         Wait.untilElementPresent("my_account.go_to_my_XXXXXX");
     }
 
@@ -533,8 +536,9 @@ public class MyAccountSteps extends StepUtils {
 
     @When("^I enroll into the USL program from loyalty home page$")
     public void iEnrollIntoTheUSLProgramFromLoyaltyHomePage() throws Throwable {
-        iClickOnTheJoinForFreeButton();
-        iClickOnTheJoinNowButton();
+        // Now we have new USL home page in qa environment which is pointing to production, So we are directly visit USL sign in page instead of USL home.
+//        iClickOnTheJoinForFreeButton();
+//        iClickOnTheJoinNowButton();
         if (!signedIn()) {
             Wait.forPageReady();
             Wait.secondsUntilElementPresent("usl_sign_in.goto_create_profile", 30);
@@ -624,6 +628,7 @@ public class MyAccountSteps extends StepUtils {
     @Then("^I (should|should not) see one time add card overlay and its components$")
     public void iShouldSeeOneTimeAddCardOverlayAndItsComponents(String condition) throws Throwable {
         String add_card_elements[] = {"one_time_add_card_overlay", "add_card_overlay_add_card_button", "add_card_overlay_close_button", "add_card_overlay_apply_today_link"};
+        pausePageHangWatchDog();
         Wait.secondsUntilElementPresent("my_account.one_time_add_card_overlay", 5);
         if (condition.equals("should")) {
             for (String element : add_card_elements) {
@@ -636,12 +641,15 @@ public class MyAccountSteps extends StepUtils {
                 Assert.fail("Add credit card overlay is displayed on my account page");
             }
         }
+        resumePageHangWatchDog();
     }
 
     @When("^I select \"([^\"]*)\" on add credit card overlay$")
     public void iSelectFieldOnAddCreditCardOverlay(String element_name) throws Throwable {
+        pausePageHangWatchDog();
         Wait.untilElementPresent("my_account." + element_name);
         Clicks.click("my_account." + element_name);
+        resumePageHangWatchDog();
     }
 
     @Then("^I should be redirected to \"([^\"]*)\" page$")
@@ -782,6 +790,7 @@ public class MyAccountSteps extends StepUtils {
         iNavigateToMyAccountPage();
         // Add CC overlay will display to user only when user visit my account for first time.
         Clicks.clickIfPresent("my_account.add_card_overlay_no_thanks_button");
+        Wait.forPageReady();
         new MyAccount().navigateToLeftNavigationPage("my address book");
         Wait.forPageReady();
         HashMap<String, String> opts = new HashMap<>();

@@ -140,7 +140,7 @@ public class Returns extends StepUtils {
                 returnsPage.returnOrder(returnOrderDetails.getString("order_number"));
                 break;
             case "OD":
-                Assert.assertFalse("ERROR - DATA : Order test data is present in environment!!", Elements.elementPresent("order_status.error_message"));
+                Assert.assertFalse("ERROR - DATA : Order test data is not present in environment!!", Elements.elementPresent("order_status.error_message"));
                 Clicks.click("order_details.return_items");
                 break;
             default:

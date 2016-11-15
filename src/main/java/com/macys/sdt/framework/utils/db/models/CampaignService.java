@@ -292,9 +292,9 @@ public class CampaignService extends StepUtils {
         if(customDate == null)
             customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
         if (!activeCampaigns.isEmpty()) {
-            updateCampaignDates(parentCampaignName, (customDate.minusDays(1)).toString() + " 00:00:00.0", (customDate.minusDays(2)).toString() + " 23:59:59.0");
-            updateCampaignDates((parentCampaignName.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn")), (customDate.minusDays(1)).toString() + " 00:00:00.0", (customDate.minusDays(2)).toString() + " 23:59:59.0");
-            updateCampaignDates((parentCampaignName.contains("ICW") ? "ICWMRedeem" : (macys() ? "MRedeem" : "BRedeem")), (customDate.minusDays(1)).toString() + " 00:00:00.0", (customDate.minusDays(2)).toString() + " 23:59:59.0");
+            updateCampaignDates(parentCampaignName, (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
+            updateCampaignDates((parentCampaignName.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn")), (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
+            updateCampaignDates((parentCampaignName.contains("ICW") ? "ICWMRedeem" : (macys() ? "MRedeem" : "BRedeem")), (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
         }
     }
 
@@ -389,7 +389,7 @@ public class CampaignService extends StepUtils {
     private static void clearShopAppCampaignCache() {
         String url = "/account/campaigncontent?removeCache=true";
         try {
-            Response response = RESTOperations.doGET(MainRunner.url + url, null);
+            Response response = RESTOperations.doGET(MainRunner.url.replace("http:","https:") + url, null);
             if (response.getStatus() != 302) {
                 throw new Exception("ShopApp MBMoney cache is not cleared properly");
             }
