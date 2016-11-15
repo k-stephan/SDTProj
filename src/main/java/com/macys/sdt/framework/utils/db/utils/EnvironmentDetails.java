@@ -1,7 +1,6 @@
 package com.macys.sdt.framework.utils.db.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.Exceptions;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -15,14 +14,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EnvironmentDetails {
 
     static final String ENV_URL = MainRunner.url;
 
     public String envName, ipAddress, hostName;
+    private static boolean stage5 = MainRunner.url.matches(
+            ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
 
     public EnvironmentDetails(String envName, String ipAddress, String hostName) {
 
@@ -46,15 +45,21 @@ public class EnvironmentDetails {
             String json = EnvironmentDetails.getJSONString();
             JSONObject jsonObject = new JSONObject(json);
 
-            String eName = (String) jsonObject.get("envName");
+            String eName = getEnv(ENV_URL);
 
-            JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
-            JSONArray myServicesInfo = (JSONArray) environmentDetails.getJSONObject(0).get("myServicesIpBoList");
+            JSONArray myServicesInfo;
+            if (stage5) {
+                JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
+                myServicesInfo = (JSONArray)environmentDetails.getJSONObject(0).get("myServicesIpBoList");
+            } else {
+                myServicesInfo = (JSONArray)jsonObject.get("myServicesIpBoList");
+            }
 
             for (int i = 0; i < myServicesInfo.length(); i++) {
-                if (myServicesInfo.getJSONObject(i).get("appName").toString().equalsIgnoreCase(appName)) {
-                    JSONObject appInfo = myServicesInfo.getJSONObject(i);
-                    appDetails = new EnvironmentDetails(eName, appInfo.get("appIp").toString(), appInfo.get("hostName").toString());
+                JSONObject appInfo = myServicesInfo.getJSONObject(i);
+                if (appInfo.get("appName").toString().equalsIgnoreCase(appName)) {
+                    appDetails = new EnvironmentDetails(
+                            eName, appInfo.get("appIp").toString(), stage5 ? appInfo.get("hostName").toString() : "");
                     break;
                 }
             }
@@ -80,14 +85,19 @@ public class EnvironmentDetails {
             String json = EnvironmentDetails.getJSONString();
             JSONObject jsonObject = new JSONObject(json);
 
-            String eName = (String) jsonObject.get("envName");
+            String eName = getEnv(ENV_URL);
 
-            JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
-            JSONArray applicationInfo = (JSONArray) environmentDetails.getJSONObject(0).get("applicationBolist");
+            JSONArray applicationInfo;
+            if (stage5) {
+                JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
+                applicationInfo = (JSONArray) environmentDetails.getJSONObject(0).get("applicationBolist");
+            } else {
+                applicationInfo = (JSONArray)jsonObject.get("applicationBolist");
+            }
 
             for (int i = 0; i < applicationInfo.length(); i++) {
-                if (applicationInfo.getJSONObject(i).get("appName").toString().equalsIgnoreCase(appName)) {
-                    JSONObject appInfo = applicationInfo.getJSONObject(i);
+                JSONObject appInfo = applicationInfo.getJSONObject(i);
+                if (appInfo.getString("appName").equalsIgnoreCase(appName)) {
                     String hName = null;
                     if (!appName.equalsIgnoreCase("f5_vip")) {
                         hName = appInfo.get("envName").toString();
@@ -141,8 +151,7 @@ public class EnvironmentDetails {
      * @return service URL
      */
     static String getServiceURL(String envUrl) {
-        final String GET_URL = envUrl.matches(
-                ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?") ?
+        final String GET_URL =  stage5 ?
                 "http://mdc2vr6133:8088/EnvironmentDetailsRestApi/environmentService/getNewEnvDetails/" :
                 "http://c4d.devops.fds.com/reinfo/";
 
