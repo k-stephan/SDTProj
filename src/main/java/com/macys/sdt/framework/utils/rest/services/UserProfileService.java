@@ -24,7 +24,7 @@ public class UserProfileService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileService.class);
 
-    private static String filepath = "src/com/macys/sdt/shared/resources/data/website/mcom";
+    private static String filepath = "shared/resources/data/website/mcom";
 
     /**
      * This method will create user profile

@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils.db.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.Exceptions;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -12,11 +13,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EnvironmentDetails {
 
-    private static final String GET_URL = "http://mdc2vr6133:8088/EnvironmentDetailsRestApi/environmentService/getNewEnvDetails/";
-    private static final String ENV_URL = MainRunner.url;
+    static final String ENV_URL = MainRunner.url;
 
     public String envName, ipAddress, hostName;
 
@@ -104,7 +108,7 @@ public class EnvironmentDetails {
      * Returns environment details.
      *
      * @return environment details
-     * @throws IOException
+     * @throws IOException if response is unreadable
      */
     public static String getJSONString() throws IOException {
 
@@ -136,7 +140,12 @@ public class EnvironmentDetails {
      * @param envUrl environment URL
      * @return service URL
      */
-    private static String getServiceURL(String envUrl) {
+    static String getServiceURL(String envUrl) {
+        final String GET_URL = envUrl.matches(
+                ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?") ?
+                "http://mdc2vr6133:8088/EnvironmentDetailsRestApi/environmentService/getNewEnvDetails/" :
+                "http://c4d.devops.fds.com/reinfo/";
+
         return GET_URL + getEnv(envUrl);
     }
 
@@ -147,8 +156,13 @@ public class EnvironmentDetails {
      * @return environment name
      */
     private static String getEnv(String envUrl) {
-        String[] strarr = envUrl.split("\\."); //parses  http://www.qa16codemacys.fds.com
-        return strarr[1];                      // qa16codemacys
+        try {
+            URL url = new URL(envUrl);
+            String[] split = url.getHost().split("\\.");
+            return split[0].equals("www") ? split[1] : split[0];
+        } catch (MalformedURLException e) {
+            System.err.println("Unable to get environment details");
+            return null;
+        }
     }
-
 }
