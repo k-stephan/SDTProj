@@ -22,6 +22,8 @@ public class USLEnrollment extends StepUtils {
 
     /**
      * Method to enroll into USL as a guest or signed  in user
+     *
+     * @param customer Customer to enroll
      */
     public static void enroll(UserProfile customer) {
         User user = customer.getUser();
@@ -66,6 +68,8 @@ public class USLEnrollment extends StepUtils {
 
     /**
      * Method to enroll into USL from Plenti Site - Step 1
+     *
+     * @param customer Customer to enroll
      */
     public static void enrollStep1(UserProfile customer) {
 //        Wait.secondsUntilElementNotPresent(Elements.element("usl_enrollment.site_leaving_popup"), 30);

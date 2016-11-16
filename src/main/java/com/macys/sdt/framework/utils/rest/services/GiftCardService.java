@@ -21,6 +21,7 @@ public class GiftCardService {
     /**
      * Returns valid gift card object
      *
+     * @param cardType Type of gift card to get info for
      * @return GiftCard object.
      */
     public static GiftCard getValidGiftCardDetails(GiftCard.CardType cardType) {
@@ -53,8 +54,9 @@ public class GiftCardService {
     /**
      * Returns getGiftCardsResponse
      *
-     * @return getGiftCardsResponse.
-     * @throws IOException
+     * @param cardType type of gift card to retrieve
+     * @return getGiftCardsResponse
+     * @throws IOException if response is unreadable
      */
     public static String getGiftCardsResponse(GiftCard.CardType cardType) throws IOException {
         String serviceUrl = getGiftCardServiceUrl(cardType);

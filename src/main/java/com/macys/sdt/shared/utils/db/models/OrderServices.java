@@ -2,6 +2,7 @@ package com.macys.sdt.shared.utils.db.models;
 
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,15 +20,17 @@ public class OrderServices {
 
     /**
      * Method to get orderDetails from site DB(table:ORDER) for a given order number
+     *
+     * @param orderNumber order number to look up
      * @return orderDetails in hashMap format
      **/
-    public HashMap getOrderDetails(String orderNumber) throws Throwable
-    {
+    public HashMap getOrderDetails(String orderNumber) {
         setupConnection();
         HashMap<String, String> orderDetails = new HashMap<>();
         queries = Utils.getSqlQueries();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service").getString("order_details").toString().replaceFirst("'\\?'", "'" + orderNumber + "'"));
+            PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service")
+                    .getString("order_details").replaceFirst("'\\?'", "'" + orderNumber + "'"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 orderDetails.put("USER_ID", resultSet.getString("USER_ID"));
@@ -38,7 +41,7 @@ public class OrderServices {
                 orderDetails.put("BASE_FEE", resultSet.getString("ADJUSTED_BASE_FEE"));
                 orderDetails.put("RESERVATION_STATUS", resultSet.getString("RESERVATION_STATUS"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
         return orderDetails;
@@ -46,9 +49,11 @@ public class OrderServices {
 
     /**
      * Method to get shipping method code from site DB(TABLE:Shipment) for a given order number
+     *
+     * @param orderNumber order number to get info for
      * @return shippingMethodCode
      **/
-    public List getShipMethodCode(String orderNumber) throws Throwable {
+    public List getShipMethodCode(String orderNumber) {
         setupConnection();
         List shipMethod = new ArrayList();
         queries = Utils.getSqlQueries();
@@ -59,7 +64,7 @@ public class OrderServices {
             while (resultSet.next()) {
                 shipMethod.add(resultSet.getString("SHIP_METHOD_CODE"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
         return shipMethod;
@@ -67,9 +72,11 @@ public class OrderServices {
 
     /**
      * Method to get prepareOrder request from site DB(TABLE:Orderlog) for a given order number
+     *
+     * @param orderNumber order number to get info for
      * @return prepareOrderReq in List Element format
      **/
-    public List<Element> getPrepareOrderRequest(String orderNumber) throws Throwable {
+    public List<Element> getPrepareOrderRequest(String orderNumber) {
         setupConnection();
         List<Element> preapreOrderReq = new ArrayList();
         queries = Utils.getSqlQueries();
@@ -81,7 +88,7 @@ public class OrderServices {
                 Element prepareOrderXml = getXmlElements(xmlData);
                 preapreOrderReq.add(prepareOrderXml);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
         return preapreOrderReq ;
@@ -90,20 +97,24 @@ public class OrderServices {
     /**
      * Method to parse the XML into TagElements
      *
+     * @param xmlData Data to look for
      * @return documentElement
      **/
 
-    public Element getXmlElements(String xmlData) throws Exception
-    {
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        InputSource src = new InputSource();
-        src.setCharacterStream(new StringReader(xmlData));
-        Document doc = builder.parse(src);
-        return doc.getDocumentElement();
+    public Element getXmlElements(String xmlData) {
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource src = new InputSource();
+            src.setCharacterStream(new StringReader(xmlData));
+            Document doc = builder.parse(src);
+            return doc.getDocumentElement();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    /*
-        To setup DB connection
+    /**
+     * Sets up a database connection
      */
     private void setupConnection() {
         if (statement == null) {

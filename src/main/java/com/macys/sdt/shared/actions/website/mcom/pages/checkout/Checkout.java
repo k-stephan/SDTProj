@@ -47,6 +47,7 @@ public class Checkout extends StepUtils {
     /**
      * Method to get bMoney earn information
      *
+     * @param pageName current page
      * @return bMoney earn information
      */
     public static HashMap<String, String> getEstimatedBMoneyInformation(RCPage pageName) {

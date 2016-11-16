@@ -80,7 +80,6 @@ public class ScenarioHelper {
     /**
      * Increments the offset of the step index
      * <p>
-     * <p>
      * The list of results includes not only steps and scenario names,
      * but also a result for each pre-run hook. We need to adjust for
      * this offset.

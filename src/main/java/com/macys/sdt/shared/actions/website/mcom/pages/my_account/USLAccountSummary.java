@@ -11,6 +11,10 @@ public class USLAccountSummary extends StepUtils {
 
     /**
      * Method to verify USL information displayed on USL account summary page
+     *
+     * @param status Expected USL status
+     * @param enrollmentMessage Expected message after enrollment
+     * @throws Exceptions.EnvException If expected elements are not present
      */
     public static void verifyUSLAccountSummaryPageInformation(String status, String enrollmentMessage) throws Exceptions.EnvException {
         try {

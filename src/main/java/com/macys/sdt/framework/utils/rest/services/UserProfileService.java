@@ -103,6 +103,7 @@ public class UserProfileService {
     /**
      * This method will create a user profile from the given object
      *
+     * @param profile UserProfile to create
      * @return true if profile was created successfully
      */
     public static boolean createUserProfile(UserProfile profile) {

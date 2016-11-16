@@ -442,7 +442,7 @@ public class PageNavigation extends StepUtils {
         for (String option : sortByList) {
             //Observed that, In website, Sort by options values are varying for products and thus failing assertions
             //Example: Feature file has "Price: Low to High", where as in Website, it is listed as "Price: (low to high)"
-            foundMatch = CommonUtils.isMatchFound(sortByOptions, option);
+            foundMatch = CommonUtils.matchSimilarSortBy(sortByOptions, option);
             if (!foundMatch)
                 Assert.fail("sort by (" + option + ") option is not displayed in page!!");
         }

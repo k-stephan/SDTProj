@@ -202,7 +202,7 @@ public class ShopAndBrowse extends StepUtils {
         List<String> sortByOptionsUI = DropDowns.getAllValues(pageName + ".sort_by_select");
         Assert.assertTrue("Sort by options are not displayed correctly!!", (sortByOptionsUI.size() == sortByOptions.size()));
         for (String option : sortByOptions) {
-            Assert.assertTrue("Sort by (" + option + ") option is not displayed in page!!", CommonUtils.isMatchFound(sortByOptionsUI, option));
+            Assert.assertTrue("Sort by (" + option + ") option is not displayed in page!!", CommonUtils.matchSimilarSortBy(sortByOptionsUI, option));
         }
         DropDowns.selectByText(pageName + ".sort_by_select", sortByOptionsUI.get(new Random().nextInt(sortByOptionsUI.size())));
         if (macys()) {
@@ -223,7 +223,7 @@ public class ShopAndBrowse extends StepUtils {
         List<String> sortByOptionsUI = Elements.findElements(page + ".sort_by_button").stream().map(WebElement::getText).collect(Collectors.toList());
         Assert.assertTrue("Sort by options are not displayed correctly!!", (sortByOptionsUI.size() == sortByOptions.size()));
         for (String option : sortByOptionsUI) {
-            Assert.assertTrue("Sort by (" + option + ") option is not displayed in page!!", CommonUtils.isMatchFound(sortByOptionsUI, option));
+            Assert.assertTrue("Sort by (" + option + ") option is not displayed in page!!", CommonUtils.matchSimilarSortBy(sortByOptionsUI, option));
         }
         Clicks.clickRandomElement(page + ".sort_by_button");
         Wait.forPageReady();

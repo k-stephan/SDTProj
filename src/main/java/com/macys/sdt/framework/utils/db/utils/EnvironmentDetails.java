@@ -20,15 +20,13 @@ public class EnvironmentDetails {
     static final String ENV_URL = MainRunner.url;
 
     public String envName, ipAddress, hostName;
-    private static boolean stage5 = MainRunner.url.matches(
+    static boolean stage5 = MainRunner.url.matches(
             ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
 
     public EnvironmentDetails(String envName, String ipAddress, String hostName) {
-
         this.envName = envName;
         this.ipAddress = ipAddress;
         this.hostName = hostName;
-
     }
 
     /**

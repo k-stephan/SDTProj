@@ -536,39 +536,40 @@ public abstract class CommonUtils extends StepUtils {
     }
 
     /**
-     * Sort by options values vary for products and thus failing assertions
+     * Checks for sort by options similar to the option you're looking for
+     * <p>
      * Example1: Feature file has "Price: Low to High", where as in Website, it is listed as "Price: (low to high)"
      * Example2: Feature file has "Price: Customer Top Rated", where as in Website, it is listed as "Customers' Top Rated"
      * This method is to find the match with matching regex and returns boolean value based on the match found
+     * </p>
+     *
+     * @param sortByOptions List of all available options
+     * @param listOption Option you're looking for
+     * @return true if a similar option exists in the list
      */
-    public static boolean isMatchFound(List<String> sortByOptions, String listOption) {
-        boolean foundMatch = false;
+    public static boolean matchSimilarSortBy(List<String> sortByOptions, String listOption) {
         for (String sortOption : sortByOptions) {
             // So far seen four different combinations for price and customer options
             if (listOption.startsWith("Price")) {
                 Pattern pricePattern = Pattern.compile("(?i)(.*Low(.*?)High*.)|(.*High(.*?)Low*.)");
                 Matcher priceMatcher = pricePattern.matcher(sortOption);
                 if (priceMatcher.find()) {
-                    foundMatch = true;
-                    break;
+                    return true;
                 }
             } else if (listOption.startsWith("Customer")) {
                 Pattern customerPattern = Pattern.compile("(?i)(.*Customer(.*?)Rated*.)");
                 Matcher customerMatcher = customerPattern.matcher(sortOption);
                 if (customerMatcher.find()) {
-                    foundMatch = true;
-                    break;
+                    return true;
                 }
             } else {
-                foundMatch = false;
                 Pattern optionPattern = Pattern.compile(listOption, Pattern.CASE_INSENSITIVE);
                 Matcher optionMatcher = optionPattern.matcher(sortOption);
                 if (optionMatcher.find()) {
-                    foundMatch = true;
-                    break;
+                    return true;
                 }
             }
         }
-        return foundMatch;
+        return false;
     }
 }
