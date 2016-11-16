@@ -186,18 +186,18 @@ public class ProductDisplayPage extends StepUtils {
     @And("^I search for a product in a nearby store using mobile website$")
     public void I_search_for_a_product_in_a_nearby_store_using_mobile_website() throws Throwable {
         Assert.assertTrue("ERROR-ENV: Unable to locate product in store", Elements.elementPresent("product_display.find_store_link"));
-        Clicks.click(Elements.element("product_display.find_store_link"));
+        Clicks.click("product_display.find_store_link");
         Assert.assertTrue("ERROR-ENV: Find in store overlay is not visible ", Elements.elementPresent("product_display.find_in_store_overlay"));
         if (macys())
-            DropDowns.selectByText(Elements.element("change_pickup_store.search_distance"), "Show stores within 100 miles");
+            DropDowns.selectByText("change_pickup_store.search_distance", "Show stores within 100 miles");
 
-        TextBoxes.typeTextbox(Elements.element("change_pickup_store.address_zip_code"), "22102");
-        Clicks.click(Elements.element("change_pickup_store.search_button"));
+        TextBoxes.typeTextbox("change_pickup_store.address_zip_code", "22102");
+        Clicks.click("change_pickup_store.search_button");
     }
 
     @And("^I should see member products listed in mobile website$")
     public void I_should_see_member_products_listed_in_mobile_website() throws Throwable {
-        Assert.assertTrue("Member items not visible", Elements.anyPresent(Elements.element("product_display_master.member_prod_list")));
+        Assert.assertTrue("Member items not visible", Elements.anyPresent("product_display_master.member_prod_list"));
     }
 
     @And("^I add member product from PDP and select \"([^\"]*)\" using mobile website$")
@@ -219,14 +219,14 @@ public class ProductDisplayPage extends StepUtils {
     }
 
     @And("^I click Add to Wish List button on PDP using mobile website$")
-    public void I_click_Add_to_Wish_List_button_on_PDP_using_mobile_website() throws Throwable {
-        Clicks.click(Elements.element("product_display.add_to_wishlist"));
-        Assert.assertTrue("ERROR-ENV: Unable to navigate wish list overlay", Elements.elementPresent(Elements.element("product_display.wish_list_overlay")));
+    public void I_click_add_to_Wish_List_button_on_PDP_using_mobile_website() throws Throwable {
+        Clicks.click("product_display.add_to_wishlist");
+        Assert.assertTrue("ERROR-ENV: Unable to navigate wish list overlay", Wait.untilElementPresent("product_display.wish_list_overlay"));
     }
 
     @When("^I click on view list in ATW overlay from PDP using mobile website$")
     public void I_click_on_view_list_in_ATW_overlay_from_PDP_using_mobile_website() throws Throwable {
-        Clicks.click(Elements.element("product_display.view_list"));
+        Clicks.click("product_display.view_list");
         Assert.assertTrue("ERROR-ENV: Unable to navigate wish list page", onPage("wish_list"));
     }
 
@@ -260,7 +260,7 @@ public class ProductDisplayPage extends StepUtils {
         }
         I_add_product_to_my_registry_from_standard_PDP_Page_using_mobile_site();
         if (Elements.elementPresent("add_to_registry_overlay.add_to_registry_overlay"))
-            Clicks.click(Elements.element("add_to_registry_overlay.view_registry"));
+            Clicks.click("add_to_registry_overlay.view_registry");
         if (bloomingdales()) {
             Clicks.click("registry_bvr.category_header");
             Wait.untilElementPresent("registry_bvr.quantity");
@@ -283,13 +283,13 @@ public class ProductDisplayPage extends StepUtils {
                 ProductDisplay.selectRandomColor();
                 ProductDisplay.selectRandomSize();
                 if (ProductDisplay.isMasterMemberPage()) {
-                    Clicks.clickRandomElement(Elements.element("product_display.add_to_registry"));
+                    Clicks.clickRandomElement("product_display.add_to_registry");
                 } else {
-                    Clicks.click(Elements.element("product_display.add_to_registry"));
+                    Clicks.click("product_display.add_to_registry");
                 }
                 Clicks.clickIfPresent("product_display.technical_error");
                 if (isErrorPaneVisible()) {
-                    Clicks.click(Elements.element("home.popup_close"));
+                    Clicks.click("home.popup_close");
                 }
 //            }
             Wait.forPageReady();
