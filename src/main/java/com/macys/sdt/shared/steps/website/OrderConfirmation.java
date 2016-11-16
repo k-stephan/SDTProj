@@ -87,12 +87,12 @@ public class OrderConfirmation extends StepUtils {
         Assert.assertTrue("Order placed in batch mode", (orderDetails.get("ORDER_STATUS").toString()).equals((inventoryDownMsg.contains("inventory system is temporarily offline") ? "BPEND" :"RCMPL")));
 
         //Getting shipment details from site DB and verifying the shipment code for nohurry
-        List shipMethodCode = order.getShipMethodCode(orderNumber);
+        List<String> shipMethodCode = order.getShipMethodCode(orderNumber);
         Assert.assertTrue("Shipping method code for nohurry is not correct", shipMethodCode.contains("W"));
 
         //Getting prepare order request in XML Element format from site DB and verifying the shipType for noHurry shipping method
         List<Element> prepareOrderReq = order.getPrepareOrderRequest(orderNumber);
-        List<Object> shipTypes = new ArrayList();
+        List<Object> shipTypes = new ArrayList<>();
         for (int index = 0; index < shipMethodCode.size(); index++)
             shipTypes.add(prepareOrderReq.get(prepareOrderReq.size() - 1).getElementsByTagName("shipType").item(index).getTextContent());
         Assert.assertTrue("NoHurry shipping method code is not displayed in prepare order request", shipTypes.contains("W"));

@@ -53,12 +53,13 @@ public class OrderServices {
      * @param orderNumber order number to get info for
      * @return shippingMethodCode
      **/
-    public List getShipMethodCode(String orderNumber) {
+    public List<String> getShipMethodCode(String orderNumber) {
         setupConnection();
-        List shipMethod = new ArrayList();
+        List<String> shipMethod = new ArrayList<>();
         queries = Utils.getSqlQueries();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service").getString("order_shipment_details").toString().replaceFirst("'\\?'", "'" + orderNumber + "'"));
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    queries.getJSONObject("order_service").getString("order_shipment_details").replaceFirst("'\\?'", "'" + orderNumber + "'"));
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -81,7 +82,8 @@ public class OrderServices {
         List<Element> preapreOrderReq = new ArrayList();
         queries = Utils.getSqlQueries();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service").getString("prepare_order_details").toString().replaceFirst("'\\?'", "'" + orderNumber + "'"));
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    queries.getJSONObject("order_service").getString("prepare_order_details").replaceFirst("'\\?'", "'" + orderNumber + "'"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String xmlData = resultSet.getString("XML_DATA");

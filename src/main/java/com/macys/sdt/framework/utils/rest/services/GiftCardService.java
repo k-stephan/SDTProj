@@ -29,9 +29,9 @@ public class GiftCardService {
         try {
             String json = getGiftCardsResponse(cardType);
             JSONArray jsonObject = new JSONArray(json);
-            for (int index = 0;index<jsonObject.length();index++){
+            for (int index = 0; index < jsonObject.length(); index++) {
                 JSONObject giftCardObject = jsonObject.getJSONObject(index);
-                if(giftCardObject.getDouble("Balance") > 0 && giftCardObject.getDouble("Current_Balance") > 0){
+                if (giftCardObject.getDouble("Balance") > 0 && giftCardObject.getDouble("Current_Balance") > 0) {
                     giftCard = new GiftCard(GiftCard.CardType.fromString(giftCardObject.getString("Card_Type")),
                             giftCardObject.getString("Gift_Card"),
                             giftCardObject.getString("CardDesc"),
@@ -73,9 +73,9 @@ public class GiftCardService {
         return response.toString();
     }
 
-    private static String getGiftCardServiceUrl(GiftCard.CardType cardType){
+    private static String getGiftCardServiceUrl(GiftCard.CardType cardType) {
         String environmentUrl = MainRunner.url.split("\\.")[1], cardPath = "Min Balance (<$50)", cardFullPath = null, requestUrl = null, tokenName = "N_GUrqG6Eq8oeCrvE0aZLA";
-        switch (cardPath){
+        switch (cardPath) {
             case "Min Balance (<$50)":
                 cardFullPath = "/buckets/Gift%20Cards/Gift%20Cards::" + cardType + "::Min%20Balance%20(%3C$50)?auth_token=";
                 break;
@@ -83,7 +83,7 @@ public class GiftCardService {
                 cardFullPath = "/buckets/Gift%20Cards/Gift%20Cards::" + cardType + "::Regular%20Balance%20($50%20-%20$2000)?auth_token=";
                 break;
             default:
-                Assert.fail("Incorrect cardPath ("+cardPath+") found!!");
+                Assert.fail("Incorrect cardPath (" + cardPath + ") found!!");
         }
         requestUrl = "http://sim.delivery.fds/sim/environments/" + environmentUrl + cardFullPath + tokenName;
         return requestUrl;
