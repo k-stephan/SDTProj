@@ -66,7 +66,7 @@ public class ProductDisplayPage extends StepUtils {
         Clicks.clickIfPresent("product_display.no_thanks");
         I_add_product_to_my_bag_from_standard_PDP_Page_using_mobile_site();
         if (onPage("add_to_bag")) {
-            Clicks.click("add_to_bag.checkout");
+            Clicks.clickWhenPresent("add_to_bag.checkout");
             shouldBeOnPage("shopping_bag");
         }
     }

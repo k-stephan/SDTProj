@@ -228,8 +228,8 @@ public class MyAccount extends StepUtils {
         String plenti_id = TestUsers.getEnrolledUslId().getPlentiId();
         TextBoxes.typeTextbox("my_account.usl_id", plenti_id);
         Clicks.click("my_account.apply_usl_id_button");
-        Wait.untilElementPresent("my_account.go_to_my_XXXXXX");
-        Assert.assertTrue("ERROR-ENV: Unable to add usl id to profile", Elements.elementPresent("my_account.go_to_my_XXXXXX"));
+        Wait.untilElementPresent("my_account.my_plenti_label");
+        Assert.assertTrue("ERROR-ENV: Unable to add usl id to profile", Elements.elementPresent("my_account.my_plenti_label"));
     }
 
     @And("^I remove USL ID from shipping and payment page using mobile website$")
