@@ -265,7 +265,7 @@ public class CampaignService extends StepUtils {
      * @param expiryDate         to update campaign expiration date
      */
     private static void updateCampaignDates(String campaignPeriodType, String effectiveStart, String expiryDate) {
-        String campaignId = getCampaignDetails(campaignPeriodType).get("campaignId").toString();
+        String campaignId = getCampaignDetails(campaignPeriodType, true).get("campaignId").toString();
 
         try {
             String sqlQuery = campaignQueries.getJSONObject("mb_money").getString("update_mb_money_campaign");
@@ -285,10 +285,10 @@ public class CampaignService extends StepUtils {
     /**
      * Method used to disable the campaign
      *
-     * @param parentCampaignName to updated campaign details
+     * @param name to updated campaign details
      */
-    private static void disableOtherCampaign(String parentCampaignName) {
-        Map<String, Object> activeCampaigns = getCampaignDetails(parentCampaignName);
+    private static void disableOtherCampaign(String name) {
+        Map<String, Object> activeCampaigns = getCampaignDetails(name, false);
         if(customDate == null)
             customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
         if (!activeCampaigns.isEmpty()) {
@@ -304,7 +304,7 @@ public class CampaignService extends StepUtils {
      * @param campaignType to get campaign details
      * @return campaign details
      */
-    private static Map<String, Object> getCampaignDetails(String campaignType) {
+    private static Map<String, Object> getCampaignDetails(String campaignType, boolean insertCampaignFlag) {
         Map<String, Object> campaignDetails = new HashMap<>();
 
         try {
@@ -324,9 +324,9 @@ public class CampaignService extends StepUtils {
                     campaignDetails.put("effectiveDate", rs.getTimestamp("effective_date"));
                     campaignDetails.put("expirationDate", rs.getTimestamp("expiration_date"));
                 }
-            } else {
+            } else if (insertCampaignFlag){
                 insertCampaignDetails();
-                campaignDetails = getCampaignDetails(campaignType);
+                campaignDetails = getCampaignDetails(campaignType, false);
             }
         } catch (JSONException | SQLException e) {
             System.err.println("Unable to get MBMoney campaign details: " + e);
@@ -353,7 +353,7 @@ public class CampaignService extends StepUtils {
             }
             for (int index = 0; index < campaignAttributesQueries.length(); index++)
                 statement.executeUpdate(campaignAttributesQueries.getString(index));
-            System.out.println("Inserted MB Money campaign details !!");
+            System.out.println("Inserted "+campaignName+" campaign details !!");
         } catch (JSONException | SQLException e) {
             System.err.println("Unable to insert Campaign details: " + e);
         }

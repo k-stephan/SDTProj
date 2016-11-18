@@ -507,6 +507,7 @@ public class PageNavigation extends StepUtils {
 
     @Given("^I visit the web site as a (guest|registered) user in (mMoney|bMoney|ICWMoney) (earn|burn) period$")
     public void I_visit_the_web_site_as_a_guest_user_in_mMoney_earn_period(String userType, String moneyType, String campaignType) throws Throwable {
+        pausePageHangWatchDog();
         CampaignService.setCampaignName(moneyType);
         Map<String,Boolean> mbMoneycampaignDetails = CampaignService.getAllCampaignPeriods();
         if (campaignType.equals("earn") && mbMoneycampaignDetails.get("earn").equals(false))
@@ -516,6 +517,7 @@ public class PageNavigation extends StepUtils {
         else if (mbMoneycampaignDetails.get(campaignType).equals(false))
             CampaignService.updateCampaignDetailsInDatabase(campaignType);
         CampaignService.clearAllMbmoneyRelatedCaches();
+        resumePageHangWatchDog();
         if (userType.equals("guest"))
             I_visit_the_web_site_as_a_guest_user();
         else

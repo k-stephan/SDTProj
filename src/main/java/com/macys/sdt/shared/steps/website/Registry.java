@@ -19,6 +19,7 @@ import cucumber.api.java.en.When;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.time.Month;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Registry extends StepUtils {
 
@@ -418,12 +420,11 @@ public class Registry extends StepUtils {
         Wait.secondsUntilElementPresent("shopping_bag.promo_text", 5);
         List<WebElement> discountTexts = Elements.findElements("shopping_bag.promo_text");
         String discount = "";
-        for (int index = 0; index < discountTexts.size(); index++) {
-            if (discountTexts.get(index).getText().toLowerCase().contains("registry")) {
-                discount = Elements.findElements("shopping_bag.promo_discount").get(index).getText();
-                break;
-            }
-        }
+        if (discountTexts.stream().anyMatch(element -> element.getText().toLowerCase().contains("registry")))
+            discount = discountTexts.stream()
+                    .filter(element -> element.getText().toLowerCase().contains("registry"))
+                    .map(element -> element.findElement(By.xpath("..")).findElement(By.className("promoDiscount")).getText())
+                    .collect(Collectors.toList()).get(0);
         Assert.assertFalse("Registry Promo Code is not applied on shopping bag page!!", discount.isEmpty());
         discount = discount.replaceAll("[-$.]", "").replaceAll("\\s+", "");
         String after_price = Elements.getText("shopping_bag.order_total");
@@ -431,7 +432,7 @@ public class Registry extends StepUtils {
         if (Integer.parseInt(after_price) <= (Integer.parseInt(beforePrice) - Integer.parseInt(discount)))
             System.out.println("Registry Promotion is applied successfully");
         else
-            Assert.fail("Unable to apply registry promotion");
+            Assert.fail("ERROR - APP : Applied registry promo code is not reflected in order summary!!");
         resumePageHangWatchDog();
     }
 }
