@@ -118,6 +118,8 @@ public class ShopAndBrowse extends StepUtils {
                     ProductDisplay.selectRandomColor();
                     ProductDisplay.selectRandomSize();
                     Clicks.click("product_display.add_to_bag_button");
+                    if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog"))
+                        Clicks.clickIfPresent("product_display.add_to_bag_button");
 
                     addedToBag = ProductDisplay.addedToBag();
                     if (MainRunner.debugMode) {

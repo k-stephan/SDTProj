@@ -630,17 +630,12 @@ public class MyAccountSteps extends StepUtils {
         String add_card_elements[] = {"one_time_add_card_overlay", "add_card_overlay_add_card_button", "add_card_overlay_close_button", "add_card_overlay_apply_today_link"};
         pausePageHangWatchDog();
         Wait.secondsUntilElementPresent("my_account.one_time_add_card_overlay", 5);
-        if (condition.equals("should")) {
-            for (String element : add_card_elements) {
-                if (!Elements.elementPresent("my_account." + element)) {
-                    Assert.fail(element + " element is not displayed on my account page!!");
-                }
-            }
-        } else {
-            if (Elements.elementPresent("my_account.one_time_add_card_overlay")) {
-                Assert.fail("Add credit card overlay is displayed on my account page");
-            }
-        }
+        if (condition.equals("should"))
+            for (String element : add_card_elements)
+                Assert.assertTrue(element + " element is not displayed on add_card_overlay!!", Elements.elementPresent("my_account." + element));
+        else
+            Assert.assertFalse("Add credit card overlay is displayed on my account page!!", Elements.elementPresent("my_account.one_time_add_card_overlay"));
+
         resumePageHangWatchDog();
     }
 
@@ -753,8 +748,8 @@ public class MyAccountSteps extends StepUtils {
 
     @Then("^I verify the ability to cancel the order in order details page$")
     public void iVerifyTheAbilityToCancelTheOrderInOrderDetailsPage() throws Throwable {
-        if (Elements.elementPresent("order_status.cancel_order_button"))
-            Clicks.click("order_status.cancel_order_button");
+        Wait.secondsUntilElementPresent("order_status.cancel_order_button", 5);
+        Clicks.click("order_status.cancel_order_button");
         if(safari())
             Wait.secondsUntilElementPresent("order_status.order_cancel_yes_button", 10);
         Clicks.click("order_status.order_cancel_yes_button");

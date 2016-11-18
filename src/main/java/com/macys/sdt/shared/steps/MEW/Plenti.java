@@ -27,13 +27,13 @@ public class Plenti extends StepUtils {
 
         switch (button.toLowerCase()) {
             case "join for free":
-                Clicks.clickIfPresent("plenti_home.learn_more");
+                Clicks.click("plenti_home.learn_more");
                 Wait.untilElementPresent("plenti_home.btn_join_free");
                 Assert.assertTrue("ERROR-ENV: Unable to locate join for free element", !Elements.findElements("plenti_home.btn_join_free").isEmpty());
              //   Clicks.click(Elements.findElements("plenti_home.btn_join_free").get(0));
                 break;
             case "join now":
-                Navigate.visit("https://m.qa"+url().substring(19,21)+"codemacys.fds.com/loyalty/enroll");
+                Navigate.visit("plenti_enroll"); //goto plenty enroll page directly
              //   Wait.untilElementPresent("plenti_join.btn_join_now");
              //   Assert.assertTrue("ERROR-ENV: Unable to locate join now element", Elements.elementPresent("plenti_join.btn_join_now"));
              //   Clicks.click("plenti_join.btn_join_now");
@@ -49,7 +49,7 @@ public class Plenti extends StepUtils {
                 Wait.untilElementPresent("plenti_enrollment_cancel_confirm.cancel_overlay");
                 Assert.assertTrue("ERROR-ENV: Unable to locate yes, cancel element", Elements.elementPresent("plenti_enrollment_cancel_confirm.cancel_overlay"));
                 Clicks.click("plenti_enrollment_cancel_confirm.btn_yes_cancel");
-                Assert.assertTrue("ERROR-ENV: Current environment is deviated in to a " + url() + " environment", MEW());
+                // Assert.assertTrue("ERROR-ENV: Current environment is deviated in to a " + url() + " environment", MEW());
                 break;
             default:
                 System.out.println("Invalid button: " + button);
