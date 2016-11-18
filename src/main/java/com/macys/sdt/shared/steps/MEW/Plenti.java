@@ -27,7 +27,7 @@ public class Plenti extends StepUtils {
 
         switch (button.toLowerCase()) {
             case "join for free":
-                Clicks.click("plenti_home.learn_more");
+                Clicks.clickWhenPresent("plenti_home.learn_more");
                 Wait.untilElementPresent("plenti_home.btn_join_free");
                 Assert.assertTrue("ERROR-ENV: Unable to locate join for free element", !Elements.findElements("plenti_home.btn_join_free").isEmpty());
              //   Clicks.click(Elements.findElements("plenti_home.btn_join_free").get(0));
