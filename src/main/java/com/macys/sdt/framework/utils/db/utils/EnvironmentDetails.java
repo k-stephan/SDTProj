@@ -171,7 +171,7 @@ public class EnvironmentDetails {
         try {
             URL url = new URL(envUrl);
             String[] split = url.getHost().split("\\.");
-            return split[0].equals("www") ? split[1] : split[0];
+            return split[0].matches("www|m") ? split[1] : split[0];
         } catch (MalformedURLException e) {
             System.err.println("Unable to get environment details");
             return null;

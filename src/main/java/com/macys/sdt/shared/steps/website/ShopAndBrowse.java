@@ -118,6 +118,8 @@ public class ShopAndBrowse extends StepUtils {
                     ProductDisplay.selectRandomColor();
                     ProductDisplay.selectRandomSize();
                     Clicks.click("product_display.add_to_bag_button");
+                    if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog"))
+                        Clicks.clickIfPresent("product_display.add_to_bag_button");
 
                     addedToBag = ProductDisplay.addedToBag();
                     if (MainRunner.debugMode) {
@@ -541,10 +543,7 @@ public class ShopAndBrowse extends StepUtils {
 
     @When("^I add \"([^\"]*)\" product to my bag(?: that is not(?: an?)? \"(.*?)\")? from BVR page$")
     public void i_add_product_to_my_bag_from_BVR_page(String productTrue, String productFalse) throws Throwable {
-        Product p = getRandomProduct(CommonUtils.extractOptions(productTrue, productFalse));
-
-        Assert.assertNotNull("No " + productTrue + " product" + " was found in products list.", p);
-        CommonUtils.navigateDirectlyToProduct(p.id);
+        iNavigateToPdp(productTrue, productFalse);
         I_add_registry_product_to_BVR_page_from_standard_PDP_Page();
 
         if (Elements.elementPresent("home.continue_shopping")) {

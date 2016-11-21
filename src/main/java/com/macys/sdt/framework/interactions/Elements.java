@@ -47,12 +47,18 @@ public class Elements {
             if (StepUtils.safari()) {
                 Wait.untilElementPresent(selector);
             }
-            WebElement el = MainRunner.getWebDriver().findElement(selector);
-            if (el == null) {
-                throw new Exception();
+            List<WebElement> elements = MainRunner.getWebDriver().findElements(selector);
+            if (elements.size() == 0) {
+                throw new NoSuchElementException("Unable to locate an element using: " + selector);
             }
-            return el;
-        } catch (Exception ex) {
+            if (elements.size() > 1) {
+                List<WebElement> visible = elements.stream().filter(WebElement::isDisplayed).collect(Collectors.toList());
+                if (!visible.isEmpty()) {
+                    elements = visible;
+                }
+            }
+            return elements.get(0);
+        } catch (NoSuchElementException ex) {
             System.err.println("-->StepUtils.findElement() no element found with selector: " + selector);
             errLog.println(ex);
         }

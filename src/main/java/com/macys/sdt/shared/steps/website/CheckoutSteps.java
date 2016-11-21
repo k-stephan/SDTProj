@@ -804,9 +804,9 @@ public class CheckoutSteps extends StepUtils {
     public void iShouldSeeOnlyItemIsPresentInShoppingBagPage(String itemType) throws Throwable{
         List<Product> bagItems = ShoppingBag.getAllProductDetails();
         if(ShoppingBag.findItemIndexByType(bagItems, itemType) == -1)
-            Assert.fail(itemType + " Item is not removed from bag!!");
+            Assert.fail(itemType + " Item is not present in shopping bag!!");
         else
-            System.out.println(itemType + " Item is removed from bag!!");
+            System.out.println(itemType + " Item is present in shopping bag!!");
     }
 
     @And("^I checkout on batch mode until I reach the (shipping|payment|shipping (?:and|&) payment|order review|order confirmation) page as an? \"([^\"]*)\" user(?: from \"([^\"]*)\")?(?: with \"([^\"]*)\")?$")
