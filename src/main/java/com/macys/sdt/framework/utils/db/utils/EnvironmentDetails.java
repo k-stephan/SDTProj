@@ -17,9 +17,9 @@ import java.net.URL;
 
 public class EnvironmentDetails {
 
-    static final String ENV_URL = MainRunner.url;
-
     public String envName, ipAddress, hostName;
+
+    static String ENV_URL = MainRunner.url;
     static boolean stage5 = MainRunner.url.matches(
             ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
 
@@ -27,6 +27,11 @@ public class EnvironmentDetails {
         this.envName = envName;
         this.ipAddress = ipAddress;
         this.hostName = hostName;
+    }
+
+    static void updateStage5() {
+        stage5 = ENV_URL.matches(
+                ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
     }
 
     /**

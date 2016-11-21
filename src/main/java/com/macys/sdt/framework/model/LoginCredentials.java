@@ -3,6 +3,10 @@ package com.macys.sdt.framework.model;
 public class LoginCredentials {
     private String password;
 
+    public static LoginCredentials getDefaultLoginCredentials() {
+        return new LoginCredentials("Macys12345");
+    }
+
     public LoginCredentials() {
     }
 

@@ -117,6 +117,15 @@ public class TestUsers {
     }
 
     /**
+     * Sets the current customer to the given UserProfile
+     *
+     * @param newCustomer customer to set to current
+     */
+    public static void setCurrentCustomer(UserProfile newCustomer) {
+        customer = newCustomer;
+    }
+
+    /**
      * Generates a new customer with random data
      *
      * @param country Country the profile should have (US if null)
@@ -132,26 +141,21 @@ public class TestUsers {
             customer = new UserProfile();
             user = new User();
             ProfileAddress profileAddress = getRandomValidAddress(opts);
+
             UserPasswordHint userPasswordHint = new UserPasswordHint();
+            userPasswordHint.setId(1L);
+            userPasswordHint.setAnswer(generateRandomSecurityAnswer());
+            userPasswordHint.setQuestion("What was the first concert you attended?");
+
             LoginCredentials loginCredentials = new LoginCredentials();
-            try {
-                userPasswordHint.setId(1L);
-                userPasswordHint.setAnswer(generateRandomSecurityAnswer());
-                userPasswordHint.setQuestion("What was the first concert you attended?");
+            loginCredentials.setPassword(getPassword());
 
-                loginCredentials.setPassword(getPassword());
-
-                user.setGender(generateRandomGender());
-                user.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").format(TestUsers.generateRandomDate()));
-
-                user.setLoginCredentials(loginCredentials);
-                user.setProfileAddress(profileAddress);
-                user.setUserPasswordHint(userPasswordHint);
-                customer.setUser(user);
-            } catch (Exception e) {
-                Assert.fail("Unable to parse JSON: " + e);
-                return null;
-            }
+            user.setGender(generateRandomGender());
+            user.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").format(TestUsers.generateRandomDate()));
+            user.setLoginCredentials(loginCredentials);
+            user.setProfileAddress(profileAddress);
+            user.setUserPasswordHint(userPasswordHint);
+            customer.setUser(user);
         }
         currentEmail = customer.getUser().getProfileAddress().getEmail();
         currentPassword = customer.getUser().getLoginCredentials().getPassword();
@@ -233,9 +237,10 @@ public class TestUsers {
         registry.setPreferredStoreState("New York");
         registry.setPreferredStore("New York - Herald Square");
 
-        if (customer != null) {
-            customer.setRegistry(registry);
+        if (customer == null) {
+            getCustomer(null);
         }
+        customer.setRegistry(registry);
         return customer;
     }
 

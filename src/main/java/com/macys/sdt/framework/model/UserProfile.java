@@ -17,6 +17,10 @@ public class UserProfile {
         this.registry = registry;
     }
 
+    public static UserProfile getDefaultProfile() {
+        return new UserProfile(User.getDefaultUser(), null);
+    }
+
     public User getUser() {
         return user;
     }

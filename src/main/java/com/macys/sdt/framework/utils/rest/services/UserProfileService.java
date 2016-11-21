@@ -24,8 +24,6 @@ public class UserProfileService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileService.class);
 
-    private static String filepath = "shared/resources/data/website/mcom";
-
     /**
      * This method will create user profile
      *
@@ -38,7 +36,9 @@ public class UserProfileService {
             System.out.println("response : " + response);
             Assert.assertEquals(response.getStatus(), 201);
             LOGGER.info("User profile created successfully");
-            return new ObjectMapper().readValue(userProfileDetailInJson, UserProfile.class);
+            UserProfile profile = new ObjectMapper().readValue(userProfileDetailInJson, UserProfile.class);
+            TestUsers.setCurrentCustomer(profile);
+            return profile;
         } catch (Exception e) {
             LOGGER.error("error creating user profile", e.getCause());
             Assert.fail(e.getMessage());
@@ -47,54 +47,21 @@ public class UserProfileService {
     }
 
     /**
-     * This method will create default user profile
-     *
-     * @return UserProfile that was created
-     */
-    public static UserProfile createUserProfileFromFile() {
-        File userProfileFile = Utils.getResourceFile(filepath, "user_profile.json");
-        JSONObject createUserProfileDetail = Utils.getFileDataInJson(userProfileFile);
-        return createUserProfile(createUserProfileDetail.toString());
-    }
-
-    /**
      * This method will create random user profile
      *
      * @return UserProfile that was created
      */
     public static UserProfile createRandomUserProfile() {
-        String projectLocation = System.getProperty("user.dir");
-        String absolutePath = projectLocation + "/" + filepath;
-        File userProfileFile = Utils.getResourceFile(absolutePath, "user_profile.json");
-        ObjectMapper mapper = new ObjectMapper();
-        UserProfile userProfile = null;
-        User user = null;
-        try {
-            userProfile = mapper.readValue(userProfileFile, UserProfile.class);
-            user = userProfile.getUser();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        UserProfile userProfile = TestUsers.getCustomer(null);
 
-        if (user != null) {
-            ProfileAddress profileAddress = user.getProfileAddress();
-            if (profileAddress == null) {
-                profileAddress = new ProfileAddress();
-            }
-            profileAddress.setEmail(TestUsers.generateRandomEmail(16));
-            profileAddress.setFirstName(TestUsers.generateRandomFirstName());
-            profileAddress.setLastName(TestUsers.generateRandomLastName());
-            profileAddress.setBestPhone(TestUsers.generateRandomPhoneNumber());
-            user.setProfileAddress(profileAddress);
-            user.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").format(TestUsers.generateRandomDate()));
-            userProfile.setUser(user);
-        }
+        ObjectMapper mapper = new ObjectMapper();
         String createUserProfileDetail = null;
         try {
             createUserProfileDetail = mapper.writeValueAsString(userProfile);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
         System.out.println("user detail : " + createUserProfileDetail);
         createUserProfile(createUserProfileDetail);
         return userProfile;

@@ -12,6 +12,10 @@ public class UserPasswordHint {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String question;
 
+    public static UserPasswordHint getDefaultUserPasswordHint() {
+        return new UserPasswordHint(1L, "My Name");
+    }
+
     public UserPasswordHint() {
     }
 
