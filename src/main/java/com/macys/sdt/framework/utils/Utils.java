@@ -844,6 +844,7 @@ public class Utils {
                 System.out.println(System.currentTimeMillis() - ts + ":" + bout.size());
 //                writeBinaryFile(bout.toByteArray(), fOut, false);
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
+                Utils.createDirectory(ftemp.getParent(), false);
                 for (int i=0; i<100; i++){
                 	if (writeSmallBinaryFile(bout.toByteArray(), ftemp)){
                 		renameFile(ftemp, fOut, 10);
