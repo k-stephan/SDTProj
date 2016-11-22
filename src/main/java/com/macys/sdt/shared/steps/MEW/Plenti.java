@@ -33,7 +33,7 @@ public class Plenti extends StepUtils {
              //   Clicks.click(Elements.findElements("plenti_home.btn_join_free").get(0));
                 break;
             case "join now":
-                Navigate.visit("plenti_enroll"); //goto plenty enroll page directly
+                Navigate.visit("plenti_enroll"); //This will directly navigate to plenty enroll page directly
              //   Wait.untilElementPresent("plenti_join.btn_join_now");
              //   Assert.assertTrue("ERROR-ENV: Unable to locate join now element", Elements.elementPresent("plenti_join.btn_join_now"));
              //   Clicks.click("plenti_join.btn_join_now");
