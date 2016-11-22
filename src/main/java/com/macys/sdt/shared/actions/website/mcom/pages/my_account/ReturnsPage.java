@@ -37,8 +37,8 @@ public class ReturnsPage extends StepUtils {
             } else {
                 if (returns.orderExistsByOrderNumber(orderNumber))
                     returns.deleteOrderRecord(orderNumber);
-                MyAccountSteps account = new MyAccountSteps();
-                account.iSignInToMyExistingProfile();
+                if (!signedIn())
+                    new MyAccountSteps().iSignInToMyExistingProfile();
                 returns.insertOrderByOrderNumber(orderNumber, TestUsers.currentEmail);
             }
             Clicks.click(Elements.element("home.goto_order_status"));

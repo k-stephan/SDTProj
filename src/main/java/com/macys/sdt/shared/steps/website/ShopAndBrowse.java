@@ -109,10 +109,10 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I add product to my bag from standard PDP Page$")
     public void I_add_product_to_my_bag_from_standard_PDP_Page() throws Throwable {
         boolean addedToBag = false;
+        Assert.assertFalse("ERROR - DATA : Product ( "+ (recentProduct == null ? "" : String.valueOf(recentProduct.id)) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_bag_button") && Elements.elementPresent("product_display.availability_error"));
         try {
             int retries = 5;
             pausePageHangWatchDog();
-            Assert.assertFalse("ERROR - DATA : Product ( "+ String.valueOf(recentProduct.id) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_bag_button") && Elements.elementPresent("product_display.availability_error"));
             for (int count = 0; count < retries && !addedToBag; count++) {
                 try {
                     ProductDisplay.selectRandomColor();

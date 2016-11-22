@@ -683,6 +683,7 @@ public class MyAccountSteps extends StepUtils {
     @Then("^I should be navigated to below respective credit services pages:$")
     public void iShouldBeNavigatedToBelowRespectiveCreditServicesPages(List<HashMap<String, String>> credit_footer_links) throws Throwable {
         ArrayList<String> failed_elements = new ArrayList<>();
+        Assert.assertFalse("ERROR - ENV : CITI Credit services are down!!", Wait.untilElementPresent("credit_service_gateway_signedin.credit_services_down_message"));
         for (Map set : credit_footer_links) {
             Clicks.click("home." + set.get("credit_link"));
             if (safari()) {
@@ -709,6 +710,7 @@ public class MyAccountSteps extends StepUtils {
     @Then("^I should be navigated to below citi pages from citi gateway page:$")
     public void iShouldBeNavigatedToBelowCitiPagesFromCitiGatewayPage(List<String> citiPages) throws Throwable {
         ArrayList<String> failedPagesList = new ArrayList<>();
+        Assert.assertFalse("ERROR - ENV : CITI Credit services are down!!", Wait.untilElementPresent("credit_service_gateway_signedin.credit_services_down_message"));
         if(safari())
             Wait.secondsUntilElementPresent("credit_service_gateway_signedin.verify_page", 20);
         Assert.assertTrue("credit services page is not displayed!!", onPage("credit_service_gateway_signedin"));
