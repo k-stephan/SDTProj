@@ -119,7 +119,7 @@ public class CheckoutSteps extends StepUtils {
     @And("^I select continue button on guest payment page$")
     public void I_select_continue_button_on_guest_payment_page() throws Throwable {
         // run this step only on Batch Mode enabled QA environment
-        // We can place order even though site is in batch mode. Batch mode and product unavailability are two different things, user con't place order if the product is unavaibale.
+        // We can place orders even though site is in batch mode. Batch mode and product unavailability are two different things, user con't place order if the product is unavaibale.
 //        if (MainRunner.batchMode) {
             if (onPage("responsive_checkout")) {
                 Clicks.clickWhenPresent("responsive_checkout.continue_payment_checkout_button");
