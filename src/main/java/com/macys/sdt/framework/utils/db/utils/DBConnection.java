@@ -11,10 +11,11 @@ public class DBConnection {
 
     private static Connection con = null;
 
-    public static void closeConnection() {
+    public void closeConnection() {
         try {
             if (con != null && !con.isClosed()) {
                 con.close();
+                con = null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
