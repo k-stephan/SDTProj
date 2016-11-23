@@ -253,7 +253,10 @@ public class Registry extends StepUtils {
             Wait.untilElementPresent("registry_manager.edit_profile_button");
         Wait.forPageReady();
         shouldBeOnPage("registry_manager");
-        Clicks.click("registry_manager.edit_profile_button");
+        if (firefox() || safari())
+            Clicks.javascriptClick("registry_manager.edit_profile_button");
+        else
+            Clicks.click("registry_manager.edit_profile_button");
     }
 
     @Then("^I should see update registry page$")

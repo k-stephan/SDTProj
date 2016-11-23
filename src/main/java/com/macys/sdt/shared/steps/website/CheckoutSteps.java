@@ -328,7 +328,7 @@ public class CheckoutSteps extends StepUtils {
             Clicks.selectCheckbox("responsive_shipping_options.gift_option");
             Clicks.selectCheckbox("responsive_shipping_options.gift_message");
             TextBoxes.typeTextbox("responsive_shipping_options.gift_message_field1", "test message");
-            Clicks.selectCheckbox("responsive_shipping_options.gift_box");
+//            Clicks.selectCheckbox("responsive_shipping_options.gift_box");
         } else {
             Clicks.click("shipping_guest.gift_option");
             Clicks.selectCheckbox("shipping_guest.gift_message");

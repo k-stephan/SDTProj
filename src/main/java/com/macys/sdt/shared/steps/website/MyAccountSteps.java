@@ -399,14 +399,16 @@ public class MyAccountSteps extends StepUtils {
     public void iAddFullyEnrolledUslIdOnMyAccountPage() throws Throwable {
         if (prodEnv())
             throw new Exceptions.ProductionException("iAddFullyEnrolledUslIdOnMyAccountPage()");
-
+        pausePageHangWatchDog();
         String plenti_id = TestUsers.getEnrolledUslId().getPlentiId();
         TextBoxes.typeTextbox("my_account.usl_id", plenti_id);
-        Clicks.click("my_account.apply_usl_id_button");
-        if (Elements.elementPresent("my_account.error_message")) {
-            Assert.fail("ERROR - ENV: Unable to look up Plenti ID");
-        }
-        Wait.untilElementPresent("my_account.go_to_my_XXXXXX");
+        if (safari())
+            Clicks.javascriptClick("my_account.apply_usl_id_button");
+        else
+            Clicks.click("my_account.apply_usl_id_button");
+        Assert.assertFalse("ERROR - ENV : Unable to look up Plenti ID!!", Wait.untilElementPresent("my_account.error_message"));
+        Assert.assertTrue("ERROR - APP : Added USL ID is not displayed in my account!!", Wait.secondsUntilElementPresent("my_account.go_to_my_XXXXXX", (safari() ? 20 : 5)));
+        resumePageHangWatchDog();
     }
 
     @And("^I remove USL ID from shipping and payment page$")
