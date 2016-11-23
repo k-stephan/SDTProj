@@ -510,7 +510,7 @@ public class MyAccountSteps extends StepUtils {
             }
         } else {
             if (safari()) {
-                Wait.untilElementPresent("my_account.verify_page");
+                Wait.until(() -> onPage("my_account"), 10);
             }
             if (!onPage("my_account")) {
                 Assert.fail("Could not update profile");
