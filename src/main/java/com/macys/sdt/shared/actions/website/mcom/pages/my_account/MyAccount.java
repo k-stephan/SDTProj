@@ -59,8 +59,7 @@ public class MyAccount extends StepUtils {
         }
         if (safari()) {
             String verifyElementKey = navigated_page_name + ".verify_page";
-            String verifyElement = Elements.getValues(verifyElementKey).get(0);
-            if (verifyElement != null)
+            if (!Elements.getValues(verifyElementKey).isEmpty())
                 Wait.secondsUntilElementPresent(navigated_page_name + ".verify_page", 20);
             else
                 Utils.threadSleep(5000, "Navigated page is not loaded properly!!");

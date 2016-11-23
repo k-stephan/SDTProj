@@ -509,6 +509,9 @@ public class MyAccountSteps extends StepUtils {
                 Assert.fail("Profile not updated");
             }
         } else {
+            if (safari()) {
+                Wait.untilElementPresent("my_account.verify_page");
+            }
             if (!onPage("my_account")) {
                 Assert.fail("Could not update profile");
             }
