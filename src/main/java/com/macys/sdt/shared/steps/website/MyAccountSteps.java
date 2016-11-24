@@ -715,9 +715,10 @@ public class MyAccountSteps extends StepUtils {
     @Then("^I should be navigated to below citi pages from citi gateway page:$")
     public void iShouldBeNavigatedToBelowCitiPagesFromCitiGatewayPage(List<String> citiPages) throws Throwable {
         ArrayList<String> failedPagesList = new ArrayList<>();
-        Assert.assertFalse("ERROR - ENV : CITI Credit services are down!!", Wait.untilElementPresent("credit_service_gateway_signedin.credit_services_down_message"));
+//        Assert.assertFalse("ERROR - ENV : CITI Credit services are down!!", Wait.untilElementPresent("credit_service_gateway_signedin.credit_services_down_message"));
         if(safari())
             Wait.secondsUntilElementPresent("credit_service_gateway_signedin.verify_page", 20);
+        Wait.forPageReady();
         Assert.assertTrue("credit services page is not displayed!!", onPage("credit_service_gateway_signedin"));
         for (String pageName : citiPages) {
             String elementName = (pageName.equals("apply_credit_card") ? "apply_now_button" : (pageName.equals("fusion_activate_card") ? "activate_card" : "add_card_button"));

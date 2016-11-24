@@ -109,11 +109,11 @@ public class Registry extends StepUtils {
                     Wait.forPageReady();
                     if (safari())
                         Wait.secondsUntilElementPresent("registry_welcome.verify_page", 20);
-                } else if (onPage("new_create_registry")) {
+                } else if (Wait.secondsUntilElementPresent("new_create_registry.verify_page", 8) && onPage("new_create_registry")) {
                     CreateRegistry.createRegistryUserForExistingUser(regUser);
                     Wait.forPageReady();
                 } else if (!onPage("registry_manager")) {
-                    Wait.secondsUntilElementPresent("registry_welcome.verify_page", (safari() ? 15 : 2));
+                    Wait.secondsUntilElementPresent("registry_welcome.verify_page", (safari() ? 15 : 5));
                     shouldBeOnPage("registry_welcome");
                 }
             } else {

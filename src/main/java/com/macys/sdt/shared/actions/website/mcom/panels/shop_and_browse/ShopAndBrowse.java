@@ -65,7 +65,9 @@ public class ShopAndBrowse extends StepUtils {
     }
 
     public int getProductCount() {
+        Wait.untilElementPresent("category_browse.product_count_span");
         String productCountText = Elements.getText("category_browse.product_count_span");
+        Assert.assertFalse("ERROR - APP : Product count is not displayed on browse page!!", productCountText.isEmpty());
         return Integer.parseInt((macys() ? productCountText : productCountText.split(" ")[0]));
     }
 
