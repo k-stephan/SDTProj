@@ -501,7 +501,7 @@ public abstract class CommonUtils extends StepUtils {
     public static Product navigateToRandomProduct(String productTrue, String productFalse) throws Exceptions.EnvException {
         HashMap<String, Boolean> opts = CommonUtils.extractOptions(productTrue, productFalse);
         Product p = getRandomProduct(opts);
-        Assert.assertNotNull("No " + productTrue + " product" + (productFalse != null ? " that is not " + productFalse : "") + " was found in products list.", p);
+        Assert.assertNotNull("ERROR - DATA:  No " + productTrue + " product" + (productFalse != null ? " that is not " + productFalse : "") + " was found in products list.", p);
         CommonUtils.navigateDirectlyToProduct(p.id);
         shouldBeOnPage("product_display");
         return p;

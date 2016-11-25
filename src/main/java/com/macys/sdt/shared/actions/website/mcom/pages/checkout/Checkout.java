@@ -649,6 +649,7 @@ public class Checkout extends StepUtils {
 
     public void fillResponsiveBCAddressInfo(HashMap<String, String> opts, String section, RCPage page, boolean responsive) {
         ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        Wait.untilElementPresent(page + ".use_shipping_address");
         Clicks.unSelectCheckbox(page + ".use_shipping_address");
         Wait.untilElementPresent(page + ".first_name");
 //            if (!signedIn() && Elements.elementPresent(page + ".use_shipping_address")) {

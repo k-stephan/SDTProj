@@ -102,11 +102,13 @@ public class CheckoutSteps extends StepUtils {
     @When("^I enter shipping address on guest shipping page$")
     public void I_enter_shipping_address_on_guest_shipping_page() throws Throwable {
         HashMap<String, String> opts = new HashMap<>();
+        pausePageHangWatchDog();
         opts.put("checkout_eligible", "true");
         if (macys())
             new Checkout().fillShippingData(true, false, opts);
         else
             new CheckoutPageBcom().fillGuestShippingData(opts, false);
+        resumePageHangWatchDog();
     }
 
     @And("^I fill in payment information on guest payment page$")
@@ -151,6 +153,7 @@ public class CheckoutSteps extends StepUtils {
     @And("^I add a credit card during checkout$")
     public void I_add_a_credit_card_during_checkout() throws Throwable {
         HashMap<String, String> opts = new HashMap<>();
+        pausePageHangWatchDog();
         opts.put("checkout_eligible", "true");
         boolean responsive = onPage("responsive_checkout");
         boolean iship = onPage("iship_checkout");
@@ -166,6 +169,7 @@ public class CheckoutSteps extends StepUtils {
         } else {
             new CheckoutPageBcom().fillGuestPaymentData(null, false);
         }
+        resumePageHangWatchDog();
     }
 
     @When("^I sign in during checkout$")
@@ -324,6 +328,7 @@ public class CheckoutSteps extends StepUtils {
 
     @When("^I select gift options on shipping page$")
     public void i_select_gift_options_on_shipping_page() throws Throwable {
+        pausePageHangWatchDog();
         if (onPage("responsive_checkout")) {
             Clicks.selectCheckbox("responsive_shipping_options.gift_option");
             Clicks.selectCheckbox("responsive_shipping_options.gift_message");
@@ -335,6 +340,7 @@ public class CheckoutSteps extends StepUtils {
             TextBoxes.typeTextbox("shipping_guest.gift_message_field1", "test message");
             Clicks.selectCheckbox("shipping_guest.gift_box");
         }
+        resumePageHangWatchDog();
     }
 
     @When("^I enter payment details on payment page$")

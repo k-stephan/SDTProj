@@ -89,14 +89,7 @@ public class Wishlist extends StepUtils {
     public void i_should_see_in_product_line_items_in_wishlist_page(String product) throws Throwable {
         pausePageHangWatchDog();
         List<WebElement> plist = Elements.findElements("wish_list.item_links");
-        Boolean found = false;
-        for (WebElement link : plist) {
-            if (link.getText().equalsIgnoreCase(product)) {
-                System.out.println("Product found in wishlist");
-                found = true;
-                break;
-            }
-        }
+        Boolean found = plist.stream().anyMatch(link -> link.getText().equalsIgnoreCase(product));
         Assert.assertTrue("Product is not added to wishlist", found);
         resumePageHangWatchDog();
     }
@@ -104,12 +97,8 @@ public class Wishlist extends StepUtils {
     @When("^I select a \"([^\"]*)\" product on wishlist page$")
     public void i_select_a_product_on_wishlist_page(String product) throws Throwable {
         List<WebElement> plist = Elements.findElements("wish_list.item_links");
-        for (WebElement link : plist) {
-            if (link.getText().equalsIgnoreCase(product)) {
-                Clicks.click(link);
-                break;
-            }
-        }
+        if (plist.stream().anyMatch(link -> link.getText().equalsIgnoreCase(product)))
+            Clicks.click(plist.stream().filter(link -> link.getText().equalsIgnoreCase(product)).findFirst().get());
     }
 
     @When("^I add product to my bag from wishlist page and (continue shopping|checkout|close)$")

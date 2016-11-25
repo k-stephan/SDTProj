@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
 import com.macys.sdt.framework.model.*;
+import com.macys.sdt.framework.utils.rest.services.ProductService;
 import com.macys.sdt.framework.utils.rest.services.UserProfileService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -844,6 +845,7 @@ public class TestUsers {
             }
             File addressFile = getResourceFile("orderable_products.json");
             // for now all our products are orderable
+            boolean orderable = options.containsKey("orderable") && options.get("orderable");
             options.remove("orderable");
             String jsonTxt = Utils.readTextFile(addressFile);
             JSONObject json = new JSONObject(jsonTxt);
@@ -870,6 +872,7 @@ public class TestUsers {
                         }
                     }
                 }
+                found = ((found && orderable) ? ProductService.availability(product.getString("id")) : found);
                 if (found) {
                     return new Product(product);
                 }

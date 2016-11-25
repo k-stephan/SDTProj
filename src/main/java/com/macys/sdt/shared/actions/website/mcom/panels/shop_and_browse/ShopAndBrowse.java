@@ -61,7 +61,7 @@ public class ShopAndBrowse extends StepUtils {
                 return;
             }
         }
-        Assert.fail("ERROR: Data: Popular search links page is not available in " + max_attempts + " attempts");
+        Assert.fail("ERROR - DATA : Popular search links page is not available in " + max_attempts + " attempts");
     }
 
     public int getProductCount() {
