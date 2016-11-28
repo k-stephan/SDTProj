@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.runner;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
@@ -622,7 +623,15 @@ public class MainRunner {
                     System.out.println("File not found: " + path);
                     path = workSpace + "/" + path;
                 }
-                featureScenarios = new Gson().fromJson(Utils.gherkinToJson(false, path), ArrayList.class);
+                String json = Utils.gherkinToJson(false, path);
+                try{
+                	featureScenarios = new Gson().fromJson(json, ArrayList.class);
+                }catch(JsonSyntaxException jex){
+                	System.err.println("--> Failed to parse : " + path);
+                	System.err.println("--> json :\n\n" + json);
+                	System.err.println();
+                	throw jex;
+                }
             }
             findScenario(featureScenarios, path, line);
         }
