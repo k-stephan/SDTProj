@@ -1,16 +1,18 @@
 package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.model.GiftCard;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
+import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.glassfish.jersey.client.internal.HttpUrlConnector;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Assert;
 
+import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -59,33 +61,9 @@ public class GiftCardService {
      * @throws IOException if response is unreadable
      */
     public static String getGiftCardsResponse(GiftCard.CardType cardType) throws IOException {
-        String serviceUrl = getGiftCardServiceUrl(cardType);
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(serviceUrl);
-        CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-        while ((inputLine = reader.readLine()) != null)
-            response.append(inputLine);
-        reader.close();
-        httpClient.close();
-        return response.toString();
+        String serviceUrl = RESTEndPoints.getGiftCardServiceUrl(cardType);
+        Response response = RESTOperations.doGET(serviceUrl, null);
+        return response.readEntity(String.class);
     }
 
-    private static String getGiftCardServiceUrl(GiftCard.CardType cardType) {
-        String environmentUrl = MainRunner.url.split("\\.")[1], cardPath = "Min Balance (<$50)", cardFullPath = null, requestUrl = null, tokenName = "N_GUrqG6Eq8oeCrvE0aZLA";
-        switch (cardPath) {
-            case "Min Balance (<$50)":
-                cardFullPath = "/buckets/Gift%20Cards/Gift%20Cards::" + cardType + "::Min%20Balance%20(%3C$50)?auth_token=";
-                break;
-            case "Regular Balance ($50 - $2000)":
-                cardFullPath = "/buckets/Gift%20Cards/Gift%20Cards::" + cardType + "::Regular%20Balance%20($50%20-%20$2000)?auth_token=";
-                break;
-            default:
-                Assert.fail("Incorrect cardPath (" + cardPath + ") found!!");
-        }
-        requestUrl = "http://sim.delivery.fds/sim/environments/" + environmentUrl + cardFullPath + tokenName;
-        return requestUrl;
-    }
 }
