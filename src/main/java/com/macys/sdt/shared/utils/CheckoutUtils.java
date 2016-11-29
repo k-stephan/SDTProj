@@ -115,7 +115,7 @@ public class CheckoutUtils extends StepUtils {
                 if (MEW())
                     Wait.secondsUntilElementPresent("checkout_sign_in.email", 20);
                 if (guestCheckoutSignInPageVerify) {
-                    Assert.assertTrue("ERROR-ENV: Unable to navigate checkout sign in page", onPage("checkout_sign_in"));
+                    Assert.assertTrue("ERROR - ENV : Unable to navigate checkout sign in page", onPage("checkout_sign_in"));
                     guestCheckoutSignInPageVerify = false;
                 }
             }
