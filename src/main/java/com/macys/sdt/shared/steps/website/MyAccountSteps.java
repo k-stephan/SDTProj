@@ -797,10 +797,12 @@ public class MyAccountSteps extends StepUtils {
         Wait.forPageReady();
         HashMap<String, String> opts = new HashMap<>();
         opts.put("checkout_eligible", "true");
+        pausePageHangWatchDog();
         if(MyAddressBook.isAddressAdded())
             new MyAddressBook().updateAddress(0, opts);
         else
             new MyAddressBook().addAddress(opts);
+        resumePageHangWatchDog();
         System.out.println("-> Added Checkout eligible address in address book page!!");
     }
 

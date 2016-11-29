@@ -120,6 +120,7 @@ public class CheckoutSteps extends StepUtils {
 
     @And("^I select continue button on guest payment page$")
     public void I_select_continue_button_on_guest_payment_page() throws Throwable {
+        pausePageHangWatchDog();
         // run this step only on Batch Mode enabled QA environment
         // We can place orders even though site is in batch mode. Batch mode and product unavailability are two different things, user con't place order if the product is unavaibale.
 //        if (MainRunner.batchMode) {
@@ -133,6 +134,7 @@ public class CheckoutSteps extends StepUtils {
 //        } else {
 //            System.err.println("Environment not in batch mode, unable to navigate to payment panel due to product unavailability.");
 //        }
+        resumePageHangWatchDog();
     }
 
     @When("^I checkout on add to bag overlay$")
