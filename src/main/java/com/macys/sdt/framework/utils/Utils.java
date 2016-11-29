@@ -761,7 +761,6 @@ public class Utils {
         if (resourcesExctracted) {
             return;
         }
-        redirectSOut();
         String rpath = "com/macys/sdt/framework/resources";
         System.out.println(rpath);
         outputJarFile(repoJar, rpath, workspace + "/" + rpath);
@@ -775,7 +774,6 @@ public class Utils {
         rpath = "com/macys/sdt/projects/";
         System.out.println(rpath);
         outputJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features");
-        resetSOut();
         resourcesExctracted = true;
     }
 
@@ -1058,7 +1056,7 @@ public class Utils {
     /**
      * Initializes the PrintStream used to redirect any error message bloat
      */
-    private static void initRedirect() {
+    private static void initLogs() {
         if (errStream == null) {
             try {
                 errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
@@ -1082,7 +1080,7 @@ public class Utils {
      */
     public static void redirectSOut() {
         if (infoLog == null) {
-            initRedirect();
+            initLogs();
         }
         if (infoLog != null) {
             System.setOut(infoLog);
@@ -1116,7 +1114,7 @@ public class Utils {
      */
     public static void redirectSErr() {
         if (errLog == null) {
-            initRedirect();
+            initLogs();
         }
         if (errLog != null) {
             System.setErr(errLog);
