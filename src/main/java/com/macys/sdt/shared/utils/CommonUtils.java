@@ -398,36 +398,28 @@ public abstract class CommonUtils extends StepUtils {
      * Checks if the test failed due to product unavailability or other checkout related environment issues
      */
     public static void checkProductUnavailability() {
-        Utils.redirectSErr();
         if (onPage("responsive_checkout")) {
             if ((Elements.elementPresent("responsive_checkout.error_container")) && (Elements.elementPresent("responsive_checkout.item_level_error"))) {
-                Utils.resetSErr();
                 Assert.fail("ERROR - DATA: Unable to checkout your added product due to Product Unavailability Issue");
             }
             if (Elements.elementPresent("responsive_checkout.error_container")) {
-                Utils.resetSErr();
                 Assert.fail("ERROR - ENV: Unable to process your checkout. This may be due to an environment issue");
             }
         } else if (onPage("responsive_checkout_signed_in")) {
             if (Elements.elementPresent("responsive_checkout_signed_in.error_container") && Elements.elementPresent("responsive_checkout_signed_in.item_level_error")) {
-                Utils.resetSErr();
                 Assert.fail("ERROR - DATA: Unable to checkout your added product due to Product Unavailability Issue");
             }
             if (Elements.elementPresent("responsive_checkout_signed_in.error_container")) {
-                Utils.resetSErr();
                 Assert.fail("ERROR - ENV: Unable to process your checkout. This may be due to an environment issue");
             }
         } else if (onPage("shipping_payment_signed_in")) {
             if (Elements.elementPresent("shipping_payment_signed_in.error_container") && Elements.elementPresent("shipping_payment_signed_in.item_level_error")) {
-                Utils.resetSErr();
                 Assert.fail("ERROR - DATA: Unable to checkout your added product due to Product Unavailability Issue");
             }
             if (Elements.elementPresent("shipping_payment_signed_in.error_container")) {
-                Utils.resetSErr();
                 Assert.fail("ERROR - ENV: Unable to process your checkout. This may be due to an environment issue");
             }
         }
-        Utils.resetSErr();
     }
 
     public static void closeUpdateBrowserPopup() {

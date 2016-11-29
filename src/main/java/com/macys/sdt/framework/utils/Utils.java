@@ -61,13 +61,8 @@ import static com.macys.sdt.framework.utils.StepUtils.macys;
 @SuppressWarnings("deprecation")
 public class Utils {
 
-    // use these to redirect unneeded error output
-    private static PrintStream originalErr = System.err;
-    private static PrintStream originalInfo = System.out;
-    private static int errRedirectCalls = 0;
-    private static int infoRedirectCalls = 0;
-    private static File errFile = null;
-    private static File infoFile = null;
+    private static File errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
+    private static File infoFile = infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");;
     private static FileOutputStream errStream = null;
     private static FileOutputStream infoStream = null;
     public static PrintStream errLog = null;
@@ -1051,92 +1046,6 @@ public class Utils {
             }
         }
         return items;
-    }
-
-    /**
-     * Initializes the PrintStream used to redirect any error message bloat
-     */
-    private static void initLogs() {
-        if (errStream == null) {
-            try {
-                errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
-                infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");
-                errStream = new FileOutputStream(errFile);
-                infoStream = new FileOutputStream(infoFile);
-                errLog = new PrintStream(errStream);
-                infoLog = new PrintStream(infoStream);
-            } catch (FileNotFoundException e) {
-                System.err.println("File not found: " + errFile);
-            }
-        }
-    }
-
-    /**
-     * Redirects System.out prints to the log files to avoid console clutter
-     * <p>
-     *     Maintains a call count with resetSOut so redirects/resets below
-     *     each other don't mess each other up.
-     * </p>
-     */
-    public static void redirectSOut() {
-        if (infoLog == null) {
-            initLogs();
-        }
-        if (infoLog != null) {
-            System.setOut(infoLog);
-            infoRedirectCalls++;
-        }
-    }
-
-    /**
-     * Sets System.Out back to the console
-     * <p>
-     *     Maintains a call count with redirectSOut so redirects/resets below
-     *     each other don't mess each other up.
-     * </p>
-     */
-    public static void resetSOut() {
-        infoRedirectCalls--;
-        if (infoRedirectCalls < 0) {
-            infoRedirectCalls = 0;
-        }
-        if (infoRedirectCalls == 0) {
-            System.setOut(originalInfo);
-        }
-    }
-
-    /**
-     * Redirects System.err prints to the log files to avoid console clutter
-     * <p>
-     *     Maintains a call count with resetSErr so redirects/resets below
-     *     each other don't mess each other up.
-     * </p>
-     */
-    public static void redirectSErr() {
-        if (errLog == null) {
-            initLogs();
-        }
-        if (errLog != null) {
-            System.setErr(errLog);
-            errRedirectCalls++;
-        }
-    }
-
-    /**
-     * Sets System.err back to the console
-     * <p>
-     *     Maintains a call count with redirectSErr so redirects/resets below
-     *     each other don't mess each other up.
-     * </p>
-     */
-    public static void resetSErr() {
-        errRedirectCalls--;
-        if (errRedirectCalls < 0) {
-            errRedirectCalls = 0;
-        }
-        if (errRedirectCalls == 0) {
-            System.setErr(originalErr);
-        }
     }
 
     /**
