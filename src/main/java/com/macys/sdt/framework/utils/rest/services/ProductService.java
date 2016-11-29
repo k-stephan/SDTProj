@@ -20,16 +20,17 @@ public class ProductService {
 
 
     /**
-     * To find the product id is available in environment using FCC service
+     * To find the product id is available for checkout in environment using FCC service
      *
      * @param productId ID of product to check
      * @return true if product is available
      */
-    public static boolean availability(String productId){
+    public static boolean checkoutAvailability(String productId){
         Response response = RESTOperations.doGET(getServiceURL() + productId, null);
         try {
             JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
-            return jsonResponse.getBoolean("available");
+            // We need to check these three parameter values to confirm the product is available for checkout or not
+            return jsonResponse.getBoolean("active") && jsonResponse.getBoolean("live") && !jsonResponse.getBoolean("archived");
         } catch (JSONException e) {
             System.err.println("Unable to get product information from FCC: " + e);
         }

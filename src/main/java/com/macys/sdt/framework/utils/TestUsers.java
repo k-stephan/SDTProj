@@ -872,7 +872,7 @@ public class TestUsers {
                         }
                     }
                 }
-                found = ((found && orderable) ? ProductService.availability(product.getString("id")) : found);
+                found = ((found && orderable) ? ProductService.checkoutAvailability(product.get("id").toString()) : found);
                 if (found) {
                     return new Product(product);
                 }
