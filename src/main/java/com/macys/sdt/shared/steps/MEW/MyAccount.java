@@ -173,7 +173,7 @@ public class MyAccount extends StepUtils {
         boolean expected = false;
         List<WebElement> offer = Elements.findElements("offer_details.offers_container");
         int size = offer.size();
-        if (size > 0) {
+        if (size > 0 && (expected == false)) {
             for (WebElement anOffer : offer) {
                 Clicks.click(anOffer);
                 switch (deal) {
