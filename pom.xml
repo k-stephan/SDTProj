@@ -124,7 +124,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20090211</version>
+            <version>20160810</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

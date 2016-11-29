@@ -27,30 +27,31 @@ public class GiftCardService {
      * @return GiftCard object.
      */
     public static GiftCard getValidGiftCardDetails(GiftCard.CardType cardType) {
-        GiftCard giftCard = null;
         try {
-            String json = getGiftCardsResponse(cardType);
-            JSONArray jsonObject = new JSONArray(json);
-            for (int index = 0; index < jsonObject.length(); index++) {
-                JSONObject giftCardObject = jsonObject.getJSONObject(index);
-                if (giftCardObject.getDouble("Balance") > 0 && giftCardObject.getDouble("Current_Balance") > 0) {
-                    giftCard = new GiftCard(GiftCard.CardType.fromString(giftCardObject.getString("Card_Type")),
-                            giftCardObject.getString("Gift_Card"),
-                            giftCardObject.getString("CardDesc"),
-                            giftCardObject.getString("CID"),
-                            giftCardObject.getString("ECID"),
+            JSONArray json = new JSONArray(getGiftCardsResponse(cardType));
+            for (Object o : json) {
+                if (!(o instanceof JSONObject)) {
+                    continue;
+                }
+                JSONObject giftCardJSON = (JSONObject)o;
+                if (giftCardJSON.getDouble("Balance") > 0 && giftCardJSON.getDouble("Current_Balance") > 0) {
+                    return new GiftCard(cardType,
+                            giftCardJSON.getString("Gift_Card"),
+                            giftCardJSON.getString("CardDesc"),
+                            giftCardJSON.getString("CID"),
+                            giftCardJSON.getString("ECID"),
                             null,
-                            giftCardObject.getDouble("Balance"),
-                            giftCardObject.getDouble("Current_Balance"),
-                            giftCardObject.getInt("Division"));
-                    return giftCard;
+                            giftCardJSON.getDouble("Balance"),
+                            giftCardJSON.getDouble("Current_Balance"),
+                            giftCardJSON.getInt("Division"));
+
                 }
             }
 
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
-        return giftCard;
+        return null;
     }
 
     /**
