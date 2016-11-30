@@ -349,6 +349,7 @@ public class CheckoutSteps extends StepUtils {
 
     @When("^I enter payment details on payment page$")
     public void i_enter_payment_details_on_payment_page() throws Throwable {
+        pausePageHangWatchDog();
         boolean responsive = onPage("responsive_checkout");
         boolean iship = onPage("iship_checkout");
         if (macys()) {
@@ -356,10 +357,12 @@ public class CheckoutSteps extends StepUtils {
         } else {
             new CheckoutPageBcom().fillGuestCardDetails(responsive, iship);
         }
+        resumePageHangWatchDog();
     }
 
     @And("^I select use my shipping address checkbox on payment page$")
     public void i_select_use_my_shipping_address_checkbox_on_payment_page() throws Throwable {
+        pausePageHangWatchDog();
         if (macys()) {
             if (Elements.elementPresent("responsive_payment_guest_section.use_shipping_address")) {
                 Clicks.selectCheckbox("responsive_payment_guest_section.use_shipping_address");
@@ -370,14 +373,17 @@ public class CheckoutSteps extends StepUtils {
             else
                 Clicks.selectCheckbox("responsive_payment_guest_section.use_shipping_address");
         }
+        resumePageHangWatchDog();
     }
 
     @And("^I enter contact details on payment page$")
     public void i_enter_contact_details_on_payment_page() throws Throwable {
+        pausePageHangWatchDog();
         boolean responsive = onPage("responsive_checkout") || onPage("responsive_checkout_signed_in");
         String page = responsive ? (signedIn() ? "responsive_checkout_signed_in" : "responsive_checkout")
                 : (!signedIn() ? "payment_guest" : "shipping_payment_signed_in");
         new Checkout().fillContactDetails(responsive, page, null);
+        resumePageHangWatchDog();
     }
 
     @And("^I pay whole transaction amount with usl on payment page and place order$")
