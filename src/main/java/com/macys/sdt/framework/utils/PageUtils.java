@@ -79,29 +79,37 @@ public class PageUtils {
         if (MainRunner.project != null) {
             path = MainRunner.projectDir + resPath;
             responsivePath = getResponsivePath(path);
-            loadPageAndPanels(responsivePage, responsivePath, "project");
-            loadPageAndPanels(page, path, "project");
+            if (loadPageAndPanels(responsivePage, responsivePath, "project") ||
+                    loadPageAndPanels(page, path, "project")) {
+                return;
+            }
 
             // also load panel elements
             if (page.contains(".page.")) {
                 path = path.replace("/pages/", "/panels/");
                 responsivePath = responsivePath.replace("/pages/", "/panels/");
-                loadPageAndPanels(responsivePage, responsivePath, "project");
-                loadPageAndPanels(page, path, "project");
+                if (loadPageAndPanels(responsivePage, responsivePath, "project") ||
+                        loadPageAndPanels(page, path, "project")) {
+                    return;
+                }
             }
         }
 
         // shared elements next
         path = "shared" + resPath;
         responsivePath = getResponsivePath(path);
-        loadPageAndPanels(responsivePage, responsivePath, "shared");
-        loadPageAndPanels(page, path, "shared");
+        if (loadPageAndPanels(responsivePage, responsivePath, "shared") ||
+                loadPageAndPanels(page, path, "shared")) {
+            return;
+        }
 
         // also load panel elements
         if (page.contains(".page.")) {
             path = path.replace("/pages/", "/panels/");
             responsivePath = responsivePath.replace("/pages/", "/panels/");
-            loadPageAndPanels(responsivePage, responsivePath, "shared");
+            if (loadPageAndPanels(responsivePage, responsivePath, "shared")) {
+                return;
+            }
             loadPageAndPanels(page, path, "shared");
         }
     }
