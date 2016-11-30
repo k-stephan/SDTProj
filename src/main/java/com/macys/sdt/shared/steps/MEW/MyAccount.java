@@ -87,8 +87,8 @@ public class MyAccount extends StepUtils {
         //Check before attempt to delete a CC
         if (Elements.elementPresent("oc_my_wallet.cc_container"))
             MyWallet.deleteCreditCard();
-        else
-            CommonUtils.addCreditCardFromBWallet(null, null);
+
+        CommonUtils.addCreditCardFromBWallet(null, null);
     }
 
     @Then("^I should be redirected to store page using mobile website$")
