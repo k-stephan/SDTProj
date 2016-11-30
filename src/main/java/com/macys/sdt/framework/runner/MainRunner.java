@@ -1030,6 +1030,10 @@ public class MainRunner {
             }
         }
 
+        public static void resetWatchDog() {
+            hangWatchDog.reset(null);
+        }
+
         public static boolean timedOut = false;
 
         private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 120 : 95) * 1000;

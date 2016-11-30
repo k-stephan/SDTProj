@@ -88,6 +88,7 @@ public class Navigate {
     public static void runAfterNavigation() {
         afterNavigate.forEach(Runnable::run);
         MainRunner.getCurrentUrl();
+        MainRunner.PageHangWatchDog.resetWatchDog();
     }
 
     /**
