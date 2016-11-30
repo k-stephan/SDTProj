@@ -60,7 +60,7 @@ public class Elements {
             return elements.get(0);
         } catch (NoSuchElementException ex) {
             System.err.println("-->StepUtils.findElement() no element found with selector: " + selector);
-            errLog.println(ex);
+//            errLog.println(ex);
         }
         return null;
     }

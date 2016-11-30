@@ -164,7 +164,7 @@ public class Wait {
                         Utils.listToString(Utils.getCallFromFunction("secondsUntilElementPresent"), "\n\t ", null) +
                         ": " + selector.toString());
             }
-            errLog.println(ex.getMessage());
+//            errLog.println(ex.getMessage());
             return false;
         }
     }
@@ -199,7 +199,7 @@ public class Wait {
             if (MainRunner.debugMode) {
                 System.err.println("-->Error:secondsUntilElementNotPresent(): " + selector.toString());
             }
-            errLog.println(ex.getMessage());
+//            errLog.println(ex.getMessage());
             return false;
         }
     }
@@ -265,7 +265,7 @@ public class Wait {
             if (MainRunner.debugMode) {
                 System.err.println("-->Error:untilElementPresentWithRefreshAndClick(): " + waitFor.toString() + ": " + toClick.toString());
             }
-            errLog.println(ex.getMessage());
+//            errLog.println(ex.getMessage());
         }
     }
 
