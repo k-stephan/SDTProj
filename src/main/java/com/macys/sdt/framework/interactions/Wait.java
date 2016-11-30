@@ -416,6 +416,7 @@ public class Wait {
             return true;
         }
         StepUtils.ajaxCheck = true;
+        Utils.redirectSErr();
         try {
 
             //below script returns either string or long value, so fetching the results conditionally to avoid type cast error
@@ -441,6 +442,7 @@ public class Wait {
 
             return queries == 0;
         } finally {
+            Utils.resetSErr();
             StepUtils.ajaxCheck = false;
         }
     }
