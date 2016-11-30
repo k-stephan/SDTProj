@@ -426,7 +426,7 @@ public class Registry extends StepUtils {
         if (discountTexts.stream().anyMatch(element -> element.getText().toLowerCase().contains("registry")))
             discount = discountTexts.stream()
                     .filter(element -> element.getText().toLowerCase().contains("registry"))
-                    .map(element -> element.findElement(By.xpath("..")).findElement(By.className("promoDiscount")).getText())
+                    .map(element -> element.findElement(By.xpath("..")).findElement(Elements.element("shopping_bag.promo_discount")).getText())
                     .collect(Collectors.toList()).get(0);
         Assert.assertFalse("Registry Promo Code is not applied on shopping bag page!!", discount.isEmpty());
         discount = discount.replaceAll("[-$.]", "").replaceAll("\\s+", "");

@@ -34,6 +34,7 @@ public class Returns extends StepUtils {
         HashMap order = new HashMap();
         order.put("return_order", orderType);
         returnOrderDetails = Utils.getVirtualReturns(order);
+        pausePageHangWatchDog();
         returnsPage.navigateToSelectionPage(orderType, userType);
         returnsPage.selectItemsAndContinueToSubmitPage();
         Clicks.click("return_submit.submit_return");
@@ -42,6 +43,7 @@ public class Returns extends StepUtils {
         Wait.forPageReady();
         if (!onPage("return_confirmation"))
             Assert.fail("User is not navigated to return confirmation page!!");
+        resumePageHangWatchDog();
     }
 
     @Then("^I should see barcode and crl number$")
