@@ -84,8 +84,11 @@ public class MyAccount extends StepUtils {
             GlobalNav.closeGlobalNav();
         }
         I_navigate_to_the_wallet_page_using_mobile_website();
-        MyWallet.deleteCreditCard();
-        CommonUtils.addCreditCardFromBWallet(null, null);
+        //Check before attempt to delete a CC
+        if (Elements.elementPresent("oc_my_wallet.cc_container"))
+            MyWallet.deleteCreditCard();
+        else
+            CommonUtils.addCreditCardFromBWallet(null, null);
     }
 
     @Then("^I should be redirected to store page using mobile website$")
