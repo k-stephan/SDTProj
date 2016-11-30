@@ -91,12 +91,14 @@ public class CheckoutSteps extends StepUtils {
 
     @And("^I select continue button on guest shipping page$")
     public void I_select_continue_button_on_guest_shipping_page() throws Throwable {
+        pausePageHangWatchDog();
         if (macys())
             Clicks.click("responsive_checkout.continue_shipping_checkout_button");
         else {
             if(!Clicks.clickIfPresent("responsive_checkout.continue_shipping_checkout_button"))
                 Clicks.click("shipping_guest.continue_checkout");
         }
+        resumePageHangWatchDog();
     }
 
     @When("^I enter shipping address on guest shipping page$")
