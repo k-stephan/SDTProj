@@ -390,8 +390,7 @@ public class Registry extends StepUtils {
         DropDowns.selectByText("edit_registry.event_year", year);
         Clicks.click("edit_registry.update_registry_button");
         Wait.untilElementPresent("create_registry.close_overlay_chat");
-        if (Elements.elementPresent("create_registry.close_overlay_chat"))
-            Clicks.click("create_registry.close_overlay_chat");
+        Clicks.clickIfPresent("create_registry.close_overlay_chat");
         Wait.forPageReady();
     }
 

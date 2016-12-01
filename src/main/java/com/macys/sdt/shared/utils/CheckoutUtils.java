@@ -114,7 +114,6 @@ public class CheckoutUtils extends StepUtils {
                     Wait.secondsUntilElementPresent("checkout_sign_in.continue_checkout_guest_button", 20);
                 if (MEW())
                     Wait.secondsUntilElementPresent("checkout_sign_in.email", 20);
-                Clicks.click("checkout_sign_in.continue_checkout_guest_button");
                 if (guestCheckoutSignInPageVerify) {
                     Assert.assertTrue("ERROR - ENV : Unable to navigate checkout sign in page", onPage("checkout_sign_in"));
                     guestCheckoutSignInPageVerify = false;

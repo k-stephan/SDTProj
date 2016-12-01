@@ -91,14 +91,12 @@ public class CheckoutSteps extends StepUtils {
 
     @And("^I select continue button on guest shipping page$")
     public void I_select_continue_button_on_guest_shipping_page() throws Throwable {
-        pausePageHangWatchDog();
         if (macys())
             Clicks.click("responsive_checkout.continue_shipping_checkout_button");
         else {
             if(!Clicks.clickIfPresent("responsive_checkout.continue_shipping_checkout_button"))
                 Clicks.click("shipping_guest.continue_checkout");
         }
-        resumePageHangWatchDog();
     }
 
     @When("^I enter shipping address on guest shipping page$")
@@ -122,7 +120,6 @@ public class CheckoutSteps extends StepUtils {
 
     @And("^I select continue button on guest payment page$")
     public void I_select_continue_button_on_guest_payment_page() throws Throwable {
-        pausePageHangWatchDog();
         // run this step only on Batch Mode enabled QA environment
         // We can place orders even though site is in batch mode. Batch mode and product unavailability are two different things, user con't place order if the product is unavaibale.
 //        if (MainRunner.batchMode) {
@@ -136,7 +133,6 @@ public class CheckoutSteps extends StepUtils {
 //        } else {
 //            System.err.println("Environment not in batch mode, unable to navigate to payment panel due to product unavailability.");
 //        }
-        resumePageHangWatchDog();
     }
 
     @When("^I checkout on add to bag overlay$")
@@ -349,7 +345,6 @@ public class CheckoutSteps extends StepUtils {
 
     @When("^I enter payment details on payment page$")
     public void i_enter_payment_details_on_payment_page() throws Throwable {
-        pausePageHangWatchDog();
         boolean responsive = onPage("responsive_checkout");
         boolean iship = onPage("iship_checkout");
         if (macys()) {
@@ -357,12 +352,10 @@ public class CheckoutSteps extends StepUtils {
         } else {
             new CheckoutPageBcom().fillGuestCardDetails(responsive, iship);
         }
-        resumePageHangWatchDog();
     }
 
     @And("^I select use my shipping address checkbox on payment page$")
     public void i_select_use_my_shipping_address_checkbox_on_payment_page() throws Throwable {
-        pausePageHangWatchDog();
         if (macys()) {
             if (Elements.elementPresent("responsive_payment_guest_section.use_shipping_address")) {
                 Clicks.selectCheckbox("responsive_payment_guest_section.use_shipping_address");
@@ -373,17 +366,14 @@ public class CheckoutSteps extends StepUtils {
             else
                 Clicks.selectCheckbox("responsive_payment_guest_section.use_shipping_address");
         }
-        resumePageHangWatchDog();
     }
 
     @And("^I enter contact details on payment page$")
     public void i_enter_contact_details_on_payment_page() throws Throwable {
-        pausePageHangWatchDog();
         boolean responsive = onPage("responsive_checkout") || onPage("responsive_checkout_signed_in");
         String page = responsive ? (signedIn() ? "responsive_checkout_signed_in" : "responsive_checkout")
                 : (!signedIn() ? "payment_guest" : "shipping_payment_signed_in");
         new Checkout().fillContactDetails(responsive, page, null);
-        resumePageHangWatchDog();
     }
 
     @And("^I pay whole transaction amount with usl on payment page and place order$")
