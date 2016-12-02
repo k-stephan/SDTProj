@@ -1036,7 +1036,7 @@ public class MainRunner {
 
         public static boolean timedOut = false;
 
-        private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 120 : 95) * 1000;
+        private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 130 : 95) * 1000;
         private final static int MAX_FAILURES = 5;
         private String m_url;
         private long ts;
