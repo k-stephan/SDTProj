@@ -259,7 +259,7 @@ public class PageNavigation extends StepUtils {
 
     @And("^I click on thumbnail \"([^\"]*)\" on featured categories$")
     public void I_click_on_thumbnail_on_featured_categories(String category) throws Throwable {
-        if(Elements.elementPresent("category_splash.featured_categories")){
+        if(!Elements.elementPresent("category_splash.featured_categories")){
                  Clicks.click(CategorySplash.selectFeaturedCategory(category));
         }
         else

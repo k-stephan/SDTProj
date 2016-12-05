@@ -235,7 +235,7 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I select a customer top rated product$")
     public void I_select_a_customer_top_rated_product() throws Throwable {
-        if (Elements.elementPresent("category_splash.top_rated")) {
+        if (!Elements.elementPresent("category_splash.top_rated")) {
             CategorySplash.selectCustomerTopRatedProduct();
         } else
             Assert.fail("ERROR - ENV: shop customers' top rated panel is not visible..... ");
