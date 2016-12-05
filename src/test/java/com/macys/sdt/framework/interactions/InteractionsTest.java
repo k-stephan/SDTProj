@@ -59,4 +59,21 @@ public class InteractionsTest {
         Clicks.javascriptClick("ui_standards.forms_link");
         Assert.assertTrue(Wait.untilElementPresent("ui_standards.dropdown_select_menu_link"));
     }
+
+    @Test
+    public void testTypeTextBox() throws Exception {
+        Assume.assumeTrue("Test element not present - Ignoring TypeTextBox Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
+        String firstName = "First Name";
+        TextBoxes.typeTextbox("ui_standards.first_name_text_box", firstName);
+        Assert.assertEquals(Elements.getElementAttribute("ui_standards.first_name_text_box", "value"), firstName);
+    }
+
+    @Test
+    public void testTypeTextNEnter() throws Exception {
+        Assume.assumeTrue("Test element not present - Ignoring TypeTextNEnter Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
+        String firstName = "First Name";
+        TextBoxes.typeTextNEnter("ui_standards.first_name_text_box", firstName);
+        Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg"));
+        Assert.assertEquals(Elements.getElementAttribute("ui_standards.first_name_text_box", "value"), firstName);
+    }
 }

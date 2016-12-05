@@ -5,5 +5,7 @@
   "buttons_link":                 "linkText, Buttons",
   "primary_buttons_link":         "linkText, Primary Buttons",
   "forms_link":                   "linkText, Forms",
-  "dropdown_select_menu_link":    "linkText, Dropdown Select Menu"
+  "dropdown_select_menu_link":    "linkText, Dropdown Select Menu",
+  "first_name_text_box":           "id, profile_firstname",
+  "error_msg":                    "className, error_msg"
 }
