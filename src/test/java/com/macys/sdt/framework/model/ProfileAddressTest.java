@@ -1,6 +1,5 @@
-package com.macys.sdt.framework.resources.model;
+package com.macys.sdt.framework.model;
 
-import com.macys.sdt.framework.model.ProfileAddress;
 import org.junit.Assert;
 import org.junit.Test;
 

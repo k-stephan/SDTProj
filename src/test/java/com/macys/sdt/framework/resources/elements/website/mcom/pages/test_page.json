@@ -1,0 +1,10 @@
+{
+  "include": [
+    "panel.test_panel"
+  ],
+
+  "url":                       "mcom/page/url",
+  "verify_page":               "id, verifyPageElementM",
+
+  "test_element":              "name, m_name || linkText, m text"
+}

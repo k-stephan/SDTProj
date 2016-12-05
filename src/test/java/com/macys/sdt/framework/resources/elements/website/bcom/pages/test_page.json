@@ -1,0 +1,10 @@
+{
+  "include": [
+    "panel.test_panel"
+  ],
+
+  "url":                                 "bcom/page/url",
+  "verify_page":                         "id, verifyPageElementB",
+
+  "test_element":                        "id, b_id || class,  b_class"
+}
