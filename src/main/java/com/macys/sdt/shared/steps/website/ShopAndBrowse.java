@@ -581,6 +581,25 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+
+    @When("^I directly add an available and orderable product to my bag$")
+    public void I_directly_add_an_available_and_orderable_product_to_my_bag() throws Throwable {
+        String mcom_avilable_prodcut = "22804";
+        String bcom_avilable_prodcut = "3048";
+        if(macys())
+            CommonUtils.navigateDirectlyToProduct(mcom_avilable_prodcut);
+        else
+            CommonUtils.navigateDirectlyToProduct(bcom_avilable_prodcut);
+        I_add_product_to_my_bag_from_standard_PDP_Page();
+
+        if (onPage("add_to_bag"))
+            Clicks.click("add_to_bag.checkout");
+        else if (Elements.elementPresent("add_to_bag_dialog.add_to_bag_checkout"))
+            Clicks.click("add_to_bag_dialog.add_to_bag_checkout");
+        else
+            Clicks.click("product_display.member_atb_checkout");
+    }
+
     @When("^I select a random \"([^\"]*)\" recommendation$")
     public void I_select_a_random_recommendation(String panel_position) throws Throwable {
         Clicks.click("product_display.vertical_recommendation");
