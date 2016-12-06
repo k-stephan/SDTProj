@@ -1061,6 +1061,7 @@ public class Utils {
             try {
                 errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
                 infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");
+                createDirectory(MainRunner.workspace + "logs");
                 if (!errFile.exists()) {
                     if (!errFile.createNewFile()) {
                         System.err.println("Could not create error log file");

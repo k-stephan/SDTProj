@@ -3,7 +3,7 @@ package com.macys.sdt.framework.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestStatesUtils {
+public class StatesUtilsTest {
 
     @Test
     public void testAbbreviations() {

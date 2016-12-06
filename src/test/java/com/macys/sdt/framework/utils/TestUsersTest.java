@@ -8,7 +8,7 @@ import org.junit.Test;
 public class TestUsersTest {
 
     @Test
-    public void defaultProfileTest() {
+    public void testDefaultProfile() {
         UserProfile profile = UserProfile.getDefaultProfile();
         User user = profile.getUser();
 
