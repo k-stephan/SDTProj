@@ -969,7 +969,6 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I click delete on random offer and wait for confirmation overlay$")
     public void I_click_delete_on_random_offer_and_wait_for_confirmation_overlay() throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.delete_offers")) {
-           promoCode = Elements.findElement("oc_my_wallet.special_redemption_codes").getText();
             Clicks.clickRandomElement("oc_my_wallet.delete_offers");
             Wait.untilElementPresent("oc_my_wallet.yes_delete_offer");
         } else {
@@ -979,9 +978,12 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I add a valid offer$")
     public void I_add_a_valid_offer() throws Throwable {
-        Wait.untilElementPresent("add_offer_dialog.promo_code");
-        TextBoxes.typeTextbox("add_offer_dialog.promo_code", promoCode);
-        Clicks.click("add_offer_dialog.save_offer");
+        if(Elements.elementPresent("oc_my_wallet.special_redemption_codes"))
+            promoCode = Elements.findElement("oc_my_wallet.special_redemption_codes").getText();
+        else{
+            promoCode = "X1A001IEZB17";
+            TextBoxes.typeTextbox("add_offer_dialog.promo_code", promoCode);
+            Clicks.click("add_offer_dialog.save_offer");}
     }
     @And("^I confirm offer remove$")
     public void I_confirm_offer_remove() throws Throwable {
