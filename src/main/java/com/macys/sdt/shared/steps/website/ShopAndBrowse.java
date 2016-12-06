@@ -35,6 +35,7 @@ public class ShopAndBrowse extends StepUtils {
     public static String promotionalProdId;
     public static String promotionCode;
     public static Product recentProduct;
+    public static String promoCode;
 
     @When("^I select \"([^\"]*)\" in bops change store dialog$")
     public static void I_select_miles_in_bops_change_store_dialog(String distance) throws Throwable {
@@ -968,6 +969,7 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I click delete on random offer and wait for confirmation overlay$")
     public void I_click_delete_on_random_offer_and_wait_for_confirmation_overlay() throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.delete_offers")) {
+           promoCode = Elements.findElement("oc_my_wallet.special_redemption_codes").getText();
             Clicks.clickRandomElement("oc_my_wallet.delete_offers");
             Wait.untilElementPresent("oc_my_wallet.yes_delete_offer");
         } else {
@@ -975,6 +977,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    @And("^I add a valid offer$")
+    public void I_add_a_valid_offer() throws Throwable {
+        Wait.untilElementPresent("add_offer_dialog.promo_code");
+        TextBoxes.typeTextbox("add_offer_dialog.promo_code", promoCode);
+        Clicks.click("add_offer_dialog.save_offer");
+    }
     @And("^I confirm offer remove$")
     public void I_confirm_offer_remove() throws Throwable {
         if (!Clicks.clickIfPresent("oc_my_wallet.yes_delete_offer"))
