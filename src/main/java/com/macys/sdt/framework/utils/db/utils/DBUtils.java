@@ -76,24 +76,21 @@ public class DBUtils {
 
         try {
             JSONObject jsonObject = new JSONObject(json);
-
-            String eName = (String) jsonObject.get("envName");
+            String eName;
+            try {
+                eName = jsonObject.getString("envName");
+            } catch (JSONException e) {
+                eName = "Unknown";
+            }
             JSONObject dbInfo = (JSONObject) jsonObject.get("dbInfo");
-            String dbName = (String) dbInfo.get("dbName");
-            String dbSchema = (String) dbInfo.get("dbSchema");
-            String dbUsername = (String) dbInfo.get("dbUsername");
-            String dbPassword = (String) dbInfo.get("dbPassword");
-            String dbPortNo = (String) dbInfo.get("dbPortNo");
-            String dbHost = (String) dbInfo.get("dbHost");
-            String dbUrl = (String) dbInfo.get("dbUrl");
 
-            dbconfig.setPort(dbPortNo);
-            dbconfig.setDBUrl(dbUrl);
-            dbconfig.setUserName(dbUsername);
-            dbconfig.setPassword(dbPassword);
-            dbconfig.setHost(dbHost);
-            dbconfig.setDbName(dbName);
-            dbconfig.setSchema(dbSchema);
+            dbconfig.setPort(dbInfo.getString("dbPortNo"));
+            dbconfig.setDBUrl(dbInfo.getString("dbUrl"));
+            dbconfig.setUserName(dbInfo.getString("dbUsername"));
+            dbconfig.setPassword(dbInfo.getString("dbPassword"));
+            dbconfig.setHost(dbInfo.getString("dbHost"));
+            dbconfig.setDbName((String) dbInfo.get("dbName"));
+            dbconfig.setSchema(dbInfo.getString("dbSchema"));
             dbconfig.setEnvName(eName);
         } catch (ParseException | JSONException e) {
             e.printStackTrace();

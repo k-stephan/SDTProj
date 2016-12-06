@@ -31,7 +31,8 @@ public class DBConnection {
             try {
                 Class.forName(config.getDriver());
                 System.out.println("Connecting to database...");
-                Assert.assertFalse("ERROR - ENV : Unable to fetch database details from REAPPS URL", (config.getDBUrl() == null || config.getUserName() == null || config.getPassword() == null));
+                Assert.assertFalse("ERROR - ENV : Unable to fetch database details from REAPPS URL",
+                        (config.getDBUrl() == null || config.getUserName() == null || config.getPassword() == null));
                 con = DriverManager.getConnection(config.getDBUrl(), config.getUserName(), config.getPassword());
                 System.out.println("Connection complete");
             } catch (Exception e) {
