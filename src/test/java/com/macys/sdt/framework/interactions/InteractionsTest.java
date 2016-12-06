@@ -8,6 +8,9 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
+
+import java.util.List;
 
 public class InteractionsTest {
 
@@ -77,5 +80,43 @@ public class InteractionsTest {
         TextBoxes.typeTextNEnter("ui_standards.first_name_text_box", firstName);
         Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg"));
         Assert.assertEquals(Elements.getElementAttribute("ui_standards.first_name_text_box", "value"), firstName);
+    }
+
+//    @Test
+    public void testSelectByText() throws Exception {
+        Assume.assumeTrue("Dropdown element not present - Ignoring SelectByText Test", Wait.untilElementPresent("ui_standards.drop_down"));
+        DropDowns.selectByText("ui_standards.drop_down", "Visa");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")) , "Visa");
+        DropDowns.selectByText(Elements.element("ui_standards.drop_down"), "Macy's");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")) , "Macy's");
+    }
+
+ //   @Test
+    public void testSelectByIndex() throws Exception {
+        Assume.assumeTrue("Dropdown element not present - Ignoring selectByIndex Test", Wait.untilElementPresent("ui_standards.drop_down"));
+        DropDowns.selectByIndex("ui_standards.drop_down",2);
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")) , "Macy's American Express");
+    }
+
+ //   @Test
+    public void testSelectByValue() throws Exception {
+        Assume.assumeTrue("Dropdown element not present - Ignoring selectByValue Test", Wait.untilElementPresent("ui_standards.drop_down"));
+        DropDowns.selectByValue("ui_standards.drop_down","Y");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")) , "Macy's");
+    }
+
+ //   @Test
+    public void testSelectRandomValue() throws Exception {
+        Assume.assumeTrue("Dropdown element not present - Ignoring selectRandomValue Test", Wait.untilElementPresent("ui_standards.drop_down"));
+        String selected = DropDowns.selectRandomValue("ui_standards.drop_down");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")) , selected);
+    }
+
+ //   @Test
+    public void testGetAllValues() throws Exception {
+        Assume.assumeTrue("Dropdown element not present - Ignoring getAllValues Test", Wait.untilElementPresent("ui_standards.drop_down"));
+        List<String> options = DropDowns.getAllValues("ui_standards.drop_down");
+        Assert.assertNotNull(options);
+        Assert.assertFalse(options.isEmpty());
     }
 }
