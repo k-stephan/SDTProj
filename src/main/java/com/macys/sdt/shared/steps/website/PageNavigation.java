@@ -29,7 +29,7 @@ public class PageNavigation extends StepUtils {
     @Given("^I visit the web site as a guest user$")
     public void I_visit_the_web_site_as_a_guest_user() throws Throwable {
         Navigate.visit("home");
-//        MyAccountSteps.iClearAllTheCookies();
+        MyAccountSteps.iClearAllTheCookies();
         Clicks.clickIfPresent("home.popup_close");
         Wait.forPageReady();
         closeBcomPopup();

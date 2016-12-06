@@ -141,6 +141,8 @@ public class ShopAndBrowse extends StepUtils {
         } finally {
             if (!addedToBag) {
                 Wait.untilElementNotPresent("product_display.add_to_bag_button");
+                if (macys())
+                    Assert.assertFalse("ERROR - DATA : Given item is unavailable!!", Elements.elementPresent(By.className("css-tooltip")) && Elements.getText(By.className("css-tooltip")).contains("this item is unavailable"));
                 Assert.assertTrue("Unable to add product to bag", ProductDisplay.addedToBag());
             }
 

@@ -35,10 +35,10 @@ public class CreateRegistry extends StepUtils {
             Registry registry = customer.getRegistry();
             User user = customer.getUser();
             ProfileAddress profileAddress = user.getProfileAddress();
-            DropDowns.selectByText("create_registry.event_type", registry.getEventType());
-            DropDowns.selectByText("create_registry.event_month", registry.getEventMonth());
-            DropDowns.selectByText("create_registry.event_day", registry.getEventDay());
-            DropDowns.selectByText("create_registry.event_year", registry.getEventYear());
+            selectDropDownText("create_registry.event_type", registry.getEventType());
+            selectDropDownText("create_registry.event_month", registry.getEventMonth());
+            selectDropDownText("create_registry.event_day", registry.getEventDay());
+            selectDropDownText("create_registry.event_year", registry.getEventYear());
 
             if (macys()) {
                 DropDowns.selectByText("create_registry.event_location", registry.getEventLocation());
@@ -51,14 +51,14 @@ public class CreateRegistry extends StepUtils {
             TextBoxes.typeTextbox("create_registry.address_line_1", profileAddress.getAddressLine1());
             TextBoxes.typeTextbox("create_registry.address_line_2", "");
             TextBoxes.typeTextbox("create_registry.address_city", profileAddress.getCity());
-            DropDowns.selectByText("create_registry.address_state", profileAddress.getState());
+            selectDropDownText("create_registry.address_state", profileAddress.getState());
             TextBoxes.typeTextbox("create_registry.address_zip_code", String.valueOf(profileAddress.getZipCode()));
 
-            DropDowns.selectByText("create_registry.security_question", user.getUserPasswordHint().getQuestion());
+            selectDropDownText("create_registry.security_question", user.getUserPasswordHint().getQuestion());
             TextBoxes.typeTextbox("create_registry.security_answer", user.getUserPasswordHint().getAnswer());
-            DropDowns.selectByText("create_registry.dob_month", TestUsers.generateRandomMonth());
-            DropDowns.selectByIndex("create_registry.dob_day", date);
-            DropDowns.selectByValue("create_registry.dob_year", Integer.toString(year));
+            selectDropDownText("create_registry.dob_month", TestUsers.generateRandomMonth());
+            selectDropDownIndex("create_registry.dob_day", date);
+            selectDropDownValue("create_registry.dob_year", Integer.toString(year));
 
             TextBoxes.typeTextbox("create_registry.phone_area_code", profileAddress.getPhoneAreaCode());
             TextBoxes.typeTextbox("create_registry.phone_exchange", profileAddress.getPhoneExchange());
@@ -66,7 +66,7 @@ public class CreateRegistry extends StepUtils {
 
             TextBoxes.typeTextbox("create_registry.co_registrant_first_name", registry.getCoRegistrantFirstName());
             TextBoxes.typeTextbox("create_registry.co_registrant_last_name", registry.getCoRegistrantLastName());
-            DropDowns.selectByIndex("create_registry.preferred_store", 1);
+            selectDropDownIndex("create_registry.preferred_store", 1);
 
             Clicks.javascriptClick("create_registry.create_registry_button");
             try {
@@ -84,10 +84,10 @@ public class CreateRegistry extends StepUtils {
         Wait.forPageReady();
         Registry registry = customer.getRegistry();
         ProfileAddress profileAddress = customer.getUser().getProfileAddress();
-        DropDowns.selectByText("create_registry.event_type", registry.getEventType());
-        DropDowns.selectByText("create_registry.event_month", registry.getEventMonth());
-        DropDowns.selectByText("create_registry.event_day", registry.getEventDay());
-        DropDowns.selectByText("create_registry.event_year", registry.getEventYear());
+        selectDropDownText("create_registry.event_type", registry.getEventType());
+        selectDropDownText("create_registry.event_month", registry.getEventMonth());
+        selectDropDownText("create_registry.event_day", registry.getEventDay());
+        selectDropDownText("create_registry.event_year", registry.getEventYear());
 
         if (macys()) {
             DropDowns.selectByText(Elements.element("create_registry.event_location"), registry.getEventLocation());
@@ -100,7 +100,7 @@ public class CreateRegistry extends StepUtils {
         TextBoxes.typeTextbox("create_registry.phone_exchange", profileAddress.getPhoneExchange());
         TextBoxes.typeTextbox("create_registry.phone_subscriber", profileAddress.getPhoneSubscriber());
 
-        DropDowns.selectByIndex("create_registry.preferred_store", 1);
+        selectDropDownIndex("create_registry.preferred_store", 1);
 
         Clicks.click("create_registry.create_registry_button");
         try {
@@ -212,5 +212,26 @@ public class CreateRegistry extends StepUtils {
     private static void fillRegistryStoreInfo(UserProfile customer) {
         DropDowns.selectByText("new_create_registry.preferred_store_state", customer.getRegistry().getPreferredStoreState());
         DropDowns.selectByIndex("new_create_registry.preferred_store", 1);
+    }
+
+    private static void selectDropDownText(String element, String text){
+        if (Elements.elementPresent(element))
+            DropDowns.selectByText(element, text);
+        else
+            DropDowns.selectCustomText(element + "_options", element + "_list", text);
+    }
+
+    private static void selectDropDownValue(String element, String text){
+        if (Elements.elementPresent(element))
+            DropDowns.selectByValue(element, text);
+        else
+            DropDowns.selectCustomText(element + "_options", element + "_list", text);
+    }
+
+    private static void selectDropDownIndex(String element, int index){
+        if (Elements.elementPresent(element))
+            DropDowns.selectByIndex(element, index);
+        else
+            DropDowns.selectCustomValue(element + "_options", element + "_list", index);
     }
 }
