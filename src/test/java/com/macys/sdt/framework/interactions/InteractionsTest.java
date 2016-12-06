@@ -2,6 +2,7 @@ package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
+import com.macys.sdt.framework.utils.Utils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -15,6 +16,7 @@ public class InteractionsTest {
         boolean preCondition = false;
         try {
             MainRunner.project = "framework";
+            MainRunner.workspace = "";
             MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
             MainRunner.browser = "firefox";
             MainRunner.remoteOS = "Windows 7";

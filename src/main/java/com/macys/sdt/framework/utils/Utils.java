@@ -1061,12 +1061,24 @@ public class Utils {
             try {
                 errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
                 infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");
+                if (!errFile.exists()) {
+                    if (!errFile.createNewFile()) {
+                        System.err.println("Could not create error log file");
+                    }
+                }
+                if (!infoFile.exists()) {
+                    if (!infoFile.createNewFile()) {
+                        System.err.println("Could not create info log file");
+                    }
+                }
                 errStream = new FileOutputStream(errFile);
                 infoStream = new FileOutputStream(infoFile);
                 errLog = new PrintStream(errStream);
                 infoLog = new PrintStream(infoStream);
             } catch (FileNotFoundException e) {
                 System.err.println("File not found: " + errFile);
+            } catch (IOException e) {
+                System.err.println("Error while creating file: " + e);
             }
         }
     }
