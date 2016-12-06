@@ -132,7 +132,9 @@ public class Hooks extends StepUtils {
                 if (isScenarioOutline()) {
                     System.err.println("FAILED EXAMPLES: " + getScenarioExamples());
                 }
-                System.err.println("FAILED STEP: " + getScenarioStepName(getScenarioIndex() - 1).trim() + "\nERROR: " + errorMsg + "\n<--------------------->\n\n");
+                String stepName = getScenarioStepName(getScenarioIndex() - 1);
+
+                System.err.println("FAILED STEP: " + (stepName == null ? null : stepName.trim()) + "\nERROR: " + errorMsg + "\n<--------------------->\n\n");
                 if (errorMsg.startsWith("sdt.utils.StepUtils$ProductionException:") || errorMsg.startsWith("sdt.utils.StepUtils$SkipException:")) {
                     clearStepResult(-1);
                 }
@@ -188,7 +190,7 @@ public class Hooks extends StepUtils {
             try {
                 String stepName = getScenarioStepName(getScenarioIndex());
                 // the first step will be step 0 and will start with "0:[lineNum] - [step name]"
-                while (!stepName.startsWith("0")) {
+                while (stepName != null && !stepName.startsWith("0")) {
                     incrementStepIndexOffset();
                     stepName = getScenarioStepName(getScenarioIndex());
                 }

@@ -132,6 +132,10 @@ public class DATagCollector {
         tag_collection_started = true;
     }
 
+    /**
+     * capture the digital analytics data
+     * @param step_name : current step name
+     */
     public static void capture(String step_name) {
         // if monitor have not started, skip
         if (!tag_collection_started) {
@@ -171,11 +175,13 @@ public class DATagCollector {
             // System.out.println("****** Chang: " + content);
         } catch (Exception e) {
             // System.out.println("****** Chang: Parsing Error happened");
+            e.printStackTrace();
         }
 
         try {
             json_steps.put(step_item);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -189,6 +195,7 @@ public class DATagCollector {
         try {
             json_top.put("steps", json_steps);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         // write json object to file
         String jsonString = json_top.toString();
@@ -223,6 +230,7 @@ public class DATagCollector {
             p.waitFor();  // wait for process to complete
         } catch (Exception e) {
             // ignore all errors
+            System.out.println("ignored error : " + e.getMessage());
         }
 
         tag_collection_started = false;
@@ -241,7 +249,8 @@ public class DATagCollector {
             json_top.put("feature", featurepath);
             json_top.put("scenario", scenario.getName());
         } catch (Exception e) {
-            // ignore
+            // ignore all errors
+            System.out.println("ignored error : " + e.getMessage());
         }
 
         return Utils.getScenarioShaKey(featurepath, scenario.getName());
@@ -284,6 +293,7 @@ public class DATagCollector {
                 flag_findCorrectHeader = true;
             } else if (s.matches("^Clear.*$")) {
                 // ignore
+                System.out.println("ignore");
             } else if (s.matches(".* tag \\(.*$")) {
                 // new tag
                 new_tag = new JSONObject();
@@ -300,6 +310,7 @@ public class DATagCollector {
                     new_tag.put("tag_url", tag_url);
                     param_list = new JSONArray();
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else if (s.matches(".*:$")) {
                 param_name = regexReplace(s, "^.* \\(", "");
@@ -310,7 +321,7 @@ public class DATagCollector {
 
                 // new param
                 param = new JSONObject();
-            } else if (s.equals("")) {
+            } else if (s.isEmpty()) {
                 // flush previous tag
                 if (param_name != null) {
                     // end of tag
@@ -318,6 +329,7 @@ public class DATagCollector {
                         new_tag.put("params", param_list);
                         json_tags.put(new_tag);
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     param_name = null;
                 }
@@ -333,6 +345,7 @@ public class DATagCollector {
                         param.put("value", param_value);
                         param_list.put(param);
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -345,6 +358,7 @@ public class DATagCollector {
                 new_tag.put("params", param_list);
                 json_tags.put(new_tag);
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
