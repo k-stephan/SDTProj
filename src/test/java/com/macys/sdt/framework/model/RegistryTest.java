@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class RegistryTest {
 
-    private Registry registry=null;
+    private Registry registry;
 
     public RegistryTest()    {
         registry = new Registry();

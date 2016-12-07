@@ -1,0 +1,22 @@
+package com.macys.sdt.framework.model;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class LoginCredentialsTest {
+
+    @Test
+    public void testGetDefaultLoginCredentials() throws Exception {
+        LoginCredentials logincredentials = LoginCredentials.getDefaultLoginCredentials();
+        Assert.assertNotNull(logincredentials);
+        Assert.assertNotNull(logincredentials.getPassword());
+    }
+
+    @Test
+    public void testGetPassword() throws Exception {
+        LoginCredentials loginCredentials = new LoginCredentials();
+        String password = "password";
+        loginCredentials.setPassword(password);
+        Assert.assertEquals(password, loginCredentials.getPassword());
+    }
+}

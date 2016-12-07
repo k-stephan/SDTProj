@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class ProfileAddressTest {
 
-    private ProfileAddress profileAddress = null;
+    private ProfileAddress profileAddress;
 
     public ProfileAddressTest()    {
         profileAddress = new ProfileAddress();
