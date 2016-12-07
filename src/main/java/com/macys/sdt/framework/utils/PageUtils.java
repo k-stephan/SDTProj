@@ -18,7 +18,15 @@ import static com.macys.sdt.framework.utils.Utils.log;
  * This class pulls and manages data from page and panel JSON files
  */
 public class PageUtils {
+
+    /**
+     * This store paths and JSON values of the JSON page and panels present in the project
+     */
     protected static HashMap<String, JSONObject> cachePagesProject = new HashMap<>();
+
+    /**
+     * This store paths and JSON values of the JSON page and panels present in the shared space
+     */
     protected static HashMap<String, JSONObject> cachePagesShared = new HashMap<>();
 
     /**
@@ -40,7 +48,7 @@ public class PageUtils {
      * shared directories. If on BCOM, it will default to MCOM if no page is found.
      * </p>
      *
-     * @param pagePath name of page to load
+     * @param pagePath name of page to load (page path  home.logo => website.mcom.page.home)
      */
     public static void loadPageJSON(String pagePath) {
         String responsivePath = getResponsivePath(pagePath);

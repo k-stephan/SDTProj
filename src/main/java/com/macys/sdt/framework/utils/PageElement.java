@@ -7,13 +7,42 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class PageElement {
-    public String elementKey = null;                                  // home.logo => home.logo or panel.home.logo
-    public String pageName = null;                                    // home.logo => home
-    public String pagePath = null;                                    // home.logo => website.mcom.page.home
-    public String elementName = null;                                 // home.logo => logo
-    public ArrayList<String> elementLocators = new ArrayList<>();     // home.logo => [id, cssSelector]
-    public ArrayList<String> elementValues = new ArrayList<>();       // home.logo => [logoImage, div#newLogoImage]
 
+    /**
+     * example : home.logo => home.logo or panel.home.logo
+     */
+    public String elementKey = null;
+
+    /**
+     * example : home.logo => home
+     */
+    public String pageName = null;
+
+    /**
+     * example : home.logo => website.mcom.page.home
+     */
+    public String pagePath = null;
+
+    /**
+     * example : home.logo => logo
+     */
+    public String elementName = null;
+
+    /**
+     * example : home.logo => [id, cssSelector]
+     */
+    public ArrayList<String> elementLocators = new ArrayList<>();
+
+    /**
+     * example : home.logo => [logoImage, div#newLogoImage]
+     */
+    public ArrayList<String> elementValues = new ArrayList<>();
+
+    /**
+     * setup and read page element data
+     *
+     * @param stringName in format home.logo => home.logo or panel.home.logo
+     */
     public PageElement(String stringName) {
         elementKey = stringName;
 
@@ -21,18 +50,36 @@ public class PageElement {
         parseValue(PageUtils.getElementJSONValue(this));
     }
 
+    /**
+     * This return the JSON page name
+     * @return page name (home.logo => home)
+     */
     public String getPageName() {
         return pageName;
     }
 
+    /**
+     * This return element name in the JSON page
+     * @return element name (home.logo => logo)
+     */
     public String getElementName() {
         return elementName;
     }
 
+    /**
+     * This return path of the page
+     * @return page path (home.logo => website.mcom.page.home)
+     */
     public String getPagePath() {
         return pagePath;
     }
 
+    /**
+     * parse the locators and values for a page element
+     *
+     * @param values values in format 'id, b_id || class,  b_class'
+     * @return list of values (b_id, b_class)
+     */
     public ArrayList<String> parseValue(String values) {
         if (values == null) {
             return elementValues;
@@ -40,18 +87,22 @@ public class PageElement {
 
         // parse element String
         for (String value : values.split("\\|\\|")) {
-            String[] parts = value.split(Pattern.quote(","));
-            int count = parts.length;
+            if (value.contains(","))    {
+                String[] parts = value.split(Pattern.quote(","));
 
-            String locator = parts[0].trim();
-            if (isValidLocatorStrategy(locator)) {
-                elementLocators.add(locator);
-                value = value.replace(locator + ",", "").trim();
+                String locator = parts[0].trim();
+
+                // add only valid locator and corresponding value
+                if (isValidLocatorStrategy(locator)) {
+                    elementLocators.add(locator);
+                    value = value.replace(locator + ",", "").trim();
+                    elementValues.add(value);
+                } else {
+                    System.err.println("wrong locator : " + locator);
+                }
+            } else {    // else use case example : url where no locator present
+                elementValues.add(value);
             }
-            // System.out.println("elementLocators = " + elementLocators);
-
-            elementValues.add(value);
-            // System.out.println("elementValues = " + elementValues);
         }
         return elementValues;
     }
@@ -113,6 +164,13 @@ public class PageElement {
         return pagePath;
     }
 
+    /**
+     * make 'MEW.mcom.page.responsive_page' to 'responsive.mcom.page.responsive_page'
+     * or 'website.mcom.page.responsive_page' to 'responsive.mcom.page.responsive_page'
+     *
+     * @param pagePath path of page or panel
+     * @return  responsive path of the page or panel
+     */
     public static String getResponsivePath(String pagePath) {
         if (!(pagePath.contains("website") || pagePath.contains("MEW"))) {
             return pagePath;
