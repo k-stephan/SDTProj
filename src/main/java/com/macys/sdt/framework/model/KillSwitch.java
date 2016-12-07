@@ -79,7 +79,7 @@ public class KillSwitch {
         if (data != null && !data.isEmpty())
             return new Gson().toJson(data, Map.class);
         try {
-            String env = new URL(System.getenv("website")).getHost().replaceAll("www.", "").replaceAll(".fds.com", "");
+            String env = new URL(System.getenv("website")).getHost().replaceAll("www1.", "").replaceAll("www.", "").replaceAll(".fds.com", "").replaceAll(".com", "");
             String ksurl = Utils.getEEUrl() + "/api/ee/getKillSwitch/" + env;
             System.out.println("--> Dumping KillSwitch data for:" + ksurl);
             String ks = Utils.httpGet(ksurl, null);

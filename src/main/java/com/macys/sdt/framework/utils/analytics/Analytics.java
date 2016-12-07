@@ -259,23 +259,23 @@ public abstract class Analytics {
 	        if (tagAttr.equals("ul")) {
 	            String page_url = getCurrentURL();
 	            if (cval.equals(page_url)) {
+	            	hresult.put("action", "page_url:" + page_url);
 	                hresult.put("status", "pass");
-	                compare.put("action", "page_url:" + page_url);
 	            }
 	        } else {
 	        	String globalValue = this.global_values.get(tagAttr);
 	        	if (globalValue != null){
 	        		compare.put("gold", globalValue);
+	        		hresult.put("action", "update_global");
 	        		hresult.put("status", globalValue.equals(cval)? "pass":"fail");
-	                compare.put("action", "update_global");
 	                return;
 	        	}
 	        	
 	        	globalValue = this.global_values.get(tagid + "." + tagAttr);
 	        	if (globalValue != null){
 	        		compare.put("gold", globalValue);
+	        		hresult.put("action", "update_global_tag");
 	        		hresult.put("status", globalValue.equals(cval)? "pass":"fail");
-	                compare.put("action", "update_global_tag");
 	                return;
 	        	}
 	        	
@@ -283,8 +283,13 @@ public abstract class Analytics {
 	            if (gval.startsWith("_ignore_") ||
 	                    this.global_ignores.contains("all." + tagAttr) ||
 	                    this.global_ignores.contains(tagid + "." + tagAttr)) {
-	                hresult.put("status", "pass");
-	                hresult.put("action", "ignore");
+	            	String action = "ignore";
+	            	if (this.global_ignores.contains("all." + tagAttr))
+	            		action = "ignore_global";
+	            	else if (this.global_ignores.contains(tagid + "." + tagAttr))
+	            		action = "ignore_global_tag";
+	            	hresult.put("action", action);
+	            	hresult.put("status", "pass");
 	            } else if (gval.startsWith("_has_value_") ||
 	                    this.global_has_values.contains("all." + tagAttr) ||
 	                    this.global_has_values.contains(tagid + "." + tagAttr)) {
@@ -297,17 +302,17 @@ public abstract class Analytics {
 	            } else if ((Boolean) (res = compareEqual(cval, gval)) == true) {
 	                hresult.put("status", "pass");
 	            } else if (cval.contains(gval)) {
+	                hresult.put("action", "val_contains_gold");
 	                hresult.put("status", "pass");
-	                compare.put("action", "val_contains_gold");
 	            } else if (gval.contains(cval)) {
 	                hresult.put("status", "pass");
-	                compare.put("action", "gold_contains_val");
+	                hresult.put("action", "gold_contains_val");
 	            } else if ((res = compareElementClicks(cval)) != null) {
 	                hresult.put("status", "pass");
-	                compare.put("action", "element_click:" + res);
+	                hresult.put("action", "element_click:" + res);
 	            } else if ((res = comparePageSrc(cval)) != null) {
 	                hresult.put("status", "pass");
-	                compare.put("action", "page_src:" + res);
+	                hresult.put("action", "page_src:" + res);
 	            } else {
 	                hresult.put("status", "fail");
 	            }
