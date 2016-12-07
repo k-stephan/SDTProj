@@ -25,7 +25,6 @@ public class TestSuite {
             MainRunner.url = "http://ui-standards.herokuapp.com/";
             MainRunner.PageHangWatchDog.init();
             Navigate.visit(MainRunner.url);
-            Navigate.browserRefresh();
             StepUtils.shouldBeOnPage("ui_standards");
             preCondition = true;
         }

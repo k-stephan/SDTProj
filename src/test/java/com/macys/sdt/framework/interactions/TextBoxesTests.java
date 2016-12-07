@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -19,9 +20,12 @@ public class TextBoxesTests {
     public void testTypeTextNEnter() throws Exception {
         Assume.assumeTrue("Precondition not met.", TestSuite.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring TypeTextNEnter Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
-        String firstName = "First Name";
+        String firstName = "FirstName";
         TextBoxes.typeTextNEnter("ui_standards.first_name_text_box", firstName);
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg"));
-        Assert.assertEquals(Elements.getElementAttribute("ui_standards.first_name_text_box", "value"), firstName);
+        if (Wait.untilElementPresent("ui_standards.error_msg")) {
+            Assert.assertEquals(Elements.getElementAttribute("ui_standards.first_name_text_box", "value"), firstName);
+        } else {
+            Assert.assertTrue(MainRunner.getCurrentUrl().contains("profile.firstname="+ firstName));
+        }
     }
 }
