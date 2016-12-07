@@ -539,6 +539,15 @@ public class MyAccountSteps extends StepUtils {
         }
     }
 
+    @When("^I click on the 'Get Started' button$")
+    public void iClickOnGetStartedButton() throws Throwable {
+        if (!signedIn()) {
+            Wait.forPageReady();
+            Wait.secondsUntilElementPresent("usl_sign_in.goto_create_profile", 30);
+            Clicks.click("usl_sign_in.goto_create_profile");
+        }
+    }
+
     @When("^I enroll into the USL program from loyalty home page$")
     public void iEnrollIntoTheUSLProgramFromLoyaltyHomePage() throws Throwable {
         // Now we have new USL home page in qa environment which is pointing to production, So we are directly visit USL sign in page instead of USL home.
