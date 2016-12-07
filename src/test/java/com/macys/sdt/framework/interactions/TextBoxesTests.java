@@ -9,7 +9,7 @@ public class TextBoxesTests {
 
     @Test
     public void testTypeTextBox() throws Exception {
-        Assume.assumeTrue("Precondition not met.", TestSuite.preCondition);
+        Assume.assumeTrue("Precondition not met.", InteractionsTestSuite.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring TypeTextBox Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
         String firstName = "First Name";
         TextBoxes.typeTextbox("ui_standards.first_name_text_box", firstName);
@@ -18,7 +18,7 @@ public class TextBoxesTests {
 
     @Test
     public void testTypeTextNEnter() throws Exception {
-        Assume.assumeTrue("Precondition not met.", TestSuite.preCondition);
+        Assume.assumeTrue("Precondition not met.", InteractionsTestSuite.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring TypeTextNEnter Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
         String firstName = "FirstName";
         TextBoxes.typeTextNEnter("ui_standards.first_name_text_box", firstName);

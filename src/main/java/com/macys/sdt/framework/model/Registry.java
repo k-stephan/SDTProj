@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.model;
 
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 public class Registry {
 
     private String eventType;
