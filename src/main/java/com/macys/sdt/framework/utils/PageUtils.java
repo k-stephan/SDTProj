@@ -48,7 +48,7 @@ public class PageUtils {
      * shared directories. If on BCOM, it will default to MCOM if no page is found.
      * </p>
      *
-     * @param pagePath name of page to load (page path  home.logo => website.mcom.page.home)
+     * @param pagePath name of page to load (page path  home.logo = website.mcom.page.home)
      */
     public static void loadPageJSON(String pagePath) {
         String responsivePath = getResponsivePath(pagePath);

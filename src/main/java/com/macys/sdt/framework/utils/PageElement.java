@@ -9,39 +9,39 @@ import java.util.regex.Pattern;
 public class PageElement {
 
     /**
-     * example : home.logo => home.logo or panel.home.logo
+     * example : home.logo = home.logo or panel.home.logo
      */
     public String elementKey = null;
 
     /**
-     * example : home.logo => home
+     * example : home.logo = home
      */
     public String pageName = null;
 
     /**
-     * example : home.logo => website.mcom.page.home
+     * example : home.logo = website.mcom.page.home
      */
     public String pagePath = null;
 
     /**
-     * example : home.logo => logo
+     * example : home.logo = logo
      */
     public String elementName = null;
 
     /**
-     * example : home.logo => [id, cssSelector]
+     * example : home.logo = [id, cssSelector]
      */
     public ArrayList<String> elementLocators = new ArrayList<>();
 
     /**
-     * example : home.logo => [logoImage, div#newLogoImage]
+     * example : home.logo = [logoImage, div#newLogoImage]
      */
     public ArrayList<String> elementValues = new ArrayList<>();
 
     /**
      * setup and read page element data
      *
-     * @param stringName in format home.logo => home.logo or panel.home.logo
+     * @param stringName in format home.logo = home.logo or panel.home.logo
      */
     public PageElement(String stringName) {
         elementKey = stringName;
@@ -52,7 +52,7 @@ public class PageElement {
 
     /**
      * This return the JSON page name
-     * @return page name (home.logo => home)
+     * @return page name home.logo = home
      */
     public String getPageName() {
         return pageName;
@@ -60,7 +60,7 @@ public class PageElement {
 
     /**
      * This return element name in the JSON page
-     * @return element name (home.logo => logo)
+     * @return element name home.logo = logo
      */
     public String getElementName() {
         return elementName;
@@ -68,7 +68,7 @@ public class PageElement {
 
     /**
      * This return path of the page
-     * @return page path (home.logo => website.mcom.page.home)
+     * @return page path home.logo = website.mcom.page.home
      */
     public String getPagePath() {
         return pagePath;
