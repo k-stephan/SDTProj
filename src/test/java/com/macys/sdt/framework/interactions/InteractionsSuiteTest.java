@@ -3,14 +3,13 @@ package com.macys.sdt.framework.interactions;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { ClicksTests.class, TextBoxesTests.class, DropDownsTests.class })
-public class InteractionsTestSuite {
+public class InteractionsSuiteTest {
 
     static boolean preCondition = false;
 

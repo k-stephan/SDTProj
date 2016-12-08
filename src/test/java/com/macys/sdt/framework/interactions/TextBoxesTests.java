@@ -5,11 +5,14 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
+/**
+ * These test can be executed from InteractionsSuiteTest only, hence the class name is ending with 'Tests' instead of 'Test'
+ */
 public class TextBoxesTests {
 
     @Test
     public void testTypeTextBox() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsTestSuite.preCondition);
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring TypeTextBox Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
         String firstName = "First Name";
         TextBoxes.typeTextbox("ui_standards.first_name_text_box", firstName);
@@ -18,7 +21,7 @@ public class TextBoxesTests {
 
     @Test
     public void testTypeTextNEnter() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsTestSuite.preCondition);
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring TypeTextNEnter Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
         String firstName = "FirstName";
         TextBoxes.typeTextNEnter("ui_standards.first_name_text_box", firstName);

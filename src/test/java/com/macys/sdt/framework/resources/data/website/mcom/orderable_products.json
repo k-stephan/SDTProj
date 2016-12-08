@@ -1,0 +1,31 @@
+{
+    "macys": [
+        {
+            "id": 1902537,
+            "click_to_call": false,
+            "gift_wrappable": false,
+            "master_product": true,
+            "available": false
+        },
+        {
+            "id": 2112827,
+            "click_to_call": false,
+            "iship_eligible": false,
+            "registrable": true,
+            "gift_wrappable": true,
+            "gift_messageable": true,
+            "master_product": false,
+            "available": true,
+            "orderable": true
+        },
+        {
+            "id": 298391,
+            "click_to_call": false,
+            "iship_eligible": true,
+            "master_product": true,
+            "registrable": true,
+            "category_page_type": "Browse",
+            "available": true
+        }
+    ]
+}
