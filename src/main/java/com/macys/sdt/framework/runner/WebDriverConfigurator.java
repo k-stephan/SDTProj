@@ -311,7 +311,7 @@ public class WebDriverConfigurator {
             } else {
                 System.out.println("running without sauce connect");
             }
-            // need to increase res or we get tablet layout
+            // need to increase resolution or we get tablet layout
             // not supported on win10 and mac OSX El Capitan (10.11)
             if (!StepUtils.mobileDevice() && !remoteOS.matches("^Windows 10|(.*?)10.11$")) {
                 capabilities.setCapability("screenResolution", "1280x1024");

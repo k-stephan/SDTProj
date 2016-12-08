@@ -128,7 +128,7 @@ public class MainRunner {
      */
     public static int runStatus = 0;
     /**
-     * Wait timeout as given in "timeout" env variable. Default 90 seconds (120 seconds for safari)
+     * Wait timeout as given in "timeout" env variable. Default 95 seconds (125 seconds for safari)
      */
     public static int timeout;
     /**
@@ -324,12 +324,18 @@ public class MainRunner {
             System.out.println("batch_mode is enabled");
         }
 
+        // use saucelabs when valid "sauce_user" and "sauce_key" is provided
         useSauceLabs = sauceUser != null && sauceKey != null;
+
+        // use chrome emulation when it is mobile device and use of Appium is not mentioned
         useChromeEmulation = StepUtils.mobileDevice() && !useAppium;
 
+        // Test is appTest when use of Appium is mentioned and app_location is given
         appTest = useAppium && (appLocation != null);
 
+        // close browser at exist unless debugMode is on or test is appTest
         closeBrowserAtExit = !debugMode && !appTest;
+
         if (url == null && !appTest) {
             Assert.fail("\"website\" variable required to test a website");
         }
@@ -345,7 +351,7 @@ public class MainRunner {
         if (envVal != null) {
             timeout = Integer.parseInt(envVal);
         } else {
-            timeout = StepUtils.safari() ? 120 : 90;
+            timeout = StepUtils.safari() ? 130 : 95;
         }
 
         // get project from environment variables
@@ -462,6 +468,13 @@ public class MainRunner {
                 driver = WebDriverConfigurator.initDriver(null);
             } else {
                 driver = WebDriverConfigurator.initDriverWithProxy();
+            }
+
+            // print the session id of saucelabs for tracking job on sauceLabs
+            if (useSauceLabs) {
+                if (driver instanceof RemoteWebDriver) {
+                    System.out.println("Link to your job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
+                }
             }
 
             try {

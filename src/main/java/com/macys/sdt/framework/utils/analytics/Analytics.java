@@ -299,7 +299,7 @@ public abstract class Analytics {
 	                    hresult.put("status", "fail");
 	                }
 	                hresult.put("action", "has_value");
-	            } else if ((Boolean) (res = compareEqual(cval, gval)) == true) {
+	            } else if ((Boolean) (res = compareEqual(cval, gval))) {
 	                hresult.put("status", "pass");
 	            } else if (cval.contains(gval)) {
 	                hresult.put("action", "val_contains_gold");
