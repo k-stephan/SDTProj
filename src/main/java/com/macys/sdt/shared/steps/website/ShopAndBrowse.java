@@ -44,7 +44,7 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I close the bops change store dialog$")
     public static void I_save_close_the_bops_change_store_dialog() throws Throwable {
-        Clicks.click("change_pickup_store_dialog.save");
+        //Clicks.click("change_pickup_store_dialog.save");
         if (bloomingdales()) {
             if (Elements.elementPresent("change_pickup_store_dialog.close"))
                 Clicks.click("change_pickup_store_dialog.close");
