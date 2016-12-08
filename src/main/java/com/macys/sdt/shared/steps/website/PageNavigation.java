@@ -88,7 +88,7 @@ public class PageNavigation extends StepUtils {
 
     @When("^I select \"Create Your Registry\"$")
     public void iSelectCreateRegistry() throws Throwable {
-        if ( (firefox() || chrome()) && macys())
+        if ( (firefox() || chrome()) && macys() && !Elements.elementPresent("registry_home.goto_create_registry"))
             Clicks.clickArea("alt", "create your registry. couples start here!");
         else
             Clicks.click("registry_home.goto_create_registry");

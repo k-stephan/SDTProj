@@ -617,7 +617,7 @@ public class Checkout extends StepUtils {
             System.err.println("Cannot place orders on prod!!!");
             return;
         }
-        if (onPage("responsive_checkout_signed_in")) {
+        if (signedIn() && onPage("responsive_checkout_signed_in")) {
             Clicks.click("responsive_checkout_signed_in.place_order");
         } else if (onPage("responsive_checkout")) {
             Clicks.click("responsive_checkout.place_order");

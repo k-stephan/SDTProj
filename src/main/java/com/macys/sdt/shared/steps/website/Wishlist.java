@@ -1,6 +1,7 @@
 package com.macys.sdt.shared.steps.website;
 
 import com.macys.sdt.framework.interactions.*;
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.shared.actions.website.mcom.pages.my_account.CreateProfile;
 import cucumber.api.java.en.And;
@@ -88,6 +89,8 @@ public class Wishlist extends StepUtils {
     @Then("^I should see \"([^\"]*)\" in product line items in wishlist page$")
     public void i_should_see_in_product_line_items_in_wishlist_page(String product) throws Throwable {
         pausePageHangWatchDog();
+        if (Wait.secondsUntilElementPresent("wish_list.item_links", 5))
+            Navigate.browserRefresh();
         List<WebElement> plist = Elements.findElements("wish_list.item_links");
         Boolean found = plist.stream().anyMatch(link -> link.getText().equalsIgnoreCase(product));
         Assert.assertTrue("Product is not added to wishlist", found);
