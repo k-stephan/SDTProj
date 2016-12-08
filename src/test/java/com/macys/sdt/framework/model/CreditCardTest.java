@@ -41,7 +41,7 @@ public class CreditCardTest {
         Assert.assertTrue(creditCard.getBalance() == 562);
         Double balance = 592.22;
         creditCard.setBalance(balance);
-       Assert.assertTrue(creditCard.getBalance() == balance);
+        Assert.assertTrue(creditCard.getBalance() == balance);
     }
 
     @Test
@@ -79,8 +79,8 @@ public class CreditCardTest {
 
     @Test
     public void testHas3DSecure() throws Exception {
-       Assert.assertFalse(creditCard.has3DSecure());
-       Assert.assertTrue(creditCard3DSecure.has3DSecure());
+        Assert.assertFalse(creditCard.has3DSecure());
+        Assert.assertTrue(creditCard3DSecure.has3DSecure());
         creditCard.setHas3DSecure(true);
         Assert.assertTrue(creditCard.has3DSecure());
     }
