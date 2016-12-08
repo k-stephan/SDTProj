@@ -49,7 +49,7 @@ public class RESTOperations {
             System.out.println("requestpayload : " + requestPayload);
             Invocation.Builder requestBuilder = webTarget.request(mediaType);
             if (headers != null && !headers.isEmpty()) {
-                for (String headerKey : headers.keySet())  {
+                for (String headerKey : headers.keySet()) {
                     requestBuilder.header(headerKey, headers.get(headerKey));
                 }
             }
@@ -93,7 +93,7 @@ public class RESTOperations {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             Invocation.Builder requestBuilder = webTarget.request();
             if (headers != null && !headers.isEmpty()) {
-                for (String headerKey : headers.keySet())  {
+                for (String headerKey : headers.keySet()) {
                     requestBuilder.header(headerKey, headers.get(headerKey));
                 }
             }
@@ -137,7 +137,7 @@ public class RESTOperations {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             Invocation.Builder requestBuilder = webTarget.request();
             if (headers != null && !headers.isEmpty()) {
-                for (String headerKey : headers.keySet())  {
+                for (String headerKey : headers.keySet()) {
                     requestBuilder.header(headerKey, headers.get(headerKey));
                 }
             }
@@ -187,7 +187,7 @@ public class RESTOperations {
             System.out.println("requestpayload : " + requestPayload);
             Invocation.Builder requestBuilder = webTarget.request(mediaType);
             if (headers != null && !headers.isEmpty()) {
-                for (String headerKey : headers.keySet())  {
+                for (String headerKey : headers.keySet()) {
                     requestBuilder.header(headerKey, headers.get(headerKey));
                 }
             }

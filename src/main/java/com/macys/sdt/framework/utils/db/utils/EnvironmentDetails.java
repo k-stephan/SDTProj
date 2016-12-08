@@ -17,11 +17,10 @@ import java.net.URL;
 
 public class EnvironmentDetails {
 
-    public String envName, ipAddress, hostName;
-
     static String ENV_URL = MainRunner.url;
     static boolean stage5 = MainRunner.url.matches(
             ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
+    public String envName, ipAddress, hostName;
 
     public EnvironmentDetails(String envName, String ipAddress, String hostName) {
         this.envName = envName;
@@ -53,9 +52,9 @@ public class EnvironmentDetails {
             JSONArray myServicesInfo;
             if (stage5) {
                 JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
-                myServicesInfo = (JSONArray)environmentDetails.getJSONObject(0).get("myServicesIpBoList");
+                myServicesInfo = (JSONArray) environmentDetails.getJSONObject(0).get("myServicesIpBoList");
             } else {
-                myServicesInfo = (JSONArray)jsonObject.get("myServicesIpBoList");
+                myServicesInfo = (JSONArray) jsonObject.get("myServicesIpBoList");
             }
 
             for (int i = 0; i < myServicesInfo.length(); i++) {
@@ -95,7 +94,7 @@ public class EnvironmentDetails {
                 JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
                 applicationInfo = (JSONArray) environmentDetails.getJSONObject(0).get("applicationBolist");
             } else {
-                applicationInfo = (JSONArray)jsonObject.get("applicationBolist");
+                applicationInfo = (JSONArray) jsonObject.get("applicationBolist");
             }
 
             for (int i = 0; i < applicationInfo.length(); i++) {
@@ -154,7 +153,7 @@ public class EnvironmentDetails {
      * @return service URL
      */
     static String getServiceURL(String envUrl) {
-        final String GET_URL =  stage5 ?
+        final String GET_URL = stage5 ?
                 "http://mdc2vr6133:8088/EnvironmentDetailsRestApi/environmentService/getNewEnvDetails/" :
                 "http://c4d.devops.fds.com/reinfo/";
 

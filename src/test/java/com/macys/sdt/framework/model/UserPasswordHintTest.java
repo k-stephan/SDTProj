@@ -7,7 +7,7 @@ public class UserPasswordHintTest {
 
     private UserPasswordHint passwordHint;
 
-    public UserPasswordHintTest()    {
+    public UserPasswordHintTest() {
         passwordHint = new UserPasswordHint();
     }
 

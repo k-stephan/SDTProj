@@ -1,9 +1,9 @@
 package com.macys.sdt.framework.utils.rest.utils;
 
 
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.junit.Assert;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

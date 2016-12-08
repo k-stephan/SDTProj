@@ -21,14 +21,8 @@ public class User {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LoyalistDetails loyalistDetails;
 
-    public static User getDefaultUser() {
-        UserPasswordHint hint = UserPasswordHint.getDefaultUserPasswordHint();
-        ProfileAddress address = ProfileAddress.getDefaultProfileAddress();
-        LoginCredentials credentials = LoginCredentials.getDefaultLoginCredentials();
-        return new User("1989-11-09", "M", true, hint, address, credentials);
+    public User() {
     }
-
-    public User() {}
 
     public User(String dateOfBirth, String gender, Boolean subscribedToNewsLetter, UserPasswordHint userPasswordHint, ProfileAddress profileAddress, LoginCredentials loginCredentials) {
         this.dateOfBirth = dateOfBirth;
@@ -39,16 +33,23 @@ public class User {
         this.loginCredentials = loginCredentials;
     }
 
+    public static User getDefaultUser() {
+        UserPasswordHint hint = UserPasswordHint.getDefaultUserPasswordHint();
+        ProfileAddress address = ProfileAddress.getDefaultProfileAddress();
+        LoginCredentials credentials = LoginCredentials.getDefaultLoginCredentials();
+        return new User("1989-11-09", "M", true, hint, address, credentials);
+    }
+
     public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public LocalDate getDateOfBirth(String date) {
-        return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
-    }
-
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public LocalDate getDateOfBirth(String date) {
+        return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     public String getGender() {

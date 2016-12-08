@@ -386,7 +386,7 @@ public class TestUsers {
         if (length == 0) {
             length = 16;
         }
-        
+
         String allowedChars = "abcdefghijklmnopqrstuvwxyz" + "1234567890";
         String email = RandomStringUtils.random(length, allowedChars);
         email = email.substring(0, email.length()) + "@blackhole.macys.com";

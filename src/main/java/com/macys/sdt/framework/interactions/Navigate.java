@@ -169,7 +169,7 @@ public class Navigate {
      * <code>"format_url":     "/shop/product/?ID=%1d"</code>
      * </p>
      *
-     * @param pageURL either valid url or JSON page file name
+     * @param pageURL         either valid url or JSON page file name
      * @param urlFormatParams arguments to pass to a format string within "format_url" element
      */
     public static void visit(String pageURL, Object... urlFormatParams) {
@@ -198,7 +198,7 @@ public class Navigate {
                 // grab the first one on the list (if there are multiple)
                 String jsonURL;
                 try {
-                    jsonURL= Elements.getValues(pageURL).get(0);
+                    jsonURL = Elements.getValues(pageURL).get(0);
                 } catch (IndexOutOfBoundsException e) {
                     jsonURL = "";
                 }

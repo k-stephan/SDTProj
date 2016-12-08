@@ -77,8 +77,9 @@ public class Clicks {
      */
     public static void unSelectCheckbox(By selector) {
         WebElement checkBox = Elements.findElement(selector);
-        if (checkBox != null && checkBox.isSelected())
+        if (checkBox != null && checkBox.isSelected()) {
             Clicks.click(checkBox);
+        }
     }
 
     /**
@@ -86,7 +87,9 @@ public class Clicks {
      *
      * @param selector String selector in format "page_name.element_name"
      */
-    public static void unSelectCheckbox(String selector) { unSelectCheckbox(Elements.element(selector));}
+    public static void unSelectCheckbox(String selector) {
+        unSelectCheckbox(Elements.element(selector));
+    }
 
     /**
      * Hovers over an element
@@ -245,7 +248,7 @@ public class Clicks {
      * Runs a pre-condition lambda, then clicks an element
      *
      * @param preCondition code to run before element is clicked
-     * @param selector      By selector to use
+     * @param selector     By selector to use
      * @throws NoSuchElementException thrown if no element is found
      */
     public static void click(Runnable preCondition, By selector) throws NoSuchElementException {
@@ -256,7 +259,7 @@ public class Clicks {
     /**
      * Clicks an element, then runs an exit condition lambda
      *
-     * @param selector       By selector to use
+     * @param selector      By selector to use
      * @param exitCondition code to run after element is clicked
      * @throws NoSuchElementException thrown if no element is found
      */
@@ -378,7 +381,7 @@ public class Clicks {
     /**
      * Clicks a point in a map area as a workaround of Selenium on Firefox/IE/Safari
      *
-     * @param attribute    attribute to look for
+     * @param attribute   attribute to look for
      * @param searchValue expected value of attribute given by "attribute" arg
      * @throws NoSuchElementException thrown if no element is found
      */

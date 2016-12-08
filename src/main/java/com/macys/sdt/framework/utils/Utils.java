@@ -44,11 +44,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +57,9 @@ import static com.macys.sdt.framework.utils.StepUtils.macys;
 @SuppressWarnings("deprecation")
 public class Utils {
 
+    public static PrintStream errLog = null;
+    public static PrintStream infoLog = null;
+    public static Logger log = LoggerFactory.getLogger(Utils.class);
     // use these to redirect unneeded error output
     private static PrintStream originalErr = System.err;
     private static PrintStream originalInfo = System.out;
@@ -70,9 +69,7 @@ public class Utils {
     private static File infoFile = null;
     private static FileOutputStream errStream = null;
     private static FileOutputStream infoStream = null;
-    public static PrintStream errLog = null;
-    public static PrintStream infoLog = null;
-    public static Logger log = LoggerFactory.getLogger(Utils.class);
+    private static boolean resourcesExctracted = false;
 
     /**
      * Executes a command on the command line (cmd for windows, else bash)
@@ -248,19 +245,19 @@ public class Utils {
      * @return true if write succeeded
      */
     public static boolean writeSmallBinaryFile(byte[] aBytes, File aFileName) {
-    	DataOutputStream os = null;
-    	FileOutputStream fout = null;
-    	try {
-    		fout = new FileOutputStream(aFileName);
-    	    os = new DataOutputStream(fout);
-    	    os.write(aBytes);
-    	    return true;
-    	} catch (IOException ex) {
-    	  System.out.println("Cannot create:" + aFileName.getPath());
-    	} finally {
-    	   closeIoOutput(os);
-    	   closeIoOutput(fout);
-    	}
+        DataOutputStream os = null;
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(aFileName);
+            os = new DataOutputStream(fout);
+            os.write(aBytes);
+            return true;
+        } catch (IOException ex) {
+            System.out.println("Cannot create:" + aFileName.getPath());
+        } finally {
+            closeIoOutput(os);
+            closeIoOutput(fout);
+        }
         return false;
     }
 
@@ -738,25 +735,24 @@ public class Utils {
         return false;
     }
 
-    private static boolean resourcesExctracted = false;
-    private static boolean saveDriver(String driver, String rpath){
-    	if (Utils.isWindows()){
-    		System.out.println(new Date() + " --> Saving driver: " + driver);
-        	File fcdriver = new File(System.getenv("HOME") + "/" + driver);
-        	File fdriver = new File(rpath + "/framework/selenium_drivers/" + driver);
-        	if (fdriver.exists() && (!fcdriver.exists() || fcdriver.length() != fdriver.length())){
-        		try {
-					Files.copy(fdriver.toPath(), fcdriver.toPath(), StandardCopyOption.REPLACE_EXISTING);
-					System.out.println(new Date() + " --> Saved driver to: " + fcdriver.getPath());
-				} catch (IOException e) {
-					e.printStackTrace();
-					return false;
-				}
-        	}
+    private static boolean saveDriver(String driver, String rpath) {
+        if (Utils.isWindows()) {
+            System.out.println(new Date() + " --> Saving driver: " + driver);
+            File fcdriver = new File(System.getenv("HOME") + "/" + driver);
+            File fdriver = new File(rpath + "/framework/selenium_drivers/" + driver);
+            if (fdriver.exists() && (!fcdriver.exists() || fcdriver.length() != fdriver.length())) {
+                try {
+                    Files.copy(fdriver.toPath(), fcdriver.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    System.out.println(new Date() + " --> Saved driver to: " + fcdriver.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
         }
-    	return true; 
+        return true;
     }
-    
+
     public static void extractResources(File repoJar, String workspace, String project) throws IOException {
         if (resourcesExctracted) {
             return;
@@ -764,13 +760,13 @@ public class Utils {
         String rpath = "com/macys/sdt/framework/resources";
         System.out.println(rpath);
         outputJarFile(repoJar, rpath, workspace + "/" + rpath);
-        
+
         rpath = "com/macys/sdt/shared/resources";
         System.out.println(rpath);
         outputJarFile(repoJar, rpath, workspace + "/" + rpath);
         saveDriver("chromedriver.exe", rpath);
         saveDriver("IEDriverServer.exe", rpath);
-        
+
         rpath = "com/macys/sdt/projects/";
         System.out.println(rpath);
         outputJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features");
@@ -840,57 +836,57 @@ public class Utils {
                     bout.write(buff, 0, length);
                 }
                 System.out.println(System.currentTimeMillis() - ts + ":" + bout.size());
-//                writeBinaryFile(bout.toByteArray(), fOut, false);
+                //                writeBinaryFile(bout.toByteArray(), fOut, false);
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
                 Utils.createDirectory(ftemp.getParent(), false);
-                for (int i=0; i<100; i++){
-                	if (writeSmallBinaryFile(bout.toByteArray(), ftemp)){
-                		renameFile(ftemp, fOut, 10);
-                		break;
-                	}
-                	System.out.println("--> retry outputCompressFile:" + i);
-                	threadSleep(3000l, null);
+                for (int i = 0; i < 100; i++) {
+                    if (writeSmallBinaryFile(bout.toByteArray(), ftemp)) {
+                        renameFile(ftemp, fOut, 10);
+                        break;
+                    }
+                    System.out.println("--> retry outputCompressFile:" + i);
+                    threadSleep(3000l, null);
                 }
             }
         }
     }
 
-    private static boolean renameFile(File src, File dest, int retryCount){
-		for (int i=0; i<retryCount; i++){
-			if(src.renameTo(dest)){
-				System.err.print(".");
-				return true;
-			}
-			threadSleep(3000l, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
-		}
-		
-		if (isWindows()){
-			for (int i=0; i<retryCount; i++){
-				String res = executeCMD("ren \"\"" + src.getPath() + "\"\" \"\"" + dest.getPath() + "\"\"");
-				if (res.trim().isEmpty() && dest.exists()){
-					System.err.print("--> used CMD");
-					return true;
-				}
-				threadSleep(3000l, "*" + src.getName() + ":" + dest.getName() + ":" + i);
-			}
-		}else{
-			
-		}
-		
-		try {
-			FileUtils.copyFile(src, dest);
-			src.delete();
-			if (dest.exists()){
-				System.err.print("!");
-				return true;
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-	}
-    
+    private static boolean renameFile(File src, File dest, int retryCount) {
+        for (int i = 0; i < retryCount; i++) {
+            if (src.renameTo(dest)) {
+                System.err.print(".");
+                return true;
+            }
+            threadSleep(3000l, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
+        }
+
+        if (isWindows()) {
+            for (int i = 0; i < retryCount; i++) {
+                String res = executeCMD("ren \"\"" + src.getPath() + "\"\" \"\"" + dest.getPath() + "\"\"");
+                if (res.trim().isEmpty() && dest.exists()) {
+                    System.err.print("--> used CMD");
+                    return true;
+                }
+                threadSleep(3000l, "*" + src.getName() + ":" + dest.getName() + ":" + i);
+            }
+        } else {
+
+        }
+
+        try {
+            FileUtils.copyFile(src, dest);
+            src.delete();
+            if (dest.exists()) {
+                System.err.print("!");
+                return true;
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private static boolean closeIoOutput(OutputStream st) {
         if (st == null) {
             return true;
@@ -1087,8 +1083,8 @@ public class Utils {
     /**
      * Redirects System.out prints to the log files to avoid console clutter
      * <p>
-     *     Maintains a call count with resetSOut so redirects/resets below
-     *     each other don't mess each other up.
+     * Maintains a call count with resetSOut so redirects/resets below
+     * each other don't mess each other up.
      * </p>
      */
     public static void redirectSOut() {
@@ -1104,8 +1100,8 @@ public class Utils {
     /**
      * Sets System.Out back to the console
      * <p>
-     *     Maintains a call count with redirectSOut so redirects/resets below
-     *     each other don't mess each other up.
+     * Maintains a call count with redirectSOut so redirects/resets below
+     * each other don't mess each other up.
      * </p>
      */
     public static void resetSOut() {
@@ -1121,8 +1117,8 @@ public class Utils {
     /**
      * Redirects System.err prints to the log files to avoid console clutter
      * <p>
-     *     Maintains a call count with resetSErr so redirects/resets below
-     *     each other don't mess each other up.
+     * Maintains a call count with resetSErr so redirects/resets below
+     * each other don't mess each other up.
      * </p>
      */
     public static void redirectSErr() {
@@ -1138,8 +1134,8 @@ public class Utils {
     /**
      * Sets System.err back to the console
      * <p>
-     *     Maintains a call count with redirectSErr so redirects/resets below
-     *     each other don't mess each other up.
+     * Maintains a call count with redirectSErr so redirects/resets below
+     * each other don't mess each other up.
      * </p>
      */
     public static void resetSErr() {
@@ -1171,117 +1167,6 @@ public class Utils {
         }
 
         return "http://" + ee;
-    }
-
-
-    public static class ThreadWatchDog extends Thread {
-        private Thread m_thread;
-        private long m_timeout;
-        private String m_name;
-        private Runnable m_callback;
-
-        public ThreadWatchDog(Thread th, long timeout, String name, Runnable callback) {
-            this.m_thread = th;
-            this.m_timeout = timeout;
-            this.m_name = name + System.currentTimeMillis();
-            this.m_callback = callback;
-            this.start();
-        }
-
-        public void run() {
-            if (Utils.threadSleep(this.m_timeout, "--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout)) {
-                System.err.println("--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout + ": exit normally.");
-                return;
-            }
-            if (this.m_thread != null && this.m_thread.isAlive()) {
-                System.err.println("--> ThreadWatchDog.destroy():" + this.m_name + ":" + this.m_timeout);
-                this.m_thread.interrupt();
-            }
-            if (this.m_callback != null) {
-                m_callback.run();
-            }
-        }
-    }
-
-    protected static class ReadStream extends Thread {
-        StringBuilder console = new StringBuilder();
-        String name;
-        InputStream is;
-        Thread thread;
-
-        public ReadStream(String name, InputStream is) {
-            this.name = name;
-            this.is = is;
-            this.start();
-        }
-
-        public void run() {
-            try {
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
-                while (true) {
-                    String s = br.readLine();
-                    if (s == null) {
-                        break;
-                    }
-                    if (System.getenv("DEBUG") != null) {
-                        System.out.println(s);
-                    }
-                    console.append(s).append("\n");
-                }
-                is.close();
-            } catch (Exception ex) {
-                System.out.println("Problem reading stream " + name + "... :" + ex);
-                ex.printStackTrace();
-            }
-        }
-
-        public StringBuilder getConsole() {
-            return this.console;
-        }
-    }
-
-    protected abstract static class UtilsComparator implements Comparator {
-        private Object[] m_params;
-
-        public UtilsComparator(Object[] params) {
-            this.m_params = params;
-        }
-
-        @Override
-        public abstract int compare(Object o1, Object o2);
-
-    }
-
-    public static class ProcessWatchDog extends Thread {
-        private Process m_process;
-        private long m_timeout;
-        private String m_name;
-
-        /**
-         * Creates a watchdog for a process to monitor it for timeouts
-         *
-         * @param p       process to monitor
-         * @param timeout timeout in milliseconds
-         * @param name    name of the process
-         */
-        public ProcessWatchDog(Process p, long timeout, String name) {
-            this.m_process = p;
-            this.m_timeout = timeout;
-            this.m_name = name + System.currentTimeMillis();
-            this.start();
-        }
-
-        /**
-         * Kills the monitored process if it is still running
-         */
-        public void run() {
-            Utils.threadSleep(this.m_timeout, null);
-            if (this.m_process.isAlive()) {
-                System.out.println("--> ProcessWatchDog.destroyForcibly():" + this.m_name + ":" + this.m_timeout);
-                this.m_process.destroyForcibly();
-            }
-        }
     }
 
     /**
@@ -1401,5 +1286,115 @@ public class Utils {
 
         return jsonObject;
 
+    }
+
+    public static class ThreadWatchDog extends Thread {
+        private Thread m_thread;
+        private long m_timeout;
+        private String m_name;
+        private Runnable m_callback;
+
+        public ThreadWatchDog(Thread th, long timeout, String name, Runnable callback) {
+            this.m_thread = th;
+            this.m_timeout = timeout;
+            this.m_name = name + System.currentTimeMillis();
+            this.m_callback = callback;
+            this.start();
+        }
+
+        public void run() {
+            if (Utils.threadSleep(this.m_timeout, "--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout)) {
+                System.err.println("--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout + ": exit normally.");
+                return;
+            }
+            if (this.m_thread != null && this.m_thread.isAlive()) {
+                System.err.println("--> ThreadWatchDog.destroy():" + this.m_name + ":" + this.m_timeout);
+                this.m_thread.interrupt();
+            }
+            if (this.m_callback != null) {
+                m_callback.run();
+            }
+        }
+    }
+
+    protected static class ReadStream extends Thread {
+        StringBuilder console = new StringBuilder();
+        String name;
+        InputStream is;
+        Thread thread;
+
+        public ReadStream(String name, InputStream is) {
+            this.name = name;
+            this.is = is;
+            this.start();
+        }
+
+        public void run() {
+            try {
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                while (true) {
+                    String s = br.readLine();
+                    if (s == null) {
+                        break;
+                    }
+                    if (System.getenv("DEBUG") != null) {
+                        System.out.println(s);
+                    }
+                    console.append(s).append("\n");
+                }
+                is.close();
+            } catch (Exception ex) {
+                System.out.println("Problem reading stream " + name + "... :" + ex);
+                ex.printStackTrace();
+            }
+        }
+
+        public StringBuilder getConsole() {
+            return this.console;
+        }
+    }
+
+    protected abstract static class UtilsComparator implements Comparator {
+        private Object[] m_params;
+
+        public UtilsComparator(Object[] params) {
+            this.m_params = params;
+        }
+
+        @Override
+        public abstract int compare(Object o1, Object o2);
+
+    }
+
+    public static class ProcessWatchDog extends Thread {
+        private Process m_process;
+        private long m_timeout;
+        private String m_name;
+
+        /**
+         * Creates a watchdog for a process to monitor it for timeouts
+         *
+         * @param p       process to monitor
+         * @param timeout timeout in milliseconds
+         * @param name    name of the process
+         */
+        public ProcessWatchDog(Process p, long timeout, String name) {
+            this.m_process = p;
+            this.m_timeout = timeout;
+            this.m_name = name + System.currentTimeMillis();
+            this.start();
+        }
+
+        /**
+         * Kills the monitored process if it is still running
+         */
+        public void run() {
+            Utils.threadSleep(this.m_timeout, null);
+            if (this.m_process.isAlive()) {
+                System.out.println("--> ProcessWatchDog.destroyForcibly():" + this.m_name + ":" + this.m_timeout);
+                this.m_process.destroyForcibly();
+            }
+        }
     }
 }

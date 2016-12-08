@@ -134,6 +134,7 @@ public class DATagCollector {
 
     /**
      * capture the digital analytics data
+     *
      * @param step_name : current step name
      */
     public static void capture(String step_name) {

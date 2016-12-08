@@ -7,7 +7,7 @@ public class RegistryTest {
 
     private Registry registry;
 
-    public RegistryTest()    {
+    public RegistryTest() {
         registry = new Registry();
     }
 

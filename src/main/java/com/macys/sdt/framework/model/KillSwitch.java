@@ -13,6 +13,69 @@ public class KillSwitch {
     private static Map<String, Map<String, String>> data;
 
     /**
+     * Gets KS data in JSON format and returns it as a string.
+     * <p>
+     * Also fills the "data" variable with kill switch data in map format
+     * </p>
+     *
+     * @return String representation of kill switch JSON data
+     */
+    public static String dump() {
+        if (data != null && !data.isEmpty()) {
+            return new Gson().toJson(data, Map.class);
+        }
+        try {
+            String env = new URL(System.getenv("website")).getHost().replaceAll("www1.", "").replaceAll("www.", "").replaceAll(".fds.com", "").replaceAll(".com", "");
+            String ksurl = Utils.getEEUrl() + "/api/ee/getKillSwitch/" + env;
+            System.out.println("--> Dumping KillSwitch data for:" + ksurl);
+            String ks = Utils.httpGet(ksurl, null);
+            try {
+                KillSwitch.data = new Gson().fromJson(ks, Map.class);
+                return ks;
+            } catch (Exception ex) {
+                System.out.println("--> Killswitch data not available:" + ex.getMessage());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "{}";
+    }
+
+    /**
+     * Gets kill switch data as a Map
+     *
+     * @return Kill switch data from EE API
+     */
+    private static Map<String, Map<String, String>> getData() {
+        if (data == null) {
+            dump();
+        }
+        return data;
+    }
+
+    /**
+     * Checks whether a kill switch with name "switchName" is enabled
+     *
+     * @param switchName name of kill switch to check
+     * @return true if kill switch is enabled
+     */
+    public static boolean getEnabled(String switchName) {
+        Map<String, String> data = getData().get(switchName);
+        return data != null && data.get(KSData.EXPECTED_VALUE).equals("true");
+    }
+
+    /**
+     * Gets a KSData object with the data for a kill switch named "switchName"
+     *
+     * @param switchName name of kill switch to get data for
+     * @return KSData object with kill switch data
+     */
+    public static KSData getData(String switchName) {
+        return new KSData(getData().get(switchName));
+    }
+
+    /**
      * Represents an individual kill switch
      */
     public static class KSData {
@@ -65,66 +128,5 @@ public class KillSwitch {
         public boolean getEnabled() {
             return this.data.get(EXPECTED_VALUE).equals("true");
         }
-    }
-
-    /**
-     * Gets KS data in JSON format and returns it as a string.
-     * <p>
-     *     Also fills the "data" variable with kill switch data in map format
-     * </p>
-     *
-     * @return String representation of kill switch JSON data
-     */
-    public static String dump() {
-        if (data != null && !data.isEmpty())
-            return new Gson().toJson(data, Map.class);
-        try {
-            String env = new URL(System.getenv("website")).getHost().replaceAll("www1.", "").replaceAll("www.", "").replaceAll(".fds.com", "").replaceAll(".com", "");
-            String ksurl = Utils.getEEUrl() + "/api/ee/getKillSwitch/" + env;
-            System.out.println("--> Dumping KillSwitch data for:" + ksurl);
-            String ks = Utils.httpGet(ksurl, null);
-            try {
-                KillSwitch.data = new Gson().fromJson(ks, Map.class);
-                return ks;
-            } catch (Exception ex) {
-                System.out.println("--> Killswitch data not available:" + ex.getMessage());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "{}";
-    }
-
-    /**
-     * Gets kill switch data as a Map
-     *
-     * @return Kill switch data from EE API
-     */
-    private static Map<String, Map<String, String>> getData() {
-        if (data == null)
-            dump();
-        return data;
-    }
-
-    /**
-     * Checks whether a kill switch with name "switchName" is enabled
-     *
-     * @param switchName name of kill switch to check
-     * @return true if kill switch is enabled
-     */
-    public static boolean getEnabled(String switchName) {
-        Map<String, String> data = getData().get(switchName);
-        return data != null && data.get(KSData.EXPECTED_VALUE).equals("true");
-    }
-
-    /**
-     * Gets a KSData object with the data for a kill switch named "switchName"
-     *
-     * @param switchName name of kill switch to get data for
-     * @return KSData object with kill switch data
-     */
-    public static KSData getData(String switchName) {
-        return new KSData(getData().get(switchName));
     }
 }

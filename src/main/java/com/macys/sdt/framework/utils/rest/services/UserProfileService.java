@@ -2,23 +2,16 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.User;
 import com.macys.sdt.framework.model.UserProfile;
 import com.macys.sdt.framework.utils.TestUsers;
-import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
-import org.json.JSONObject;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.junit.Assert;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 public class UserProfileService {
 

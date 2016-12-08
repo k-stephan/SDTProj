@@ -32,12 +32,14 @@ public class MediaService {
 
     public static List<Map> getFinalContextualizeCanvasData(String[] mediaNamesArray, String rowType, String[] contextAttrNames, String[] contextAttrValues) throws Throwable {
         setupConnection();
-        if (contextData == null)
+        if (contextData == null) {
             contextData = Utils.getContextualizeMedia();
-        if (((contextData.getJSONObject("GROUP").has(mediaNamesArray[0]) && contextData.getJSONObject("GROUP").getString(mediaNamesArray[0]).contains("row_contextualize_media")) || (contextData.getJSONObject("COMPONENT").has(mediaNamesArray[0]) && contextData.getJSONObject("COMPONENT").getString(mediaNamesArray[0]).contains("row_contextualize_media"))) && (rowType.contains("101") || rowType.contains("0")))
+        }
+        if (((contextData.getJSONObject("GROUP").has(mediaNamesArray[0]) && contextData.getJSONObject("GROUP").getString(mediaNamesArray[0]).contains("row_contextualize_media")) || (contextData.getJSONObject("COMPONENT").has(mediaNamesArray[0]) && contextData.getJSONObject("COMPONENT").getString(mediaNamesArray[0]).contains("row_contextualize_media"))) && (rowType.contains("101") || rowType.contains("0"))) {
             return getRowContextualizeCanvasId(mediaNamesArray.clone(), rowType, contextAttrNames, contextAttrValues);
-        else
+        } else {
             return getContextualizeData(mediaNamesArray.clone(), rowType, contextAttrNames, contextAttrValues);
+        }
     }
 
     /*
@@ -51,12 +53,15 @@ public class MediaService {
         List canvasData = new ArrayList<>();
         try {
             setupConnection();
-            if (queries == null)
+            if (queries == null) {
                 queries = Utils.getSqlQueries();
-            if (contextData == null)
+            }
+            if (contextData == null) {
                 contextData = Utils.getContextualizeMedia();
-            if (customDate == null)
+            }
+            if (customDate == null) {
                 customDate = getCustomDate();
+            }
             String mediaType = ((contextData.getJSONObject("GROUP").has(mediaNamesArray[0])) ? "GROUP" : "COMPONENT");
             List<String> canvasRowIds = getCanvasRowIds(queries.getJSONObject("media_service")
                     .get("canvas_layout_attribute_data").toString(), contextAttrNames, contextAttrValues, 4);
@@ -111,10 +116,12 @@ public class MediaService {
         int count = (Arrays.asList(contextAttrNames).contains("INHERITABLE_ROW_TYPE")) ? 5 : 4;
         try {
             setupConnection();
-            if (queries == null)
+            if (queries == null) {
                 queries = Utils.getSqlQueries();
-            if (customDate == null)
+            }
+            if (customDate == null) {
                 customDate = getCustomDate();
+            }
             canvasRowIds = getCanvasRowIds(queries.getJSONObject("media_service").getString("canvas_layout_attribute_data"), contextAttrNames, contextAttrValues, count);
             List<String[]> values = new ArrayList<>();
             values.add(canvasRowIds.toArray(new String[canvasRowIds.size()]));
@@ -143,12 +150,13 @@ public class MediaService {
                     .collect(Collectors.toList());
             finalMediaInfo = rowLevelContextData;
             finalMediaInfo = getContextualizeMedia(mediaNamesArray, groupMediaKeys, componentMediaKeys, context, finalMediaInfo);
-//            String[] mediaNames = {"PRODUCT_PANEL_NA", "PRODUCT_PANEL_CATEGORY", "PRODUCT_PANEL_CATEGORY_FACET", "THUMBNAIL_GRID"};
-//            if (ListUtils.subtract(Arrays.asList(mediaNamesArray), Arrays.asList(mediaNames)).size() == 0)
-//                finalMediaInfo.removeIf(data -> data.get("mediaTypeDesc") == null || (data.keySet().contains("mediaInfo") && data.get("mediaInfo").toString().equals("[]")));
-            if (thumbnailFlag != 1)
+            //            String[] mediaNames = {"PRODUCT_PANEL_NA", "PRODUCT_PANEL_CATEGORY", "PRODUCT_PANEL_CATEGORY_FACET", "THUMBNAIL_GRID"};
+            //            if (ListUtils.subtract(Arrays.asList(mediaNamesArray), Arrays.asList(mediaNames)).size() == 0)
+            //                finalMediaInfo.removeIf(data -> data.get("mediaTypeDesc") == null || (data.keySet().contains("mediaInfo") && data.get("mediaInfo").toString().equals("[]")));
+            if (thumbnailFlag != 1) {
                 finalMediaInfo.removeIf(data -> !data.containsKey("mediaInfo"));
-//            finalMediaInfo.removeIf(data -> data.containsKey("mediaInfo") && ((List)data.get("mediaInfo")).isEmpty());
+            }
+            //            finalMediaInfo.removeIf(data -> data.containsKey("mediaInfo") && ((List)data.get("mediaInfo")).isEmpty());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -156,29 +164,38 @@ public class MediaService {
     }
 
     public static List<Map> getContextualizeMedia(String[] mediaNamesArray, List groupMediaKeys, List componentMediaKeys, List<String[]> context, List<Map> finalMediaInfo) throws Throwable {
-        if (mediaGroupTypeData == null)
+        if (mediaGroupTypeData == null) {
             mediaGroupTypeData = getMediaGroupTypes();
-        if (mediaComponentTypeData == null)
+        }
+        if (mediaComponentTypeData == null) {
             mediaComponentTypeData = getMediaComponentTypes();
-        if (Arrays.asList(mediaNamesArray).contains("THUMBNAIL_GRID"))
+        }
+        if (Arrays.asList(mediaNamesArray).contains("THUMBNAIL_GRID")) {
             thumbnailFlag = 1;
-        if (Arrays.asList(mediaNamesArray).contains("BANNER_MACHINE"))
+        }
+        if (Arrays.asList(mediaNamesArray).contains("BANNER_MACHINE")) {
             bannerFlag = 1;
+        }
         if ((Arrays.asList(mediaNamesArray).contains("BANNER_MACHINE_SLIDESHOW")) || (Arrays.asList(mediaNamesArray).contains("BANNER_MACHINE_WIDGET"))) {
             mediaBannerFlag = 1;
             for (int index = 0; index < mediaNamesArray.length; index++) {
-                if (mediaNamesArray[index].equals("BANNER_MACHINE_SLIDESHOW"))
+                if (mediaNamesArray[index].equals("BANNER_MACHINE_SLIDESHOW")) {
                     mediaNamesArray[index] = "SLIDESHOW";
-                if (mediaNamesArray[index].equals("BANNER_MACHINE_WIDGET"))
+                }
+                if (mediaNamesArray[index].equals("BANNER_MACHINE_WIDGET")) {
                     mediaNamesArray[index] = "WIDGET";
+                }
             }
         }
-        if (Arrays.asList(mediaNamesArray).contains("WIDGET"))
+        if (Arrays.asList(mediaNamesArray).contains("WIDGET")) {
             widgetFlag = 1;
-        if (Arrays.asList(mediaNamesArray).contains("MEDIA_ADS"))
+        }
+        if (Arrays.asList(mediaNamesArray).contains("MEDIA_ADS")) {
             for (int index = 0; index < mediaNamesArray.length; index++)
-                if (mediaNamesArray[index].equals("MEDIA_ADS"))
+                if (mediaNamesArray[index].equals("MEDIA_ADS")) {
                     mediaNamesArray[index] = "THUMBNAIL_GRID";
+                }
+        }
 
         List<String> componentContextualizeMedia = new ArrayList<>();
         List componentNonContextualizeMedia = new ArrayList<>();
@@ -188,29 +205,34 @@ public class MediaService {
         //Get all group media key with expected media
         int imageMapFlag = 0, adFlag = 0, popupFlag = 0;
         if (!groupMediaKeys.isEmpty()) {
-            if (Arrays.asList(mediaNamesArray).contains("AD"))
+            if (Arrays.asList(mediaNamesArray).contains("AD")) {
                 adFlag = 1;
+            }
             //For IMAGE_MAP media type replace with AD
             if (Arrays.asList(mediaNamesArray).contains("IMAGE_MAP")) {
                 for (int index = 0; index < mediaNamesArray.length; index++)
-                    if (mediaNamesArray[index].equals("IMAGE_MAP"))
+                    if (mediaNamesArray[index].equals("IMAGE_MAP")) {
                         mediaNamesArray[index] = "AD";
+                    }
                 imageMapFlag = 1;
             }
             if (Arrays.asList(mediaNamesArray).contains("CUSTOM_POPUP")) {
                 for (int index = 0; index < mediaNamesArray.length; index++)
-                    if (mediaNamesArray[index].equals("CUSTOM_POPUP"))
+                    if (mediaNamesArray[index].equals("CUSTOM_POPUP")) {
                         mediaNamesArray[index] = "AD";
+                    }
                 popupFlag = 1;
             }
-            if (mediaBannerFlag == 2 && bannerFlag != 1)
+            if (mediaBannerFlag == 2 && bannerFlag != 1) {
                 bannerFlag = 1;
+            }
             List<List> groupData = getMediaTypeDescription(groupMediaKeys, "group", mediaNamesArray, finalMediaInfo);
-            if (Arrays.asList(mediaNamesArray).contains("CATEGORY_ICON"))
+            if (Arrays.asList(mediaNamesArray).contains("CATEGORY_ICON")) {
                 catIconMediaKeys = (List) groupData.get(0).stream()
                         .filter(data -> (((Map) data).get("mediaTypeDesc").equals("CATEGORY_ICON")))
                         .map(data -> ((Map) data).get("mediaKey").toString())
                         .collect(Collectors.toList());
+            }
             if (catIconMediaKeys.isEmpty()) {
                 groupContextualizeMedia = (List) groupData.get(0).stream()
                         .map(data -> ((Map) data).get("mediaKey").toString())
@@ -235,12 +257,13 @@ public class MediaService {
                     .map(data -> ((Map) data).get("mediaKey").toString())
                     .collect(Collectors.toList());
         }
-        if(mediaNamesArray.length != 0){
+        if (mediaNamesArray.length != 0) {
             finalMediaInfo.removeIf(type -> type == null);
             finalMediaInfo.removeIf(type -> !type.containsKey("mediaTypeDesc"));
         }
-        if (thumbnailFlag == 1)
+        if (thumbnailFlag == 1) {
             return finalMediaInfo;
+        }
         //Get all group media data for direct media
         if (!(groupContextualizeMedia.isEmpty() && catIconMediaKeys.isEmpty())) {
             //get the data for Image map and AD media type
@@ -248,8 +271,9 @@ public class MediaService {
             List mediaGroupDataTwo = new ArrayList<>();
             List mediaGroupDataSecond = new ArrayList<>();
             List<Map> mediaGroupData = new ArrayList<>();
-            if (customDate == null)
+            if (customDate == null) {
                 customDate = getCustomDate();
+            }
             List mediaGroupIds = getGroupIdsWithMultipleContext(context.get(0), context.get(context.size() - 1), "media_group_attribute_data");
             if (!catIconMediaKeys.isEmpty()) {
                 List<String[]> values = new ArrayList<>();
@@ -263,8 +287,9 @@ public class MediaService {
                 preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("without_group_media_context_by_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
                 resultSet = preparedStatement.executeQuery();
                 mediaGroupDataTwo = getMediaGroupDataFromResult(resultSet, "group");
-                if (!mediaGroupDataTwo.isEmpty())
+                if (!mediaGroupDataTwo.isEmpty()) {
                     mediaGroupDataOne.addAll(mediaGroupDataTwo);
+                }
             }
             if (bannerFlag == 1) {
                 List<String[]> values = new ArrayList<>();
@@ -277,16 +302,19 @@ public class MediaService {
                 preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("without_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
                 resultSet = preparedStatement.executeQuery();
                 mediaGroupDataTwo = getMediaGroupDataFromResult(resultSet, "group");
-                if (!mediaGroupDataTwo.isEmpty())
+                if (!mediaGroupDataTwo.isEmpty()) {
                     mediaGroupData.addAll(mediaGroupDataTwo);
+                }
             } else {
                 List<String> finalMediaKeys = ListUtils.sum(mediaGroupIds, groupContextualizeMedia);
                 mediaGroupData = getGroupMediaContextData(finalMediaKeys, "with_group_media_context", customDate.toString());
                 mediaGroupDataSecond = getGroupMediaContextData(groupContextualizeMedia, "without_group_media_context", customDate.toString());
-                if (!mediaGroupDataSecond.isEmpty())
+                if (!mediaGroupDataSecond.isEmpty()) {
                     mediaGroupData.addAll(mediaGroupDataSecond);
-                if (!mediaGroupDataOne.isEmpty())
+                }
+                if (!mediaGroupDataOne.isEmpty()) {
                     mediaGroupData.addAll(mediaGroupDataOne);
+                }
             }
             if (imageMapFlag == 1 || adFlag == 1 || popupFlag == 1) {
                 List<String> adComponentIds = mediaGroupData.stream()
@@ -313,28 +341,35 @@ public class MediaService {
                         .map(pop -> pop.get("componentId").toString())
                         .collect(Collectors.toList());
                 mediaGroupData = mediaGroupData.stream().map(type -> {
-                    if (mediaParameterData.stream().anyMatch(param -> type.get("componentId").toString().equals(param.get("componentId").toString()))){
-                        if (mediaParameterData.stream().anyMatch(param -> (param.get("linkType").toString().equals("4") || popupComponentIds.contains(param.get("componentId").toString()))))
+                    if (mediaParameterData.stream().anyMatch(param -> type.get("componentId").toString().equals(param.get("componentId").toString()))) {
+                        if (mediaParameterData.stream().anyMatch(param -> (param.get("linkType").toString().equals("4") || popupComponentIds.contains(param.get("componentId").toString())))) {
                             type.put("mediaTypeDesc", "CUSTOM_POPUP");
-                        if (mediaParameterData.stream().anyMatch(param -> (!param.get("regionCoordinates").equals("") || param.get("regionCoordinates") != null)))
+                        }
+                        if (mediaParameterData.stream().anyMatch(param -> (!param.get("regionCoordinates").equals("") || param.get("regionCoordinates") != null))) {
                             type.put("mediaTypeDesc", "IMAGE_MAP");
+                        }
                     }
                     return type;
                 }).collect(Collectors.toList());
                 List<Map> finalMediaGroupData = mediaGroupData;
                 finalMediaInfo = finalMediaInfo.stream().map(type -> {
-                    if(finalMediaGroupData.stream().anyMatch(mgType -> mgType.get("mediaKey").toString().equals(type.get("mediaKey").toString()) && mgType.get("mediaTypeDesc").equals("IMAGE_MAP")))
+                    if (finalMediaGroupData.stream().anyMatch(mgType -> mgType.get("mediaKey").toString().equals(type.get("mediaKey").toString()) && mgType.get("mediaTypeDesc").equals("IMAGE_MAP"))) {
                         type.put("mediaTypeDesc", "IMAGE_MAP");
-                    if(finalMediaGroupData.stream().anyMatch(mgType -> mgType.get("mediaKey").toString().equals(type.get("mediaKey").toString()) && mgType.get("mediaTypeDesc").equals("CUSTOM_POPUP")))
+                    }
+                    if (finalMediaGroupData.stream().anyMatch(mgType -> mgType.get("mediaKey").toString().equals(type.get("mediaKey").toString()) && mgType.get("mediaTypeDesc").equals("CUSTOM_POPUP"))) {
                         type.put("mediaTypeDesc", "CUSTOM_POPUP");
+                    }
                     return type;
                 }).collect(Collectors.toList());
-                if (adFlag == 0)
+                if (adFlag == 0) {
                     finalMediaInfo.removeIf(type -> type.get("mediaTypeDesc").equals("AD"));
-                if (imageMapFlag == 0)
+                }
+                if (imageMapFlag == 0) {
                     finalMediaInfo.removeIf(type -> type.get("mediaTypeDesc").equals("IMAGE_MAP"));
-                if (popupFlag == 0)
+                }
+                if (popupFlag == 0) {
                     finalMediaInfo.removeIf(type -> type.get("mediaTypeDesc").equals("CUSTOM_POPUP"));
+                }
             }
             finalMediaInfo = updateMediaInformation(mediaNamesArray, mediaGroupData, finalMediaInfo);
         }
@@ -351,22 +386,26 @@ public class MediaService {
                 preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("without_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
                 resultSet = preparedStatement.executeQuery();
                 List mediaComponentDataTwo = getMediaGroupDataFromResult(resultSet, "group");
-                if (!mediaComponentDataTwo.isEmpty())
+                if (!mediaComponentDataTwo.isEmpty()) {
                     componentMediaLevelContextData.addAll(mediaComponentDataTwo);
+                }
             } else {
                 List mediaComponentIds = getGroupIdsWithMultipleContext(context.get(0), context.get(context.size() - 1), "media_component_attribute_data");
                 List<String> finalMediaKeys = ListUtils.sum(mediaComponentIds, componentContextualizeMedia);
                 componentMediaLevelContextData = getGroupMediaContextData(finalMediaKeys, "with_component_media_context", customDate.toString());
                 List mediaComponentDataSecond = getGroupMediaContextData(finalMediaKeys, "without_component_media_context", customDate.toString());
-                if (!mediaComponentDataSecond.isEmpty())
+                if (!mediaComponentDataSecond.isEmpty()) {
                     componentMediaLevelContextData.addAll(mediaComponentDataSecond);
+                }
             }
             finalMediaInfo = updateMediaInformation(mediaNamesArray, componentMediaLevelContextData, finalMediaInfo);
         }
-        if (!groupNonContextualizeMedia.isEmpty())
+        if (!groupNonContextualizeMedia.isEmpty()) {
             finalMediaInfo = getIndirectContextualizeData(groupNonContextualizeMedia, context.get(0), context.get(context.size() - 1), finalMediaInfo, "GROUP");
-        if (!componentNonContextualizeMedia.isEmpty())
+        }
+        if (!componentNonContextualizeMedia.isEmpty()) {
             finalMediaInfo = getIndirectContextualizeData(componentNonContextualizeMedia, context.get(0), context.get(context.size() - 1), finalMediaInfo, "COMPONENT");
+        }
         return finalMediaInfo;
     }
 
@@ -374,8 +413,9 @@ public class MediaService {
         List<String[]> values = new ArrayList<>();
         values.add(mediaKeys.toArray(new String[mediaKeys.size()]));
         String sqlQuery = updatedQuery((queries.getJSONObject("media_service").getString(queryName).replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string");
-        if (queryName.equals("without_group_media_context"))
+        if (queryName.equals("without_group_media_context")) {
             sqlQuery = sqlQuery.replace("media_parameter.text, ", "");
+        }
         PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
         return getMediaGroupDataFromResult(resultSet, (queryName.contains("group") ? "group" : "component"));
@@ -385,19 +425,22 @@ public class MediaService {
         List<String[]> context = new ArrayList<>();
         context.add(attrNames);
         context.add(attrValues);
-        if (customDate == null)
+        if (customDate == null) {
             customDate = getCustomDate();
+        }
         List mediaGroupIds = getGroupIdsWithMultipleContext(attrNames, attrValues, "media_group_attribute_data");
         List<Map> mediaGroupComponentData = new ArrayList<>();
-        if (mediaBannerFlag == 1)
+        if (mediaBannerFlag == 1) {
             mediaBannerFlag = 2;
+        }
         if (mediaType.equals("GROUP")) {
             if (bannerFlag == 1) {
                 List<String> finalMediaKeys = ListUtils.sum(mediaGroupIds, mediaKeys);
                 List<Map> mediaGroupData = getGroupMediaContextData(finalMediaKeys, "with_group_media_context", customDate.toString());
                 List<Map> mediaGroupDataSecond = getGroupMediaContextData(mediaKeys, "without_group_media_context", customDate.toString());
-                if (!mediaGroupDataSecond.isEmpty())
+                if (!mediaGroupDataSecond.isEmpty()) {
                     mediaGroupData.addAll(mediaGroupDataSecond);
+                }
                 for (Map media : mediaGroupData) {
                     Map type = new HashMap<>();
                     type.put("mediaGroupId", media.get("mediaKey"));
@@ -436,8 +479,9 @@ public class MediaService {
             List<String> mediaComponentDataSecond = new ArrayList<>();
             while (resultSet.next())
                 mediaComponentDataSecond.add(resultSet.getString("component_id"));
-            if (!mediaComponentDataSecond.isEmpty())
+            if (!mediaComponentDataSecond.isEmpty()) {
                 mediaComponentData.addAll(mediaComponentDataSecond);
+            }
             mediaKeys = mediaComponentData;
         }
         List<Map> mediaParameterData = new ArrayList<>();
@@ -470,15 +514,18 @@ public class MediaService {
             while (resultSet.next())
                 mediaParameterAttrData.add(resultSet.getString("parameter_id"));
             final List finalMediaParameterAttrData = mediaParameterAttrData;
-            if (!mediaParameterAttrData.isEmpty())
+            if (!mediaParameterAttrData.isEmpty()) {
                 mediaParameterData.removeIf(param -> !finalMediaParameterAttrData.contains(param.get("parameterId").toString()));
+            }
         }
-        if (mediaType.equals("GROUP"))
+        if (mediaType.equals("GROUP")) {
             mediaParameterData = mediaParameterData.stream().map(param -> {
-                if (mediaGroupComponentData.stream().anyMatch(gc -> gc.get("componentId").toString().equals(param.get("mediaKey"))))
+                if (mediaGroupComponentData.stream().anyMatch(gc -> gc.get("componentId").toString().equals(param.get("mediaKey")))) {
                     param.put("mediaKey", mediaGroupComponentData.stream().filter(mg -> mg.get("componentId").toString().equals(param.get("mediaKey"))).map(mg -> mg.get("mediaGroupId")).collect(Collectors.toList()).get(0));
+                }
                 return param;
             }).collect(Collectors.toList());
+        }
         List<Map> pdata = mediaParameterData;
         if (bannerFlag == 1) {
             String[] linkTypes = {"1", "2", "3"};
@@ -510,13 +557,14 @@ public class MediaService {
             finalMediaInfo = finalMediaInfo.stream().map(info -> {
                 List finalRefIds = new ArrayList<>();
                 ((List<String>) info.get("refIds")).stream().map(ref -> {
-                    if (finalMediaParameterData.stream().anyMatch(param -> param.get("mediaKey").toString().equals(ref)))
+                    if (finalMediaParameterData.stream().anyMatch(param -> param.get("mediaKey").toString().equals(ref))) {
                         finalRefIds.addAll(finalMediaParameterData.stream()
                                 .filter(param -> param.get("mediaKey").toString().equals(ref))
                                 .map(param -> param.get("refId").toString())
                                 .collect(Collectors.toList()));
-                    else
+                    } else {
                         finalRefIds.add(ref);
+                    }
                     return finalRefIds;
                 });
                 info.put("refIds", finalRefIds);
@@ -569,12 +617,13 @@ public class MediaService {
                         type.put("linkType", param.get("linkType"));
                         type.put("text", param.get("parameterText"));
                         type.put("deviceType", param.get("deviceType"));
-                        if (staticData.stream().anyMatch(url -> (url.get("staticLinkId").toString().equals(param.get("refId").toString()))))
+                        if (staticData.stream().anyMatch(url -> (url.get("staticLinkId").toString().equals(param.get("refId").toString())))) {
                             type.put("url", staticData.stream()
                                     .filter(url -> (url.get("staticLinkId").toString().equals(param.get("refId").toString())))
                                     .map(url -> url.get("urlText")).collect(Collectors.toList()).get(0));
-                        else
+                        } else {
                             type.put("url", null);
+                        }
                         return type;
                     });
                     info.put("bannerMachine", type);
@@ -601,18 +650,21 @@ public class MediaService {
             final List<Map> refMediaInfo = new ArrayList<>();
             if (mediaNamesArray.length == 0) {
                 ((ArrayList) type.get("refIds")).forEach(ref -> {
-                    if (mediaGroupData.stream().anyMatch(media -> media.get("mediaKey").toString().equals(ref.toString())))
+                    if (mediaGroupData.stream().anyMatch(media -> media.get("mediaKey").toString().equals(ref.toString()))) {
                         refMediaInfo.add(mediaGroupData.stream().filter(media -> media.get("mediaKey").toString().equals(ref)).findFirst().get());
+                    }
                 });
             } else {
-                if (mediaGroupData.stream().anyMatch(media -> media.get("mediaKey").toString().equals(type.get("mediaKey").toString())))
+                if (mediaGroupData.stream().anyMatch(media -> media.get("mediaKey").toString().equals(type.get("mediaKey").toString()))) {
                     refMediaInfo.add(mediaGroupData.stream().filter(media -> media.get("mediaKey").toString().equals(type.get("mediaKey").toString())).findFirst().get());
+                }
             }
             if (!refMediaInfo.isEmpty()) {
-                if (!type.containsKey("mediaInfo") || type.get("mediaInfo") == null)
+                if (!type.containsKey("mediaInfo") || type.get("mediaInfo") == null) {
                     type.put("mediaInfo", refMediaInfo);
-                else
+                } else {
                     ((List) type.get("mediaInfo")).addAll(refMediaInfo);
+                }
             }
         });
         return finalMediaInfo;
@@ -639,15 +691,17 @@ public class MediaService {
         boolean isTextExists = false;
         ResultSetMetaData rsmd = resultSet.getMetaData();
         for (int index = 1; index <= rsmd.getColumnCount(); index++)
-            if (rsmd.getColumnName(index).equalsIgnoreCase("text"))
+            if (rsmd.getColumnName(index).equalsIgnoreCase("text")) {
                 isTextExists = true;
+            }
         while (resultSet.next()) {
             Map type = new HashMap<>();
             type.put("mediaKey", resultSet.getString((mediaType.equals("group") ? "media_group_id" : "component_id")));
             type.put("componentId", resultSet.getString("component_id"));
             type.put("mediaName", resultSet.getString("media_name"));
-            if (isTextExists)
+            if (isTextExists) {
                 type.put("text", resultSet.getString("text"));
+            }
             type.put("description", resultSet.getString("description"));
             type.put("mediaTypeDesc", mediaGroupTypeData.get(resultSet.getString((mediaType.equals("group") ? "media_group_type" : "media_type"))));
             finalGroupData.add(type);
@@ -658,10 +712,12 @@ public class MediaService {
     public static List<List> getMediaTypeDescription(List<String> mediaKeys, String mediaType, String[] mediaNamesArray, List<Map> finalMediaInfo) throws Throwable {
         List<Map> mediaTypes = new ArrayList<>();
         setupConnection();
-        if (queries == null)
+        if (queries == null) {
             queries = Utils.getSqlQueries();
-        if (customDate == null)
+        }
+        if (customDate == null) {
             customDate = getCustomDate();
+        }
         String mediaKeyName = (mediaType.equals("group") ? "media_group_id" : "component_id");
         String mediaTypeName = (mediaType.equals("group") ? "media_group_type" : "media_type");
         Map mediaTypeDesc = (mediaType.equals("group") ? mediaGroupTypeData : mediaComponentTypeData);
@@ -677,8 +733,9 @@ public class MediaService {
             type.put("mediaTypeDesc", mediaTypeDesc.get(resultSet.getString(mediaTypeName)));
             mediaTypes.add(type);
         }
-        if (mediaType.equals("component") && widgetFlag == 1 && mediaBannerFlag == 2)
+        if (mediaType.equals("component") && widgetFlag == 1 && mediaBannerFlag == 2) {
             mediaBannerFlag = 1;
+        }
         boolean isBannerMachine = mediaTypes.stream().anyMatch(type -> (type.get("mediaTypeDesc").toString().equals("BANNER_MACHINE")));
         boolean conditionOne = (bannerFlag == 1 && mediaBannerFlag != 2 && !isBannerMachine && mediaType.equals("group"));
         boolean conditionTwo = (mediaBannerFlag == 2 && bannerFlag == 1 && !isBannerMachine && mediaType.equals("group"));
@@ -691,27 +748,32 @@ public class MediaService {
                     .map(type -> type.get("mediaKey").toString())
                     .collect(Collectors.toList()));
             List<String> mediaRowIds = new ArrayList<>();
-            if (mediaBannerFlag != 2 && bannerFlag == 1 && widgetFlag != 1)
+            if (mediaBannerFlag != 2 && bannerFlag == 1 && widgetFlag != 1) {
                 mediaRowIds.addAll(finalMediaInfo.stream()
                         .filter(info -> (mediaIds.contains(info.get("mediaKey").toString())))
                         .map(info -> info.get("canvasRowId").toString())
                         .collect(Collectors.toList()));
-            if (mediaBannerFlag == 2 && bannerFlag == 1)
+            }
+            if (mediaBannerFlag == 2 && bannerFlag == 1) {
                 finalMediaInfo.stream().map(info -> {
-                    if (mediaIds.stream().anyMatch(id -> (((List) info.get("refIds")).contains(id))))
+                    if (mediaIds.stream().anyMatch(id -> (((List) info.get("refIds")).contains(id)))) {
                         mediaRowIds.add(info.get("canvasRowId").toString());
+                    }
                     return info;
                 });
-            if (!mediaRowIds.isEmpty())
+            }
+            if (!mediaRowIds.isEmpty()) {
                 finalMediaInfo.removeIf(info -> (!mediaRowIds.contains(info.get("canvasRowId").toString())));
+            }
             if (mediaBannerFlag == 2 && bannerFlag == 1) {
                 finalMediaInfo = finalMediaInfo.stream().map(info -> {
                     info.put("refIds", ((List<String>) info.get("refId")).stream().filter(ref -> mediaIds.contains(ref)).collect(Collectors.toList()));
                     return info;
                 }).collect(Collectors.toList());
             }
-            if (!mediaRowIds.isEmpty())
+            if (!mediaRowIds.isEmpty()) {
                 bannerData = true;
+            }
         } else if ((conditionOne || conditionTwo) && !bannerData && !isBannerMachine) {
             Assert.fail("ERROR - DATA: Banner Machine media data not found");
         } else {
@@ -740,40 +802,47 @@ public class MediaService {
                         .collect(Collectors.toList());
                 List<Map> finalFinalMediaInfo = finalMediaInfo;
                 mediaTypeData = mediaTypes.stream().map(type -> {
-                    if (finalFinalMediaInfo.stream().anyMatch(info -> (type.get("mediaKey").toString().equals(info.get("mediaKey").toString()))))
+                    if (finalFinalMediaInfo.stream().anyMatch(info -> (type.get("mediaKey").toString().equals(info.get("mediaKey").toString())))) {
                         type.put("canvasRowId", finalFinalMediaInfo.stream()
                                 .filter(info -> (type.get("mediaKey").toString().equals(info.get("mediaKey").toString())))
                                 .map(info -> info.get("canvasRowId").toString())
                                 .collect(Collectors.toList()).get(0));
+                    }
                     return type;
                 }).collect(Collectors.toList());
                 final List<String> finalBannerCanvasRowIds = bannerCanvasRowIds;
                 final List<String> finalMediaCanvasRowIds = mediaCanvasRowIds;
-                if (mediaNamesArray.length != 0)
+                if (mediaNamesArray.length != 0) {
                     mediaTypeData.removeIf(type -> ((!(finalBannerCanvasRowIds.contains(type.get("canvasRowId").toString())) && !(finalMediaCanvasRowIds.contains(type.get("canvasRowId").toString()))) || !(Arrays.asList(mediaNamesArray).contains(type.get("mediaTypeDesc").toString()))));
+                }
             } else {
-                if (mediaNamesArray.length != 0)
+                if (mediaNamesArray.length != 0) {
                     mediaTypes.removeIf(type -> (!Arrays.asList(mediaNamesArray).contains(type.get("mediaTypeDesc").toString())));
+                }
             }
         }
         if (!(mediaNamesArray.length == 0 && mediaTypes.isEmpty())) {
             finalMediaInfo.removeIf(info -> info == null);
             finalMediaInfo = finalMediaInfo.stream().map(info -> {
-                if (mediaTypes.stream().anyMatch(type -> (type.get("mediaKey").toString().equals(info.get("mediaKey").toString()))))
+                if (mediaTypes.stream().anyMatch(type -> (type.get("mediaKey").toString().equals(info.get("mediaKey").toString())))) {
                     info.put("mediaTypeDesc", mediaTypes.stream().filter(type -> (type.get("mediaKey").toString().equals(info.get("mediaKey").toString()))).findFirst().get().get("mediaTypeDesc").toString());
+                }
                 return info;
             }).collect(Collectors.toList());
         }
         String[] medias = {"row_contextualize_media", "contextualize_media"};
         List<Map> contextualizeMedia = new ArrayList<>();
         List<Map> nonContextualizeMedia = new ArrayList<>();
-        if (contextData == null)
+        if (contextData == null) {
             contextData = Utils.getContextualizeMedia();
+        }
         for (Map type : mediaTypes) {
-            if (contextData.getJSONObject(mediaType.toUpperCase()).has(type.get("mediaTypeDesc").toString().toUpperCase()) && Arrays.asList(medias).contains(contextData.getJSONObject(mediaType.toUpperCase()).getString(type.get("mediaTypeDesc").toString().toUpperCase())))
+            if (contextData.getJSONObject(mediaType.toUpperCase()).has(type.get("mediaTypeDesc").toString().toUpperCase()) && Arrays.asList(medias).contains(contextData.getJSONObject(mediaType.toUpperCase()).getString(type.get("mediaTypeDesc").toString().toUpperCase()))) {
                 contextualizeMedia.add(type);
-            if (contextData.getJSONObject(mediaType.toUpperCase()).has(type.get("mediaTypeDesc").toString().toUpperCase()) && contextData.getJSONObject(mediaType.toUpperCase()).getString(type.get("mediaTypeDesc").toString().toUpperCase()).equals("non_contextualize_media"))
+            }
+            if (contextData.getJSONObject(mediaType.toUpperCase()).has(type.get("mediaTypeDesc").toString().toUpperCase()) && contextData.getJSONObject(mediaType.toUpperCase()).getString(type.get("mediaTypeDesc").toString().toUpperCase()).equals("non_contextualize_media")) {
                 nonContextualizeMedia.add(type);
+            }
         }
         List finalMediaDataSet = new ArrayList<>();
         finalMediaDataSet.add(contextualizeMedia);
@@ -784,8 +853,9 @@ public class MediaService {
     public static Map getMediaGroupTypes() throws Throwable {
         Map mediaGroupTypeData = new HashMap<>();
         setupConnection();
-        if (queries == null)
+        if (queries == null) {
             queries = Utils.getSqlQueries();
+        }
         ResultSet resultSet = statement.executeQuery(queries.getJSONObject("media_service").get("select_all_media_group_type").toString());
         while (resultSet.next())
             mediaGroupTypeData.put(resultSet.getString("media_group_type"), resultSet.getString("media_group_type_desc"));
@@ -795,8 +865,9 @@ public class MediaService {
     public static Map getMediaComponentTypes() throws Throwable {
         Map mediaComponentTypeData = new HashMap<>();
         setupConnection();
-        if (queries == null)
+        if (queries == null) {
             queries = Utils.getSqlQueries();
+        }
         ResultSet resultSet = statement.executeQuery(queries.getJSONObject("media_service").get("select_all_media_component_type").toString());
         while (resultSet.next())
             mediaComponentTypeData.put(resultSet.getString("media_type"), resultSet.getString("media_type_desc"));
@@ -806,11 +877,13 @@ public class MediaService {
     public static List getCanvasRowIds(String query, String[] contextAttrNames, String[] contextAttrValues, int count) throws Throwable {
         List<String> canvasRowIds = new ArrayList<>();
         if (!allCanvasRowIds.isEmpty()) {
-            if (allCanvasRowIds.stream().anyMatch(canvas -> ((Arrays.asList(canvas.get("contextAttrNames")).containsAll(Arrays.asList(contextAttrNames))) && (Arrays.asList(canvas.get("contextAttrValues")).containsAll(Arrays.asList(contextAttrValues))) && (Integer.parseInt(canvas.get("count").toString()) == count))))
+            if (allCanvasRowIds.stream().anyMatch(canvas -> ((Arrays.asList(canvas.get("contextAttrNames")).containsAll(Arrays.asList(contextAttrNames))) && (Arrays.asList(canvas.get("contextAttrValues")).containsAll(Arrays.asList(contextAttrValues))) && (Integer.parseInt(canvas.get("count").toString()) == count)))) {
                 canvasRowIds = (List) allCanvasRowIds.stream().filter(canvas -> ((Arrays.asList(canvas.get("contextAttrNames")).containsAll(Arrays.asList(contextAttrNames))) && (Arrays.asList(canvas.get("contextAttrValues")).containsAll(Arrays.asList(contextAttrValues))) && (Integer.parseInt(canvas.get("count").toString()) == count)))
                         .findFirst().get().get("canvasRowIds");
-            if (!canvasRowIds.isEmpty())
+            }
+            if (!canvasRowIds.isEmpty()) {
                 return canvasRowIds;
+            }
         }
         setupConnection();
         List<String[]> values = new ArrayList<>();
@@ -832,17 +905,19 @@ public class MediaService {
 
     public static String updatedQuery(String query, List values, String type) throws Throwable {
         for (int index = 0; index < values.size(); index++)
-            if (query.contains("IN (?)"))
+            if (query.contains("IN (?)")) {
                 query = query.replaceFirst("IN \\(\\?\\)", "IN (" + getStringFromArray((String[]) values.get(index), type) + ")");
+            }
         return query;
     }
 
     public static List getGroupIdsWithMultipleContext(String[] contextAttrNames, String[] contextAttrValues, String queryName) throws Throwable {
-        if (!((queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).isEmpty()))
+        if (!((queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).isEmpty())) {
             return (queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).stream()
                     .filter(group -> ((Arrays.asList(group.get("contextAttrNames")).containsAll(Arrays.asList(contextAttrNames))) && (Arrays.asList(group.get("contextAttrValues")).containsAll(Arrays.asList(contextAttrValues))) && (group.get("queryName").equals(queryName))))
                     .map(group -> group.get("mediaGroupIds"))
                     .collect(Collectors.toList());
+        }
         List<String[]> values = new ArrayList<>();
         values.add(contextAttrNames);
         values.add(contextAttrValues);
@@ -867,8 +942,9 @@ public class MediaService {
         regionCode = context.stream().filter(con -> con.containsKey("SHOPPING_MODE")).map(con -> con.get("REGION_CODE")).findFirst().get();
         try {
             setupConnection();
-            if (queries == null)
+            if (queries == null) {
                 queries = Utils.getSqlQueries();
+            }
             List<String[]> values = new ArrayList<>();
             values.add(canvasIds.toArray(new String[canvasIds.size()]));
             PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_canvas_id_false").toString(), values, "string"));
@@ -896,10 +972,11 @@ public class MediaService {
             categoryIds = canvasCatIdData.stream().map(a -> a.get("categoryId").toString()).distinct().collect(Collectors.toList());
             List<Map> finalCanvasCatIdData = canvasCatIdData;
             canvasCatIdData = categoryIds.stream().map(id -> {
-                if(finalCanvasCatIdData.stream().anyMatch(cat -> cat.get("categoryId").toString().equals(id)))
+                if (finalCanvasCatIdData.stream().anyMatch(cat -> cat.get("categoryId").toString().equals(id))) {
                     return finalCanvasCatIdData.stream().filter(cat -> cat.get("categoryId").toString().equals(id)).findFirst().get();
-                else
+                } else {
                     return null;
+                }
             }).collect(Collectors.toList());
             canvasCatIdData.removeIf(id -> id == null);
             categoryIds.clear();
@@ -907,8 +984,9 @@ public class MediaService {
             data.removeIf(one -> finalcanvasCatIdData1.stream()
                     .anyMatch(two -> (one.get("categoryId").equals(two.get("categoryId")) && !one.get("canvasId").equals(two.get("canvasId")))));
             categoryIds = data.stream().map(one -> one.get("categoryId").toString()).collect(Collectors.toList());
-            if (customDate == null)
+            if (customDate == null) {
                 customDate = getCustomDate();
+            }
             List<String> catIds = new ArrayList<>();
             List<String> chanelCatIds = new ArrayList<>();
             if (!pageType.equals("Home Page")) {
@@ -931,18 +1009,22 @@ public class MediaService {
                 resultSet = statement.executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("category_site_chanel").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
                 while (resultSet.next())
                     chanelCatIds.add(resultSet.getString("cat_id"));
-                if (!chanelCatIds.isEmpty())
+                if (!chanelCatIds.isEmpty()) {
                     catIds.removeAll(chanelCatIds);
+                }
                 int fetchCount = ((regionCode.equals("INTL") || !mode.equals("SITE")) ? ((catIds.size() > 3) ? 3 : catIds.size()) : 1);
                 for (String cat : catIds) {
-                    if (categoryCanvasData.size() >= fetchCount)
+                    if (categoryCanvasData.size() >= fetchCount) {
                         break;
-                    if (Categories.category(cat).has("externalHostUrl"))
+                    }
+                    if (Categories.category(cat).has("externalHostUrl")) {
                         continue;
+                    }
                     boolean response = Categories.activeCategory(cat);
                     String canvasId = null;
-                    if (data.stream().anyMatch(catData -> catData.get("categoryId").toString().equals(cat)))
+                    if (data.stream().anyMatch(catData -> catData.get("categoryId").toString().equals(cat))) {
                         canvasId = data.stream().filter(catData -> catData.get("categoryId").toString().equals(cat)).map(d -> d.get("canvasId").toString()).collect(Collectors.toList()).get(0);
+                    }
                     JSONObject mediaData = Canvas.contextPoolMedia(canvasId, cat, context, "SITE", (new ArrayList<>()));
                     List<JSONObject> mediaContent = new ArrayList<>();
                     for (int index = 0; index < mediaData.getJSONObject("canvases").getJSONArray("canvas").length(); index++) {
@@ -985,17 +1067,21 @@ public class MediaService {
                                 }
                             }
                         }
-                        if (!finalMediaData.isEmpty())
+                        if (!finalMediaData.isEmpty()) {
                             categoryCanvasData.add(getCanvasAndComponentForCategory(data, tempMediaNames, cat, pageType));
+                        }
                     } else if (response && String.join(" ", tempMediaNames).contains("FLEXIBLE_POOL")) {
                         List<JSONObject> mData = new ArrayList<>();
                         for (JSONObject content : mediaContent)
-                            if (content.getString("contentGroupType").equals("FLEXIBLE_POOL"))
+                            if (content.getString("contentGroupType").equals("FLEXIBLE_POOL")) {
                                 mData.add(content);
-                        if (mData.size() >= 4)
+                            }
+                        if (mData.size() >= 4) {
                             finalMediaData = mData;
-                        if (!finalMediaData.isEmpty())
+                        }
+                        if (!finalMediaData.isEmpty()) {
                             categoryCanvasData.add(getCanvasAndComponentForCategory(data, tempMediaNames, cat, pageType));
+                        }
                     } else if (response && String.join(" ", tempMediaNames).contains("MEDIA_ADS")) {
                         List<JSONObject> mediaZoneData = new ArrayList<>();
                         for (int index = 0; index < mediaData.getJSONObject("canvases").getJSONArray("canvas").length(); index++) {
@@ -1019,16 +1105,18 @@ public class MediaService {
                         List keys = new ArrayList<>();
                         for (int index = 0; index < mediaAdConent.getJSONArray("entry").length(); index++)
                             keys.add(mediaAdConent.getJSONArray("entry").getJSONObject(index).getString("key"));
-                        if (mediaAdConent != null && keys.size() >= 0)
+                        if (mediaAdConent != null && keys.size() >= 0) {
                             categoryCanvasData.add(getCanvasAndComponentForCategory(data, tempMediaNames, cat, pageType));
-                    }
-                    else {
-                        if (response)
+                        }
+                    } else {
+                        if (response) {
                             categoryCanvasData.add(getCanvasAndComponentForCategory(data, tempMediaNames, cat, pageType));
+                        }
                     }
                 }
-            } else
+            } else {
                 categoryCanvasData.add(getCanvasAndComponentForCategory(data, tempMediaNames, (site.equals("mcom") ? "62678" : "1001111"), pageType));
+            }
             Assert.assertFalse("ERROR - DATA: Unable to find category form site database with expected media:'" + String.join(", ", tempMediaNames) + "'", categoryCanvasData.isEmpty());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1045,10 +1133,11 @@ public class MediaService {
         List finalData = new ArrayList<>();
         Assert.assertFalse("ERROR - DATA: Unable to find category form SDP with expected media:'" + mediaNames.toString() + "'", catId == null);
         String canvasId = null;
-        if (data.stream().anyMatch(cate -> (cate.get("categoryId").toString().equals(catId))))
+        if (data.stream().anyMatch(cate -> (cate.get("categoryId").toString().equals(catId)))) {
             canvasId = data.stream().filter(cate -> (cate.get("categoryId").toString().equals(catId))).map(cate -> cate.get("canvasId").toString()).findFirst().get();
-        else
+        } else {
             Assert.fail("ERROR - DATA: Unable to find canvas_id with expected media:'" + mediaNames.toString() + "' for " + pageType + " page");
+        }
         String componentId = (!Arrays.asList(mediaNames).stream().anyMatch(name -> name.contains("PRODUCT"))) ? null : String.valueOf(finalMediaData.get(0).getInt("componentID"));
         finalData.add(catId);
         finalData.add(canvasId);
@@ -1079,8 +1168,9 @@ public class MediaService {
         try {
             setupConnection();
             ResultSet rs = statement.executeQuery(Utils.getSqlQueries().get("custom_date").toString());
-            if (rs.next())
+            if (rs.next()) {
                 customDate = rs.getTimestamp("timestamp_value");
+            }
             Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
             customDate = customDate == null ? currentTimeStamp : customDate;
         } catch (SQLException | JSONException e) {

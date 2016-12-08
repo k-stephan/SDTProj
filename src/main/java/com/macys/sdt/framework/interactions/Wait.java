@@ -250,8 +250,8 @@ public class Wait {
     /**
      * Wait for the first element. If it is not present, refresh browser and click the second element.
      *
-     * @param waitFor  By selector to use
-     * @param toClick  By selector to use if waitFor does not appear
+     * @param waitFor By selector to use
+     * @param toClick By selector to use if waitFor does not appear
      */
     public static void untilElementPresentWithRefreshAndClick(By waitFor, By toClick) {
         try {
@@ -392,7 +392,7 @@ public class Wait {
             return true;
         }
         Object done = Navigate.execJavascript("return $(\":animated\").length == 0;");
-        return done instanceof Boolean ? (Boolean)done : true;
+        return done instanceof Boolean ? (Boolean) done : true;
     }
 
     /**
@@ -433,11 +433,12 @@ public class Wait {
 
             // TEMPORARY - currently a bug in BCOM sign in, checkout, MEW search and MCOM VGC PDP page that leaves AJAX calls hanging
             MainRunner.getCurrentUrl();
-            if ((StepUtils.bloomingdales() || StepUtils.MEW()) || (StepUtils.macys() && MainRunner.currentURL.contains("product")))
+            if ((StepUtils.bloomingdales() || StepUtils.MEW()) || (StepUtils.macys() && MainRunner.currentURL.contains("product"))) {
                 if (MainRunner.currentURL.matches(".*?(signin|chkout|profile|product).*?")
                         || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop"))) {
                     return queries <= 1;
                 }
+            }
             // END TEMPORARY FIX
 
             return queries == 0;

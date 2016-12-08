@@ -2,6 +2,7 @@ package com.macys.sdt.framework.model;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -9,7 +10,7 @@ public class UserTest {
 
     private User user;
 
-    public UserTest()    {
+    public UserTest() {
         user = new User();
     }
 
@@ -51,7 +52,7 @@ public class UserTest {
     @Test
     public void testGetUserPasswordHint() throws Exception {
         Long id = 1234L;
-        user.setUserPasswordHint(new UserPasswordHint(id,"answer"));
+        user.setUserPasswordHint(new UserPasswordHint(id, "answer"));
         UserPasswordHint hint = user.getUserPasswordHint();
         Assert.assertEquals(id, hint.getId());
         Assert.assertEquals("answer", hint.getAnswer());
@@ -82,7 +83,7 @@ public class UserTest {
     @Test
     public void testGetLoginCredentials() throws Exception {
         user.setLoginCredentials(LoginCredentials.getDefaultLoginCredentials());
-        Assert.assertEquals(user.getLoginCredentials().getPassword(),"Macys12345");
+        Assert.assertEquals(user.getLoginCredentials().getPassword(), "Macys12345");
     }
 
     @Test

@@ -7,7 +7,7 @@ public class ProfileAddressTest {
 
     private ProfileAddress profileAddress;
 
-    public ProfileAddressTest()    {
+    public ProfileAddressTest() {
         profileAddress = new ProfileAddress();
     }
 

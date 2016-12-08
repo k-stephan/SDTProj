@@ -36,7 +36,7 @@ public class PageUtilsTest {
         PageUtils.loadPageJSON("website.mcom.page.test_page");
         Assert.assertNotNull(PageUtils.cachePagesProject.get("website.mcom.page.test_page"));
         Assert.assertNotNull(PageUtils.cachePagesProject.get("website.mcom.panel.test_panel"));
-        
+
         // fallback
         PageUtils.loadPageJSON("website.bcom.page.mcom_another_page");
         Assert.assertNotNull(PageUtils.cachePagesProject.get("website.mcom.page.mcom_another_page"));
@@ -44,7 +44,7 @@ public class PageUtilsTest {
         // responsive
         PageUtils.loadPageJSON("MEW.mcom.page.responsive_page");
         Assert.assertNotNull(PageUtils.cachePagesProject.get("responsive.mcom.page.responsive_page"));
-        
+
         // no file
         PageUtils.loadPageJSON("website.mcom.page.page_dos_not_exists");
         Assert.assertNull(PageUtils.cachePagesProject.get("website.mcom.page.page_dos_not_exists"));
@@ -59,10 +59,10 @@ public class PageUtilsTest {
 
         // fallback
         Assert.assertNotNull(PageUtils.getElementJSONValue(new PageElement("mcom_another_page.another_element")));
-        
+
         //no element
         Assert.assertNull(PageUtils.getElementJSONValue(new PageElement("test_page.element_dos_not_exists")));
-        
+
         // no file
         Assert.assertNull(PageUtils.getElementJSONValue(new PageElement("page_dos_not_exists.test_element")));
     }

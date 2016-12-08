@@ -1,28 +1,6 @@
 package com.macys.sdt.framework.model;
 
 public class CreditCard {
-    public enum CardType {
-        VISA("Visa"),
-        MASTER_CARD("MasterCard"),
-        AMERICAN_EXPRESS("American Express"),
-        DISCOVER("Discover");
-
-        public final String name;
-
-        CardType(String name) {
-            this.name = name;
-        }
-
-        public static CardType fromString(String value) {
-            for (CardType type : CardType.values())
-                if (value.equals(type.name)) {
-                    return type;
-                }
-
-            return null;
-        }
-    }
-
     private CardType cardType;
     private String cardNumber;
     private String securityCode;
@@ -32,7 +10,6 @@ public class CreditCard {
     private String expiryYear;
     private boolean has3DSecure;
     private String securePassword;
-
     public CreditCard(CardType cardType, String cardNumber, String securityCode, double balance, String expiryMonth, String expiryMonthIndex, String expiryYear) {
         this.cardType = cardType;
         this.cardNumber = cardNumber;
@@ -61,52 +38,52 @@ public class CreditCard {
         return cardType;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public String getSecurityCode() {
-        return securityCode;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public String getExpiryMonth() {
-        return expiryMonth;
-    }
-
-    public String getExpiryMonthIndex() {
-        return expiryMonthIndex;
-    }
-
-    public String getExpiryYear() {
-        return expiryYear;
-    }
-
     public void setCardType(CardType cardType) {
         this.cardType = cardType;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
     }
 
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
+    public String getSecurityCode() {
+        return securityCode;
+    }
+
     public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
+    }
+
+    public double getBalance() {
+        return balance;
     }
 
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
+    public String getExpiryMonth() {
+        return expiryMonth;
+    }
+
     public void setExpiryMonth(String expiryMonth) {
         this.expiryMonth = expiryMonth;
     }
 
+    public String getExpiryMonthIndex() {
+        return expiryMonthIndex;
+    }
+
     public void setExpiryMonthIndex(String expiryMonthIndex) {
         this.expiryMonthIndex = expiryMonthIndex;
+    }
+
+    public String getExpiryYear() {
+        return expiryYear;
     }
 
     public void setExpiryYear(String expiryYear) {
@@ -127,6 +104,28 @@ public class CreditCard {
 
     public void setHas3DSecure(boolean has3DSecure) {
         this.has3DSecure = has3DSecure;
+    }
+
+    public enum CardType {
+        VISA("Visa"),
+        MASTER_CARD("MasterCard"),
+        AMERICAN_EXPRESS("American Express"),
+        DISCOVER("Discover");
+
+        public final String name;
+
+        CardType(String name) {
+            this.name = name;
+        }
+
+        public static CardType fromString(String value) {
+            for (CardType type : CardType.values())
+                if (value.equals(type.name)) {
+                    return type;
+                }
+
+            return null;
+        }
     }
 
 }

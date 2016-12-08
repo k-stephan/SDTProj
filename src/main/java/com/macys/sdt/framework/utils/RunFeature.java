@@ -2,8 +2,8 @@ package com.macys.sdt.framework.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.model.KillSwitch;
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -75,35 +75,6 @@ public class RunFeature {
         }
     }
 
-    public void cleanWorkSpace() {
-        System.err.println("-->cleanWorkSpace()...");
-        try {
-            File[] files = new File(m_workspace).listFiles();
-            if (files == null) {
-                return;
-            }
-            for (File f : files) {
-                if (f.getName().equals(this.m_repo_jar.getName())) {
-                    continue;
-                }
-                System.out.println("--> removing " + f.getPath());
-                if (f.isDirectory()) {
-                	try{
-                		FileUtils.cleanDirectory(f);
-                	}catch(IOException iex){
-                		System.err.println("-->Cannot clean " + f.getPath() + ":" + iex.getMessage());
-                		continue;
-                	}
-                }
-                if (!f.delete()) {
-                    System.err.println("Failed to delete file: " + f.getPath());
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public static boolean checkAborted() {
         if (System.getenv("BUILD_URL") == null) {
             return false;
@@ -143,6 +114,35 @@ public class RunFeature {
             Utils.writeBinaryFile(data.getBytes(), new File(fgolds.getCanonicalPath() + "/" + goldName), false);
         } catch (Exception ex) {
             System.out.println("-->RunFeature.downloadGolds():Cannot download gold:" + url);
+        }
+    }
+
+    public void cleanWorkSpace() {
+        System.err.println("-->cleanWorkSpace()...");
+        try {
+            File[] files = new File(m_workspace).listFiles();
+            if (files == null) {
+                return;
+            }
+            for (File f : files) {
+                if (f.getName().equals(this.m_repo_jar.getName())) {
+                    continue;
+                }
+                System.out.println("--> removing " + f.getPath());
+                if (f.isDirectory()) {
+                    try {
+                        FileUtils.cleanDirectory(f);
+                    } catch (IOException iex) {
+                        System.err.println("-->Cannot clean " + f.getPath() + ":" + iex.getMessage());
+                        continue;
+                    }
+                }
+                if (!f.delete()) {
+                    System.err.println("Failed to delete file: " + f.getPath());
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -209,10 +209,10 @@ public class RunFeature {
             System.out.println("Logs dir is empty:" + flog.getCanonicalPath());
             return;
         }
-        
+
         File fenv = new File(flog.getCanonicalPath() + File.separator + "env_variables.json");
-        if (!fenv.exists()){
-        	this.dumpEnvironmentVariables();
+        if (!fenv.exists()) {
+            this.dumpEnvironmentVariables();
         }
         if (!new File(flog.getCanonicalPath() + File.separator + "cucumber.json").exists()) {
             try {
@@ -323,7 +323,7 @@ public class RunFeature {
                 pushLogObj(this.m_pushObj);
             } catch (Exception ex) {
                 if (m_fpushed != null && !m_fpushed.delete()) {
-                        System.err.println("Unable to delete fPushed file");
+                    System.err.println("Unable to delete fPushed file");
                 }
                 ex.printStackTrace();
             }

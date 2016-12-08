@@ -18,9 +18,11 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.macys.sdt.framework.runner.MainRunner.appTest;
@@ -30,19 +32,16 @@ import static com.macys.sdt.framework.runner.MainRunner.appTest;
  */
 public abstract class StepUtils {
 
-    public static boolean ajaxCheck = false;
-
     /**
      * A regex string that will match allowed mobile devices
      */
     public static final String MOBILE_DEVICES = "(?i)Android|iPhone 6|Google Nexus [0-9](p|x)?|Samsung Galaxy S4|Android Emulator|Nexus [0-9]";
-
     /**
      * A regex string that will match allowed tablets
      */
     public static final String TABLETS = "(?i)ipad( 2)?|galaxy note 10.1|Google Nexus ([0-9][0-9]|[7-9])";
-
     public static final String IPAD = "(?i)ipad( 2)?";
+    public static boolean ajaxCheck = false;
 
     /**
      * Checks if using chrome
@@ -120,7 +119,7 @@ public abstract class StepUtils {
         if (MainRunner.brand != null) {
             return MainRunner.brand.equalsIgnoreCase("bcom");
         }
-        
+
         return MainRunner.url.matches(".*?(bloomingdales|bcom).*?");
     }
 

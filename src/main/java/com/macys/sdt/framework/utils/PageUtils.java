@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.utils.PageElement.getResponsivePath;
 import static com.macys.sdt.framework.utils.Utils.log;
+
 /**
  * This class pulls and manages data from page and panel JSON files
  */
@@ -125,9 +126,9 @@ public class PageUtils {
         String fName = f.getName();
         File dir = f.getParentFile();
         f = findFile(dir, fName);
-        if (filePath.startsWith("shared/") && f == null){
-        	dir = new File("com/macys/sdt/" + dir.getPath());
-        	f = findFile(dir, fName);
+        if (filePath.startsWith("shared/") && f == null) {
+            dir = new File("com/macys/sdt/" + dir.getPath());
+            f = findFile(dir, fName);
         }
 
         if (f != null && f.exists() && !f.isDirectory()) {

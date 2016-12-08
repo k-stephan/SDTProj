@@ -28,7 +28,7 @@ public class TextBoxesTests {
         if (Wait.untilElementPresent("ui_standards.error_msg")) {
             Assert.assertEquals(Elements.getElementAttribute("ui_standards.first_name_text_box", "value"), firstName);
         } else {
-            Assert.assertTrue(MainRunner.getCurrentUrl().contains("profile.firstname="+ firstName));
+            Assert.assertTrue(MainRunner.getCurrentUrl().contains("profile.firstname=" + firstName));
         }
     }
 }

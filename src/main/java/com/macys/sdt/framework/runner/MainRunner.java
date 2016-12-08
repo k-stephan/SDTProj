@@ -637,13 +637,13 @@ public class MainRunner {
                     path = workSpace + "/" + path;
                 }
                 String json = Utils.gherkinToJson(false, path);
-                try{
-                	featureScenarios = new Gson().fromJson(json, ArrayList.class);
-                }catch(JsonSyntaxException jex){
-                	System.err.println("--> Failed to parse : " + path);
-                	System.err.println("--> json :\n\n" + json);
-                	System.err.println();
-                	throw jex;
+                try {
+                    featureScenarios = new Gson().fromJson(json, ArrayList.class);
+                } catch (JsonSyntaxException jex) {
+                    System.err.println("--> Failed to parse : " + path);
+                    System.err.println("--> json :\n\n" + json);
+                    System.err.println();
+                    throw jex;
                 }
             }
             findScenario(featureScenarios, path, line);
@@ -1021,11 +1021,14 @@ public class MainRunner {
     }
 
     public static class PageHangWatchDog extends Thread {
-        public static void init() {
-            if (hangWatchDog == null) {
-                hangWatchDog = new PageHangWatchDog();
-            }
-        }
+        private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 130 : 95) * 1000;
+        private final static int MAX_FAILURES = 5;
+        public static boolean timedOut = false;
+        private static PageHangWatchDog hangWatchDog;
+        private static int failCount;
+        private static boolean pause;
+        private String m_url;
+        private long ts;
 
         private PageHangWatchDog() {
             System.err.println("--> Start:PageHangWatchDog:" + new Date());
@@ -1033,13 +1036,9 @@ public class MainRunner {
             this.start();
         }
 
-        private static PageHangWatchDog hangWatchDog;
-
-        private void reset(String url) {
-            this.ts = System.currentTimeMillis();
-            if (url != null) {
-                this.m_url = url;
-                failCount = 0;
+        public static void init() {
+            if (hangWatchDog == null) {
+                hangWatchDog = new PageHangWatchDog();
             }
         }
 
@@ -1047,19 +1046,18 @@ public class MainRunner {
             hangWatchDog.reset(null);
         }
 
-        public static boolean timedOut = false;
-
-        private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 130 : 95) * 1000;
-        private final static int MAX_FAILURES = 5;
-        private String m_url;
-        private long ts;
-        private static int failCount;
-        private static boolean pause;
-
         public static void pause(boolean pause) {
             PageHangWatchDog.pause = pause;
             if (!pause) {
                 timedOut = false;
+                failCount = 0;
+            }
+        }
+
+        private void reset(String url) {
+            this.ts = System.currentTimeMillis();
+            if (url != null) {
+                this.m_url = url;
                 failCount = 0;
             }
         }

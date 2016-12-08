@@ -50,8 +50,43 @@ public class PageElement {
         parseValue(PageUtils.getElementJSONValue(this));
     }
 
+    // make 'home' or 'panel.home' to 'website.mcom.page.home' or 'website.mcom.panel.home' based on
+    // current execution status & setup
+    private static String getPageFullPath(String pageName) {
+        String pagePath;
+        if (MainRunner.appTest) {
+            pagePath = StepUtils.iOS() ? "iOS." : "android.";
+        } else {
+            pagePath = StepUtils.MEW() ? "MEW." : "website.";
+        }
+
+        pagePath += (StepUtils.macys() ? "mcom." : (StepUtils.bloomingdales() ? "bcom." : "other."));
+
+        if (pageName.contains("panel.")) {
+            pagePath = pagePath + pageName;
+        } else {
+            pagePath = pagePath + "page." + pageName;
+        }
+        return pagePath;
+    }
+
+    /**
+     * make 'MEW.mcom.page.responsive_page' to 'responsive.mcom.page.responsive_page'
+     * or 'website.mcom.page.responsive_page' to 'responsive.mcom.page.responsive_page'
+     *
+     * @param pagePath path of page or panel
+     * @return responsive path of the page or panel
+     */
+    public static String getResponsivePath(String pagePath) {
+        if (!(pagePath.contains("website") || pagePath.contains("MEW"))) {
+            return pagePath;
+        }
+        return pagePath.replaceFirst("website", "responsive").replaceFirst("MEW", "responsive");
+    }
+
     /**
      * This return the JSON page name
+     *
      * @return page name home.logo = home
      */
     public String getPageName() {
@@ -60,6 +95,7 @@ public class PageElement {
 
     /**
      * This return element name in the JSON page
+     *
      * @return element name home.logo = logo
      */
     public String getElementName() {
@@ -68,6 +104,7 @@ public class PageElement {
 
     /**
      * This return path of the page
+     *
      * @return page path home.logo = website.mcom.page.home
      */
     public String getPagePath() {
@@ -87,7 +124,7 @@ public class PageElement {
 
         // parse element String
         for (String value : values.split("\\|\\|")) {
-            if (value.contains(","))    {
+            if (value.contains(",")) {
                 String[] parts = value.split(Pattern.quote(","));
 
                 String locator = parts[0].trim();
@@ -142,39 +179,5 @@ public class PageElement {
             System.err.println("-->Error - UI: element name format is not correct:" + elementKey);
             Assert.fail();
         }
-    }
-
-    // make 'home' or 'panel.home' to 'website.mcom.page.home' or 'website.mcom.panel.home' based on
-    // current execution status & setup
-    private static String getPageFullPath(String pageName) {
-        String pagePath;
-        if (MainRunner.appTest) {
-            pagePath = StepUtils.iOS() ? "iOS." : "android.";
-        } else {
-            pagePath = StepUtils.MEW() ? "MEW." : "website.";
-        }
-
-        pagePath += (StepUtils.macys() ? "mcom." : (StepUtils.bloomingdales() ? "bcom." : "other."));
-
-        if (pageName.contains("panel.")) {
-            pagePath = pagePath + pageName;
-        } else {
-            pagePath = pagePath + "page." + pageName;
-        }
-        return pagePath;
-    }
-
-    /**
-     * make 'MEW.mcom.page.responsive_page' to 'responsive.mcom.page.responsive_page'
-     * or 'website.mcom.page.responsive_page' to 'responsive.mcom.page.responsive_page'
-     *
-     * @param pagePath path of page or panel
-     * @return  responsive path of the page or panel
-     */
-    public static String getResponsivePath(String pagePath) {
-        if (!(pagePath.contains("website") || pagePath.contains("MEW"))) {
-            return pagePath;
-        }
-        return pagePath.replaceFirst("website", "responsive").replaceFirst("MEW", "responsive");
     }
 }

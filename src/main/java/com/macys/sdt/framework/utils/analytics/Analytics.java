@@ -29,13 +29,18 @@ public abstract class Analytics {
     protected Map<String, String> global_values = new HashMap<String, String>();
     protected HashMap<String, Integer> tag_histogram = new HashMap<>();
 
-    public abstract Map analyze(LinkedTreeMap scenarioInfo, int step, ArrayList entries, Result result) throws Exception;
-
-    protected abstract Map test() throws Exception;
-
     public Analytics() {
         this.loadGlobals();
     }
+
+    public static String getGoldName(Map sInfo) {
+        String feature = sInfo.get("uri").toString().replace('\\', '/').split("features/")[1];
+        return Utils.getScenarioShaKey(feature, sInfo.get("name").toString());
+    }
+
+    public abstract Map analyze(LinkedTreeMap scenarioInfo, int step, ArrayList entries, Result result) throws Exception;
+
+    protected abstract Map test() throws Exception;
 
     public void recordPageSource(String link, String pageSource) {
         step_page_sources.put(link, pageSource);
@@ -47,13 +52,13 @@ public abstract class Analytics {
             if (fglobal.exists()) {
                 Map globals = new Gson().fromJson(Utils.readTextFile(fglobal), Map.class);
                 if (globals.get("ignore") != null) {
-                    this.global_ignores = (List)globals.get("ignore");
+                    this.global_ignores = (List) globals.get("ignore");
                 }
                 if (globals.get("has_value") != null) {
-                    this.global_has_values = (List)globals.get("has_value");
+                    this.global_has_values = (List) globals.get("has_value");
                 }
                 if (globals.get("update") != null) {
-                    this.global_values = (Map)globals.get("update");
+                    this.global_values = (Map) globals.get("update");
                 }
             }
         } catch (Exception ex) {
@@ -63,11 +68,6 @@ public abstract class Analytics {
 
     public void recordClickElement(String elHtml) {
         step_click_elements.add(elHtml);
-    }
-
-    public static String getGoldName(Map sInfo) {
-        String feature = sInfo.get("uri").toString().replace('\\', '/').split("features/")[1];
-        return Utils.getScenarioShaKey(feature, sInfo.get("name").toString());
     }
 
     protected Map record() {
@@ -112,14 +112,6 @@ public abstract class Analytics {
 
     protected ArrayList convertHarEntries(ArrayList harEntries) {
         return this.entries = new Gson().fromJson(new Gson().toJson(harEntries), ArrayList.class);
-    }
-
-    public static class AnalyticsExeception extends Exception {
-        private static final long serialVersionUID = -5394782789087798477L;
-
-        public AnalyticsExeception(String msg) {
-            super(msg);
-        }
     }
 
     protected Map compareEntries(String tagid, Map gmap, Map cmap) {
@@ -255,70 +247,71 @@ public abstract class Analytics {
         HashMap hresult = new HashMap();
         hresult.put("compare", compare);
 
-        try{
-	        if (tagAttr.equals("ul")) {
-	            String page_url = getCurrentURL();
-	            if (cval.equals(page_url)) {
-	            	hresult.put("action", "page_url:" + page_url);
-	                hresult.put("status", "pass");
-	            }
-	        } else {
-	        	String globalValue = this.global_values.get(tagAttr);
-	        	if (globalValue != null){
-	        		compare.put("gold", globalValue);
-	        		hresult.put("action", "update_global");
-	        		hresult.put("status", globalValue.equals(cval)? "pass":"fail");
-	                return;
-	        	}
-	        	
-	        	globalValue = this.global_values.get(tagid + "." + tagAttr);
-	        	if (globalValue != null){
-	        		compare.put("gold", globalValue);
-	        		hresult.put("action", "update_global_tag");
-	        		hresult.put("status", globalValue.equals(cval)? "pass":"fail");
-	                return;
-	        	}
-	        	
-	            Object res = null;
-	            if (gval.startsWith("_ignore_") ||
-	                    this.global_ignores.contains("all." + tagAttr) ||
-	                    this.global_ignores.contains(tagid + "." + tagAttr)) {
-	            	String action = "ignore";
-	            	if (this.global_ignores.contains("all." + tagAttr))
-	            		action = "ignore_global";
-	            	else if (this.global_ignores.contains(tagid + "." + tagAttr))
-	            		action = "ignore_global_tag";
-	            	hresult.put("action", action);
-	            	hresult.put("status", "pass");
-	            } else if (gval.startsWith("_has_value_") ||
-	                    this.global_has_values.contains("all." + tagAttr) ||
-	                    this.global_has_values.contains(tagid + "." + tagAttr)) {
-	                if (cval != null && !cval.isEmpty()) {
-	                    hresult.put("status", "pass");
-	                } else {
-	                    hresult.put("status", "fail");
-	                }
-	                hresult.put("action", "has_value");
-	            } else if ((Boolean) (res = compareEqual(cval, gval))) {
-	                hresult.put("status", "pass");
-	            } else if (cval.contains(gval)) {
-	                hresult.put("action", "val_contains_gold");
-	                hresult.put("status", "pass");
-	            } else if (gval.contains(cval)) {
-	                hresult.put("status", "pass");
-	                hresult.put("action", "gold_contains_val");
-	            } else if ((res = compareElementClicks(cval)) != null) {
-	                hresult.put("status", "pass");
-	                hresult.put("action", "element_click:" + res);
-	            } else if ((res = comparePageSrc(cval)) != null) {
-	                hresult.put("status", "pass");
-	                hresult.put("action", "page_src:" + res);
-	            } else {
-	                hresult.put("status", "fail");
-	            }
-	        }
-        }finally{
-        	hdiff.put(tagAttr, hresult);
+        try {
+            if (tagAttr.equals("ul")) {
+                String page_url = getCurrentURL();
+                if (cval.equals(page_url)) {
+                    hresult.put("action", "page_url:" + page_url);
+                    hresult.put("status", "pass");
+                }
+            } else {
+                String globalValue = this.global_values.get(tagAttr);
+                if (globalValue != null) {
+                    compare.put("gold", globalValue);
+                    hresult.put("action", "update_global");
+                    hresult.put("status", globalValue.equals(cval) ? "pass" : "fail");
+                    return;
+                }
+
+                globalValue = this.global_values.get(tagid + "." + tagAttr);
+                if (globalValue != null) {
+                    compare.put("gold", globalValue);
+                    hresult.put("action", "update_global_tag");
+                    hresult.put("status", globalValue.equals(cval) ? "pass" : "fail");
+                    return;
+                }
+
+                Object res = null;
+                if (gval.startsWith("_ignore_") ||
+                        this.global_ignores.contains("all." + tagAttr) ||
+                        this.global_ignores.contains(tagid + "." + tagAttr)) {
+                    String action = "ignore";
+                    if (this.global_ignores.contains("all." + tagAttr)) {
+                        action = "ignore_global";
+                    } else if (this.global_ignores.contains(tagid + "." + tagAttr)) {
+                        action = "ignore_global_tag";
+                    }
+                    hresult.put("action", action);
+                    hresult.put("status", "pass");
+                } else if (gval.startsWith("_has_value_") ||
+                        this.global_has_values.contains("all." + tagAttr) ||
+                        this.global_has_values.contains(tagid + "." + tagAttr)) {
+                    if (cval != null && !cval.isEmpty()) {
+                        hresult.put("status", "pass");
+                    } else {
+                        hresult.put("status", "fail");
+                    }
+                    hresult.put("action", "has_value");
+                } else if ((Boolean) (res = compareEqual(cval, gval))) {
+                    hresult.put("status", "pass");
+                } else if (cval.contains(gval)) {
+                    hresult.put("action", "val_contains_gold");
+                    hresult.put("status", "pass");
+                } else if (gval.contains(cval)) {
+                    hresult.put("status", "pass");
+                    hresult.put("action", "gold_contains_val");
+                } else if ((res = compareElementClicks(cval)) != null) {
+                    hresult.put("status", "pass");
+                    hresult.put("action", "element_click:" + res);
+                } else if ((res = comparePageSrc(cval)) != null) {
+                    hresult.put("status", "pass");
+                    hresult.put("action", "page_src:" + res);
+                } else {
+                    hresult.put("status", "fail");
+                }
+            }
+        } finally {
+            hdiff.put(tagAttr, hresult);
         }
     }
 
@@ -340,7 +333,7 @@ public abstract class Analytics {
     }
 
     public boolean attributeFormatValidation_emailValidator(String email) {
-        if (email == null)   {
+        if (email == null) {
             return false;
         }
         final String EMAIL_PATTERN =
@@ -348,5 +341,13 @@ public abstract class Analytics {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    public static class AnalyticsExeception extends Exception {
+        private static final long serialVersionUID = -5394782789087798477L;
+
+        public AnalyticsExeception(String msg) {
+            super(msg);
+        }
     }
 }

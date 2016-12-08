@@ -101,8 +101,9 @@ public class WebDriverConfigurator {
                 File file = new File(path);
                 if (!file.exists()) {
                     file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
-                    if (!file.exists() && Utils.isWindows())
+                    if (!file.exists() && Utils.isWindows()) {
                         file = new File(System.getenv("HOME") + "/IEDriverServer.exe");
+                    }
                 }
                 if (file.exists()) {
                     System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
@@ -182,8 +183,9 @@ public class WebDriverConfigurator {
             File file = new File(MainRunner.workspace + path);
             if (!file.exists()) {
                 file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
-                if (!file.exists() && Utils.isWindows())
+                if (!file.exists() && Utils.isWindows()) {
                     file = new File(System.getenv("HOME") + "/" + fileName);
+                }
             }
             if (file.exists()) {
                 System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
@@ -316,8 +318,9 @@ public class WebDriverConfigurator {
             if (!StepUtils.mobileDevice() && !remoteOS.matches("^Windows 10|(.*?)10.11$")) {
                 capabilities.setCapability("screenResolution", "1280x1024");
             }
-            if(remoteOS.matches("^(.*?)10.11$"))
+            if (remoteOS.matches("^(.*?)10.11$")) {
                 capabilities.setCapability("screenResolution", "1152x864");
+            }
             if (StepUtils.safari()) {
                 // safari driver is not stable, try up to 3 times
                 int count = 0;

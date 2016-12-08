@@ -7,7 +7,6 @@ import org.junit.BeforeClass;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-
 public class DBUtilsTest {
 
     @BeforeClass
@@ -20,7 +19,7 @@ public class DBUtilsTest {
     public void getCustomDate() {
         try {
             Assert.assertNotNull("Date generated is null", DBUtils.getCustomDate());
-        } catch (Exception e)   {
+        } catch (Exception e) {
             Assert.fail("Failed due to : " + e.getMessage());
         }
     }
@@ -45,7 +44,7 @@ public class DBUtilsTest {
     public void getConfig() {
         try {
             Assert.assertNotNull(new DBUtils().getConfig());
-        } catch (Exception e)   {
+        } catch (Exception e) {
             Assert.fail("Failed due to : " + e.getMessage());
         }
     }

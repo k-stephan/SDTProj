@@ -1,15 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.model.CreditCard;
-import com.macys.sdt.framework.model.LoginCredentials;
-import com.macys.sdt.framework.model.LoyalistDetails;
-import com.macys.sdt.framework.model.Product;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.Registry;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserPasswordHint;
-import com.macys.sdt.framework.model.UserProfile;
-import com.macys.sdt.framework.model.UslInfo;
+import com.macys.sdt.framework.model.*;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -210,7 +201,7 @@ public class TestUsersTest {
     @Test
     public void testGenerateRandomDateIndex() throws Exception {
         int dateIndex = TestUsers.generateRandomDateIndex();
-        Assert.assertTrue(dateIndex >=1 && dateIndex <= 31);
+        Assert.assertTrue(dateIndex >= 1 && dateIndex <= 31);
     }
 
     @Test
@@ -222,7 +213,7 @@ public class TestUsersTest {
     @Test
     public void testGenerateRandomYearIndex() throws Exception {
         int year = TestUsers.generateRandomYearIndex();
-        Assert.assertTrue(year >=1917 && year <= 1987);
+        Assert.assertTrue(year >= 1917 && year <= 1987);
     }
 
     @Test
@@ -255,7 +246,7 @@ public class TestUsersTest {
 
     @Test
     public void testGenerateRandomPhoneSubscriber() throws Exception {
-        String subscriberNumber  = TestUsers.generateRandomPhoneSubscriber();
+        String subscriberNumber = TestUsers.generateRandomPhoneSubscriber();
         Assert.assertNotNull(subscriberNumber);
         Assert.assertEquals(4, subscriberNumber.length());
         Assert.assertNotEquals(0, subscriberNumber.charAt(0));
@@ -336,7 +327,7 @@ public class TestUsersTest {
 
     @Test
     public void testGetRandomValidAddress() throws Exception {
-        HashMap<String, String> options =  new HashMap<>();
+        HashMap<String, String> options = new HashMap<>();
         options.put("checkout_eligible", "true");
         ProfileAddress address = TestUsers.getRandomValidAddress(options);
         Assert.assertNotNull(address);
@@ -364,7 +355,7 @@ public class TestUsersTest {
     @Test
     public void testGetRandomProduct() throws Exception {
         HashMap<String, Boolean> options = new HashMap<>();
-        options.put("gift_wrappable",true);
+        options.put("gift_wrappable", true);
         Product product = TestUsers.getRandomProduct(options);
         Assert.assertNotNull(product);
         Assert.assertNotNull(product.id);

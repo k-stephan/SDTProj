@@ -1,13 +1,5 @@
 package com.macys.sdt.framework.utils.db.utils;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-
-import static org.junit.Assert.*;
-
 /**
  * Created by M509108 on 11/21/2016.
  */

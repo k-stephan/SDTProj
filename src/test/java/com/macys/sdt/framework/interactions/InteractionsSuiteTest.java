@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { ClicksTests.class, TextBoxesTests.class, DropDownsTests.class })
+@Suite.SuiteClasses({ClicksTests.class, TextBoxesTests.class, DropDownsTests.class})
 public class InteractionsSuiteTest {
 
     static boolean preCondition = false;
@@ -27,13 +27,11 @@ public class InteractionsSuiteTest {
             Navigate.visit(MainRunner.url);
             StepUtils.shouldBeOnPage("ui_standards");
             preCondition = true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("-->Error - Test setUp:" + e.getMessage());
             try {
                 MainRunner.getWebDriver().quit();
-            }
-            catch (Exception ignored) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -42,8 +40,7 @@ public class InteractionsSuiteTest {
     public static void tearDown() throws Exception {
         try {
             MainRunner.getWebDriver().quit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("-->Error - Test tearDown:" + e.getMessage());
         }
     }

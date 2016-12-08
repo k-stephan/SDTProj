@@ -6,7 +6,8 @@ import org.junit.Test;
 public class UserProfileTest {
 
     private UserProfile userProfile;
-    public UserProfileTest()    {
+
+    public UserProfileTest() {
         userProfile = new UserProfile();
     }
 

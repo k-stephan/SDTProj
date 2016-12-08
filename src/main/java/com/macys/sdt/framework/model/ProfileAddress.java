@@ -22,11 +22,6 @@ public class ProfileAddress {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String province;
 
-    public static ProfileAddress getDefaultProfileAddress() {
-        return new ProfileAddress(1234L, "testattention", 11L, "first", "last", "middle", "postbox", "AP", "Hyderabad",
-                "AL", 32701, "USA", "test1010@blackhole.macys.com", "123-444-5577", true);
-    }
-
     public ProfileAddress() {
 
     }
@@ -49,6 +44,11 @@ public class ProfileAddress {
         this.email = email;
         this.bestPhone = bestPhone;
         this.primaryFlag = primaryFlag;
+    }
+
+    public static ProfileAddress getDefaultProfileAddress() {
+        return new ProfileAddress(1234L, "testattention", 11L, "first", "last", "middle", "postbox", "AP", "Hyderabad",
+                "AL", 32701, "USA", "test1010@blackhole.macys.com", "123-444-5577", true);
     }
 
     public Long getId() {

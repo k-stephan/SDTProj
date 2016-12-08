@@ -95,11 +95,11 @@ public class Registry {
         this.coRegistrantLastName = coRegistrantLastName;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

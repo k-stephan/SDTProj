@@ -30,7 +30,7 @@ public class CampaignService extends StepUtils {
     public static LocalDate customDate = null;
     public static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static void setCampaignName(String name){
+    public static void setCampaignName(String name) {
         campaignName = name;
         setCampaignInfo();
     }
@@ -42,16 +42,19 @@ public class CampaignService extends StepUtils {
      */
     public static Map<String, Boolean> getAllCampaignPeriods() {
         Map<String, Boolean> campaign = new HashMap<>();
-        if(statement == null)
+        if (statement == null) {
             setupConnection();
-        if(macys())
+        }
+        if (macys()) {
             disableOtherCampaign((campaignName.contains("ICW") ? "MMoney" : "ICWMMoney"));
+        }
         List<Map<String, Object>> activeCampaigns = getActiveCampaignDetails();
         boolean earn = false, redeem = false, inBetween = false, outside = false;
         for (Map aCampaign : activeCampaigns) {
             String campaignType = aCampaign.get("name").toString();
-            if (!(aCampaign.get("campaignCode").toString().equals(campaignCode)))
+            if (!(aCampaign.get("campaignCode").toString().equals(campaignCode))) {
                 continue;
+            }
             if (campaignType.equals(earnPeriodType)) {
                 earn = true;
                 break;
@@ -94,8 +97,9 @@ public class CampaignService extends StepUtils {
         List<Map<String, String>> campaignAttributes = new ArrayList<>();
         try {
             String sqlQuery = campaignQueries.getJSONObject("mb_money").getString("mb_money_attributes");
-            if(statement == null)
+            if (statement == null) {
                 setupConnection();
+            }
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, earnPeriodType);
             ResultSet rs = preparedStatement.executeQuery();
@@ -122,8 +126,9 @@ public class CampaignService extends StepUtils {
         List<Map<String, String>> campaignExclusions = new ArrayList<>();
         try {
             String sqlQuery = campaignQueries.getJSONObject("mb_money").getString("mb_money_exclusions");
-            if(statement == null)
+            if (statement == null) {
                 setupConnection();
+            }
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, earnPeriodType);
             ResultSet rs = preparedStatement.executeQuery();
@@ -150,11 +155,13 @@ public class CampaignService extends StepUtils {
 
         try {
             String sqlQuery = campaignQueries.getJSONObject("mb_money").getString("all_campaigns");
-            if(statement == null)
+            if (statement == null) {
                 setupConnection();
+            }
             ResultSet campaignDetails = statement.executeQuery(sqlQuery);
-            if(customDate == null)
+            if (customDate == null) {
                 customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
+            }
             while (campaignDetails.next()) {
                 if ((LocalDate.parse(dateFormat.format(campaignDetails.getTimestamp("effective_date"))).compareTo(customDate)) <= 0 && (LocalDate.parse(dateFormat.format(campaignDetails.getTimestamp("expiration_date"))).compareTo(customDate)) >= 0) {
                     Map<String, Object> campaign = new HashMap<>();
@@ -191,8 +198,9 @@ public class CampaignService extends StepUtils {
      * @param campaignPeriodType to update mbmoney campaign details
      */
     private static void updateCampaignDetails(String campaignPeriodType) {
-        if(customDate == null)
+        if (customDate == null) {
             customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
+        }
         List<Map<String, Object>> newCampaignData = new ArrayList<>();
         Map<String, Object> earnCampaign = new HashMap<>();
         Map<String, Object> redeemCampaign = new HashMap<>();
@@ -269,8 +277,9 @@ public class CampaignService extends StepUtils {
 
         try {
             String sqlQuery = campaignQueries.getJSONObject("mb_money").getString("update_mb_money_campaign");
-            if(statement == null)
+            if (statement == null) {
                 setupConnection();
+            }
 
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setTimestamp(1, Timestamp.valueOf(effectiveStart));
@@ -289,8 +298,9 @@ public class CampaignService extends StepUtils {
      */
     private static void disableOtherCampaign(String name) {
         Map<String, Object> activeCampaigns = getCampaignDetails(name, false);
-        if(customDate == null)
+        if (customDate == null) {
             customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
+        }
         if (!activeCampaigns.isEmpty()) {
             updateCampaignDates(parentCampaignName, (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
             updateCampaignDates((parentCampaignName.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn")), (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
@@ -309,8 +319,9 @@ public class CampaignService extends StepUtils {
 
         try {
             String sqlQuery = campaignQueries.getJSONObject("mb_money").getString("mb_money_campaign_details");
-            if(statement == null)
+            if (statement == null) {
                 setupConnection();
+            }
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, campaignType);
             ResultSet rs = preparedStatement.executeQuery();
@@ -324,7 +335,7 @@ public class CampaignService extends StepUtils {
                     campaignDetails.put("effectiveDate", rs.getTimestamp("effective_date"));
                     campaignDetails.put("expirationDate", rs.getTimestamp("expiration_date"));
                 }
-            } else if (insertCampaignFlag){
+            } else if (insertCampaignFlag) {
                 insertCampaignDetails();
                 campaignDetails = getCampaignDetails(campaignType, false);
             }
@@ -342,18 +353,19 @@ public class CampaignService extends StepUtils {
             JSONArray campaignConfigurationQueries = campaignQueries.getJSONObject(queryPath).getJSONArray("insert_campaign_configuration");
             JSONArray campaignExclusionsQueries = campaignQueries.getJSONObject("mb_money").getJSONArray("insert_campaign_exclusions");
             JSONArray campaignAttributesQueries = campaignQueries.getJSONObject(queryPath).getJSONArray("insert_campaign_attributes");
-            if(statement == null)
+            if (statement == null) {
                 setupConnection();
+            }
             for (int index = 0; index < campaignConfigurationQueries.length(); index++)
                 statement.executeUpdate(campaignConfigurationQueries.getString(index));
-            for (int index = 0; index < campaignExclusionsQueries.length(); index++){
+            for (int index = 0; index < campaignExclusionsQueries.length(); index++) {
                 PreparedStatement preparedStatement = connection.prepareStatement(campaignExclusionsQueries.getString(index));
                 preparedStatement.setString(1, earnPeriodType);
                 preparedStatement.executeUpdate();
             }
             for (int index = 0; index < campaignAttributesQueries.length(); index++)
                 statement.executeUpdate(campaignAttributesQueries.getString(index));
-            System.out.println("Inserted "+campaignName+" campaign details !!");
+            System.out.println("Inserted " + campaignName + " campaign details !!");
         } catch (JSONException | SQLException e) {
             System.err.println("Unable to insert Campaign details: " + e);
         }
@@ -389,7 +401,7 @@ public class CampaignService extends StepUtils {
     private static void clearShopAppCampaignCache() {
         String url = "/account/campaigncontent?removeCache=true";
         try {
-            Response response = RESTOperations.doGET(MainRunner.url.replace("http:","https:") + url, null);
+            Response response = RESTOperations.doGET(MainRunner.url.replace("http:", "https:") + url, null);
             if (response.getStatus() != 302) {
                 throw new Exception("ShopApp MBMoney cache is not cleared properly");
             }
@@ -416,9 +428,10 @@ public class CampaignService extends StepUtils {
     /*
         To define other campaign details.
      */
-    private static void setCampaignInfo(){
-        earnPeriodType = campaignName.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn");;
-        redeemPeriodType = campaignName.contains("ICW") ? "ICWMRedeem" :  (macys() ? "MRedeem" : "BRedeem");
+    private static void setCampaignInfo() {
+        earnPeriodType = campaignName.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn");
+        ;
+        redeemPeriodType = campaignName.contains("ICW") ? "ICWMRedeem" : (macys() ? "MRedeem" : "BRedeem");
         parentCampaignName = campaignName.contains("ICW") ? "ICWMoney" : (macys() ? "MMoney" : "BMoney");
         campaignCode = (campaignName.contains("ICW") ? "ICW" : (macys() ? "MMON" : "BMON"));
         queryPath = (campaignName.contains("ICW") ? "icw" : "mb") + "_money";

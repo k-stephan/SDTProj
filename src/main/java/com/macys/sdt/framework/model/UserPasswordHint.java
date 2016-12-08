@@ -12,16 +12,16 @@ public class UserPasswordHint {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String question;
 
-    public static UserPasswordHint getDefaultUserPasswordHint() {
-        return new UserPasswordHint(1L, "My Name");
-    }
-
     public UserPasswordHint() {
     }
 
     public UserPasswordHint(Long id, String answer) {
         this.id = id;
         this.answer = answer;
+    }
+
+    public static UserPasswordHint getDefaultUserPasswordHint() {
+        return new UserPasswordHint(1L, "My Name");
     }
 
     public Long getId() {

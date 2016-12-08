@@ -7,7 +7,7 @@ public class LoyalistDetailsTest {
 
     private LoyalistDetails loyalistDetails;
 
-    public LoyalistDetailsTest()    {
+    public LoyalistDetailsTest() {
         loyalistDetails = new LoyalistDetails();
     }
 

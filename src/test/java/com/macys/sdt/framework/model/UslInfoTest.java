@@ -6,7 +6,8 @@ import org.junit.Test;
 public class UslInfoTest {
 
     private UslInfo uslInfo;
-    public UslInfoTest()    {
+
+    public UslInfoTest() {
         uslInfo = new UslInfo();
     }
 
