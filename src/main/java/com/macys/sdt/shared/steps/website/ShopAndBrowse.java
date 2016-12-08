@@ -17,6 +17,7 @@ import com.macys.sdt.shared.utils.CommonUtils;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 
@@ -1102,6 +1103,21 @@ public class ShopAndBrowse extends StepUtils {
                     Assert.fail("More than one alternative images are not available for selected product");
                 }
                 break;
+        }
+    }
+
+    @When("^I select a predefined orderable random product$")
+    public void I_select_a_predefined_orderable_random_product() throws Throwable {
+        String selector = ("category_browse.product_thumbnails_container");
+        String[] predefined_product_ids = {"78600", "22804", "22805", "86800"};
+        List<WebElement> elements = Elements.findElements(Elements.element(selector));
+
+        for (WebElement el : elements) {
+            String id = el.getAttribute("id");
+            if (id != null && ArrayUtils.contains(predefined_product_ids, id)) {
+                Clicks.click(el);
+                break;
+            }
         }
     }
 }

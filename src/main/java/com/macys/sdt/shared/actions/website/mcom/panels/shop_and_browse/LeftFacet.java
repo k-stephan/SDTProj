@@ -44,6 +44,7 @@ public class LeftFacet extends StepUtils {
 
     public static void collapseFacet(String facet) {
         if (isExpanded(facet))
+            Wait.untilElementPresent(getHeader(facet));
             Clicks.click(getHeader(facet));
     }
 

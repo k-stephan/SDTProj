@@ -118,6 +118,7 @@ public class Facets extends StepUtils {
 
     @When("^I select \"([^\"]*)\" item from \"([^\"]*)\" facet on left nav$")
     public void I_select_item_from_facet_on_left_nav(String selected_item, String facet) throws Throwable {
+        pausePageHangWatchDog();
         if (Elements.elementPresent(Elements.paramElement("left_facet.facet_div", facet))) {
             LeftFacet.selectItemFromFacet(selected_item, facet);
         } else if (Elements.elementPresent("facet_chart.facet_div")) {
