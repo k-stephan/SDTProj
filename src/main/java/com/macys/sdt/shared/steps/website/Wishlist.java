@@ -89,7 +89,7 @@ public class Wishlist extends StepUtils {
     @Then("^I should see \"([^\"]*)\" in product line items in wishlist page$")
     public void i_should_see_in_product_line_items_in_wishlist_page(String product) throws Throwable {
         pausePageHangWatchDog();
-        if (Wait.secondsUntilElementPresent("wish_list.item_links", 5))
+        if (!Wait.secondsUntilElementPresent("wish_list.item_links", 5))
             Navigate.browserRefresh();
         List<WebElement> plist = Elements.findElements("wish_list.item_links");
         Boolean found = plist.stream().anyMatch(link -> link.getText().equalsIgnoreCase(product));
@@ -109,20 +109,9 @@ public class Wishlist extends StepUtils {
         Assert.assertTrue("ERROR-DATA: Unable to find available products in the wishlist", Elements.elementPresent("wish_list.add_to_bag_btn"));
         Clicks.clickRandomElement("wish_list.add_to_bag_btn");
         Wait.untilElementPresent("wish_list.add_to_bag_dialog");
-        Assert.assertTrue("ERROR-ENV: Add to bag Dialog is not presented", Elements.elementPresent("wish_list.add_to_bag_dialog"));
-        switch (action.toLowerCase()) {
-            case "continue shopping":
-                Clicks.clickIfPresent("wish_list.continue_shopping");
-                break;
-            case "checkout":
-                Clicks.clickIfPresent("wish_list.checkout");
-                break;
-            case "close":
-                Clicks.clickIfPresent("wish_list.overlay_close");
-                break;
-            default:
-                Assert.fail("Invalid option found");
-                break;
-        }
+        Assert.assertTrue("ERROR - ENV : Add to bag Dialog is not presented", Elements.elementPresent("wish_list.add_to_bag_dialog"));
+        action = action.equals("close") ? "overlay close" : action;
+        action = action.replaceAll(" ", "_");
+        Clicks.clickIfPresent("wish_list." + action);
     }
 }
