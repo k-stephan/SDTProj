@@ -408,6 +408,7 @@ public class MainRunner {
         } catch (Exception e) {
             System.err.println("error in resetDriver : " + e.getMessage());
             driver = null;
+            System.out.println("driver set to null in catch");
         }
     }
 
