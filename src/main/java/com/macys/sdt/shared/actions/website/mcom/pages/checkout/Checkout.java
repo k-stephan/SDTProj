@@ -595,6 +595,8 @@ public class Checkout extends StepUtils {
             click(page + ".save_card");
             secondsUntilElementNotPresent(page + ".card_phone_area_code", 5);
         }*/
+        // adding wait time, as it is consistently failing in jenkins
+        Wait.secondsUntilElementPresent(page + ".security_code", 5);
         if (Elements.elementPresent(page + ".security_code") && Elements.getText(page + ".security_code").isEmpty()) {
             TextBoxes.typeTextbox(page + ".security_code", creditCard.getSecurityCode());
         }
