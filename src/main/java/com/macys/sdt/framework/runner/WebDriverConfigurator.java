@@ -44,7 +44,7 @@ public class WebDriverConfigurator {
         if (useSauceLabs) {
             driver = initSauceLabs(capabilities);
 
-            // print the session id of saucelabs for tracking job on sauceLabs 
+            // print the session id of saucelabs for tracking job on sauceLabs
             if (driver instanceof RemoteWebDriver) {
                 System.out.println("Link to your job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
             } else {

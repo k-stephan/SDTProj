@@ -186,7 +186,9 @@ public class DATagCollector {
         }
     }
 
-    // flush tag collection file per each scenario
+    /**
+     *  flush tag collection file per each scenario
+     */
     public static void flush() {
         // no monitor run, skip
         if (!tag_collection_started) {

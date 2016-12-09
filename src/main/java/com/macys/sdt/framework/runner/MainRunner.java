@@ -395,7 +395,7 @@ public class MainRunner {
                 if (appTest) {
                     driver.quit();
                 } else {
-                    driver.close();
+//                    driver.close();
                     driver.quit();
                     System.out.println("driver quit");
                     if (ie()) { // workaround for IE browser closing
@@ -407,6 +407,7 @@ public class MainRunner {
             System.out.println("driver set to null");
         } catch (Exception e) {
             System.err.println("error in resetDriver : " + e.getMessage());
+            driver = null;
         }
     }
 
