@@ -57,7 +57,7 @@ public class ElementsTests {
     @Test(expected = NoSuchElementException.class)
     public void testGetRandomElementNegative() throws Exception {
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assert.assertNotNull(Elements.getRandomElement("ui_standards.not_present"));
+        Elements.getRandomElement("ui_standards.not_present");
     }
 
     @Test

@@ -12,5 +12,11 @@
   "left_nav_links":               "className, bold",
   "not_present":                  "id, forNegativeTest",
   "param_element":                "className, row_{arg1}_{arg2}",
-  "multi_value":                  "linkText, Some Text || name, someName"
+  "multi_value":                  "linkText, Some Text || name, someName",
+  "foundation_link":              "linkText, Foundation",
+  "foundation_components_link":   "linkText, Foundation Components",
+  "accessibility_link":           "linkText, Accessibility",
+  "accessibility_remarks_link":   "linkText, General Accessibility Remarks",
+  "check_box":                    "id, Chkbox",
+  "check_box_label":              "id, arialabel_Chkbox"
 }
