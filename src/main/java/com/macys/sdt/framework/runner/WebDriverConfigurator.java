@@ -43,6 +43,13 @@ public class WebDriverConfigurator {
         WebDriver driver;
         if (useSauceLabs) {
             driver = initSauceLabs(capabilities);
+
+            // print the session id of saucelabs for tracking job on sauceLabs
+            if (driver instanceof RemoteWebDriver) {
+                System.out.println("Link to your job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
+            } else {
+                System.out.println("no RemoteWebDriver instance : " + driver);
+            }
         } else if (useAppium) {
             driver = initAppiumDevice(capabilities);
         } else {

@@ -470,13 +470,6 @@ public class MainRunner {
                 driver = WebDriverConfigurator.initDriverWithProxy();
             }
 
-            // print the session id of saucelabs for tracking job on sauceLabs
-            if (useSauceLabs) {
-                if (driver instanceof RemoteWebDriver) {
-                    System.out.println("Link to your job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
-                }
-            }
-
             try {
                 if (!useAppium) {
                     if (browser.equals("safari")) {
