@@ -390,18 +390,24 @@ public class MainRunner {
      * @param quit whether to close the driver
      */
     public static void resetDriver(boolean quit) {
-        if (quit) {
-            if (appTest) {
-                driver.quit();
-            } else {
-                driver.close();
-                driver.quit();
-                if (ie()) { // workaround for IE browser closing
+        try {
+            if (quit) {
+                if (appTest) {
                     driver.quit();
+                } else {
+                    driver.close();
+                    driver.quit();
+                    System.out.println("driver quit");
+                    if (ie()) { // workaround for IE browser closing
+                        driver.quit();
+                    }
                 }
             }
+            driver = null;
+            System.out.println("driver set to null");
+        } catch (Exception e) {
+            System.err.println("error in resetDriver : " + e.getMessage());
         }
-        driver = null;
     }
 
     /**
