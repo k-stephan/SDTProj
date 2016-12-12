@@ -1110,7 +1110,7 @@ public class ShopAndBrowse extends StepUtils {
     public void I_select_a_predefined_orderable_random_product() throws Throwable {
         String selector = ("category_browse.product_thumbnails_container");
         String[] predefined_product_ids = {"78600", "22804", "22805", "86800"};
-        List<WebElement> elements = Elements.findElements(Elements.element(selector));
+        List<WebElement> elements = Elements.findElements(selector);
 
         for (WebElement el : elements) {
             String id = el.getAttribute("id");

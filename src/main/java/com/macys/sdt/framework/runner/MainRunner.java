@@ -371,7 +371,7 @@ public class MainRunner {
             index = parts.indexOf("features");
             if (index < 2) {
                 Assert.fail("Unable to determine project by given environment variables. Please" +
-                        "add an environment variable \"sdt_project\" (previously called \"project\") " +
+                        "add an environment variable \"sdt_project\" " +
                         "with project name in format \"<domain>.<project>\"");
             }
             project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
@@ -652,6 +652,15 @@ public class MainRunner {
 
         // condense any duplicate feature files
         HashMap<String, ArrayList<String>> featureLines = new HashMap<>();
+        // remove windows drive to avoid incorrect matches on ":"
+        final String drive = scenarioList.get(0).matches("[A-Z]:.*?") ? scenarioList.get(0).substring(0, 2) : null;
+        if (drive != null) {
+            for (i = 0; i < scenarioList.size(); i++) {
+                String scenario = scenarioList.remove(i);
+                scenarioList.add(i, scenario.substring(2));
+            }
+        }
+
         for (String scenario : scenarioList) {
             int lineIndex = scenario.lastIndexOf(':');
             if (lineIndex == -1) {
@@ -674,6 +683,13 @@ public class MainRunner {
         scenarioList.addAll(featureLines.keySet().stream()
                 .map((key) -> key + ":" + StringUtils.join(featureLines.get(key), ":"))
                 .collect(Collectors.toList()));
+
+        if (drive != null) {
+            for (i = 0; i < scenarioList.size(); i++) {
+                String scenario = scenarioList.remove(i);
+                scenarioList.add(i, drive + scenario);
+            }
+        }
 
         return scenarioList;
     }

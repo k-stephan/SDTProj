@@ -48,7 +48,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookie(String name, String value) {
-        return !MainRunner.useAppium && ie() ? addCookieJavascript(name, value) : addCookie(name, value, "/", getExpiry());
+        return !MainRunner.useAppium && (ie() || edge()) ? addCookieJavascript(name, value) : addCookie(name, value, "/", getExpiry());
     }
 
     /**
@@ -68,7 +68,7 @@ public class Cookies {
         if (expiry == null) {
             expiry = getExpiry();
         }
-        if (ie()) {
+        if (ie() || edge()) {
             addCookieJavascript(name, value, path, expiry);
         } else {
             try {
@@ -113,7 +113,7 @@ public class Cookies {
             return;
         }
 
-        if (ie() || safari()) {
+        if (ie() || safari() || edge()) {
             deleteAllCookiesJavascript();
         } else {
             MainRunner.getWebDriver().manage().deleteAllCookies();
@@ -230,7 +230,7 @@ public class Cookies {
         }
 
         try {
-            if (ie() || safari()) {
+            if (ie() || safari() || edge()) {
                 String cookieValue = "";
                 for (String cookie : ((String) Navigate.execJavascript("return document.cookie")).split("; "))
                     if (cookie.split("=")[0].equals(name)) {

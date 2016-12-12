@@ -399,7 +399,7 @@ public class WebDriverConfigurator {
             case "ie":
                 return "11.0";
             case "edge":
-                return "20.10240";
+                return "25.10586";
             case "safari":
                 String version;
                 if (remoteOS == null) {
