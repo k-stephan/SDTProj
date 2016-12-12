@@ -4,6 +4,8 @@ import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 /**
  * These test can be executed from InteractionsSuiteTest only, hence the class name is ending with 'Tests' instead of 'Test'
@@ -16,6 +18,23 @@ public class ClicksTests {
         Assume.assumeTrue("Test element not present - Ignoring Click Test", Wait.untilElementPresent("ui_standards.buttons_link"));
         Clicks.click("ui_standards.buttons_link");
         Assert.assertTrue(Wait.untilElementPresent("ui_standards.primary_buttons_link") || MainRunner.getCurrentUrl().contains("#Buttons"));
+    }
+
+   @Test(expected = NoSuchElementException.class)
+    public void testClickNegative() throws Exception {
+       Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+       WebElement element = Elements.findElement("ui_standards.not_present");
+       Clicks.click(element);
+   }
+
+    @Test
+    public void testClickRandomElement() throws Exception {
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Navigate.visit(MainRunner.url);
+        Assume.assumeTrue("Test element not present - Ignoring ClickRandomElement Test", Wait.untilElementPresent("ui_standards.left_nav_links"));
+        Clicks.clickRandomElement("ui_standards.left_nav_links");
+        Wait.untilElementPresent("ui_standards.left_sub_nav");
+        Assert.assertTrue(Elements.anyPresent("ui_standards.left_sub_nav") || MainRunner.getCurrentUrl().contains("#"));
     }
 
     @Test

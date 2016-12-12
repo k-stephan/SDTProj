@@ -17,6 +17,7 @@
   "foundation_components_link":   "linkText, Foundation Components",
   "accessibility_link":           "linkText, Accessibility",
   "accessibility_remarks_link":   "linkText, General Accessibility Remarks",
+  "left_sub_nav":                 "className, side-sub-nav",
   "check_box":                    "id, Chkbox",
   "check_box_label":              "id, arialabel_Chkbox"
 }
