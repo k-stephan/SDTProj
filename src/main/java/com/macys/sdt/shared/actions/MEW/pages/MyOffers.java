@@ -33,6 +33,25 @@ public class MyOffers extends StepUtils {
         }
     }
 
+    public static void addValidOffers(String code) {
+        Navigate.browserRefresh();
+        TextBoxes.typeTextbox("oc_my_wallet.input_offer_code", code);
+        Clicks.javascriptClick("oc_my_wallet.add_offer_code_button");
+        By el = Elements.element("oc_my_wallet.add_offer_error_msg");
+        if (Elements.elementPresent(el)) {
+            if (Elements.findElement(el).getText().contains("This offer is already in your wallet")) {
+                System.out.print("Same offer is already added to you wallet. Please use it for checkout");
+                Navigate.browserBack();
+                Navigate.browserRefresh();
+                if (!Wait.untilElementPresent("oc_my_wallet.available_offers")) {
+                    Assert.fail("Add offers are not displaying in the My Wallet Page");
+                }
+            } else if (Elements.findElement(el).getText().contains("Sorry, but we don't recognize the promo code you entered")) {
+                Assert.fail("ERROR-DATA: Added offer is not valid. Please use a valid offer");
+            }
+        }
+    }
+
     public static void addOffers() {
         try {
             if (prodEnv()) {
