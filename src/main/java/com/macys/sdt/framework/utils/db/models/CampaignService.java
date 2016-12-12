@@ -302,9 +302,9 @@ public class CampaignService extends StepUtils {
             customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
         }
         if (!activeCampaigns.isEmpty()) {
-            updateCampaignDates(parentCampaignName, (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
-            updateCampaignDates((parentCampaignName.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn")), (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
-            updateCampaignDates((parentCampaignName.contains("ICW") ? "ICWMRedeem" : (macys() ? "MRedeem" : "BRedeem")), (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
+            updateCampaignDates(name, (customDate.minusDays(4)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
+            updateCampaignDates((name.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn")), (customDate.minusDays(4)).toString() + " 00:00:00.0", (customDate.minusDays(3)).toString() + " 23:59:59.0");
+            updateCampaignDates((name.contains("ICW") ? "ICWMRedeem" : (macys() ? "MRedeem" : "BRedeem")), (customDate.minusDays(2)).toString() + " 00:00:00.0", (customDate.minusDays(1)).toString() + " 23:59:59.0");
         }
     }
 
@@ -430,7 +430,6 @@ public class CampaignService extends StepUtils {
      */
     private static void setCampaignInfo() {
         earnPeriodType = campaignName.contains("ICW") ? "ICWMEarn" : (macys() ? "MEarn" : "BEarn");
-        ;
         redeemPeriodType = campaignName.contains("ICW") ? "ICWMRedeem" : (macys() ? "MRedeem" : "BRedeem");
         parentCampaignName = campaignName.contains("ICW") ? "ICWMoney" : (macys() ? "MMoney" : "BMoney");
         campaignCode = (campaignName.contains("ICW") ? "ICW" : (macys() ? "MMON" : "BMON"));

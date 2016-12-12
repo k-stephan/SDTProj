@@ -617,6 +617,8 @@ public class CheckoutSteps extends StepUtils {
     @When("^I update the bag to meet the mbMoney earn threshold if the bag not met threshold$")
     public void i_update_the_bag_to_meet_the_mbMoney_earn_threshold_if_the_bag_not_met_threshold() {
         pausePageHangWatchDog();
+        if (!onPage("shopping_bag"))
+            Navigate.visit("shopping_bag");
         ShoppingBag.removeBonusItemsFromBag();
         Navigate.browserRefresh();
         Map<String, Object> mbmoneyEstimatedData = ShoppingBag.getMbmoneyEarnInformationBasedOnBagTotal(ShoppingBag.getAllProductDetails(), ShoppingBag.subtotal());
