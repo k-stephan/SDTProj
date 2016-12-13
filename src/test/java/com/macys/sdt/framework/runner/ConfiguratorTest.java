@@ -4,6 +4,7 @@ package com.macys.sdt.framework.runner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -93,7 +94,7 @@ public class ConfiguratorTest {
         MainRunner.brand = null;
     }
 
-    @Test
+    @Test @Ignore("Need to modify feature file path, to make this test work in all machines.")
     public void testScenarioRecognition() {
         MainRunner.scenarios = "C:\\Repos\\SDT_Framework\\src\\test\\java\\com\\macys\\sdt\\framework\\Features\\website\\mcom\\test.feature " +
                 "C:\\Repos\\SDT_Framework\\src\\test\\java\\com\\macys\\sdt\\framework\\Features\\website\\mcom\\test2.feature";
