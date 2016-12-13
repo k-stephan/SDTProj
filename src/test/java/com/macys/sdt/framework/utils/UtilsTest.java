@@ -1,11 +1,17 @@
 package com.macys.sdt.framework.utils;
 
+import com.macys.sdt.framework.runner.MainRunner;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class UtilsTest {
 
@@ -17,6 +23,7 @@ public class UtilsTest {
     @Test
     public void testReadTextFile() throws Exception {
         File file = new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/valid_promo_codes.json");
+        Assume.assumeTrue(file.exists());
         Assert.assertNotNull(Utils.readTextFile(file));
     }
 
@@ -28,7 +35,7 @@ public class UtilsTest {
         Assert.assertTrue(dir.exists());
         Utils.createDirectory(dirName, true);
         Assert.assertTrue(dir.exists());
-        Assert.assertTrue(dir.delete());
+        Assume.assumeTrue(dir.delete());
     }
 
     @Test
@@ -58,7 +65,7 @@ public class UtilsTest {
         File file = new File("testWriteSmallBinaryFile");
         Utils.writeSmallBinaryFile(data.getBytes(), file);
         Assert.assertTrue(file.exists());
-        Assert.assertTrue(file.delete());
+        Assume.assumeTrue(file.delete());
     }
 
     @Test
@@ -72,7 +79,7 @@ public class UtilsTest {
         File file = new File("testWriteBinaryFile");
         Utils.writeBinaryFile(data.getBytes(), file, false);
         Assert.assertTrue(file.exists());
-        Assert.assertTrue(file.delete());
+        Assume.assumeTrue(file.delete());
     }
 
     @Test
@@ -140,5 +147,158 @@ public class UtilsTest {
         Assert.assertFalse(Utils.isWindows8());
         Assert.assertTrue(Utils.isLinux());
         System.setProperty("os.name", osName);
+    }
+
+    @Test
+    public void testDesktopCapture() throws Exception {
+        File imgFile = new File("desktopCapture.png");
+        FileOutputStream outputStream = new FileOutputStream(imgFile);
+        Utils.desktopCapture(outputStream);
+        outputStream.close();
+        Assert.assertTrue(imgFile.exists());
+        Assume.assumeTrue(imgFile.delete());
+    }
+
+    @Test
+    public void testGetResourceFile() throws Exception {
+        Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/orderable_products.json").exists());
+
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.project = "framework";
+        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
+        Assert.assertTrue(Utils.getResourceFile("orderable_products.json").exists());
+
+        //fallback to website resources
+        MainRunner.currentURL = "http://m.qa0codemacys.fds.com";
+        Assert.assertTrue(Utils.getResourceFile("orderable_products.json").exists());
+
+        //no file found
+        Assert.assertFalse(Utils.getResourceFile("not_present.json").exists());
+
+        //absolute file path
+        Assert.assertTrue(Utils.getResourceFile("src/test/java/com/macys/sdt/framework/resources/data/website/mcom", "orderable_products.json").exists());
+
+        //absolute file path, no file found
+        Assert.assertFalse(Utils.getResourceFile("src/test/java/com/macys/sdt/framework/resources/data/website/mcom", "not_present.json").exists());
+
+        MainRunner.url = null;
+        MainRunner.currentURL = "";
+        MainRunner.project = null;
+        MainRunner.projectDir = null;
+    }
+
+    @Test
+    public void testListToString() throws Exception {
+        List<String> list = new ArrayList<>();
+        list.add("Hello");
+        list.add("World!");
+        list.add("Testing");
+        String strList = Utils.listToString(list, " ", new String[]{"!"});
+        Assert.assertEquals("Hello Testing", strList);
+    }
+
+    @Test
+    public void testReadSmallBinaryFile() throws Exception {
+        File file = new File("readSmallBinaryFile");
+        Assert.assertNull(Utils.readSmallBinaryFile(file));
+        byte[] data = "some test to write in a binary file".getBytes();
+        Assume.assumeTrue(Utils.writeSmallBinaryFile(data, file));
+        Assert.assertArrayEquals(data, Utils.readSmallBinaryFile(file));
+        Assume.assumeTrue(file.delete());
+    }
+
+    @Test
+    public void testJsonArrayToList() throws Exception {
+        JSONArray jArray = new JSONArray("[{\"a\": 1, \"b\": 2}, {\"c\": 3, \"d\": 4}]");
+        ArrayList<JSONObject> aList = Utils.jsonArrayToList(jArray);
+        Assert.assertFalse(aList.isEmpty());
+        Assert.assertEquals("{\"a\":1,\"b\":2}", aList.get(0).toString());
+        Assert.assertEquals("{\"c\":3,\"d\":4}", aList.get(1).toString());
+    }
+
+    @Test
+    public void testGetEEUrl() throws Exception {
+        Assert.assertNotNull(Utils.getEEUrl());
+    }
+
+    @Test
+    public void testGetSqlQueries() throws Exception {
+        Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/queries.json").exists());
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.project = "framework";
+        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
+
+        JSONObject sqlQueries = Utils.getSqlQueries();
+        Assert.assertNotNull(sqlQueries);
+        Assert.assertNotNull(sqlQueries.get("custom_date"));
+
+        MainRunner.url = null;
+        MainRunner.project = null;
+        MainRunner.projectDir = null;
+    }
+
+    @Test
+    public void testGetVirtualReturns() throws Exception {
+        Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/return_orders.json").exists());
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.project = "framework";
+        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
+
+        HashMap<String, String> options = new HashMap<>();
+        options.put("return_order", "intransit");
+        JSONObject order = Utils.getVirtualReturns(options);
+        Assert.assertNotNull(order);
+        Assert.assertEquals("UNITTESTIN", order.get("order_number"));
+
+        MainRunner.url = null;
+        MainRunner.project = null;
+        MainRunner.projectDir = null;
+    }
+
+    @Test
+    public void testGetOrderNumber() throws Exception {
+        Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/order_mods_data.json").exists());
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.project = "framework";
+        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
+
+        String orderNumber = Utils.getOrderNumber("processing");
+        Assert.assertNotNull(orderNumber);
+        Assert.assertEquals("UNITTESTP", orderNumber);
+
+        MainRunner.url = null;
+        MainRunner.project = null;
+        MainRunner.projectDir = null;
+    }
+
+    @Test
+    public void testDecryptPassword() throws Exception {
+        Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/password.json").exists());
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.project = "framework";
+        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
+
+        String pwd = Utils.decryptPassword("11_AU0QXqYqq/tRJXonlBjwew==");
+        Assert.assertNotNull(pwd);
+        Assert.assertEquals("Macys123", pwd);
+
+        MainRunner.url = null;
+        MainRunner.project = null;
+        MainRunner.projectDir = null;
+    }
+
+    @Test
+    public void testGetContextualizeMedia() throws Exception {
+        Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/contextualize_media.json").exists());
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.project = "framework";
+        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
+
+        Assert.assertNotNull(Utils.getContextualizeMedia());
+
+        MainRunner.url = null;
+        MainRunner.project = null;
+        MainRunner.projectDir = null;
+
     }
 }

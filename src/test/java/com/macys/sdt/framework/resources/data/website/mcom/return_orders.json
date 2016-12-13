@@ -1,0 +1,18 @@
+{
+  "macys": [
+    {
+      "return_order": "submitted",
+      "order_number": "UNITTESTS",
+      "email": "TDM@MACYS.COM",
+      "shipping_zip_code": "22102",
+      "refund_method": "orignal_payment"
+    },
+    {
+      "return_order": "intransit",
+      "order_number": "UNITTESTIN",
+      "email": "TEST@MACYS.COM",
+      "carrier_tracking_nbr": "1ZE153W40300214381",
+      "shipping_zip_code": "22102"
+    }
+  ]
+}

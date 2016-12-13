@@ -1,0 +1,11 @@
+{
+  "GROUP": {
+    "AD": "contextualize_media",
+    "SLIDESHOW": "non_contextualize_media"
+  },
+  "COMPONENT": {
+    "WIDGET": "non_contextualize_media",
+    "TEXT": "row_contextualize_media",
+    "HORIZONTAL_RULE": "row_contextualize_media"
+  }
+}
