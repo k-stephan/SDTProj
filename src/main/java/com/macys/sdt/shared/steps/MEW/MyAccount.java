@@ -256,6 +256,16 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    @And("^I add a offer \"([^\"]*)\" to my wallet using mobile website$")
+    public void I_add_a_offer_to_my_wallet_using_mobile_website(String code) throws Throwable {
+        if (Elements.elementPresent("oc_my_wallet.available_offers")) {
+            MyOffers.deleteOffers();
+            MyOffers.addValidOffers(code);
+        } else {
+            MyOffers.addValidOffers(code);
+        }
+    }
+
     @And("^I remove a valid offer to my wallet using mobile website$")
     public void I_remove_a_valid_offer_to_my_wallet_using_mobile_website() throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.available_offers")) {
