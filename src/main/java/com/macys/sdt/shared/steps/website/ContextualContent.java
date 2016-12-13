@@ -43,8 +43,9 @@ public class ContextualContent extends StepUtils {
         List<Map> finalMediaData = new ArrayList<>();
         //Fetching data from db and manipulating is taking significant time, and thus resulting in timeouts
         // as a workaround pause the pagehangwatchdog and resume after this task
-        StepUtils.pausePageHangWatchDog();
+        pausePageHangWatchDog();
         finalMediaData = MediaService.getFinalContextualizeCanvasData(mediaNamesArray.clone(), rowType, contextAttrNames, contextAttrValues);
+        resumePageHangWatchDog();
         System.out.println("--> Captured required media data from database!!");
         for (int index = 0; index < mediaNamesArray.length; index++) {
             mediaNamesArray[index] = ((mediaNamesArray[index].equals("MEDIA_ADS")) ? "THUMBNAIL_GRID" : mediaNamesArray[index]);
@@ -52,6 +53,7 @@ public class ContextualContent extends StepUtils {
             mediaNamesArray[index] = ((mediaNamesArray[index].equals("BANNER_MACHINE_SLIDESHOW")) ? "SLIDESHOW" : mediaNamesArray[index]);
         }
         List<Map> canvasRowData = new ArrayList<>();
+        pausePageHangWatchDog();
         finalMediaData.stream().forEach(media -> {
             if(canvasRowData.stream().anyMatch(row -> (row.get("rowId").toString().equals(media.get("canvasRowId").toString())))){
                 ((List)canvasRowData.stream()
@@ -89,11 +91,15 @@ public class ContextualContent extends StepUtils {
             });
             finalMediaData = newTempData;
         }
+        resumePageHangWatchDog();
         List<String> canvasIds = finalMediaData.stream().map(data -> data.get("canvasId").toString()).distinct().collect(Collectors.toList());
         Assert.assertFalse("ERROR - DATA: Data is not available for expected media:'" + mediaNames + "' in site database", canvasIds.isEmpty());
+        pausePageHangWatchDog();
         List<List> categoryAndCanvasIds = MediaService.getCategoryId(canvasIds, pageType, context, site, tempMediaNames);
         System.out.println("--> Captured required media data from FCC service!!");
+        resumePageHangWatchDog();
         String categoryId = null;
+        pausePageHangWatchDog();
         for (List categoryAndCanvasId : categoryAndCanvasIds) {
             categoryId = categoryAndCanvasId.get(0).toString();
             String canvasId = categoryAndCanvasId.get(1).toString();
@@ -123,7 +129,7 @@ public class ContextualContent extends StepUtils {
         if (!pageType.equals("Home Page"))
             pageVerifications(pageType);
         mainPageType = pageType;
-        StepUtils.resumePageHangWatchDog();
+        resumePageHangWatchDog();
     }
 
     @Then("^I should see \"([^\"]*)\" on the page in \"([^\"]*)\" row$")
