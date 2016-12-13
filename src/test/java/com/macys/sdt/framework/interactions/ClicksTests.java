@@ -96,8 +96,8 @@ public class ClicksTests {
 
     @Test
     public void testClickElementByText() throws Exception {
-        Navigate.visit(MainRunner.url);
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Navigate.visit(MainRunner.url);
         Assume.assumeTrue("Test element not present - Ignoring ClickElementByText Test", Wait.untilElementPresent("ui_standards.left_nav_links"));
         Clicks.clickElementByText("ui_standards.left_nav_links", "Accessibility");
         Assert.assertTrue(Wait.untilElementPresent("ui_standards.accessibility_remarks_link") || MainRunner.getCurrentUrl().contains("#Accessibility"));
@@ -105,8 +105,8 @@ public class ClicksTests {
 
     @Test
     public void testSendEnter() throws Exception {
-        Navigate.visit(MainRunner.url);
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Navigate.visit(MainRunner.url);
         Assume.assumeTrue("TestDemo element not present - Ignoring SendEnter TestDemo", Wait.untilElementPresent("ui_standards.first_name_text_box"));
         Clicks.sendEnter("ui_standards.first_name_text_box");
         Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg") || MainRunner.getCurrentUrl().contains("profile.firstname="));
@@ -114,8 +114,8 @@ public class ClicksTests {
 
     @Test
     public void testSendRandomEnter() throws Exception {
-        Navigate.visit(MainRunner.url);
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Navigate.visit(MainRunner.url);
         Assume.assumeTrue("TestDemo element not present - Ignoring SendRandomEnter TestDemo", Wait.untilElementPresent("ui_standards.first_name_text_box"));
         Clicks.sendRandomEnter("ui_standards.first_name_text_box");
         Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg") || MainRunner.getCurrentUrl().contains("profile.firstname="));
