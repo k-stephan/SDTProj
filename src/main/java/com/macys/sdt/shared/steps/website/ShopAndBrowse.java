@@ -538,6 +538,7 @@ public class ShopAndBrowse extends StepUtils {
             }
         } else {
             try {
+                Wait.secondsUntilElementPresent("recommendations.horizontal_recommendations", 5);
                 Clicks.clickRandomElement("recommendations.horizontal_recommendations");
             } catch (Exception e) {
                 Clicks.clickRandomElement("recommendations.vertical_recommendations");
