@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ClicksTests.class, TextBoxesTests.class, DropDownsTests.class, ElementsTests.class})
+@Suite.SuiteClasses({ClicksTests.class, TextBoxesTests.class, DropDownsTests.class, ElementsTests.class, WaitTests.class})
 public class InteractionsSuiteTest {
 
     static boolean preCondition = false;

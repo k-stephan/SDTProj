@@ -96,7 +96,7 @@ public class UtilsTest {
 
     @Test
     public void testGherkinToJson() throws Exception {
-        String featurePath = "src/test/java/com/macys/sdt/framework/resources/sample_gherkin.feature";
+        String featurePath = "src/test/java/com/macys/sdt/framework/Features/website/mcom/test.feature";
         Assume.assumeTrue(new File(featurePath).exists());
         try {
             Utils.gherkinToJson(false, featurePath);

@@ -1,0 +1,10 @@
+{
+  "url":                          "unit_test_page.html",
+  "verify_page":                  "id, h1",
+
+  "show_after_2s":                "className, show",
+  "hide_after_2s":                "className, hide",
+  "div_show":                     "id, div",
+  "div_hide":                     "id, div2",
+  "goto_button":                  "linkText, Go to submit button"
+}

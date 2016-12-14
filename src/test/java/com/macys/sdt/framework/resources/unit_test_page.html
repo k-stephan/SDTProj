@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SDT Framework Interactions Unit Testing</title>
+    <style>
+        p {
+        display: none;
+        }
+        h1:hover + p {
+        display: block;
+        }
+    </style>
+    <script>
+        function showDiv() {
+            document.getElementById("div").style.visibility = "visible";
+        }
+        function hideDiv() {
+            document.getElementById("div2").style.visibility = "hidden";
+        }
+    </script>
+</head>
+<body style="margin:25px;padding:25px">
+<h1 id="h1">SDT Framework Interactions Unit Testing</h1>
+<p id="p">Unit testing is a software development process in which the smallest testable parts of an application, called
+    units, are individually and independently scrutinized for proper operation.</p>
+<br>
+<br>
+<a id="a" href="#text">Go to text box</a>
+<br>
+<br>
+<a id="a" href="#checkbox">Go to checkbox</a>
+<br>
+<br>
+<a id="a" href="#radio">Go to radio button</a>
+<br>
+<br>
+<a id="a" href="#select">Go to drop down</a>
+<br>
+<br>
+<a id="a" href="#button">Go to submit button</a>
+<br>
+<br>
+<br>
+<button id="show" class="show" value="show" onclick="setTimeout('showDiv()', 2000)" > Show Div After 2 Seconds </button>
+<br>
+<br>
+<div id="div" class="div" style="visibility: hidden">
+    Unit testing is a software development process in which the smallest testable parts of an application, called
+    units, are individually and independently scrutinized for proper operation.
+</div>
+<br>
+<br>
+<button id="hide" class="hide" value="hide" onclick="setTimeout('hideDiv()', 2000)" > Hide Div after 2 seconds </button>
+<br>
+<br>
+<div id="div2" class="div2" style="visibility: visible">
+    Unit testing is a software development process in which the smallest testable parts of an application, called
+    units, are individually and independently scrutinized for proper operation.
+</div>
+<br>
+<br>
+<br>
+<br>
+<form id="form" class="form">
+    <input type="hidden" name="form_id" value="1">
+    <fieldset class="fieldset" id="fieldset">
+        <div class="divh3">
+            <h3 id="h3">Fieldset </h3>
+        </div>
+        <ul class="ul" style="list-style: none;">
+            <li>
+                <br>
+                <label for="textarea" class="textarea-label">Textarea: </label>
+                <textarea name="textarea" id="textarea" class="textarea"></textarea>
+            </li>
+            <li>
+                <br>
+                <label for="text" class="text-label">Text Box: </label>
+                <input type="text" name="text" id="text" value="" class="text">
+            </li>
+            <li>
+                <br>
+                <label class="label">Checkbox: </label>
+                <input type="checkbox" name="checkbox" id="checkbox" value="1" class="checkbox">
+                <label for="checkbox" class="checkbox-label">Option 1 </label>
+                <input type="checkbox" name="checkbox1" id="checkbox1" value="2" class="checkbox1">
+                <label for="checkbox1" class="checkbox1-label">Option 2 </label>
+            </li>
+            <li>
+                <br>
+                <label class="label">Radio: </label>
+                <input type="radio" name="radio" id="radio" value="1" class="radio">
+                <label for="radio" class="radio-label">Option 1 </label>
+                <input type="radio" name="radio" id="radio1" value="2" class="radio1">
+                <label for="radio1" class="radio1-label">Option 2 </label>
+            </li>
+            <li>
+                <br>
+                <label for="select" class="select-label">Drop Down: </label>
+                <select name="select" id="select" class="select">
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                    <option value="4">Option 4</option>
+                </select>
+            </li>
+            <li>
+                <br>
+                <input type="submit" name="submit" id="button" value="Submit" class="button">
+            </li>
+        </ul>
+    </fieldset>
+</form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<a id="a" href="#h1">Go to top</a>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</body>
+</html>
