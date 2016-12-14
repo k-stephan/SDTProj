@@ -586,14 +586,9 @@ public class ShopAndBrowse extends StepUtils {
     }
 
 
-    @When("^I directly add an available and orderable product to my bag$")
-    public void I_directly_add_an_available_and_orderable_product_to_my_bag() throws Throwable {
-        String mcom_avilable_prodcut = "22804";
-        String bcom_avilable_prodcut = "3048";
-        if(macys())
-            CommonUtils.navigateDirectlyToProduct(mcom_avilable_prodcut);
-        else
-            CommonUtils.navigateDirectlyToProduct(bcom_avilable_prodcut);
+    @When("^I directly add an available and orderable product \"([^\"]*)\" to my bag$")
+    public void I_directly_add_an_available_and_orderable_product_to_my_bag(String avilable_prodcut_id) throws Throwable {
+        CommonUtils.navigateDirectlyToProduct(avilable_prodcut_id);
         I_add_product_to_my_bag_from_standard_PDP_Page();
 
         if (onPage("add_to_bag"))

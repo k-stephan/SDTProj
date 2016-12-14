@@ -26,6 +26,13 @@ public class MyWalletSteps extends StepUtils {
         Clicks.clickIfPresent("add_offer_dialog.save_offer");
     }
 
+    @Then("^I add omnichannel offer \"([^\"]*)\" having more than one promo code in wallet$")
+    public void I_add_omnichannel_offer_having_more_than_one_promo_code_in_wallet(String offer) throws Throwable {
+        Clicks.click((macys() ? "oc_my_wallet" : "my_bwallet")+".add_offer_btn");
+        TextBoxes.typeTextbox("add_offer_dialog.promo_code", offer);
+        Clicks.clickIfPresent("add_offer_dialog.save_offer");
+    }
+
     @And("^I verify the promo code added to my wallet page$")
     public void I_verify_the_promo_code_added_to_my_wallet_page() throws Throwable {
         try {
