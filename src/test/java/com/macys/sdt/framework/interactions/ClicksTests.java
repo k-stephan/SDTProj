@@ -3,6 +3,7 @@ package com.macys.sdt.framework.interactions;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -53,6 +54,25 @@ public class ClicksTests {
         Assume.assumeTrue("Test element not present - Ignoring Javascript Click Test", Wait.untilElementPresent("ui_standards.forms_link"));
         Clicks.javascriptClick("ui_standards.forms_link");
         Assert.assertTrue(Wait.untilElementPresent("ui_standards.dropdown_select_menu_link") || MainRunner.getCurrentUrl().contains("#Forms"));
+    }
+
+    @Test @Ignore("WIP")
+    public void testClickLazyElement() throws Exception {
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Navigate.visit(MainRunner.url);
+        Assume.assumeTrue("Test element not present - Ignoring Javascript Click Test", Wait.untilElementPresent("ui_standards.submit_button"));
+        Clicks.clickLazyElement("ui_standards.submit_button");
+        Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg") || MainRunner.getCurrentUrl().contains("Submit="));
+    }
+
+    @Test
+    public void testRandomJavascriptClick() throws Exception {
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Navigate.visit(MainRunner.url);
+        Assume.assumeTrue("Test element not present - Ignoring ClickRandomElement Test", Wait.untilElementPresent("ui_standards.left_nav_links"));
+        Clicks.randomJavascriptClick("ui_standards.left_nav_links");
+        Wait.untilElementPresent("ui_standards.left_sub_nav");
+        Assert.assertTrue(Elements.anyPresent("ui_standards.left_sub_nav") || MainRunner.getCurrentUrl().contains("#"));
     }
 
     @Test

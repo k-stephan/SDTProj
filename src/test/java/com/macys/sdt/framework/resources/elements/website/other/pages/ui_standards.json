@@ -3,6 +3,7 @@
   "verify_page":                  "id, logo-label",
 
   "buttons_link":                 "linkText, Buttons",
+  "submit_button":                "className, submit",
   "primary_buttons_link":         "linkText, Primary Buttons",
   "forms_link":                   "linkText, Forms",
   "dropdown_select_menu_link":    "linkText, Dropdown Select Menu",

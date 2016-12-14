@@ -166,7 +166,7 @@ public class Clicks {
      * @param selector By selector to use
      */
     public static void javascriptClick(String selector) {
-        javascriptClick(Elements.findElement(Elements.element(selector)));
+        javascriptClick(Elements.element(selector));
     }
 
     /**
@@ -200,7 +200,7 @@ public class Clicks {
      * @throws NoSuchElementException thrown if no element is found
      */
     public static void randomJavascriptClick(String selector) throws NoSuchElementException {
-        javascriptClick(Elements.getRandomElement(Elements.element(selector)));
+        randomJavascriptClick(Elements.element(selector));
     }
 
     /**
