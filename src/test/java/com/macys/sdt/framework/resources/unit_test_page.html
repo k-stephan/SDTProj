@@ -1,131 +1,158 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>SDT Framework Interactions Unit Testing</title>
     <style>
-        p {
-        display: none;
-        }
-        h1:hover + p {
-        display: block;
-        }
+      p {
+      display: none;
+      }
+      h1:hover + p {
+      display: block;
+      }
     </style>
     <script>
-        function showDiv() {
-            document.getElementById("div").style.visibility = "visible";
-        }
-        function hideDiv() {
-            document.getElementById("div2").style.visibility = "hidden";
-        }
+      function showDiv() {
+          document.getElementById("div").style.visibility = "visible";
+      }
+      function hideDiv() {
+          document.getElementById("div2").style.visibility = "hidden";
+      }
+      function lazyLoad() {
+          document.getElementById("lazyLoad").style.visibility = "visible";
+      }
+      function updateName() {
+          document.getElementById("change").setAttribute("name", "newName");
+      }
     </script>
-</head>
-<body style="margin:25px;padding:25px">
-<h1 id="h1">SDT Framework Interactions Unit Testing</h1>
-<p id="p">Unit testing is a software development process in which the smallest testable parts of an application, called
-    units, are individually and independently scrutinized for proper operation.</p>
-<br>
-<br>
-<a id="a" href="#text">Go to text box</a>
-<br>
-<br>
-<a id="a" href="#checkbox">Go to checkbox</a>
-<br>
-<br>
-<a id="a" href="#radio">Go to radio button</a>
-<br>
-<br>
-<a id="a" href="#select">Go to drop down</a>
-<br>
-<br>
-<a id="a" href="#button">Go to submit button</a>
-<br>
-<br>
-<br>
-<button id="show" class="show" value="show" onclick="setTimeout('showDiv()', 2000)" > Show Div After 2 Seconds </button>
-<br>
-<br>
-<div id="div" class="div" style="visibility: hidden">
-    Unit testing is a software development process in which the smallest testable parts of an application, called
-    units, are individually and independently scrutinized for proper operation.
-</div>
-<br>
-<br>
-<button id="hide" class="hide" value="hide" onclick="setTimeout('hideDiv()', 2000)" > Hide Div after 2 seconds </button>
-<br>
-<br>
-<div id="div2" class="div2" style="visibility: visible">
-    Unit testing is a software development process in which the smallest testable parts of an application, called
-    units, are individually and independently scrutinized for proper operation.
-</div>
-<br>
-<br>
-<br>
-<br>
-<form id="form" class="form">
-    <input type="hidden" name="form_id" value="1">
-    <fieldset class="fieldset" id="fieldset">
+  </head>
+  <body style="margin:25px;padding:25px" onscroll="lazyLoad()">
+    <h1 id="heading" class="heading">SDT Framework Interactions Unit Testing</h1>
+    <p id="paragraph" class="paragraph">
+        Unit testing is a software development process in which the smallest testable parts of an application, called units, are individually and independently scrutinized for proper operation.
+    </p>
+    <hr>
+    <br>
+    <br>
+    <a id="link" href="#text">Go to text box</a>
+    <br>
+    <br>
+    <a id="link" href="#checkbox">Go to checkbox</a>
+    <br>
+    <br>
+    <a id="link" href="#radio">Go to radio button</a>
+    <br>
+    <br>
+    <a id="link" href="#select">Go to dropdown</a>
+    <br>
+    <br>
+    <a id="link" href="#button">Go to submit button</a>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <br>
+    <button id="show" class="show" value="show" onclick="setTimeout('showDiv()', 2000)" > Show Div After 2 Seconds </button>
+    <br>
+    <br>
+    <div id="div" class="div" style="visibility: hidden">
+      Unit testing is a software development process in which the smallest testable parts of an application, called units, are individually and independently scrutinized for proper operation.
+    </div>
+    <br>
+    <hr>
+    <br>
+    <button id="hide" class="hide" value="hide" onclick="setTimeout('hideDiv()', 2000)" > Hide Div after 2 seconds </button>
+    <br>
+    <br>
+    <div id="div2" class="div2" style="visibility: visible">
+      Unit testing is a software development process in which the smallest testable parts of an application, called units, are individually and independently scrutinized for proper operation.
+    </div>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <a id="change" class="change" name="oldName" onclick="setTimeout('updateName()', 2000)">Click me to change my attribute - name will change after 2 seconds</a>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <br>
+    <img src="" width="145" height="126" alt="Planets Area Map" usemap="#planetmap">
+    <map name="planetmap">
+      <area shape="rect" coords="0,0,82,126" href="#sun" alt="Sun" id="area">
+      <area shape="circle" coords="90,58,3" href="#mercur" alt="Mercury" id="area1">
+      <area shape="circle" coords="124,58,8" href="#venus" alt="Venus" id="area2">
+    </map>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <br>
+    <form id="form" class="form">
+      <input type="hidden" name="form_id" value="1">
+      <fieldset class="fieldset" id="fieldset">
         <div class="divh3">
-            <h3 id="h3">Fieldset </h3>
+          <h3 id="h3">Fieldset </h3>
         </div>
         <ul class="ul" style="list-style: none;">
-            <li>
-                <br>
-                <label for="textarea" class="textarea-label">Textarea: </label>
-                <textarea name="textarea" id="textarea" class="textarea"></textarea>
-            </li>
-            <li>
-                <br>
-                <label for="text" class="text-label">Text Box: </label>
-                <input type="text" name="text" id="text" value="" class="text">
-            </li>
-            <li>
-                <br>
-                <label class="label">Checkbox: </label>
-                <input type="checkbox" name="checkbox" id="checkbox" value="1" class="checkbox">
-                <label for="checkbox" class="checkbox-label">Option 1 </label>
-                <input type="checkbox" name="checkbox1" id="checkbox1" value="2" class="checkbox1">
-                <label for="checkbox1" class="checkbox1-label">Option 2 </label>
-            </li>
-            <li>
-                <br>
-                <label class="label">Radio: </label>
-                <input type="radio" name="radio" id="radio" value="1" class="radio">
-                <label for="radio" class="radio-label">Option 1 </label>
-                <input type="radio" name="radio" id="radio1" value="2" class="radio1">
-                <label for="radio1" class="radio1-label">Option 2 </label>
-            </li>
-            <li>
-                <br>
-                <label for="select" class="select-label">Drop Down: </label>
-                <select name="select" id="select" class="select">
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                </select>
-            </li>
-            <li>
-                <br>
-                <input type="submit" name="submit" id="button" value="Submit" class="button">
-            </li>
+          <li>
+            <br>
+            <label for="textarea" class="textarea-label">Textarea: </label>
+            <textarea name="textarea" id="textarea" class="textarea"></textarea>
+          </li>
+          <li>
+            <br>
+            <label for="text" class="text-label">Text Box: </label>
+            <input type="text" name="text" id="text" value="" class="text">
+          </li>
+          <li>
+            <br>
+            <label class="label">Checkbox: </label>
+            <input type="checkbox" name="checkbox" id="checkbox" value="1" class="checkbox">
+            <label for="checkbox" class="checkbox-label">Option 1 </label>
+            <input type="checkbox" name="checkbox2" id="checkbox2" value="2" class="checkbox2">
+            <label for="checkbox2" class="checkbox2-label">Option 2 </label>
+          </li>
+          <li>
+            <br>
+            <label class="label">Radio: </label>
+            <input type="radio" name="radio" id="radio" value="1" class="radio">
+            <label for="radio" class="radio-label">Option 1 </label>
+            <input type="radio" name="radio" id="radio2" value="2" class="radio2">
+            <label for="radio2" class="radio2-label">Option 2 </label>
+          </li>
+          <li>
+            <br>
+            <label for="select" class="select-label">Drop Down: </label>
+            <select name="select" id="select" class="select">
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+              <option value="4">Option 4</option>
+            </select>
+          </li>
+          <li>
+            <br>
+            <input type="submit" name="submit" id="button" value="Submit" class="button">
+          </li>
         </ul>
-    </fieldset>
-</form>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<a id="a" href="#h1">Go to top</a>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</body>
+      </fieldset>
+    </form>
+    <br>
+    <br>
+    <hr>
+    <div id="lazyLoad" class="lazyLoad" style="visibility: hidden">
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <a id="lazyLoadLink" href="#h1">Go to top</a>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+  </body>
 </html>
