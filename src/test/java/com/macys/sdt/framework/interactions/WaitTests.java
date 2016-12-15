@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -17,14 +16,10 @@ import java.util.List;
  */
 public class WaitTests {
 
-    static String testPageUrl;
-
     @BeforeClass
     public static void setUp() {
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        File htmlFile = new File("src/test/java/com/macys/sdt/framework/resources/unit_test_page.html");
-        Assume.assumeTrue(htmlFile.exists());
-        testPageUrl = "file://" + htmlFile.getAbsolutePath();
+        Assume.assumeTrue(InteractionsSuiteTest.testPageUrl != null);
         MainRunner.debugMode = true;
     }
 
@@ -38,7 +33,7 @@ public class WaitTests {
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(testPageUrl);
+        MainRunner.getWebDriver().get(InteractionsSuiteTest.testPageUrl);
     }
 
     @Test
@@ -137,5 +132,32 @@ public class WaitTests {
         Assume.assumeFalse(Elements.elementPresent("unit_test_page.div_show"));
         Wait.untilElementPresentWithRefresh(Elements.element("unit_test_page.div_show"), Elements.element("unit_test_page.div_hide"));
         Assert.assertTrue(Elements.elementPresent("unit_test_page.div_hide"));
+    }
+
+    @Test
+    public void testUntilElementPresentWithRefreshAndClick() throws Exception {
+        Wait.untilElementPresentWithRefreshAndClick(Elements.element("unit_test_page.div_hide"), Elements.element("unit_test_page.hide_after_2s"));
+        Assert.assertTrue(Wait.untilElementNotPresent("unit_test_page.div_hide"));
+    }
+
+    @Test
+    public void testAttributeChanged() throws Exception {
+        Assume.assumeTrue(Elements.getElementAttribute("unit_test_page.change_attribute", "name").equals("oldName"));
+        Clicks.click("unit_test_page.change_attribute");
+        try {
+            Wait.attributeChanged("unit_test_page.change_attribute", "name", "newName");
+        } catch (Exception e) {
+            Assert.fail("Failed testAttributeChanged : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testForLoading() throws Exception {
+        Clicks.click("unit_test_page.start_loading");
+        try {
+            Wait.forLoading("unit_test_page.loader");
+        } catch (Exception e){
+            Assert.fail("Failed testForLoading : " + e.getMessage());
+        }
     }
 }

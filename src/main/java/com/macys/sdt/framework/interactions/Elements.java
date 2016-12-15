@@ -326,6 +326,22 @@ public class Elements {
     }
 
     /**
+     * Checks if an element is currently visible on the screen using javascript
+     *
+     * <p>
+     * NOTE: This method will not scroll to the element. It will just return true or false.
+     * </p>
+     *
+     * @param el element to check
+     * @return true if element is on the screen and false if element is not in view
+     */
+    public static boolean isElementInView(WebElement el) {
+        return (boolean) Navigate.execJavascript("var position = arguments[0].getBoundingClientRect();" +
+                "var actual = document.elementFromPoint(position.x, position.y);" +
+                "if(actual === arguments[0]) { return true; } else { return false; }", el);
+    }
+
+    /**
      * Retrieves values from page json file and strips any selector type information
      *
      * @param key String selector in format "page_name.element_name"

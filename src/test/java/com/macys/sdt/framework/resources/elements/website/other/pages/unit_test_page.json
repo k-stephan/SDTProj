@@ -1,10 +1,31 @@
 {
   "url":                          "unit_test_page.html",
-  "verify_page":                  "id, h1",
+  "verify_page":                  "id, heading",
 
+  "heading":                      "id, heading",
+  "paragraph":                    "id, paragraph",
+  "links":                        "className, link",
   "show_after_2s":                "className, show",
   "hide_after_2s":                "className, hide",
   "div_show":                     "id, div",
   "div_hide":                     "id, div2",
-  "goto_button":                  "linkText, Go to submit button"
+  "goto_text_box":                "linkText, Go to text box",
+  "goto_checkbox":                "linkText, Go to checkbox",
+  "goto_radio":                   "linkText, Go to radio button",
+  "goto_dropdown":                "linkText, Go to dropdown",
+  "goto_button":                  "linkText, Go to submit button",
+  "goto_image":                   "linkText, Go to image",
+  "goto_top":                     "linkText, Go to top",
+  "lazy_load":                    "id, lazyLoadLink",
+  "text_box":                     "id, text",
+  "text_area":                    "id, textarea",
+  "checkbox":                     "id, checkbox",
+  "radio_button":                 "id, radio",
+  "dropdown":                     "id, dropdown",
+  "submit_button":                "id, button",
+  "area":                         "id, area",
+  "change_attribute":             "id, change",
+  "start_loading":                "className, startLoading",
+  "loader":                       "id, loader",
+  "not_present":                  "id, notPresent"
 }
