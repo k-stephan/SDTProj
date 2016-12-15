@@ -48,7 +48,7 @@ public class CampaignService extends StepUtils {
         if (macys()) {
             disableOtherCampaign((campaignName.contains("ICW") ? "MMoney" : "ICWMMoney"));
         }
-        List<Map<String, Object>> activeCampaigns = getActiveCampaignDetails();
+        List<Map<String, Object>> activeCampaigns = getActiveCampaignDetails(campaignCode);
         boolean earn = false, redeem = false, inBetween = false, outside = false;
         for (Map aCampaign : activeCampaigns) {
             String campaignType = aCampaign.get("name").toString();
@@ -150,7 +150,7 @@ public class CampaignService extends StepUtils {
      *
      * @return active campaign details
      */
-    private static List<Map<String, Object>> getActiveCampaignDetails() {
+    private static List<Map<String, Object>> getActiveCampaignDetails(String campaignCode) {
         List<Map<String, Object>> activeCampaigns = new ArrayList<>();
 
         try {
@@ -163,7 +163,7 @@ public class CampaignService extends StepUtils {
                 customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
             }
             while (campaignDetails.next()) {
-                if ((LocalDate.parse(dateFormat.format(campaignDetails.getTimestamp("effective_date"))).compareTo(customDate)) <= 0 && (LocalDate.parse(dateFormat.format(campaignDetails.getTimestamp("expiration_date"))).compareTo(customDate)) >= 0) {
+                if ((LocalDate.parse(dateFormat.format(campaignDetails.getTimestamp("effective_date"))).compareTo(customDate)) <= 0 && (LocalDate.parse(dateFormat.format(campaignDetails.getTimestamp("expiration_date"))).compareTo(customDate)) >= 0 && campaignCode.equals(campaignDetails.getString("campaign_code"))) {
                     Map<String, Object> campaign = new HashMap<>();
 
                     campaign.put("campaignId", campaignDetails.getString("campaign_id"));
@@ -297,7 +297,7 @@ public class CampaignService extends StepUtils {
      * @param name to updated campaign details
      */
     private static void disableOtherCampaign(String name) {
-        Map<String, Object> activeCampaigns = getCampaignDetails(name, false);
+        List<Map<String, Object>> activeCampaigns = getActiveCampaignDetails((name.contains("ICW") ? "ICW" : (macys() ? "MMON" : "BMON")));
         if (customDate == null) {
             customDate = LocalDate.parse(dateFormat.format(DBUtils.getCustomDate()));
         }

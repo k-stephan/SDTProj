@@ -3,6 +3,7 @@ package com.macys.sdt.shared.steps.website;
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
+import com.macys.sdt.framework.utils.rest.services.ProductService;
 import com.macys.sdt.shared.actions.website.mcom.pages.my_account.CreateProfile;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -113,5 +114,10 @@ public class Wishlist extends StepUtils {
         action = action.equals("close") ? "overlay close" : action;
         action = action.replaceAll(" ", "_");
         Clicks.clickIfPresent("wish_list." + action);
+    }
+
+    @Then("^I verify product unavailability check at MST$")
+    public void iVeriftProductUnavailabilityCheckAtMST() throws Throwable {
+        ProductService.addUpcIdToBag("10855");
     }
 }

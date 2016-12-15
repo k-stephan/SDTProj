@@ -143,6 +143,8 @@ public class Registry extends StepUtils {
             Navigate.visit("registry_home");
             Wait.forPageReady();
         }
+        Assert.assertFalse("ERROR - ENV : Registry Flex Template services are down!!", title().contains(macys() ? "Site Unavailable" : "oops"));
+        shouldBeOnPage("registry_manager");
         resumePageHangWatchDog();
     }
 
@@ -243,6 +245,7 @@ public class Registry extends StepUtils {
         Wait.untilElementNotPresent("create_registry.create_message");
         if (safari())
             Wait.secondsUntilElementPresent("registry_manager.registry_id", 15);
+        Assert.assertFalse("ERROR - ENV : Registry Flex Template services are down!!", title().contains(macys() ? "Site Unavailable" : "oops"));
         shouldBeOnPage("registry_manager");
         CreateRegistry.verifyRegistryIsCreatedInDB(Elements.findElement("registry_manager.registry_id").getText());
     }
