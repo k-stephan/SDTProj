@@ -256,7 +256,7 @@ public class CheckoutSteps extends StepUtils {
             if (prodEnv() || validity.equals("invalid")) {
                 TextBoxes.typeTextbox("shopping_bag.promo_code", promo_code);
             } else {
-                TextBoxes.typeTextbox("shopping_bag.promo_code", ShopAndBrowse.promotionCode);
+                TextBoxes.typeTextbox("shopping_bag.promo_code", promo_code);
             }
             Clicks.click("shopping_bag.apply_promo_code_button");
         } catch (NoSuchElementException e) {

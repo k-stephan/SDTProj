@@ -753,6 +753,7 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I select the bwallet offer in shopping bag$")
     public void I_select_the_bwallet_offer_in_shopping_bag() throws Throwable {
+        Wait.forPageReady();
         int size = Elements.findElements("shopping_bag.bwallet_offers").size();
         boolean displayed = false;
         for (int i = 0; i < size; i++) {
