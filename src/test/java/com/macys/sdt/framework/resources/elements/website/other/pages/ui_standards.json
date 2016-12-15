@@ -1,5 +1,5 @@
 {
-  "url":                          "ui-standards.herokuapp.com",
+  "url":                          "/",
   "verify_page":                  "id, logo-label",
 
   "buttons_link":                 "linkText, Buttons",
@@ -20,5 +20,8 @@
   "accessibility_remarks_link":   "linkText, General Accessibility Remarks",
   "left_sub_nav":                 "className, side-sub-nav",
   "check_box":                    "id, Chkbox",
-  "check_box_label":              "id, arialabel_Chkbox"
+  "check_box_label":              "id, arialabel_Chkbox",
+  "header_comp_button":           "id, header_comp",
+  "sample_form_link":             "linkText, OPEN SAMPLE FORM",
+  "copyright":                    "className, copyright"
 }

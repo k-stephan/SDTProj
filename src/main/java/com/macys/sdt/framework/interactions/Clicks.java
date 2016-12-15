@@ -97,7 +97,7 @@ public class Clicks {
      * @param selector String selector in format "page_name.element_name"
      */
     public static void hoverForSelection(String selector) {
-        hoverForSelection(Elements.findElement(selector));
+        hoverForSelection(Elements.element(selector));
     }
 
     /**

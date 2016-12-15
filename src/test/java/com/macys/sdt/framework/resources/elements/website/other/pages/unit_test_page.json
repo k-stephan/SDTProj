@@ -14,6 +14,7 @@
   "goto_radio":                   "linkText, Go to radio button",
   "goto_dropdown":                "linkText, Go to dropdown",
   "goto_button":                  "linkText, Go to submit button",
+  "goto_image":                   "linkText, Go to image",
   "goto_top":                     "linkText, Go to top",
   "lazy_load":                    "id, lazyLoadLink",
   "text_box":                     "id, text",
@@ -25,5 +26,6 @@
   "area":                         "id, area",
   "change_attribute":             "id, change",
   "start_loading":                "className, startLoading",
-  "loader":                       "id, loader"
+  "loader":                       "id, loader",
+  "not_present":                  "id, notPresent"
 }

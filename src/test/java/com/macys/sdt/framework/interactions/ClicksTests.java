@@ -1,10 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.runner.MainRunner;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
@@ -13,94 +10,77 @@ import org.openqa.selenium.WebElement;
  */
 public class ClicksTests {
 
+    @BeforeClass
+    public static void setUp() {
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Assume.assumeTrue(InteractionsSuiteTest.testPageUrl != null);
+        MainRunner.debugMode = true;
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        MainRunner.debugMode = false;
+        if (InteractionsSuiteTest.preCondition) {
+            Navigate.visit(MainRunner.url);
+        }
+    }
+
+    @Before
+    public void visitTestPage() {
+        MainRunner.getWebDriver().get(InteractionsSuiteTest.testPageUrl);
+    }
+
     @Test
     public void testClick() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Test element not present - Ignoring Click Test", Wait.untilElementPresent("ui_standards.buttons_link"));
-        Clicks.click("ui_standards.buttons_link");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.primary_buttons_link") || MainRunner.getCurrentUrl().contains("#Buttons"));
+        Clicks.click("unit_test_page.goto_button");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#button"));
     }
 
    @Test(expected = NoSuchElementException.class)
     public void testClickNegative() throws Exception {
-       Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-       WebElement element = Elements.findElement("ui_standards.not_present");
+       WebElement element = Elements.findElement("unit_test_page.not_present");
        Clicks.click(element);
    }
 
     @Test
     public void testClickRandomElement() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Navigate.visit(MainRunner.url);
-        Assume.assumeTrue("Test element not present - Ignoring ClickRandomElement Test", Wait.untilElementPresent("ui_standards.left_nav_links"));
-        Clicks.clickRandomElement("ui_standards.left_nav_links");
-        Wait.untilElementPresent("ui_standards.left_sub_nav");
-        Assert.assertTrue(Elements.anyPresent("ui_standards.left_sub_nav") || MainRunner.getCurrentUrl().contains("#"));
+        Clicks.clickRandomElement("unit_test_page.links");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#"));
     }
 
     @Test
     public void testClickRandomElementPredicate() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Navigate.visit(MainRunner.url);
-        Assume.assumeTrue("Test element not present - Ignoring ClickRandomElementPredicate Test", Wait.untilElementPresent("ui_standards.left_nav_links"));
-        Clicks.clickRandomElement("ui_standards.left_nav_links", WebElement::isDisplayed);
-        Wait.untilElementPresent("ui_standards.left_sub_nav");
-        Assert.assertTrue(Elements.anyPresent("ui_standards.left_sub_nav") || MainRunner.getCurrentUrl().contains("#"));
+        Clicks.clickRandomElement("unit_test_page.links", WebElement::isDisplayed);
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#"));
     }
 
     @Test
     public void testJavascriptClick() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Test element not present - Ignoring Javascript Click Test", Wait.untilElementPresent("ui_standards.forms_link"));
-        Clicks.javascriptClick("ui_standards.forms_link");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.dropdown_select_menu_link") || MainRunner.getCurrentUrl().contains("#Forms"));
-    }
-
-    @Test @Ignore("WIP")
-    public void testClickLazyElement() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Navigate.visit(MainRunner.url);
-        Assume.assumeTrue("Test element not present - Ignoring Javascript Click Test", Wait.untilElementPresent("ui_standards.submit_button"));
-        Clicks.clickLazyElement("ui_standards.submit_button");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg") || MainRunner.getCurrentUrl().contains("Submit="));
+        Clicks.javascriptClick("unit_test_page.goto_text_box");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#text"));
     }
 
     @Test
     public void testRandomJavascriptClick() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Navigate.visit(MainRunner.url);
-        Assume.assumeTrue("Test element not present - Ignoring ClickRandomElement Test", Wait.untilElementPresent("ui_standards.left_nav_links"));
-        Clicks.randomJavascriptClick("ui_standards.left_nav_links");
-        Wait.untilElementPresent("ui_standards.left_sub_nav");
-        Assert.assertTrue(Elements.anyPresent("ui_standards.left_sub_nav") || MainRunner.getCurrentUrl().contains("#"));
+        Clicks.randomJavascriptClick("unit_test_page.links");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#"));
     }
 
     @Test
     public void testSelectCheckbox() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Test element not present - Ignoring SelectCheckbox Test", Wait.untilElementPresent("ui_standards.check_box"));
-        Clicks.click("ui_standards.check_box_label");
-        Clicks.selectCheckbox("ui_standards.check_box");
-        Assert.assertTrue(Elements.findElement("ui_standards.check_box").isSelected());
-    }
-
-    @Test
-    public void testUnSelectCheckbox() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Test element not present - Ignoring UnSelectCheckbox Test", Wait.untilElementPresent("ui_standards.check_box"));
-        Clicks.click("ui_standards.check_box_label");
-        Clicks.unSelectCheckbox("ui_standards.check_box");
-        Assert.assertFalse(Elements.findElement("ui_standards.check_box").isSelected());
+        Clicks.click("unit_test_page.goto_checkbox");
+        Clicks.selectCheckbox("unit_test_page.checkbox");
+        Assert.assertTrue(Elements.findElement("unit_test_page.checkbox").isSelected());
+        Clicks.unSelectCheckbox("unit_test_page.checkbox");
+        Assert.assertFalse(Elements.findElement("unit_test_page.checkbox").isSelected());
     }
 
     @Test
     public void testClickIfPresent() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Test element not present - Ignoring ClickIfPresent Test", Wait.untilElementPresent("ui_standards.foundation_link"));
-        Clicks.clickIfPresent("ui_standards.foundation_link");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.foundation_components_link") || MainRunner.getCurrentUrl().contains("#Foundation"));
+        Clicks.clickIfPresent("unit_test_page.goto_radio");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#radio"));
         try {
-            Clicks.clickIfPresent("ui_standards.not_present");
+            Clicks.clickIfPresent("unit_test_page.not_present");
         } catch (Exception e) {
             Assert.fail("Failed testClickIfPresent : " + e.getMessage());
         }
@@ -108,36 +88,65 @@ public class ClicksTests {
 
     @Test
     public void testClickWhenPresent() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Test element not present - Ignoring ClickWhenPresent Test", Wait.untilElementPresent("ui_standards.accessibility_link"));
-        Clicks.clickWhenPresent("ui_standards.accessibility_link");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.accessibility_remarks_link") || MainRunner.getCurrentUrl().contains("#Accessibility"));
+        Assert.assertTrue(Clicks.clickWhenPresent("unit_test_page.goto_dropdown"));
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#select"));
+        Assert.assertFalse(Clicks.clickWhenPresent("unit_test_page.not_present"));
     }
 
     @Test
     public void testClickElementByText() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Navigate.visit(MainRunner.url);
-        Assume.assumeTrue("Test element not present - Ignoring ClickElementByText Test", Wait.untilElementPresent("ui_standards.left_nav_links"));
-        Clicks.clickElementByText("ui_standards.left_nav_links", "Accessibility");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.accessibility_remarks_link") || MainRunner.getCurrentUrl().contains("#Accessibility"));
+        Clicks.clickElementByText("unit_test_page.links", "Go to image");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#image"));
     }
 
     @Test
     public void testSendEnter() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Navigate.visit(MainRunner.url);
-        Assume.assumeTrue("TestDemo element not present - Ignoring SendEnter TestDemo", Wait.untilElementPresent("ui_standards.first_name_text_box"));
-        Clicks.sendEnter("ui_standards.first_name_text_box");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg") || MainRunner.getCurrentUrl().contains("profile.firstname="));
+        Clicks.sendEnter("unit_test_page.text_box");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("text="));
     }
 
     @Test
     public void testSendRandomEnter() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Navigate.visit(MainRunner.url);
-        Assume.assumeTrue("TestDemo element not present - Ignoring SendRandomEnter TestDemo", Wait.untilElementPresent("ui_standards.first_name_text_box"));
-        Clicks.sendRandomEnter("ui_standards.first_name_text_box");
-        Assert.assertTrue(Wait.untilElementPresent("ui_standards.error_msg") || MainRunner.getCurrentUrl().contains("profile.firstname="));
+        Clicks.sendRandomEnter("unit_test_page.text_box");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("text="));
+    }
+
+    @Test
+    public void testHoverForSelection() throws Exception {
+        Assume.assumeFalse(Elements.elementPresent("unit_test_page.paragraph"));
+        Clicks.hoverForSelection("unit_test_page.heading");
+        Assert.assertTrue(Elements.elementPresent("unit_test_page.paragraph"));
+    }
+
+    @Test
+    public void testHover() throws Exception {
+        try {
+            Clicks.hover("unit_test_page.heading");
+        } catch (Exception e) {
+            Assert.fail("Failed testHover : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testJavascriptHover() throws Exception {
+        try {
+            Clicks.javascriptHover(Elements.findElement("unit_test_page.heading"));
+        } catch (Exception e) {
+            Assert.fail("Failed testHover : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testClickArea() throws Exception {
+        Clicks.click("unit_test_page.goto_image");
+        Clicks.clickArea("alt", "Sun");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#sun"));
+    }
+
+    @Test
+    public void testClickLazyElement() throws Exception {
+        Assume.assumeFalse(Elements.elementPresent("unit_test_page.lazy_load"));
+        Clicks.clickLazyElement("unit_test_page.lazy_load");
+        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#heading"));
     }
 }

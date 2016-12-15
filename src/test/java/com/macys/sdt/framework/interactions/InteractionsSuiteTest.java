@@ -10,7 +10,14 @@ import org.junit.runners.Suite;
 import java.io.File;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ClicksTests.class, TextBoxesTests.class, DropDownsTests.class, ElementsTests.class, WaitTests.class})
+@Suite.SuiteClasses({
+        ClicksTests.class,
+        TextBoxesTests.class,
+        DropDownsTests.class,
+        ElementsTests.class,
+        WaitTests.class,
+        NavigateTests.class
+})
 public class InteractionsSuiteTest {
 
     static boolean preCondition = false;
@@ -25,7 +32,7 @@ public class InteractionsSuiteTest {
             MainRunner.browser = "firefox";
             MainRunner.remoteOS = "Windows 7";
             MainRunner.timeout = 90;
-            MainRunner.url = "http://ui-standards.herokuapp.com/";
+            MainRunner.url = "http://ui-standards.herokuapp.com";
             MainRunner.PageHangWatchDog.init();
             Navigate.visit(MainRunner.url);
             StepUtils.shouldBeOnPage("ui_standards");
