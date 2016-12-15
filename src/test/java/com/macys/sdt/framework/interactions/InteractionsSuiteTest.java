@@ -7,11 +7,14 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import java.io.File;
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ClicksTests.class, TextBoxesTests.class, DropDownsTests.class, ElementsTests.class, WaitTests.class})
 public class InteractionsSuiteTest {
 
     static boolean preCondition = false;
+    static String testPageUrl = null;
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -27,19 +30,21 @@ public class InteractionsSuiteTest {
             Navigate.visit(MainRunner.url);
             StepUtils.shouldBeOnPage("ui_standards");
             preCondition = true;
+            File htmlFile = new File("src/test/java/com/macys/sdt/framework/resources/unit_test_page.html");
+            if (htmlFile.exists()) {
+                testPageUrl = "file://" + htmlFile.getAbsolutePath();
+            }
         } catch (Exception e) {
             System.err.println("-->Error - Test setUp:" + e.getMessage());
-            try {
-                MainRunner.getWebDriver().quit();
-            } catch (Exception ignored) {
-            }
         }
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         try {
-            MainRunner.getWebDriver().quit();
+            if (MainRunner.driverInitialized()) {
+                MainRunner.getWebDriver().quit();
+            }
         } catch (Exception e) {
             System.err.println("-->Error - Test tearDown:" + e.getMessage());
         }

@@ -4,7 +4,7 @@
 
   "heading":                      "id, heading",
   "paragraph":                    "id, paragraph",
-  "links":                        "id, link",
+  "links":                        "className, link",
   "show_after_2s":                "className, show",
   "hide_after_2s":                "className, hide",
   "div_show":                     "id, div",
@@ -22,5 +22,8 @@
   "radio_button":                 "id, radio",
   "dropdown":                     "id, dropdown",
   "submit_button":                "id, button",
-  "area":                         "id, area"
+  "area":                         "id, area",
+  "change_attribute":             "id, change",
+  "start_loading":                "className, startLoading",
+  "loader":                       "id, loader"
 }
