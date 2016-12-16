@@ -9,12 +9,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.HashMap;
 
-import static com.macys.sdt.framework.runner.MainRunner.browserVersion;
-
 /**
  * Tests for WebDriverConfigurator
  */
-public class ConfiguratorTest {
+public class WebDriverConfiguratorTest {
 
     @Test
     public void testBasicFirefox() {
@@ -125,10 +123,9 @@ public class ConfiguratorTest {
 
     @Test
     public void testInitBrowserCapabilitiesIE() {
-        String browser = "ie";
         String browserVersion = "10";
         MainRunner.url = "http://www.macys.com";
-        MainRunner.browser = browser;
+        MainRunner.browser = "ie";
         MainRunner.browserVersion = browserVersion;
 
         DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
@@ -143,7 +140,7 @@ public class ConfiguratorTest {
     @Test
     public void testInitBrowserCapabilitiesSafari() {
         String browser = "safari";
-        String browserVersion = "5";
+        String browserVersion = "10.0";
         MainRunner.url = "http://www.macys.com";
         MainRunner.browser = browser;
         MainRunner.browserVersion = browserVersion;
@@ -159,10 +156,9 @@ public class ConfiguratorTest {
 
     @Test
     public void testInitBrowserCapabilitiesEdge() {
-        String browser = "edge";
         String browserVersion = "20";
         MainRunner.url = "http://www.macys.com";
-        MainRunner.browser = browser;
+        MainRunner.browser = "edge";
         MainRunner.browserVersion = browserVersion;
 
         DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
