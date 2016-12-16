@@ -361,7 +361,7 @@ class WebDriverConfigurator {
             if (!appTest) {
                 capabilities.setCapability("platform", remoteOS);
                 capabilities.setCapability("version", browserVersion);
-                capabilities.setCapability("idleTimeout", 240);
+                capabilities.setCapability("idleTimeout", 300);
             }
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
             capabilities.setCapability("name", (StepUtils.macys() ? "Macy's" : "Bloomingdales") +
