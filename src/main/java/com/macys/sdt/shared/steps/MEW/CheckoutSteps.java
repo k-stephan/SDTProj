@@ -232,7 +232,7 @@ public class CheckoutSteps extends StepUtils {
             if (prodEnv() || (validity.equals("invalid"))) {
                 TextBoxes.typeTextbox(Elements.element("shopping_bag.text_promocode"), promo_code);
             } else {
-                TextBoxes.typeTextbox(Elements.element("shopping_bag.text_promocode"), ProductDisplayPage.mew_promotion_code);
+                TextBoxes.typeTextbox(Elements.element("shopping_bag.text_promocode"), promo_code);
             }
             Clicks.click(Elements.element("shopping_bag.btn_promocode_apply"));
         } catch (NoSuchElementException e) {
