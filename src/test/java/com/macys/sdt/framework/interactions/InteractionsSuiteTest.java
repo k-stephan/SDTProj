@@ -50,7 +50,7 @@ public class InteractionsSuiteTest {
         try {
             MainRunner.debugMode = false;
             if (MainRunner.driverInitialized()) {
-                MainRunner.getWebDriver().quit();
+                MainRunner.resetDriver(true);
             }
         } catch (Exception e) {
             System.err.println("-->Error - Test tearDown:" + e.getMessage());

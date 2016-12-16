@@ -1,0 +1,30 @@
+package com.macys.sdt.framework.utils.rest.utils;
+
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+public class RESTOperationsTest {
+
+    @Test @Ignore("Need Review")
+    public void testDoPOST() throws Exception {
+        String url = "http://mdc2vr4073:9099/RAPADDashboardConfig/getEnvDetails.html";
+        String payload = "{\"stream\": \"MCOM\", \"stage\": \"5\", \"release\": \"15R\"}";
+        Assert.assertNotNull(RESTOperations.doPOST(url, "application/json", payload, null));
+    }
+
+    @Test @Ignore("Need Review")
+    public void testDoGET() throws Exception {
+        Assert.assertNotNull(RESTOperations.doGET("http://segments.macys.com/campaign/all", null));
+    }
+
+    @Test @Ignore("WIP: Need to find a service to perform DELETE operation")
+    public void testDoDELETE() throws Exception {
+
+    }
+
+    @Test @Ignore("WIP: Need to find a service to perform PUT operation")
+    public void testDoPUT() throws Exception {
+
+    }
+}
