@@ -14,6 +14,7 @@ import java.util.HashMap;
  */
 public class WebDriverConfiguratorTest {
 
+    /*
     @Test
     public void testBasicFirefox() {
         String website = "http://www.macys.com";
@@ -169,4 +170,5 @@ public class WebDriverConfiguratorTest {
         MainRunner.browser = null;
         MainRunner.browserVersion = null;
     }
+    */
 }

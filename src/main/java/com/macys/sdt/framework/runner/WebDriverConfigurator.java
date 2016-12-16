@@ -33,8 +33,14 @@ import java.util.concurrent.TimeUnit;
 
 import static com.macys.sdt.framework.runner.MainRunner.*;
 
-public class WebDriverConfigurator {
+class WebDriverConfigurator {
 
+    /**
+     * This method initiate specific driver with customized configurations
+     *
+     * @param capabilities preferred configurations in UI client
+     * @return driver
+     */
     static WebDriver initDriver(DesiredCapabilities capabilities) {
         if (capabilities == null) {
             capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initBrowserCapabilities();
@@ -67,6 +73,12 @@ public class WebDriverConfigurator {
         return driver;
     }
 
+    /*
+     * initiate browser driver with given capabilities based on browser asked
+     *
+     * @param capabilities preferred configurations for browser driver
+     * @return instance of browser driver with preferred capabilities
+     */
     private static WebDriver initBrowser(DesiredCapabilities capabilities) {
         WebDriver driver = null;
         switch (MainRunner.browser.toLowerCase()) {
@@ -97,7 +109,12 @@ public class WebDriverConfigurator {
 
     }
 
-    static DesiredCapabilities initBrowserCapabilities() {
+    /*
+     * This method set up capabilities based on browser asked mainly for desktop execution
+     *
+     * @return desiredCapabilities customized configurations as per browser
+     */
+    private static DesiredCapabilities initBrowserCapabilities() {
         DesiredCapabilities capabilities;
 
         switch (MainRunner.browser.toLowerCase()) {
@@ -127,7 +144,7 @@ public class WebDriverConfigurator {
                 return disabledProxyCap(capabilities);
             case "chrome":
                 capabilities = DesiredCapabilities.chrome();
-                setChromeDriverLocation(capabilities);
+                setChromeDriverLocation();
                 ChromeOptions chrome = new ChromeOptions();
                 chrome.addArguments("test-type");
                 chrome.addArguments("--disable-extensions");
@@ -179,9 +196,11 @@ public class WebDriverConfigurator {
         }
     }
 
-    private static void setChromeDriverLocation(DesiredCapabilities capabilities) {
+    /*
+     * This method set chromeDriver from the repo in the running machine for execution
+     */
+    private static void setChromeDriverLocation() {
         if (StepUtils.chrome()) {
-            capabilities.setCapability("version", browserVersion);
             String fileName = "chromedriver.exe";
             if (Utils.isOSX()) {
                 fileName = "chromedriver";
@@ -202,6 +221,12 @@ public class WebDriverConfigurator {
         }
     }
 
+    /*
+     * This method set proxy as disables in capability
+     *
+     * @param capabilities configurations which are already set where disable proxy configurations is to be added
+     * @return desiredCapabilities configurations including disable proxy capability
+     */
     private static DesiredCapabilities disabledProxyCap(DesiredCapabilities capabilities) {
         if (MainRunner.disableProxy) {
             //			Proxy py = new Proxy();
@@ -214,7 +239,13 @@ public class WebDriverConfigurator {
         return capabilities;
     }
 
-    static DesiredCapabilities initDeviceCapabilities() {
+    /*
+     * This method setup chrome emulator or device based capabilities
+     * based on if useChromeEmulation is set to true or not
+     *
+     * @return chrome emulator or device based capabilities
+     */
+    private static DesiredCapabilities initDeviceCapabilities() {
         if (device == null) {
             device = "";
         }
@@ -226,6 +257,11 @@ public class WebDriverConfigurator {
         }
     }
 
+    /*
+     * This method set up device (appium) based capabilities for ios or android
+     *
+     * @return desiredCapabilities ios or android device (appium) based configurations
+     */
     private static DesiredCapabilities setupDevice() {
         DesiredCapabilities caps;
         if (StepUtils.iOS()) {
@@ -252,6 +288,11 @@ public class WebDriverConfigurator {
         return caps;
     }
 
+    /*
+     * This method set up chrome emulator based capabilities for a number of devices given by MainRunner.device
+     *
+     * @return desiredCapabilities chrome emulator based configurations for devices asked
+     */
     private static DesiredCapabilities setupChromeEmulator() {
         Map<String, String> emulationOptions = new HashMap<>();
         switch (MainRunner.device.toLowerCase()) {
@@ -288,6 +329,12 @@ public class WebDriverConfigurator {
         }
     }
 
+    /*
+     * This method set up capabilities for Chrome Emulator based on device asked
+     *
+     * @param emulationOptions device name
+     * @return desiredCapabilites preferred configurations for Chrome Emulator
+     */
     private static DesiredCapabilities getChromeEmulatorConfig(Map<String, String> emulationOptions) {
         Map<String, Object> chromeOptions = new HashMap<>();
         chromeOptions.put("mobileEmulation", emulationOptions);
@@ -296,10 +343,16 @@ public class WebDriverConfigurator {
         chromeOptions.put("args", args);
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-        setChromeDriverLocation(capabilities);
+        setChromeDriverLocation();
         return capabilities;
     }
 
+    /*
+     * This method initiate SauceLabs customized driver with preferred capabilities
+     *
+     * @param capabilities preferred configurations for driver
+     * @return instance of SauceLabs related driver with preferred capabilities
+     */
     private static WebDriver initSauceLabs(DesiredCapabilities capabilities) {
         try {
             // remove quoted chars
@@ -353,6 +406,12 @@ public class WebDriverConfigurator {
         return null;
     }
 
+    /*
+     * initiate appium driver (ios or android) with given capabilities
+     *
+     * @param capabilities preferred configurations for ios or android driver
+     * @return instance of appium device ios or android driver
+     */
     private static WebDriver initAppiumDevice(DesiredCapabilities capabilities) {
         if (appTest) {
             capabilities.setCapability(MobileCapabilityType.APP, MainRunner.appLocation);
@@ -394,6 +453,11 @@ public class WebDriverConfigurator {
         return null;
     }
 
+    /**
+     * This method sets default browser version based on browser asked
+     *
+     * @return default version of browser asked
+     */
     static String defaultBrowserVersion() {
         switch (MainRunner.browser) {
             case "ie":
@@ -424,6 +488,12 @@ public class WebDriverConfigurator {
         }
     }
 
+    /**
+     * This method initiates driver having capability of BrowserMob proxy.
+     * BrowserMob server runs on port 7000.
+     *
+     * @return instance of the driver having capability of BrowserMob proxy
+     */
     static WebDriver initDriverWithProxy() {
         if (browsermobServer != null) {
             System.err.println("-->Aborting prev proxy server:" + browsermobServer.getPort());
