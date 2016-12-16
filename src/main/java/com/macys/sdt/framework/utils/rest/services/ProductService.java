@@ -3,15 +3,16 @@ package com.macys.sdt.framework.utils.rest.services;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
-import org.apache.logging.log4j.core.util.Assert;
-import org.eclipse.jetty.util.ajax.JSON;
-import org.json.JSONArray;
+import com.macys.sdt.shared.utils.db.models.OrderServices;
+import org.w3c.dom.Element;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProductService {
@@ -38,31 +39,44 @@ public class ProductService {
     }
 
     /**
+     * To find all upc ids for product id
+     *
+     * @param productId ID of product to check
+     * @return List all upc ids
+     */
+    public static List<String> getAllUpcIds(String productId) {
+        List<String> upcIds = new ArrayList<>();
+        Response response = RESTOperations.doGET(getServiceURL() + productId, null);
+        try {
+            JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
+            for(int index=0; index < jsonResponse.getJSONArray("upcs").length(); index ++)
+                upcIds.add(((JSONObject)jsonResponse.getJSONArray("upcs").get(index)).getJSONObject("upc").getString("id"));
+        } catch (JSONException e) {
+            System.err.println("Unable to get product information from FCC: " + e);
+        }
+        return upcIds;
+    }
+
+    /**
      * To find the upc id is available for checkout at MST
      *
      * @param upcId ID of product to check
      * @return true if upc is available
      */
     public static boolean checkProductAvailabilityAtMST(String upcId) {
-        checkoutHeaders.put("Accept", "application/xml");
+        checkoutHeaders.put("Accept", "application/json");
         checkoutHeaders.put("Content-Type", "application/xml");
-        JSONObject addToBagResponse = new JSONObject(addUpcIdToBag(upcId));
-        Assert.requireNonNull(addToBagResponse, "Add Item to bag response is NULL!!");
-        JSONObject initiateCheckoutResponse = new JSONObject(initiateCheckout(addToBagResponse.getJSONObject("bag").getJSONObject("owner").getString("userId")));
-        Assert.requireNonNull(initiateCheckoutResponse, "initiate checkout response is NULL!!");
-        JSONObject processCheckoutResponse = new JSONObject(processCheckout(initiateCheckoutResponse.getJSONObject("order").getString("number"), initiateCheckoutResponse.getJSONObject("order").getString("guid")));
-        Assert.requireNonNull(processCheckoutResponse, "process checkout response  is NULL!!");
         boolean isItemUnavailable = false;
-        if (processCheckoutResponse.getJSONObject("order").getBoolean("orderHasError")){
-            JSONArray shipments = processCheckoutResponse.getJSONObject("order").getJSONArray("shipments");
-            JSONArray errors = ((JSONObject)(((JSONObject)shipments.get(0)).getJSONObject("shipment")).getJSONArray("items").get(0)).getJSONObject("item").getJSONArray("errors");
-            for (int index = 0; index < errors.length(); index++) {
-                isItemUnavailable = ((JSONObject)errors.get(index)).getJSONObject("error").getString("message").equals("CS_ITEM_UNAVAILABLE");
-            }
+        Element addToBagResponse = new OrderServices().getXmlElements(addUpcIdToBag(upcId));
+        if (addToBagResponse.getElementsByTagName("message").item(0) != null)
             return isItemUnavailable;
-        } else {
-            return false;
-        }
+        Element initiateCheckoutResponse = new OrderServices().getXmlElements(initiateCheckout(addToBagResponse.getElementsByTagName("userId").item(0).getTextContent()));
+        if (initiateCheckoutResponse.getElementsByTagName("message").item(0) != null)
+            return isItemUnavailable;
+        Element processCheckoutResponse = new OrderServices().getXmlElements(processCheckout(initiateCheckoutResponse.getElementsByTagName("number").item(0).getTextContent(), initiateCheckoutResponse.getElementsByTagName("guid").item(0).getTextContent()));
+        if (Boolean.parseBoolean(processCheckoutResponse.getElementsByTagName("orderHasError").item(0).getTextContent()))
+            isItemUnavailable = processCheckoutResponse.getElementsByTagName("message").item(0).getTextContent().equals("CS_ITEM_UNAVAILABLE");
+        return isItemUnavailable;
     }
 
     /**
@@ -72,8 +86,7 @@ public class ProductService {
      * @return String Add to bag service response
      */
     public static String addUpcIdToBag(String upcId) {
-        Response response = RESTOperations.doPOST(getAddToBagURL(), MediaType.APPLICATION_XML, getAddToBagBody(upcId), checkoutHeaders);
-        return response.readEntity(String.class);
+        return RESTOperations.doPOST(getAddToBagURL(), MediaType.APPLICATION_XML, getAddToBagBody(upcId), checkoutHeaders).readEntity(String.class);
     }
 
     /**
@@ -83,8 +96,7 @@ public class ProductService {
      * @return String initiate checkout service response
      */
     public static String initiateCheckout(String userId) {
-        Response response = RESTOperations.doPOST(getInitiateCheckoutURL(), MediaType.APPLICATION_XML, getInitiateCheckoutBody(userId), checkoutHeaders);
-        return response.readEntity(String.class);
+        return RESTOperations.doPOST(getInitiateCheckoutURL(), MediaType.APPLICATION_XML, getInitiateCheckoutBody(userId), checkoutHeaders).readEntity(String.class);
     }
 
     /**
@@ -95,8 +107,7 @@ public class ProductService {
      * @return String initiate checkout service response
      */
     public static String processCheckout(String orderNumber, String guid) {
-        Response response = RESTOperations.doPOST(getProcessCheckoutURL(), MediaType.APPLICATION_XML, getProcessCheckoutBody(orderNumber, guid), checkoutHeaders);
-        return response.readEntity(String.class);
+        return RESTOperations.doPOST(getProcessCheckoutURL(), MediaType.APPLICATION_XML, getProcessCheckoutBody(orderNumber, guid), checkoutHeaders).readEntity(String.class);
     }
 
     private static String getAddToBagBody(String upcId) {

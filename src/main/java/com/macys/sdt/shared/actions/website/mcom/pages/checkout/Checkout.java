@@ -514,7 +514,7 @@ public class Checkout extends StepUtils {
 //            if (!signedIn() && Elements.elementPresent(page + ".use_shipping_address") && Elements.getElementAttribute(page + ".use_shipping_address", (signedIn() ? "aria-checked" : "value")).equals("false")) {
 //                Clicks.click(page + ".use_shipping_address");
 //            }
-            if(Elements.getElementAttribute(page + ".use_shipping_address", (signedIn() ? "aria-checked" : "value")).equals("false")) {
+            if(Elements.elementPresent(page + ".first_name") || Elements.getElementAttribute(page + ".use_shipping_address", (signedIn() ? "aria-checked" : "value")).equals("false")) {
                 TextBoxes.typeTextbox(page + ".first_name", TestUsers.generateRandomFirstName());
                 TextBoxes.typeTextbox(page + ".last_name", TestUsers.generateRandomLastName());
                 TextBoxes.typeTextbox(page + ".address_line_1", address.getAddressLine1());
