@@ -9,6 +9,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.HashMap;
 
+import static com.macys.sdt.framework.runner.MainRunner.browserVersion;
+
 /**
  * Tests for WebDriverConfigurator
  */
@@ -90,5 +92,85 @@ public class ConfiguratorTest {
         MainRunner.appLocation = null;
         MainRunner.remoteOS = null;
         MainRunner.brand = null;
+    }
+
+    @Test
+    public void testInitBrowserCapabilitiesChrome() {
+        String browser = "chrome";
+        String browserVersion = "54";
+        MainRunner.url = "http://www.macys.com";
+        MainRunner.browser = browser;
+        MainRunner.browserVersion = browserVersion;
+
+        DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
+        Assert.assertEquals(caps.getBrowserName(), browser);
+        Assert.assertEquals(caps.getVersion(), browserVersion);
+
+        MainRunner.url = null;
+        MainRunner.browser = null;
+        MainRunner.browserVersion = null;
+    }
+
+    @Test
+    public void testInitBrowserCapabilitiesFirefox() {
+        MainRunner.browser = "";
+        MainRunner.url = "http://www.macys.com";
+
+        DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
+        Assert.assertEquals(caps.getBrowserName(), "firefox");
+
+        MainRunner.url = null;
+        MainRunner.browser = null;
+    }
+
+    @Test
+    public void testInitBrowserCapabilitiesIE() {
+        String browser = "ie";
+        String browserVersion = "10";
+        MainRunner.url = "http://www.macys.com";
+        MainRunner.browser = browser;
+        MainRunner.browserVersion = browserVersion;
+
+        DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
+        Assert.assertEquals(caps.getBrowserName(), "internet explorer");
+        Assert.assertEquals(caps.getVersion(), browserVersion);
+
+        MainRunner.url = null;
+        MainRunner.browser = null;
+        MainRunner.browserVersion = null;
+    }
+
+    @Test
+    public void testInitBrowserCapabilitiesSafari() {
+        String browser = "safari";
+        String browserVersion = "5";
+        MainRunner.url = "http://www.macys.com";
+        MainRunner.browser = browser;
+        MainRunner.browserVersion = browserVersion;
+
+        DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
+        Assert.assertEquals(caps.getBrowserName(), browser);
+        Assert.assertEquals(caps.getVersion(), browserVersion);
+
+        MainRunner.url = null;
+        MainRunner.browser = null;
+        MainRunner.browserVersion = null;
+    }
+
+    @Test
+    public void testInitBrowserCapabilitiesEdge() {
+        String browser = "edge";
+        String browserVersion = "20";
+        MainRunner.url = "http://www.macys.com";
+        MainRunner.browser = browser;
+        MainRunner.browserVersion = browserVersion;
+
+        DesiredCapabilities caps = WebDriverConfigurator.initBrowserCapabilities();
+        Assert.assertEquals(caps.getBrowserName(), "MicrosoftEdge");
+        Assert.assertEquals(caps.getVersion(), browserVersion);
+
+        MainRunner.url = null;
+        MainRunner.browser = null;
+        MainRunner.browserVersion = null;
     }
 }
