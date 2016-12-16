@@ -1,7 +1,10 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,45 +14,47 @@ import java.util.List;
  */
 public class DropDownsTests {
 
+    @BeforeClass
+    public static void setUp() {
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Assume.assumeTrue(InteractionsSuiteTest.testPageUrl != null);
+    }
+
+    @Before
+    public void visitTestPage() {
+        MainRunner.getWebDriver().get(InteractionsSuiteTest.testPageUrl);
+    }
+
+
     @Test
     public void testSelectByText() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Dropdown element not present - Ignoring SelectByText Test", Wait.untilElementPresent("ui_standards.drop_down"));
-        DropDowns.selectByText("ui_standards.drop_down", "Visa");
-        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")), "Visa");
-        DropDowns.selectByText(Elements.element("ui_standards.drop_down"), "Macy's");
-        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")), "Macy's");
+        DropDowns.selectByText("unit_test_page.dropdown", "Option 2");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("unit_test_page.dropdown")), "Option 2");
+        DropDowns.selectByText(Elements.element("unit_test_page.dropdown"), "Option 3");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("unit_test_page.dropdown")), "Option 3");
     }
 
     @Test
     public void testSelectByIndex() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Dropdown element not present - Ignoring selectByIndex Test", Wait.untilElementPresent("ui_standards.drop_down"));
-        DropDowns.selectByIndex("ui_standards.drop_down", 2);
-        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")), "Macy's American Express");
+        DropDowns.selectByIndex("unit_test_page.dropdown", 2);
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("unit_test_page.dropdown")), "Option 3");
     }
 
     @Test
     public void testSelectByValue() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Dropdown element not present - Ignoring selectByValue Test", Wait.untilElementPresent("ui_standards.drop_down"));
-        DropDowns.selectByValue("ui_standards.drop_down", "Y");
-        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")), "Macy's");
+        DropDowns.selectByValue("unit_test_page.dropdown", "2");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("unit_test_page.dropdown")), "Option 2");
     }
 
     @Test
     public void testSelectRandomValue() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Dropdown element not present - Ignoring selectRandomValue Test", Wait.untilElementPresent("ui_standards.drop_down"));
-        String selected = DropDowns.selectRandomValue("ui_standards.drop_down");
-        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("ui_standards.drop_down")), selected);
+        String selected = DropDowns.selectRandomValue("unit_test_page.dropdown");
+        Assert.assertEquals(DropDowns.getSelectedValue(Elements.element("unit_test_page.dropdown")), selected);
     }
 
     @Test
     public void testGetAllValues() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue("Dropdown element not present - Ignoring getAllValues Test", Wait.untilElementPresent("ui_standards.drop_down"));
-        List<String> options = DropDowns.getAllValues("ui_standards.drop_down");
+        List<String> options = DropDowns.getAllValues("unit_test_page.dropdown");
         Assert.assertNotNull(options);
         Assert.assertFalse(options.isEmpty());
     }

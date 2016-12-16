@@ -1,7 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.runner.MainRunner;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -20,15 +19,6 @@ public class WaitTests {
     public static void setUp() {
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Assume.assumeTrue(InteractionsSuiteTest.testPageUrl != null);
-        MainRunner.debugMode = true;
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        MainRunner.debugMode = false;
-        if (InteractionsSuiteTest.preCondition) {
-            Navigate.visit(MainRunner.url);
-        }
     }
 
     @Before

@@ -21,11 +21,13 @@
   "text_area":                    "id, textarea",
   "checkbox":                     "id, checkbox",
   "radio_button":                 "id, radio",
-  "dropdown":                     "id, dropdown",
+  "dropdown":                     "id, select",
   "submit_button":                "id, button",
   "area":                         "id, area",
   "change_attribute":             "id, change",
   "start_loading":                "className, startLoading",
   "loader":                       "id, loader",
-  "not_present":                  "id, notPresent"
+  "not_present":                  "id, notPresent",
+  "param_element":                "className, row_{arg1}_{arg2}",
+  "multi_value":                  "linkText, Some Text || name, someName"
 }

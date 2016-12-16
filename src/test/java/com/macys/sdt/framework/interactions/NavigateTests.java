@@ -4,14 +4,25 @@ import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 
+/**
+ * These test can be executed from InteractionsSuiteTest only, hence the class name is ending with 'Tests' instead of 'Test'
+ */
 public class NavigateTests {
+
+    @BeforeClass
+    public static void setUp() {
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Navigate.visit(MainRunner.url);
+        Wait.forPageReady();
+        Assume.assumeTrue(StepUtils.onPage("ui_standards"));
+    }
 
     @Test
     public void testBrowserBack() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring BrowserBack Test", Wait.untilElementPresent("ui_standards.sample_form_link"));
         Clicks.javascriptClick("ui_standards.sample_form_link");
         Assume.assumeTrue(Wait.until(() -> MainRunner.getCurrentUrl().contains("prototyping/index_valid.html")));
@@ -21,7 +32,6 @@ public class NavigateTests {
 
     @Test
     public void testBrowserRefresh() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring BrowserRefresh Test", Wait.untilElementPresent("ui_standards.first_name_text_box"));
         String firstName = "First Name";
         TextBoxes.typeTextbox("ui_standards.first_name_text_box", firstName);
@@ -33,7 +43,6 @@ public class NavigateTests {
 
     @Test
     public void testBrowserReset() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         WebDriver webDriver = MainRunner.getWebDriver();
         Navigate.browserReset();
         Assert.assertFalse(webDriver.equals(MainRunner.getWebDriver()));
@@ -44,7 +53,6 @@ public class NavigateTests {
 
     @Test
     public void testExecJavascript() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Navigate.execJavascript("window.scrollTo(0, document.body.scrollHeight)");
         Assume.assumeTrue("Test element not present - Ignoring scrollPage Test", Wait.untilElementPresent("ui_standards.copyright"));
         Assert.assertTrue(Elements.isElementInView(Elements.findElement("ui_standards.copyright")));
@@ -54,7 +62,6 @@ public class NavigateTests {
 
     @Test
     public void testFindIndexOfWindow() throws Exception {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Assume.assumeTrue("Test element not present - Ignoring FindIndexOfWindow Test", Wait.untilElementPresent("ui_standards.header_comp_button"));
         Clicks.javascriptClick("ui_standards.header_comp_button");
         Assert.assertEquals(Navigate.findIndexOfWindow("Third Party Header Component"), 1);

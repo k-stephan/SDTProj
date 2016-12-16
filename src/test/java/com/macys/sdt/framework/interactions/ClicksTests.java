@@ -1,7 +1,11 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.runner.MainRunner;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
@@ -14,15 +18,6 @@ public class ClicksTests {
     public static void setUp() {
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
         Assume.assumeTrue(InteractionsSuiteTest.testPageUrl != null);
-        MainRunner.debugMode = true;
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        MainRunner.debugMode = false;
-        if (InteractionsSuiteTest.preCondition) {
-            Navigate.visit(MainRunner.url);
-        }
     }
 
     @Before
