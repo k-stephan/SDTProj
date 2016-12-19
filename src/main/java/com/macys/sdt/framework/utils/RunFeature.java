@@ -63,7 +63,7 @@ public class RunFeature {
     public static void main(String[] args) {
         try {
             //			Utils.get_tar_file_list(new File("C:\\Users\\m526092\\eclipse_workspace\\JenkinsSlave\\builds\\processed\\11.120.180.247.DSV_test_Windows_7@2.69.1441286019238.tar"), "testreport/");
-            //			Utils.extractJarFile(new File("C:\\Users\\m526092\\eclipse_workspace\\JenkinsSlave\\repo\\SDT\\master.sdt.jar"), "sdt/features/", "features");
+            //			Utils.outputJarFile(new File("C:\\Users\\m526092\\eclipse_workspace\\JenkinsSlave\\repo\\SDT\\master.sdt.jar"), "sdt/features/", "features");
 
             if (args.length == 0) {
                 new RunFeature();
