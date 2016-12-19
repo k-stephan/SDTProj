@@ -36,6 +36,7 @@ public class MainRunnerTest {
         MainRunner.browser = null;
         MainRunner.workspace = null;
         MainRunner.debugMode = false;
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
         MainRunner.scenarios = "sdt/framework/features/website/mcom/test.feature";
 
         MainRunner.getEnvVars();
