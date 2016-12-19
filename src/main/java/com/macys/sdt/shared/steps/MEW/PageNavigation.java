@@ -27,6 +27,11 @@ public class PageNavigation extends StepUtils {
         shouldBeOnPage("search_result");
     }
 
+    @Then("^I should see the \"([^\"]*)\" Page$")
+    public void I_should_see_the_page(String page) throws Throwable {
+        shouldBeOnPage(page);
+    }
+
     @Then("^I should be redirected to PDP page using mobile website$")
     public void I_should_be_redirected_to_PDP_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("product_display");

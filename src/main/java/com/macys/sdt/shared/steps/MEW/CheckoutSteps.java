@@ -3,11 +3,13 @@ package com.macys.sdt.shared.steps.MEW;
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.User;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.shared.actions.MEW.pages.Checkout;
 import com.macys.sdt.shared.actions.MEW.pages.CreateProfileMEW;
+import com.macys.sdt.shared.actions.website.bcom.pages.PaypalLogin;
 import com.macys.sdt.shared.utils.CheckoutUtils;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -205,6 +207,20 @@ public class CheckoutSteps extends StepUtils {
         Wait.untilElementPresent(Elements.element("shopping_bag.bag_items"));
     }
 
+    @When("^I place an Order using mobile site$")
+    public void I_place_an_order() throws Throwable {
+        pausePageHangWatchDog();
+        Boolean responsive = !onPage("order_review");
+        Wait.untilElementPresent((responsive ? "responsive_order_summary" : "order_review") + ".place_order");
+        new com.macys.sdt.shared.actions.website.mcom.pages.checkout.Checkout().selectPlaceOrderButton();
+        Wait.secondsUntilElementNotPresent((responsive ? "responsive_order_summary" : "order_review") + ".place_order", 10);
+        Wait.secondsUntilElementNotPresent((responsive ? "responsive_order_summary" : "order_review") + ".mask", 10);
+        Wait.secondsUntilElementPresent((responsive ? "responsive_order_confirmation" : "order_confirmation") + ".verify_page", 20);
+        Assert.assertTrue("Order not placed successfully!!", onPage("responsive_order_confirmation"));
+        resumePageHangWatchDog();
+        System.out.println("sucessfuly placed an order");
+    }
+
     @Then("^I verify the promo code validation error message appeared in mobile website$")
     public void I_verify_the_promo_code_validation_error_message_appeared_in_mobile_website() throws Throwable {
         try {
@@ -213,6 +229,31 @@ public class CheckoutSteps extends StepUtils {
             Assert.fail("Error message is not present on page");
         }
     }
+
+    @And("^I select checkout with paypal in mobile site$")
+    public void I_select_checkout_with_paypal() throws Throwable {
+        if (prodEnv())
+            throw new Exceptions.ProductionException("I_select_checkout_with_paypal()");
+
+        if (!onPage("shopping_bag"))
+            Navigate.visit("shopping_bag");
+        Wait.untilElementPresent("shopping_bag.checkout_with_paypal");
+        Clicks.click("shopping_bag.checkout_with_paypal");
+    }
+
+    @When("^I login into Paypal account using mobile site$")
+    public void I_login_into_paypal_account() throws Throwable {
+        new PaypalLogin().login();
+    }
+
+    @And("^I checkout from Paypal review page using mobile site$")
+    public void I_checkout_from_paypal_review_page() throws Throwable {
+        Clicks.click("paypal_login.continue");
+        Wait.secondsUntilElementNotPresent("paypal_login.continue", (safari() ? 15 : 5));
+        if (safari() || ie())
+            Thread.sleep(5000);
+    }
+
 
     @When("^I remove the promo code using mobile website$")
     public void I_remove_the_promo_code_using_mobile_website() throws Throwable {

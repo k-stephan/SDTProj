@@ -1,6 +1,7 @@
 package com.macys.sdt.shared.steps.MEW;
 
 import com.macys.sdt.framework.interactions.*;
+import com.macys.sdt.framework.model.Product;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
@@ -25,6 +26,64 @@ import static com.macys.sdt.shared.utils.CommonUtils.selectRandomProductMEW;
 
 public class ShopAndBrowse extends StepUtils {
 
+    public static Product recentProduct;
+
+    @When("^I directly add an available and orderable product \"([^\"]*)\" to my bag in mobile site$")
+    public void I_directly_add_an_available_and_orderable_product_to_my_bag(String avilable_prodcut_id) throws Throwable {
+        CommonUtils.navigateDirectlyToProduct(avilable_prodcut_id);
+        I_add_product_to_my_bag_from_standard_PDP_page();
+
+        if (onPage("add_to_bag"))
+            Clicks.click("add_to_bag.checkout");
+        else if (Elements.elementPresent("add_to_bag_dialog.add_to_bag_checkout"))
+            Clicks.click("add_to_bag_dialog.add_to_bag_checkout");
+        else
+            Clicks.click("product_display.member_atb_checkout");
+
+        System.out.println("Sucessfuly added product");
+    }
+
+    @And("^I add product to my bag from standard PDP page$")
+    public void I_add_product_to_my_bag_from_standard_PDP_page() throws Throwable {
+        boolean addedToBag = false;
+        Assert.assertFalse("ERROR - DATA : Product ( "+ (recentProduct == null ? "" : String.valueOf(recentProduct.id)) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_bag_button") && Elements.elementPresent("product_display.availability_error"));
+        try {
+            int retries = 5;
+            pausePageHangWatchDog();
+            for (int count = 0; count < retries && !addedToBag; count++) {
+                try {
+                    com.macys.sdt.shared.actions.website.mcom.pages.shop_and_browse.ProductDisplay.selectRandomColor();
+                    com.macys.sdt.shared.actions.website.mcom.pages.shop_and_browse.ProductDisplay.selectRandomSize();
+                    Clicks.click("product_display.add_to_bag_button");
+                    if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog"))
+                        Clicks.clickIfPresent("product_display.add_to_bag_button");
+
+                    addedToBag = ProductDisplay.addedToBag();
+                    if (MainRunner.debugMode) {
+                        System.out.println("IsProductAddedToBag:" + addedToBag + ", Add to bag retry count:" + (count + 1));
+                    }
+                } catch (Exception e) {
+                    System.err.println("Exception while adding product:" + e.getMessage());
+                }
+            }
+            Wait.untilElementPresent("add_to_bag_dialog.add_to_bag_dialog");
+            if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog"))
+                Clicks.clickIfPresent("product_display.technical_error");
+            if (isErrorPaneVisible())
+                Clicks.click("home.popup_close");
+            resumePageHangWatchDog();
+        } catch (IllegalArgumentException | NoSuchElementException e) {
+            System.err.println("Error while adding to bag: " + e);
+        } finally {
+            if (!addedToBag) {
+                Wait.untilElementNotPresent("product_display.add_to_bag_button");
+                if (macys())
+                    Assert.assertFalse("ERROR - DATA : Given item is unavailable!!", Elements.elementPresent(By.className("css-tooltip")) && Elements.getText(By.className("css-tooltip")).contains("this item is unavailable"));
+                Assert.assertTrue("Unable to add product to bag", ProductDisplay.addedToBag());
+            }
+
+        }
+    }
     @When("^I select a random (member|master|member_alternate_image|master_alternate_image) product using mobile website(?: with (customer ratings))?$")
     public void I_select_a_random_product_using_mobile_website(String prod_type, String hasRating) throws Throwable {
         boolean found = false;
