@@ -65,10 +65,6 @@ public class Utils {
     private static PrintStream originalInfo = System.out;
     private static int errRedirectCalls = 0;
     private static int infoRedirectCalls = 0;
-    private static File errFile = null;
-    private static File infoFile = null;
-    private static FileOutputStream errStream = null;
-    private static FileOutputStream infoStream = null;
     private static boolean resourcesExtracted = false;
 
     /**
@@ -121,7 +117,6 @@ public class Utils {
             ex.printStackTrace();
             return msg;
         }
-        long ts = System.currentTimeMillis();
         Process p = null;
         //    	cmd = "cmd.exe /c \"" + cmd + "\"";
         if (!isWindows()) {
@@ -396,22 +391,22 @@ public class Utils {
     /**
      * Sleeps for a given time
      *
-     * @param sleeptime time to sleep in millis
+     * @param sleepTime time to sleep in millis
      * @param msg       info message to display
      * @return true if sleep interrupted
      */
-    public static boolean threadSleep(long sleeptime, String msg) {
+    public static boolean threadSleep(long sleepTime, String msg) {
         Thread cur = Thread.currentThread();
         try {
-            //if (msg != null)
-            //    System.out.println("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleeptime);
-            Thread.sleep(sleeptime);
-            //if (msg != null)
-            //    System.out.println(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":normal");
+            if (msg != null)
+                infoLog.println("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleepTime);
+            Thread.sleep(sleepTime);
+            if (msg != null)
+                infoLog.println(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":normal");
             return false;
         } catch (InterruptedException e) {
-            //if (msg != null)
-            //    System.out.println(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":" + e.getMessage());
+            if (msg != null)
+                errLog.println(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":" + e.getMessage());
             return true;
         }
     }
@@ -804,7 +799,7 @@ public class Utils {
 
     private static void extractCompressedFile(String tarFilePath, ArchiveInputStream inputTar, String outputPath, String... fileFilters) throws IOException {
         File outputFile = new File(outputPath);
-        createDirectory(outputFile.getAbsoluteFile().getParentFile().getPath(), false);
+        createDirectory(outputFile.getAbsoluteFile().getParentFile(), false);
 
         ArchiveEntry entry;
         while ((entry = inputTar.getNextEntry()) != null) {
@@ -856,31 +851,30 @@ public class Utils {
                 System.err.print(".");
                 return true;
             }
-            threadSleep(3000l, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
+            threadSleep(3000, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
         }
 
         if (isWindows()) {
             for (int i = 0; i < retryCount; i++) {
                 String res = executeCMD("ren \"\"" + src.getPath() + "\"\" \"\"" + dest.getPath() + "\"\"");
-                if (res.trim().isEmpty() && dest.exists()) {
+                if (res != null && res.trim().isEmpty() && dest.exists()) {
                     System.err.print("--> used CMD");
                     return true;
                 }
-                threadSleep(3000l, "*" + src.getName() + ":" + dest.getName() + ":" + i);
+                threadSleep(3000, "*" + src.getName() + ":" + dest.getName() + ":" + i);
             }
-        } else {
-
         }
 
         try {
             FileUtils.copyFile(src, dest);
-            src.delete();
+            if (!src.delete()) {
+                System.err.println("Failed to delete file: " + src.getAbsolutePath());
+            }
             if (dest.exists()) {
                 System.err.print("!");
                 return true;
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return false;
@@ -1052,10 +1046,10 @@ public class Utils {
      * Initializes the PrintStream used to redirect any error message bloat
      */
     private static void initLogs() {
-        if (errStream == null) {
+        if (errLog == null || infoLog == null) {
             try {
-                errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
-                infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");
+                File errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
+                File infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");
                 createDirectory(MainRunner.workspace + "logs");
                 if (!errFile.exists()) {
                     if (!errFile.createNewFile()) {
@@ -1067,12 +1061,10 @@ public class Utils {
                         System.err.println("Could not create info log file");
                     }
                 }
-                errStream = new FileOutputStream(errFile);
-                infoStream = new FileOutputStream(infoFile);
+                FileOutputStream errStream = new FileOutputStream(errFile);
+                FileOutputStream infoStream = new FileOutputStream(infoFile);
                 errLog = new PrintStream(errStream);
                 infoLog = new PrintStream(infoStream);
-            } catch (FileNotFoundException e) {
-                System.err.println("File not found: " + errFile);
             } catch (IOException e) {
                 System.err.println("Error while creating file: " + e);
             }
