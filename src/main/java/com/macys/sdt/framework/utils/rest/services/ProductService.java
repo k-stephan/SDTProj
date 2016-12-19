@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.utils.rest.services;
 
+import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
@@ -50,7 +52,7 @@ public class ProductService {
         try {
             JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
             for(int index=0; index < jsonResponse.getJSONArray("upcs").length(); index ++)
-                upcIds.add(((JSONObject)jsonResponse.getJSONArray("upcs").get(index)).getJSONObject("upc").getString("id"));
+                upcIds.add(((JSONObject)jsonResponse.getJSONArray("upcs").get(index)).getBigInteger("id").toString());
         } catch (JSONException e) {
             System.err.println("Unable to get product information from FCC: " + e);
         }
@@ -76,7 +78,7 @@ public class ProductService {
         Element processCheckoutResponse = new OrderServices().getXmlElements(processCheckout(initiateCheckoutResponse.getElementsByTagName("number").item(0).getTextContent(), initiateCheckoutResponse.getElementsByTagName("guid").item(0).getTextContent()));
         if (Boolean.parseBoolean(processCheckoutResponse.getElementsByTagName("orderHasError").item(0).getTextContent()))
             isItemUnavailable = processCheckoutResponse.getElementsByTagName("message").item(0).getTextContent().equals("CS_ITEM_UNAVAILABLE");
-        return isItemUnavailable;
+        return !isItemUnavailable;
     }
 
     /**
@@ -125,6 +127,9 @@ public class ProductService {
                 "</order>\n";
     }
     private static String getProcessCheckoutBody(String orderNumber, String guid) {
+        HashMap<String, String> opts = new HashMap<>();
+        opts.put("checkout_eligible", "true");
+        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
         return "<order>\n" +
                 "<number>" + orderNumber + "</number>\n" +
                 "<guid>" + guid +"</guid>\n" +
@@ -132,18 +137,18 @@ public class ProductService {
                 "<shipment>\n" +
                 "<shippingContact>\n" +
                 "<address>\n" +
-                "<addressLine1>500 S.Karaemer Boulevard</addressLine1>\n" +
-                "<city>Brea</city>\n" +
-                "<state>CA</state>\n" +
+                "<addressLine1>"+address.getAddressLine1()+"</addressLine1>\n" +
+                "<city>"+address.getCity()+"</city>\n" +
+                "<state>"+address.getState()+"</state>\n" +
                 "<country>USA</country>\n" +
-                "<postalCode>88898</postalCode>\n" +
+                "<postalCode>"+address.getZipCode()+"</postalCode>\n" +
                 "</address>\n" +
                 "<firstName>First</firstName>\n" +
                 "<lastName>Last</lastName>\n" +
                 "<dayPhone>4326365427</dayPhone>\n" +
                 "<emailAddress>cbt@test.com</emailAddress>\n" +
                 "</shippingContact>\n" +
-                "<shippingMethod>O</shippingMethod>\n" +
+                "<shippingMethod>G</shippingMethod>\n" +
                 "<giftOptions>\n" +
                 "<giftMessage1>test1</giftMessage1>\n" +
                 "<giftMessage2>test2</giftMessage2>\n" +

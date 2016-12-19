@@ -7,6 +7,7 @@ import com.macys.sdt.framework.model.ProfileAddress;
 import com.macys.sdt.framework.model.User;
 import com.macys.sdt.framework.model.UserProfile;
 import com.macys.sdt.framework.utils.*;
+import com.macys.sdt.framework.utils.db.models.UserService;
 import com.macys.sdt.shared.actions.website.bcom.pages.LoyallistAssociation;
 import com.macys.sdt.shared.actions.website.bcom.pages.LoyaltyEnrollment;
 import com.macys.sdt.shared.actions.website.bcom.pages.my_account.MyAccountBCOM;
@@ -401,6 +402,7 @@ public class MyAccountSteps extends StepUtils {
             throw new Exceptions.ProductionException("iAddFullyEnrolledUslIdOnMyAccountPage()");
         pausePageHangWatchDog();
         String plenti_id = TestUsers.getEnrolledUslId().getPlentiId();
+        UserService.removeUslIdFromAllUsers(plenti_id);
         TextBoxes.typeTextbox("my_account.usl_id", plenti_id);
         if (safari())
             Clicks.javascriptClick("my_account.apply_usl_id_button");

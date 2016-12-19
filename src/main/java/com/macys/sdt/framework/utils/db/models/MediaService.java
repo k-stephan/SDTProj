@@ -2,6 +2,8 @@ package com.macys.sdt.framework.utils.db.models;
 
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
+import com.macys.sdt.framework.utils.rest.services.Canvas;
+import com.macys.sdt.framework.utils.rest.services.Categories;
 import org.apache.commons.collections4.ListUtils;
 import org.json.JSONException;
 import org.json.JSONObject;

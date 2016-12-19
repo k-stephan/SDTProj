@@ -1,4 +1,4 @@
-package com.macys.sdt.framework.utils.db.models;
+package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import org.apache.http.client.methods.CloseableHttpResponse;

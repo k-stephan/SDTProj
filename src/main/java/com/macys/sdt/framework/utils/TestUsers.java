@@ -872,7 +872,13 @@ public class TestUsers {
                         }
                     }
                 }
-                found = ((found && orderable) ? ProductService.checkoutAvailability(product.get("id").toString()) : found);
+                List<String> upcIds = new ArrayList<>();
+                if (found && orderable)
+                    upcIds = ProductService.getAllUpcIds(product.get("id").toString());
+                // Skip product if the product have more than one upcId
+                if (found && orderable && (upcIds.size() > 1))
+                    continue;
+                found = ((found && orderable) ? (ProductService.checkoutAvailability(product.get("id").toString()) && ProductService.checkProductAvailabilityAtMST(upcIds.get(0))) : found);
                 if (found) {
                     return new Product(product);
                 }
