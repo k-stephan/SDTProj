@@ -93,6 +93,8 @@ class WebDriverConfigurator {
                     try {
                         driver = new SafariDriver(capabilities);
                     } catch (Exception e) {
+                        System.err.println("Failed to open safari driver: " + e);
+                        System.err.println("Retrying: " + count);
                         Utils.threadSleep(5000, null);
                     }
                 return driver;

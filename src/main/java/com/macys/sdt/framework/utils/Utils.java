@@ -69,7 +69,7 @@ public class Utils {
     private static File infoFile = null;
     private static FileOutputStream errStream = null;
     private static FileOutputStream infoStream = null;
-    private static boolean resourcesExctracted = false;
+    private static boolean resourcesExtracted = false;
 
     /**
      * Executes a command on the command line (cmd for windows, else bash)
@@ -730,7 +730,7 @@ public class Utils {
         try (
                 TarArchiveInputStream inputTar = new TarArchiveInputStream(new FileInputStream(tar))
         ) {
-            outputCompressFile(tarFilePath, inputTar, outputPath);
+            extractCompressedFile(tarFilePath, inputTar, outputPath);
         }
         return false;
     }
@@ -754,31 +754,31 @@ public class Utils {
     }
 
     public static void extractResources(File repoJar, String workspace, String project) throws IOException {
-        if (resourcesExctracted) {
+        if (resourcesExtracted) {
             return;
         }
         String rpath = "com/macys/sdt/framework/resources";
         System.out.println(rpath);
-        outputJarFile(repoJar, rpath, workspace + "/" + rpath);
+        extractJarFile(repoJar, rpath, workspace + "/" + rpath);
 
         rpath = "com/macys/sdt/shared/resources";
         System.out.println(rpath);
-        outputJarFile(repoJar, rpath, workspace + "/" + rpath);
+        extractJarFile(repoJar, rpath, workspace + "/" + rpath);
         saveDriver("chromedriver.exe", rpath);
         saveDriver("IEDriverServer.exe", rpath);
 
         rpath = "com/macys/sdt/projects/";
         System.out.println(rpath);
-        outputJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features");
-        resourcesExctracted = true;
+        extractJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features");
+        resourcesExtracted = true;
     }
 
-    protected static boolean outputJarFile(File ar, String tarFilePath, String outputPath, String... fileFilters) throws IOException {
+    protected static boolean extractJarFile(File ar, String tarFilePath, String outputPath, String... fileFilters) throws IOException {
         try (
                 FileInputStream fin = new FileInputStream(ar);
                 JarArchiveInputStream inputTar = new JarArchiveInputStream(fin)
         ) {
-            outputCompressFile(tarFilePath, inputTar, outputPath, fileFilters);
+            extractCompressedFile(tarFilePath, inputTar, outputPath, fileFilters);
         }
         return false;
     }
@@ -790,7 +790,7 @@ public class Utils {
         return outputPath + "/" + path.replaceAll(tarPath, "");
     }
 
-    private static boolean isFileFilter(String[] filters, String path) {
+    private static boolean matchesFilter(String[] filters, String path) {
         if (filters.length == 0) {
             return true;
         }
@@ -802,9 +802,9 @@ public class Utils {
         return false;
     }
 
-    private static void outputCompressFile(String tarFilePath, ArchiveInputStream inputTar, String outputPath, String... fileFilters) throws IOException {
+    private static void extractCompressedFile(String tarFilePath, ArchiveInputStream inputTar, String outputPath, String... fileFilters) throws IOException {
         File outputFile = new File(outputPath);
-        createDirectory(outputFile.getAbsoluteFile().getParentFile(), false);
+        createDirectory(outputFile.getAbsoluteFile().getParentFile().getPath(), false);
 
         ArchiveEntry entry;
         while ((entry = inputTar.getNextEntry()) != null) {
@@ -812,12 +812,12 @@ public class Utils {
             if (!path.startsWith(tarFilePath)) {
                 continue;
             }
-            if (!entry.isDirectory() && !isFileFilter(fileFilters, path)) {
+            if (!entry.isDirectory() && !matchesFilter(fileFilters, path)) {
                 continue;
             }
 
             if (entry.isDirectory()) {
-                createDirectory(new File(getOutputPath(tarFilePath, outputPath, path)), false);
+                createDirectory(getOutputPath(tarFilePath, outputPath, path), false);
             } else {
                 File fOut = new File(getOutputPath(tarFilePath, outputPath, path));
                 long ts = System.currentTimeMillis();
@@ -836,7 +836,6 @@ public class Utils {
                     bout.write(buff, 0, length);
                 }
                 System.out.println(System.currentTimeMillis() - ts + ":" + bout.size());
-                //                writeBinaryFile(bout.toByteArray(), fOut, false);
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
                 Utils.createDirectory(ftemp.getParent(), false);
                 for (int i = 0; i < 100; i++) {
@@ -844,8 +843,8 @@ public class Utils {
                         renameFile(ftemp, fOut, 10);
                         break;
                     }
-                    System.out.println("--> retry outputCompressFile:" + i);
-                    threadSleep(3000l, null);
+                    System.out.println("--> retry extractCompressedFile:" + i);
+                    threadSleep(3000, null);
                 }
             }
         }
