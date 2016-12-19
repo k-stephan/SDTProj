@@ -1,6 +1,5 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.interactions.InteractionsSuiteTest;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.AfterClass;
@@ -18,16 +17,40 @@ public class CookiesTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        InteractionsSuiteTest.setUp();
-        Assume.assumeTrue(MainRunner.driverInitialized());
-        Navigate.visit("http://www.qa11codemacys.fds.com");
-        Cookies.changeDomain("qa11codemacys.fds.com");
+        MainRunner.workspace = "";
+        MainRunner.browser = "firefox";
+        MainRunner.remoteOS = "Windows 7";
+        MainRunner.timeout = 90;
+        MainRunner.url = "http://www.macys.com";
+        boolean preCondition = false;
+        try {
+            MainRunner.getWebDriver();
+            MainRunner.PageHangWatchDog.init();
+            MainRunner.PageHangWatchDog.resetWatchDog();
+            Navigate.visit(MainRunner.url);
+            MainRunner.debugMode = true;
+            preCondition = true;
+        } catch (Exception e) {
+            System.err.println("-->Error - Test setUp:" + e.getMessage());
+        }
+        Assume.assumeTrue("Precondition not met.", preCondition);
+        Cookies.changeDomain("macys.com");
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
+        try {
+            if (MainRunner.driverInitialized()) {
+                MainRunner.resetDriver(true);
+            }
+        } catch (Exception e) {
+            System.err.println("-->Error - Test tearDown:" + e.getMessage());
+        }
         Cookies.resetDomain();
-        InteractionsSuiteTest.tearDown();
+        MainRunner.debugMode = false;
+        MainRunner.browser = null;
+        MainRunner.remoteOS = null;
+        MainRunner.url = null;
     }
 
     @Test
