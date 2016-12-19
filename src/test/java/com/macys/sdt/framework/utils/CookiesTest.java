@@ -10,6 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Ignore("Need to decide which domain to use for testing Cookies")
 public class CookiesTest {
 
@@ -17,8 +20,8 @@ public class CookiesTest {
     public static void setUp() throws Exception {
         InteractionsSuiteTest.setUp();
         Assume.assumeTrue(MainRunner.driverInitialized());
-        Navigate.visit("http://www.google.com");
-        Cookies.changeDomain("google.com");
+        Navigate.visit("http://www.qa11codemacys.fds.com");
+        Cookies.changeDomain("qa11codemacys.fds.com");
     }
 
     @AfterClass
@@ -111,5 +114,84 @@ public class CookiesTest {
     public void testResetIshipCookie() throws Exception {
         Cookies.resetIshipCookie();
         Assert.assertEquals("US", Cookies.getCookieValue("shippingCountry"));
+    }
+
+    @Test
+    public void testAddSegment() throws Exception {
+        int segment = 1234;
+        Cookies.addSegment(segment);
+        Assert.assertTrue(Cookies.getCookieValue("SEGMENT").contains(Integer.toString(segment)));
+    }
+
+    @Test
+    public void testRemoveSegment() throws Exception {
+        int segment = 9876;
+        Cookies.addSegment(segment);
+        Cookies.removeSegment(segment);
+        Assert.assertFalse(Cookies.getCookieValue("SEGMENT").contains(Integer.toString(segment)));
+    }
+
+    @Test
+    public void testEditSegments() throws Exception {
+        List<String> toAdd = new ArrayList<>();
+        toAdd.add("1122");
+        toAdd.add("2244");
+        List<String> toRemove = new ArrayList<>();
+        toRemove.add("2467");
+        toRemove.add("1457");
+        toRemove.forEach(Cookies::addSegment);
+        Cookies.editSegments(toAdd, toRemove);
+        String segments = Cookies.getCookieValue("SEGMENT");
+        for(String seg : toAdd) {
+            Assert.assertTrue(segments.contains(seg));
+        }
+        for(String seg : toRemove) {
+            Assert.assertFalse(segments.contains(seg));
+        }
+    }
+
+    @Test
+    public void testSetSingleSegment() throws Exception {
+        String segment = "9999";
+        Cookies.setSingleSegment(segment);
+        Assert.assertEquals("{\"EXPERIMENT\":[" + segment + "]}", Cookies.getCookieValue("SEGMENT"));
+    }
+
+    @Test
+    public void testForceRc() throws Exception {
+        MainRunner.brand = "mcom";
+        Cookies.forceRc();
+        String segments = Cookies.getCookieValue("SEGMENT");
+        Assert.assertTrue(segments.contains("1067"));
+        Assert.assertFalse(segments.contains("1066"));
+        MainRunner.brand = null;
+    }
+
+    @Test
+    public void testForceNonRc() throws Exception {
+        MainRunner.brand = "bcom";
+        Cookies.forceNonRc();
+        String segments = Cookies.getCookieValue("SEGMENT");
+        Assert.assertTrue(segments.contains("1097"));
+        Assert.assertFalse(segments.contains("1098"));
+        MainRunner.brand = null;
+    }
+
+    @Test
+    public void testDisableForeseeSurvey() throws Exception {
+        Cookies.disableForeseeSurvey();
+        Assert.assertEquals("365", Cookies.getCookieValue("fsr.o"));
+    }
+
+    @Test
+    public void testSetDefaultSegments() throws Exception {
+        Assert.assertTrue(Cookies.setDefaultSegments());
+    }
+
+    @Test
+    public void testDisableExperimentation() throws Exception {
+        Cookies.disableExperimentation();
+        Assert.assertEquals("false", Cookies.getCookieValue("mercury"));
+        Assert.assertEquals("{\"EXPERIMENT\":[]}", Cookies.getCookieValue("SEGMENT"));
     }
 }

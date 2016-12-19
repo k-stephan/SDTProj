@@ -1,22 +1,30 @@
 package com.macys.sdt.framework.utils.db.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class DBUtilsTest {
 
     @BeforeClass
     public static void setup() {
-        MainRunner.url = "http://mcom-bops16s.c4d.devops.fds.com/";
-        MainRunner.browser = "firefox";
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.project = "framework";
+        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
+        HashMap<String, String> env = new HashMap<>();
+        env.put("dbUnitTest", "true");
+        env.put("dbUnitTestConfig", "{\"dbInfo\":{\"dbName\":\"mcyprdst\",\"dbSchema\":\"DB2MCYS\",\"dbUsername\":\"mcyapp\",\"dbPassword\":\"dbacce5s\",\"dbPortNo\":\"60020\",\"dbHost\":\"ibm80p49\",\"dbUrl\":\"jdbc:db2://ibm80p49:60020/MCYPRDST\"}}");
+        TestUtils.setEnv(env);
     }
 
-    //@Test
-    public void getCustomDate() {
+    @Test
+    public void testGetCustomDate() {
         try {
             Assert.assertNotNull("Date generated is null", DBUtils.getCustomDate());
         } catch (Exception e) {
@@ -24,13 +32,14 @@ public class DBUtilsTest {
         }
     }
 
-    //@Test
-    public void setupDBConnection() throws SQLException {
+    @Test
+    public void testSetupDBConnection() throws SQLException {
         Connection con = null;
         try {
             con = DBUtils.setupDBConnection();
             Assert.assertNotNull(con);
             Assert.assertFalse(con.isClosed());
+            new DBConnection().closeConnection();
         } catch (Exception e) {
             Assert.fail("Failed due to : " + e.getMessage());
         } finally {
@@ -40,8 +49,8 @@ public class DBUtilsTest {
         }
     }
 
-    //@Test
-    public void getConfig() {
+    @Test
+    public void testGetConfig() {
         try {
             Assert.assertNotNull(new DBUtils().getConfig());
         } catch (Exception e) {
