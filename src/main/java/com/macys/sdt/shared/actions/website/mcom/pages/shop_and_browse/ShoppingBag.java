@@ -130,8 +130,8 @@ public class ShoppingBag extends StepUtils {
             if (macys() && !Elements.findElements(Elements.element("shopping_bag.quantities")).get(i).getSize().toString().isEmpty()) {
                 p.quantity = Integer.parseInt(new Select(Elements.findElements("shopping_bag.quantities").get(i)).getFirstSelectedOption().getText());
                 p.giftCard = false;
-            } else if (bloomingdales() && Elements.findElements((ie() ? By.className("itemQtyDropdown") : By.cssSelector(".itemQtyDropdown>.current"))).get(i).isDisplayed()) {
-                p.quantity = Integer.parseInt((ie() ? DropDowns.getSelectedValue(By.className("itemQtyDropdown")) : Elements.findElements(By.cssSelector(".itemQtyDropdown>.current")).get(i).getText()));
+            } else if (bloomingdales() && Elements.findElements(By.cssSelector(".itemQtyDropdown>.current")).get(i).isDisplayed()) {
+                p.quantity = Integer.parseInt(Elements.findElements(By.cssSelector(".itemQtyDropdown>.current")).get(i).getText());
                 p.giftCard = false;
             } else {
                 p.quantities = Elements.findElements(Elements.element("shopping_bag.gift_card_quantities")).get(i).getText().split("\n");

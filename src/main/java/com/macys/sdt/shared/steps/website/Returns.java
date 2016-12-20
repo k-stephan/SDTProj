@@ -216,6 +216,7 @@ public class Returns extends StepUtils {
     @Then("^I verify order details for \"([^\"]*)\" items in OH page$")
     public void I_verify_order_details_for_items_in_OH_page(String status) throws Throwable {
         ReturnsPage returnObj = new ReturnsPage();
+        pausePageHangWatchDog();
         returnObj.findOrderInDateRange(orderNum);
         Map orderHash = returnObj.getOrder(orderNum);
         if (orderHash.get("orderNumber").toString().isEmpty())
@@ -266,6 +267,7 @@ public class Returns extends StepUtils {
             }
             Elements.getText("order_details.backordered_text").trim().contains("This item is on backorder and the delivery date is delayed. Please contact Customer Service at 1-800-BUY-MACY(289-6229) ???forAssistance???");
         }
+        resumePageHangWatchDog();
     }
 
     @And("^I verify order details in OD page$")

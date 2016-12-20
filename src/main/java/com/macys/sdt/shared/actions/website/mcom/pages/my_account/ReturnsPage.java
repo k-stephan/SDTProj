@@ -412,7 +412,7 @@ public class ReturnsPage extends StepUtils {
                     details.put("itemPrice", liElement.findElement(By.className("price")).getText());
                 if(liElement.findElements(By.tagName("span")).size() > 0)
                     details.put("itemQty", liElement.findElement(By.tagName("span")).getText());
-                if(macys() && liElement.getAttribute("class").equals("description") && liElement.findElements(By.tagName("p")).size() > 0)
+                if(macys() && liElement.getAttribute("class").contains("description") && liElement.findElements(By.tagName("p")).size() > 0)
                     details.put("itemDescription", liElement.findElement(By.tagName("p")).getText());
                 if(liElement.findElements(By.tagName("p")).size() > 0){
                     for(WebElement pElement : liElement.findElements(By.tagName("p"))){

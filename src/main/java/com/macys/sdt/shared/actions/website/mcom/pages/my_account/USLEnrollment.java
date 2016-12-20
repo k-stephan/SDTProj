@@ -8,6 +8,7 @@ import com.macys.sdt.framework.model.UserProfile;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import org.apache.commons.lang3.text.WordUtils;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -122,6 +123,7 @@ public class USLEnrollment extends StepUtils {
      * Private method for selecting random salutation
      */
     private static void selectRandomSalutation() {
+        Assert.assertTrue("ERROR - APP : User not navigated to Plenti site!!", Elements.elementPresent("usl_enroll_step1.salutation_list"));
         List<WebElement> options = Elements.findElement(Elements.element("usl_enroll_step1.salutation_list")).findElements(By.tagName("option"));
         int index = new Random().nextInt(options.size());
         if (safari())
