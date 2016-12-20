@@ -144,4 +144,20 @@ public class ClicksTests {
         Clicks.clickLazyElement("unit_test_page.lazy_load");
         Assert.assertTrue(MainRunner.getCurrentUrl().contains("#heading"));
     }
+
+    @Test
+    public void testClickWithExitCondition() throws Exception {
+        Clicks.click(Elements.element("unit_test_page.show_after_2s"), () -> Wait.untilElementPresent("unit_test_page.div_show"));
+        Assert.assertTrue(Elements.elementPresent("unit_test_page.div_show"));
+    }
+
+    @Test
+    public void testClickWithPreCondition() throws Exception {
+        Clicks.click("unit_test_page.show_after_2s");
+        try {
+            Clicks.click(() -> Wait.untilElementPresent("unit_test_page.div_show"), Elements.element("unit_test_page.div_show"));
+        } catch (Exception e) {
+            Assert.fail("Failed testClickWithPreCondition : " + e.getMessage());
+        }
+    }
 }

@@ -13,6 +13,8 @@ import org.openqa.selenium.WebDriver;
  */
 public class NavigateTests {
 
+    static boolean forRunnableTest;
+
     @BeforeClass
     public static void setUp() {
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
@@ -68,5 +70,63 @@ public class NavigateTests {
         Assert.assertTrue(Navigate.switchWindow(1).getTitle().equalsIgnoreCase("Third Party Header Component"));
         Navigate.switchWindowClose();
         Assert.assertTrue(MainRunner.getWebDriver().getTitle().contains("style guide"));
+    }
+
+    @Test
+    public void testBeforeNavigation() throws Exception {
+        forRunnableTest = false;
+        Runnable runnable = Navigate.addBeforeNavigation(() -> forRunnableTest = true);
+        Assert.assertFalse(forRunnableTest);
+        Navigate.runBeforeNavigation();
+        Assert.assertTrue(forRunnableTest);
+
+        forRunnableTest = false;
+        Navigate.removeBeforeNavigation(runnable);
+        Navigate.runBeforeNavigation();
+        Assert.assertFalse(forRunnableTest);
+
+        Navigate.addBeforeNavigation(runnable);
+        Navigate.removeAllBeforeNavigation();
+        Navigate.runBeforeNavigation();
+        Assert.assertFalse(forRunnableTest);
+
+        Navigate.addBeforeNavigation(runnable);
+        Navigate.removeBeforeNavigation(0);
+        Navigate.runBeforeNavigation();
+        Assert.assertFalse(forRunnableTest);
+
+        Navigate.addBeforeNavigation(runnable);
+        Navigate.clearNavigationMethods();
+        Navigate.runBeforeNavigation();
+        Assert.assertFalse(forRunnableTest);
+    }
+
+    @Test
+    public void testAfterNavigation() throws Exception {
+        forRunnableTest = false;
+        Runnable runnable = Navigate.addAfterNavigation(() -> forRunnableTest = true);
+        Assert.assertFalse(forRunnableTest);
+        Navigate.runAfterNavigation();
+        Assert.assertTrue(forRunnableTest);
+
+        forRunnableTest = false;
+        Navigate.removeAfterNavigation(runnable);
+        Navigate.runAfterNavigation();
+        Assert.assertFalse(forRunnableTest);
+
+        Navigate.addAfterNavigation(runnable);
+        Navigate.removeAllAfterNavigation();
+        Navigate.runAfterNavigation();
+        Assert.assertFalse(forRunnableTest);
+
+        Navigate.addAfterNavigation(runnable);
+        Navigate.removeAfterNavigation(0);
+        Navigate.runAfterNavigation();
+        Assert.assertFalse(forRunnableTest);
+
+        Navigate.addAfterNavigation(runnable);
+        Navigate.clearNavigationMethods();
+        Navigate.runAfterNavigation();
+        Assert.assertFalse(forRunnableTest);
     }
 }
