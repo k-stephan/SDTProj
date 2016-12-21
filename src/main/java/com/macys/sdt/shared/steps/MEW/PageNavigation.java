@@ -95,7 +95,7 @@ public class PageNavigation extends StepUtils {
     public void I_navigate_to_the_create_profile_page() throws Throwable {
         GlobalNav.closeGlobalNav();
         Assert.assertTrue("ERROR-ENV: Create Account element is not visible", Elements.elementPresent(Elements.element("sign_in.create_account")));
-        Clicks.click("sign_in.create_account");
+        Clicks.javascriptClick("sign_in.create_account");
         shouldBeOnPage("create_profile");
     }
 
