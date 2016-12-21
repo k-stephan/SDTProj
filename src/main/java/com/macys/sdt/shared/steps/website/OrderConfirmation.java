@@ -56,8 +56,8 @@ public class OrderConfirmation extends StepUtils {
     public void I_capture_order_number_from_order_confirmation_page() throws Throwable {
         boolean responsive = onPage("responsive_order_confirmation");
         String page = responsive ? "responsive_order_confirmation" : "order_confirmation";
-        Assert.assertTrue("Order number not displayed.", Wait.untilElementPresent(page + ".verify_page"));
-        orderNumber = Elements.getText(page + ".verify_page");
+        Assert.assertTrue("Order number not displayed.", Wait.untilElementPresent(page + ".order_number"));
+        orderNumber = Elements.getText(page + ".order_number");
     }
 
     @Then("^I should see order confirmation section displayed with order details$")
@@ -78,7 +78,7 @@ public class OrderConfirmation extends StepUtils {
 
     @And("^I verify the order details in DB for nohurry$")
     public void I_verify_the_order_details_in_DB_for_nohurry() throws Throwable {
-        orderNumber = Elements.getText("responsive_order_confirmation.order_number").split(": ")[1];
+        orderNumber = Elements.getText("responsive_order_confirmation.order_number").split(":\n")[1];
         OrderServices order = new OrderServices();
         String inventoryDownMsg = Elements.getText("responsive_order_confirmation.rc_inventory_down_message");
 

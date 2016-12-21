@@ -93,7 +93,7 @@ public class Wishlist extends StepUtils {
         if (!Wait.secondsUntilElementPresent("wish_list.item_links", 5))
             Navigate.browserRefresh();
         List<WebElement> plist = Elements.findElements("wish_list.item_links");
-        Boolean found = plist.stream().anyMatch(link -> link.getText().equalsIgnoreCase(product));
+        Boolean found = plist.stream().anyMatch(link -> link.getText().toLowerCase().contains(product.toLowerCase()));
         Assert.assertTrue("Product is not added to wishlist", found);
         resumePageHangWatchDog();
     }

@@ -507,7 +507,10 @@ public class MyAccountSteps extends StepUtils {
                 TextBoxes.typeTextbox("create_profile.security_answer", user.getUserPasswordHint().getAnswer());
             }
         }
-        Clicks.click("my_profile.update_profile_button");
+        if (edge())
+            Clicks.javascriptClick("my_profile.update_profile_button");
+        else
+            Clicks.click("my_profile.update_profile_button");
         if (macys()) {
             if (!Elements.elementPresent("my_profile.update_message")) {
                 Assert.fail("Profile not updated");
@@ -674,6 +677,7 @@ public class MyAccountSteps extends StepUtils {
     public void iShouldSeeBelowFieldsOnCreditServiceGatewayPage(List<String> elements) throws Throwable {
         String page = "credit_service_gateway_" + (signedIn() ? "signedin" : "guest");
         Clicks.click(page + ".other_ways_to_pay_link");
+        Assert.assertFalse("ERROR - ENV : CITI services are down!!", Elements.elementPresent(By.className("infoMessages")));
         elements.forEach(element ->
                 Assert.assertTrue(element + " is not displayed on credit service gateway guest page",
                         Elements.elementPresent(page + "." + element)));
