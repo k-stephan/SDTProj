@@ -1,0 +1,229 @@
+{
+  "envName": "qa0codemacys",
+  "dbInfo": {
+    "dbName": "mlq10",
+    "dbSchema": "DB2MCYS",
+    "dbUsername": "mcyapp",
+    "dbPassword": "dbacce5s",
+    "dbPortNo": "60000",
+    "dbHost": "11.168.113.122",
+    "dbUrl": "jdbc:db2://11.168.113.122:60000/MLQ10"
+  },
+  "bopsDBInfo": {
+    "dbName": "mbopsms",
+    "dbSchema": "DB2MBOP",
+    "dbUsername": "mbopsapp",
+    "dbPassword": "only4BOPS",
+    "dbPortNo": "60004",
+    "dbHost": "11.168.113.122"
+  },
+  "dycesDBInfo": {
+    "dbName": "DYCESDB",
+    "dbSchema": "",
+    "dbUsername": "rtd1",
+    "dbPassword": "rtd1",
+    "dbPortNo": "1521",
+    "dbHost": "jcia6528",
+    "dbIp": "11.168.54.31"
+  },
+  "orderDBDetails": {
+    "dbName": "MCORD",
+    "dbSchema": "DB2MBAG",
+    "dbUsername": "mbagapp",
+    "dbPassword": "only4MBAG",
+    "dbPortNo": "60028",
+    "dbHost": "jcie4297",
+    "dbIp": "11.168.113.122"
+  },
+  "envDetails": [
+    {
+      "siteEnvName": "qa0codemacys",
+      "stageStatus": "ONHOLD",
+      "stage": "5",
+      "envType": "QAEnv",
+      "myServicesIpBoList": [
+        {
+          "appName": "Legacy",
+          "appIp": "11.168.113.136",
+          "hostName": "jcie4311",
+          "stream": "MCOM"
+        },
+        {
+          "appName": "NavApp",
+          "appIp": "11.168.113.137",
+          "hostName": "jcie4312",
+          "stream": "MCOM"
+        },
+        {
+          "appName": "SITE-ASYNC-DB2",
+          "appIp": "11.168.113.122",
+          "hostName": "jcie4297",
+          "stream": "MCOM"
+        }
+      ],
+      "applicationBolist": [
+        {
+          "appName": "APOLLO",
+          "envName": "jcia7834",
+          "ipAddress": "11.168.59.84"
+        },
+        {
+          "appName": "BagApp",
+          "envName": "jcia5694",
+          "ipAddress": "11.168.50.195"
+        },
+        {
+          "appName": "DYCES",
+          "envName": "jcia6527",
+          "ipAddress": "11.168.54.30"
+        },
+        {
+          "appName": "DyCES-DB",
+          "envName": "jcia6528",
+          "ipAddress": "11.168.54.31"
+        },
+        {
+          "appName": "EcomPortal_JBOSS",
+          "envName": "jcia6509",
+          "ipAddress": "11.168.54.12"
+        },
+        {
+          "appName": "F5_VIP",
+          "ipAddress": "11.168.104.181"
+        },
+        {
+          "appName": "FCC",
+          "envName": "jcia8356",
+          "ipAddress": "11.168.61.118"
+        },
+        {
+          "appName": "FCC_Cassandra",
+          "envName": "jcia8357",
+          "ipAddress": "11.168.61.119"
+        },
+        {
+          "appName": "FCC_Cassandra2",
+          "envName": "jcia8351",
+          "ipAddress": "11.168.61.113"
+        },
+        {
+          "appName": "FCC_OpsCenter",
+          "envName": "jcia8354",
+          "ipAddress": "11.168.61.116"
+        },
+        {
+          "appName": "JDG_JBOSS",
+          "envName": "jcia8536",
+          "ipAddress": "11.168.62.43"
+        },
+        {
+          "appName": "JON-ORACLE-FMAM-v1.0",
+          "envName": "jcia7508",
+          "ipAddress": "11.168.58.13"
+        },
+        {
+          "appName": "JON_ENV",
+          "envName": "jcia7507",
+          "ipAddress": "11.168.58.12"
+        },
+        {
+          "appName": "MOBILEAPP_AUTH",
+          "envName": "jcie4366",
+          "ipAddress": "11.168.113.191"
+        },
+        {
+          "appName": "mobweb",
+          "envName": "jcie4373",
+          "ipAddress": "11.168.113.198"
+        },
+        {
+          "appName": "MSPAddress",
+          "envName": "jcia8139",
+          "ipAddress": "11.168.60.156"
+        },
+        {
+          "appName": "MSPCONTENT",
+          "envName": "jcia7857",
+          "ipAddress": "11.168.59.107"
+        },
+        {
+          "appName": "MSPCUSTOMER",
+          "envName": "jcia5089",
+          "ipAddress": "11.168.48.100"
+        },
+        {
+          "appName": "MSPCustomerBatch",
+          "envName": "jcia6524",
+          "ipAddress": "11.168.54.27"
+        },
+        {
+          "appName": "MSPDiscovery",
+          "envName": "jcia8522",
+          "ipAddress": "11.168.62.29"
+        },
+        {
+          "appName": "MSPORDER",
+          "envName": "jcia6513",
+          "ipAddress": "11.168.54.16"
+        },
+        {
+          "appName": "MSPOrderBatch",
+          "envName": "jcia7836",
+          "ipAddress": "11.168.59.86"
+        },
+        {
+          "appName": "MSPTax",
+          "envName": "jcia8133",
+          "ipAddress": "11.168.60.150"
+        },
+        {
+          "appName": "NAVAPP_JBOSS",
+          "envName": "jcie4324",
+          "ipAddress": "11.168.113.149"
+        },
+        {
+          "appName": "OES-JBOSS",
+          "envName": "jcia0107",
+          "ipAddress": "11.168.36.187"
+        },
+        {
+          "appName": "OES-ORACLE-DB",
+          "envName": "jcia0106",
+          "ipAddress": "11.168.36.186"
+        },
+        {
+          "appName": "SearchNSend_JBOSS",
+          "envName": "jcie0148",
+          "ipAddress": "11.168.108.228"
+        },
+        {
+          "appName": "SEO-JBOSS",
+          "envName": "jcia7867",
+          "ipAddress": "11.168.59.117"
+        },
+        {
+          "appName": "SHOPAPP_JBOSS",
+          "envName": "jcie0139",
+          "ipAddress": "11.168.108.219"
+        },
+        {
+          "appName": "SMARTMONKEY_JBOSS",
+          "envName": "jcia9678",
+          "ipAddress": "11.168.26.167"
+        },
+        {
+          "appName": "TIBCO",
+          "envName": "jcia7863",
+          "ipAddress": "11.168.59.113"
+        },
+        {
+          "appName": "WSSG_JBOSS",
+          "envName": "jcie4363",
+          "ipAddress": "11.168.113.188"
+        }
+      ]
+    }
+  ],
+  "f5Vip": "11.168.104.181",
+  "sdpMode": "\u003chtml\u003e\u003cHEAD\u003e\u003ctitle\u003eSDP SVIP Mode Check\u003c/title\u003e\u003c/HEAD\u003e\u003cbody\u003e\u003c/body\u003e\u003c/html"
+}

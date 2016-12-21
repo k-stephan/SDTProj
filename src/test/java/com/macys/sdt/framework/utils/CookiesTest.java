@@ -6,13 +6,11 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Ignore("Need to decide which domain to use for testing Cookies")
 public class CookiesTest {
 
     @BeforeClass

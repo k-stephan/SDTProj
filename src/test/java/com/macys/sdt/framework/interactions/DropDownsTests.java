@@ -58,5 +58,25 @@ public class DropDownsTests {
         Assert.assertNotNull(options);
         Assert.assertFalse(options.isEmpty());
     }
+
+    @Test
+    public void testSelectCustomText() throws Exception {
+        String value = "August";
+        DropDowns.selectCustomText("unit_test_page.custom_dropdown", "unit_test_page.custom_dropdown_options", value);
+        Assert.assertEquals(value, Elements.getText("unit_test_page.custom_dropdown_value"));
+    }
+
+    @Test
+    public void testSelectCustomValue() throws Exception {
+        DropDowns.selectCustomValue("unit_test_page.custom_dropdown", "unit_test_page.custom_dropdown_options", 4);
+        Assert.assertEquals("April", Elements.getText("unit_test_page.custom_dropdown_value"));
+    }
+
+    @Test
+    public void testGetAllCustomValues() throws Exception {
+        List<String> options = DropDowns.getAllCustomValues("unit_test_page.custom_dropdown", "unit_test_page.custom_dropdown_options");
+        Assert.assertNotNull(options);
+        Assert.assertFalse(options.isEmpty());
+    }
 }
 

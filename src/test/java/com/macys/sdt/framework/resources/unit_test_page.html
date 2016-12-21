@@ -10,6 +10,71 @@
       h1:hover + p {
       display: block;
       }
+      .custom.dropdown {
+        cursor: pointer;
+        border: solid 1px #999;
+        display: inline-block;
+        position: relative;
+        top: 0;
+        height: 2.5rem;
+        margin: 0 0 1.66667rem;
+        padding: 0;
+        width: 134px;
+        background: #fff;
+        box-shadow: none;
+        vertical-align: top;
+        text-align: left
+      }
+      .custom.dropdown .current {
+        white-space: nowrap;
+        line-height: 2.5rem;
+        height: 2.5rem;
+        color: #000;
+        text-decoration: none;
+        overflow: hidden;
+        display: block;
+        padding: 0 1.58333rem 0 0.75rem;
+        margin: 1px
+      }
+      .custom.dropdown ul {
+        overflow-y: auto;
+        max-height: 18.75rem;
+        position: absolute;
+        display: none;
+        left: -1px;
+        top: 2.5rem;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        border: solid 1px #999;
+        width: 134px
+      }
+      .custom.dropdown ul li {
+        color: #000;
+        cursor: auto;
+        padding: 0 0.83333rem;
+        min-height: 2.5rem;
+        line-height: 2.5rem;
+        margin: 0;
+        white-space: nowrap;
+        list-style: none
+      }
+      .custom.dropdown ul li.selected {
+        background: #eee;
+        color: #000
+      }
+      .custom.dropdown ul li:hover {
+        background-color: #e4e4e4;
+        color: #000
+      }
+      .custom.dropdown ul li.selected:hover {
+        background: #eee;
+        cursor: auto;
+        color: #000
+      }
+      .custom.dropdown ul.show {
+        display: block
+      }
     </style>
     <script>
       function showDiv() {
@@ -51,6 +116,9 @@
     <br>
     <br>
     <a class="link" href="#select">Go to dropdown</a>
+    <br>
+    <br>
+    <a class="link" href="#custom-dropdown">Go to custom dropdown</a>
     <br>
     <br>
     <a class="link" href="#button">Go to submit button</a>
@@ -154,6 +222,28 @@
           </li>
           <li>
             <br>
+            <label for="custom-dropdown" class="custom-dropdown-label">Custom Drop Down: </label>
+            <div class="custom dropdown" id="custom-dropdown">
+              <div class="current" tabindex="0">Month</div>
+              <ul>
+                <li class="selected">Month</li>
+                <li class="">January</li>
+                <li class="">February</li>
+                <li class="">March</li>
+                <li class="">April</li>
+                <li class="">May</li>
+                <li class="">June</li>
+                <li class="">July</li>
+                <li class="">August</li>
+                <li class="">September</li>
+                <li class="">October</li>
+                <li class="">November</li>
+                <li class="">December</li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <br>
             <input type="submit" name="submit" id="button" value="Submit" class="button">
           </li>
         </ul>
@@ -175,5 +265,19 @@
       <br>
       <br>
     </div>
+    <script>
+      document.querySelector(".custom.dropdown .current").addEventListener("click", function(){
+          document.querySelector(".custom.dropdown ul").classList.toggle("show");
+      });
+      var elements = document.querySelectorAll(".custom.dropdown li");
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].addEventListener("click", function() {
+          document.querySelector(".custom.dropdown li.selected").setAttribute("class", "");
+          this.setAttribute("class", "selected");
+          document.querySelector(".custom.dropdown .current").innerText = document.querySelector(".custom.dropdown .selected").innerText;
+          document.querySelector(".custom.dropdown ul").classList.toggle("show");
+        });
+      }
+    </script>
   </body>
 </html>

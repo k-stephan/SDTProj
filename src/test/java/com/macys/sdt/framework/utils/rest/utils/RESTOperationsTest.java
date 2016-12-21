@@ -6,14 +6,14 @@ import org.junit.Test;
 
 public class RESTOperationsTest {
 
-    @Test @Ignore("Need Review")
+    @Test
     public void testDoPOST() throws Exception {
         String url = "http://mdc2vr4073:9099/RAPADDashboardConfig/getEnvDetails.html";
         String payload = "{\"stream\": \"MCOM\", \"stage\": \"5\", \"release\": \"15R\"}";
         Assert.assertNotNull(RESTOperations.doPOST(url, "application/json", payload, null));
     }
 
-    @Test @Ignore("Need Review")
+    @Test
     public void testDoGET() throws Exception {
         Assert.assertNotNull(RESTOperations.doGET("http://segments.macys.com/campaign/all", null));
     }

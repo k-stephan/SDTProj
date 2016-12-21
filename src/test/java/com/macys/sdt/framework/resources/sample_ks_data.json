@@ -1,0 +1,27 @@
+{
+  "mbMoneyMobileEnabled": {
+    "Feature Name": "MBMoneyMobileFeature",
+    "Key Display Name": "MB Money Mobile Feature Enabled",
+    "Expected Value": "true"
+  },
+  "simplifiedRegistryCheckoutEnabled": {
+    "Feature Name": "RegistryCheckout",
+    "Key Display Name": "Simplified Registry Checkout",
+    "Expected Value": "true"
+  },
+  "uslEnabled": {
+    "Feature Name": "USLFeatureEnabled",
+    "Key Display Name": "Loyalty Feature",
+    "Expected Value": "true"
+  },
+  "newSignUpEnabled": {
+    "Feature Name": "NewSignUpFeature",
+    "Key Display Name": "BCOM New Sign Up with Loyallist Enroll",
+    "Expected Value": "false"
+  },
+  "threeDSecurityEnabled": {
+    "Feature Name": "ThreeDSecurityEnabled",
+    "Key Display Name": "3D Security Feature",
+    "Expected Value": "true"
+  }
+}

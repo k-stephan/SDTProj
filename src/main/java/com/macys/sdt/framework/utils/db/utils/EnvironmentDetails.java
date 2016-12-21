@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils.db.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.Utils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -10,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -123,6 +125,14 @@ public class EnvironmentDetails {
      * @throws IOException if response is unreadable
      */
     public static String getJSONString() throws IOException {
+
+        // This is for EnvironmentDetails Unit Test
+        if (MainRunner.booleanParam("envDetailsUnitTest")) {
+            File envDetailsFile = new File("src/test/java/com/macys/sdt/framework/resources/sample_env_details.json");
+            if (envDetailsFile.exists()) {
+             return Utils.readTextFile(envDetailsFile);
+            }
+        }
 
         String serviceUrl = getServiceURL(ENV_URL);
         CloseableHttpClient httpClient = HttpClients.createDefault();

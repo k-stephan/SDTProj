@@ -1,8 +1,10 @@
 package com.macys.sdt.framework.model;
 
 import com.google.gson.Gson;
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Utils;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Map;
 
@@ -24,6 +26,20 @@ public class KillSwitch {
         if (data != null && !data.isEmpty()) {
             return new Gson().toJson(data, Map.class);
         }
+
+        // This is for KillSwitch Unit Test
+        if (MainRunner.booleanParam("killSwitchUnitTest")) {
+            File ksDataFile = new File("src/test/java/com/macys/sdt/framework/resources/sample_ks_data.json");
+            if (ksDataFile.exists()) {
+                try {
+                    String sampleData = Utils.readTextFile(ksDataFile);
+                    KillSwitch.data = new Gson().fromJson(sampleData, Map.class);
+                    return sampleData;
+                } catch (Exception ignored) {
+                }
+            }
+        }
+
         try {
             String env = new URL(System.getenv("website")).getHost().replaceAll("www1.", "").replaceAll("www.", "").replaceAll(".fds.com", "").replaceAll(".com", "");
             String ksurl = Utils.getEEUrl() + "/api/ee/getKillSwitch/" + env;
