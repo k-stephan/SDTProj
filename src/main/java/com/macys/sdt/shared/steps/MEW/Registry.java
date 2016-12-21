@@ -173,10 +173,9 @@ public class Registry extends StepUtils {
 
     @Then("^I should be navigated to the mobile registry manager page$")
     public void I_should_be_navigated_to_the_mobile_registry_manager_page() throws Throwable {
-        if (onPage("registry_manager")) {
-            if (Elements.elementPresent("registry_manager.registry_header")) {
+        Wait.secondsUntilElementPresent(Elements.element("registry_manager.registry_header"), 5);
+        if (Elements.elementPresent("registry_manager.registry_header")) {
                 System.out.print("User successfully navigated to Registry Manager Page");
-            }
         } else {
             Assert.fail("User is currently not in Registry Manager Page");
         }

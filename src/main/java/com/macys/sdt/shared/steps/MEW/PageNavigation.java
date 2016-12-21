@@ -120,7 +120,18 @@ public class PageNavigation extends StepUtils {
                     break;
             }
         } else {
-            Assert.fail("User is currently not in Registry Home Page");
+            //mew bcom redirects from home
+            if (bloomingdales()) {
+                switch (mode) {
+                    case "create":
+                        GlobalNav.navigateOnGnByName("Create");
+                        GlobalNav.closeGlobalNav();
+                        break;
+                }
+            } else {
+                Assert.fail("User is currently not in Registry Home Page");
+            }
+
         }
     }
 
