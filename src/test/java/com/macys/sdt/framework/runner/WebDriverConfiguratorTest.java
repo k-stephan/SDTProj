@@ -156,4 +156,20 @@ public class WebDriverConfiguratorTest {
             MainRunner.brand = null;
         }
     }
+
+    @Test @Ignore("Ignore for Jenkins")
+    public void testInitAppiumDevice() throws Exception {
+        MainRunner.browser = "safari";
+        MainRunner.device = "iPhone 6";
+        MainRunner.brand = "MCOM";
+        MainRunner.useAppium = true;
+        try {
+            driver = WebDriverConfigurator.initDriver(null);
+        } catch (Exception e) {
+            Assert.fail("Failed to initialize the driver due to: " + e.getMessage());
+        } finally {
+            MainRunner.useAppium = false;
+            MainRunner.brand = null;
+        }
+    }
 }

@@ -85,10 +85,10 @@ public class MainRunnerTest {
         Assert.assertTrue(MainRunner.booleanParam("testBooleanParam"));
     }
 
-    @Test @Ignore("WIP")
+    @Test @Ignore("MainRunner.main is having System.exit call")
     public void testMain() throws Throwable {
         MainRunner.scenarios = "src/test/java/com/macys/sdt/framework/Features/website/mcom/test.feature";
-        MainRunner.url = "http://www.qa11codemacys.fds.com";
+        MainRunner.url = "http://www.macys.com";
         MainRunner.browser = "firefox";
         MainRunner.project = "sdt.framework";
         try {

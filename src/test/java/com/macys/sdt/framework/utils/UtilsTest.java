@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.lang.Runtime.getRuntime;
+
 public class UtilsTest {
 
     @Test
@@ -300,6 +302,38 @@ public class UtilsTest {
         MainRunner.url = null;
         MainRunner.project = null;
         MainRunner.projectDir = null;
+    }
 
+    @Test
+    public void testProcessWatchDog() throws Exception {
+        try {
+            Process simpleProcess = getRuntime().exec(Utils.isWindows() ? "cd" : "pwd");
+            Utils.ProcessWatchDog wd = new Utils.ProcessWatchDog(simpleProcess, 1000, "testProcessWatchDog");
+            wd.run();
+        } catch (Exception e) {
+            Assert.fail("Failed testProcessWatchDog : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testThreadWatchDog() throws Exception {
+
+        // For initLogs
+        MainRunner.workspace = "";
+        Utils.redirectSOut();
+        Utils.resetSOut();
+
+        try {
+            class SimpleThread extends Thread {
+                public void run() {
+                    System.out.println("Test Thread Watch Dog");
+                }
+            }
+            SimpleThread simpleThread = new SimpleThread();
+            Utils.ThreadWatchDog wd = new Utils.ThreadWatchDog(simpleThread, 1000, "testThreadWatchDog", null);
+            wd.run();
+        } catch (Exception e) {
+            Assert.fail("Failed testProcessWatchDog : " + e.getMessage());
+        }
     }
 }
