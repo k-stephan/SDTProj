@@ -123,7 +123,7 @@ public class USLEnrollment extends StepUtils {
      * Private method for selecting random salutation
      */
     private static void selectRandomSalutation() {
-        Assert.assertTrue("ERROR - ENV : User not navigated to Plenti site!!", Elements.elementPresent("usl_enroll_step1.salutation_list"));
+        Assert.assertTrue("ERROR - ENV : User not navigated to Plenti site!!", Elements.elementPresent("usl_enroll_step1.salutation"));
         List<WebElement> options = Elements.findElement(Elements.element("usl_enroll_step1.salutation_list")).findElements(By.tagName("option"));
         int index = new Random().nextInt(options.size());
         if (safari())

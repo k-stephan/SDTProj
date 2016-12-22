@@ -380,7 +380,7 @@ class WebDriverConfigurator {
             if (!StepUtils.mobileDevice() && !remoteOS.matches("^Windows 10|(.*?)10.11$")) {
                 capabilities.setCapability("screenResolution", "1280x1024");
             }
-            if (remoteOS.matches("^(.*?)10.11$") || StepUtils.edge()) {
+            if (remoteOS.matches("^(.*?)10.11$") || remoteOS.matches("^(.*?)10.12$") || StepUtils.edge()) {
                 capabilities.setCapability("screenResolution", "1152x864");
             }
 
