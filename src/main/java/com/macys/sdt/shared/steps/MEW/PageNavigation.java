@@ -122,12 +122,14 @@ public class PageNavigation extends StepUtils {
         } else {
             //mew bcom redirects from home
             if (bloomingdales()) {
+                GlobalNav.openGlobalNav();
+                GlobalNav.navigateOnGnByName("The Registry");
                 switch (mode) {
                     case "create":
                         GlobalNav.navigateOnGnByName("Create");
-                        GlobalNav.closeGlobalNav();
                         break;
                 }
+                GlobalNav.closeGlobalNav();
             } else {
                 Assert.fail("User is currently not in Registry Home Page");
             }

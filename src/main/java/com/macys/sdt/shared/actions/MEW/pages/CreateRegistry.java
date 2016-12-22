@@ -81,6 +81,15 @@ public class CreateRegistry extends StepUtils {
             DropDowns.selectByText("create_registry.event_location", registry.getEventLocation());
             DropDowns.selectByText("create_registry.preferred_store_state", registry.getPreferredStoreState());
         }
+
+        if (MEW() && bloomingdales()) {
+            TextBoxes.typeTextbox("create_registry.address_line_1", profileAddress.getAddressLine1());
+            TextBoxes.typeTextbox("create_registry.address_line_2", "");
+            TextBoxes.typeTextbox("create_registry.address_city", profileAddress.getCity());
+            DropDowns.selectByText("create_registry.address_state", profileAddress.getState());
+            TextBoxes.typeTextbox("create_registry.address_zip_code", String.valueOf(profileAddress.getZipCode()));
+        }
+
         TextBoxes.typeTextbox("create_registry.number_of_guests", registry.getNumberOfGuest());
 
         TextBoxes.typeTextbox("create_registry.co_registrant_first_name", registry.getCoRegistrantFirstName());

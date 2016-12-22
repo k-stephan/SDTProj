@@ -299,4 +299,23 @@ public class ShopAndBrowse extends StepUtils {
         Clicks.clickRandomElement("site_menu.category_names");
         shouldBeOnPage("category_browse");
     }
+
+    @Then("^I should see recommendation panel on pdp page using mobile website$")
+    public void I_should_see_recommendation_panel_on_pdp_page_using_mobile_website() throws Throwable {
+        shouldBeOnPage("product_display");
+        Elements.elementShouldBePresent("recommendations.recommendations_products");
+    }
+
+    @When("I select \"([^\"]*)\" recommended product from pdp page using mobile website")
+    public void I_select_recommended_product_from_pdp_page_using_mobile_website(String toSelect) throws Throwable {
+        switch (toSelect) {
+            case "first":
+                Clicks.clickWhenPresent("product_display.recommended_product");
+                break;
+            default:
+                System.out.println("unsupported page");
+                break;
+        }
+        shouldBeOnPage("product_display");
+    }
 }

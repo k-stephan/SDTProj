@@ -208,8 +208,7 @@ public class Registry extends StepUtils {
         } else {
             Assert.fail("User is currently not in Create Registry Page");
         }
-        Wait.forPageReady();
-        shouldBeOnPage("registry_welcome");
+        //There is no welcome page for bcom mew
     }
 
     @When("^I navigate to wedding registry page$")
