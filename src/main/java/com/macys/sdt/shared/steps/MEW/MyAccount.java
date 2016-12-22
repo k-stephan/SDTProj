@@ -256,6 +256,58 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    @When("^I navigate to the loyalty landing page as a \"([^\"]*)\" user using mobile website$")
+    public void iNavigateToTheLoyaltyLandingPageAsAUser(String user_type) throws Throwable {
+        // Before landing to the Loyalty enrollment page check whether the loyalty account already associated to the signed in account
+        if (signedIn() && Elements.elementPresent("my_account.view_my_loyalllist_account")) {
+            System.out.println("--> User is already enrolled in Loyalty!!");
+        } else {
+            Clicks.click("home.become_guest_loyallist");
+            switch (user_type.toLowerCase()) {
+                case "guest":
+                    shouldBeOnPage("loyalty_home");
+                    break;
+                case "signed_in":
+                    shouldBeOnPage("loyalty_enrollment");
+                    break;
+            }
+        }
+    }
+
+    @And("^I navigate to the loyalty enrollment page using mobile website$")
+    public void iNavigateToTheLoyaltyEnrollmentPage() throws Throwable {
+        Clicks.click("loyalty_home.create_profile_enroll_button");
+        shouldBeOnPage("loyalty_enrollment");
+    }
+
+    @Then("^I should be able to enroll in to the loyalty program as a \"([^\"]*)\" user using mobile website$")
+    public void iShouldBeAbleToEnrollInToTheLoyaltyProgramAsAUser(String user_type) throws Throwable {
+        if (prodEnv())
+            throw new Exceptions.ProductionException("iShouldBeAbleToEnrollInToTheLoyaltyProgramAsAUser()");
+        String pageName = null;
+        if (signedIn() && Elements.elementPresent("my_account.view_my_loyalllist_account")) {
+            Clicks.click("my_account.view_my_loyalllist_account");
+            Wait.forPageReady();
+            System.out.println("--> User is already enrolled in Loyalty, navigating to loyalty_enrollment_confirmation!!");
+            pageName = "loyallist_account_summary";
+        } else {
+            LoyaltyEnrollment enrollmentPage = new LoyaltyEnrollment();
+            switch (user_type.toLowerCase()) {
+                case "guest":
+                    enrollmentPage.guestUserLoyaltyEnrollmentMobileWebsite(TestUsers.getCustomer(null));
+                    break;
+                case "signed_in":
+                    enrollmentPage.signedInUserLoyaltyEnrollment(TestUsers.getCustomer(null));
+                    break;
+            }
+            pageName = "loyalty_enrollment_confirmation";
+        }
+        if (!Elements.elementPresent(pageName + ".loyalty_number")) {
+            Assert.fail("Loyalty Enrollment Confirmation Page Not Loaded Properly");
+        } else {
+            System.out.println("Loyalty Enrollment Confirmation Page Loaded Successfully!!!");
+        }
+    }
     @And("^I add a offer \"([^\"]*)\" to my wallet using mobile website$")
     public void I_add_a_offer_to_my_wallet_using_mobile_website(String code) throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.available_offers")) {

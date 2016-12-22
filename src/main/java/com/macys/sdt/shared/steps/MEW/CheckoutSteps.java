@@ -149,7 +149,7 @@ public class CheckoutSteps extends StepUtils {
                             Clicks.click(page + ".change_shipping_address");
                             Clicks.click(page + ".address_edit_link");
                         } else {
-                            Clicks.clickWhenPresent(page + ".add_shipping_address_button");
+                            Clicks.click(page + ".add_shipping_address_button");
                         }
                     } else if (onPage("shipping_payment_signed_in")) {
                         page = "shipping_payment_signed_in";
