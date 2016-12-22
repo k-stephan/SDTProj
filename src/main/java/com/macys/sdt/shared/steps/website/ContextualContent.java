@@ -424,7 +424,7 @@ public class ContextualContent extends StepUtils {
                             uiData.forEach(data -> Assert.assertTrue(errorMessage, ((boolean) ((Map) data.get("mediaInfo")).get("jspExists"))));
                         break;
                     default:
-                        Assert.fail("ERROR -ENV : Invalid media type!!");
+                        Assert.fail("ERROR - ENV : Required media type data is not displayed in UI!!");
                 }
             }
         } else {
