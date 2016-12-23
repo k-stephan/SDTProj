@@ -17,7 +17,7 @@ public class NavigateTests {
 
     @BeforeClass
     public static void setUp() {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.getPreCondition());
         Navigate.visit(MainRunner.url);
         Wait.forPageReady();
         Assume.assumeTrue(StepUtils.onPage("ui_standards"));

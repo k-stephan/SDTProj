@@ -14,13 +14,13 @@ public class TextBoxesTests {
 
     @BeforeClass
     public static void setUp() {
-        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.preCondition);
-        Assume.assumeTrue(InteractionsSuiteTest.testPageUrl != null);
+        Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.getPreCondition());
+        Assume.assumeTrue(InteractionsSuiteTest.getTestPageUrl() != null);
     }
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(InteractionsSuiteTest.testPageUrl);
+        MainRunner.getWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
     }
 
     @Test

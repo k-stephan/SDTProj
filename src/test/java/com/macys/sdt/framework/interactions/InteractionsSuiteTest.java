@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.StepUtilsInteractionsTests;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -15,12 +16,21 @@ import java.io.File;
         DropDownsTests.class,
         ElementsTests.class,
         WaitTests.class,
+        StepUtilsInteractionsTests.class,
         NavigateTests.class
 })
 public class InteractionsSuiteTest {
 
-    static boolean preCondition = false;
-    static String testPageUrl = null;
+    private static boolean preCondition = false;
+    private static String testPageUrl = null;
+
+    public static boolean getPreCondition() {
+        return preCondition;
+    }
+
+    public static String getTestPageUrl() {
+        return testPageUrl;
+    }
 
     @BeforeClass
     public static void setUp() throws Exception {

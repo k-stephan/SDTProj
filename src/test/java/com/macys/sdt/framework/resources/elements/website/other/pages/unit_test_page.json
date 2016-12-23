@@ -31,6 +31,11 @@
   "change_attribute":             "id, change",
   "start_loading":                "className, startLoading",
   "loader":                       "id, loader",
+  "frame":                        "id, frame",
+  "frame_content":                "id, frameContent",
+  "open_popup_window":            "linkText, Open Popup Window",
+  "open_alert":                   "linkText, Open Alert",
+
   "not_present":                  "id, notPresent",
   "param_element":                "className, row_{arg1}_{arg2}",
   "multi_value":                  "linkText, Some Text || name, someName"

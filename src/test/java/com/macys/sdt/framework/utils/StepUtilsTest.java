@@ -2,7 +2,10 @@ package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.File;
 
 public class StepUtilsTest {
 
@@ -142,5 +145,14 @@ public class StepUtilsTest {
         Assert.assertFalse(StepUtils.iOS());
         MainRunner.device = null;
         Assert.assertFalse(StepUtils.iOS());
+    }
+
+    @Test @Ignore("Not working in Jenkins")
+    public void testDesktopScreenCapture() throws Exception {
+        MainRunner.logs = "logs/";
+        Utils.createDirectory(MainRunner.logs, false);
+        File file = new File(MainRunner.logs + "StepUtilsTestDesktopScreenCapture.jpg");
+        StepUtils.desktopScreenCapture(file);
+        Assert.assertTrue(file.exists());
     }
 }
