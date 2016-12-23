@@ -522,4 +522,15 @@ public class MyAccount extends StepUtils {
         }
         Elements.elementShouldBePresent("order_details.order_total_details");
     }
+
+    @When("^I navigate to the loyallist enrollment page as a registered user using mobile website$")
+    public void I_navigate_to_the_loyallist_enrollment_page_as_a_registered_user_using_mobil_website() throws Throwable {
+        // Before landing to the Loyalty enrollment page check whether the loyalty account already associated to the signed in account
+        if (signedIn() && Elements.elementPresent("my_account.view_my_loyalllist_account")) {
+            System.out.println("--> User is already enrolled in Loyalty!!");
+        } else {
+            Clicks.click("my_account.become_a_loyallist");
+            shouldBeOnPage("loyalty_enrollment");
+        }
+    }
 }
