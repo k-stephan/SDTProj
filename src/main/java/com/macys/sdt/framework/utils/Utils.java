@@ -398,6 +398,8 @@ public class Utils {
     public static boolean threadSleep(long sleepTime, String msg) {
         Thread cur = Thread.currentThread();
         try {
+            if (infoLog == null || errLog == null)
+                initLogs();
             if (msg != null)
                 infoLog.println("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleepTime);
             Thread.sleep(sleepTime);
