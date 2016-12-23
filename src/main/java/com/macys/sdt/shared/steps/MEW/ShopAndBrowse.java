@@ -306,16 +306,22 @@ public class ShopAndBrowse extends StepUtils {
         Elements.elementShouldBePresent("recommendations.recommendations_products");
     }
 
-    @When("I select \"([^\"]*)\" recommended product from pdp page using mobile website")
-    public void I_select_recommended_product_from_pdp_page_using_mobile_website(String toSelect) throws Throwable {
-        switch (toSelect) {
-            case "first":
-                Clicks.clickWhenPresent("product_display.recommended_product");
-                break;
-            default:
-                System.out.println("unsupported page");
-                break;
+    @When("I select first recommended product from pdp page using mobile website")
+    public void I_select_recommended_product_from_pdp_page_using_mobile_website() throws Throwable {
+        if (Elements.anyPresent("product_display.recommended_product")) {
+            Clicks.javascriptClick("product_display.recommended_product");
+            shouldBeOnPage("product_display");
+        } else {
+            Assert.fail("Unable to click recommended product from horizontal pros panel");
         }
-        shouldBeOnPage("product_display");
+    }
+
+    @When("^I select random asset from mew home page$")
+    public void I_select_random_asset_from_mew_home_page() throws Throwable {
+        if (Elements.elementPresent("home.home_asset")) {
+            Clicks.click(Elements.findElement("home.home_asset"));
+        } else {
+            Assert.fail("Unable to find home page assets");
+        }
     }
 }
