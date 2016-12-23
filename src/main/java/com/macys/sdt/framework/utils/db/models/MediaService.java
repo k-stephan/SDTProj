@@ -1063,7 +1063,7 @@ public class MediaService {
                                     }
                                 }
                             } else {
-                                if (content.getString("contentType").equals(tempMediaNames[0]) && (content.has("attributes") && content.getJSONArray("attributes").length() != 0) && content.getJSONArray("contentlinks").length() != 0 && content.getJSONArray("contentlinks").length() >= 3) {
+                                if (content.getString("contentType").equals(tempMediaNames[0]) && (content.has("attributes") && content.getJSONArray("attributes").length() != 0) && (content.has("contentlinks") && content.getJSONArray("contentlinks").length() != 0 && content.getJSONArray("contentlinks").length() >= 3)) {
                                     finalMediaData.add(content);
                                     break;
                                 }

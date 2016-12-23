@@ -217,8 +217,11 @@ public class ContextualContent extends StepUtils {
             Assert.assertFalse("ERROR - DATA : Unable to find data in site database", finalExpectedData.isEmpty());
             List<Map> mediaDetails = new ArrayList<>();
             if (mainRowType.equals("0") || (Arrays.asList(mediaNamesArray).contains("PRODUCT_POOL"))) {
-                for (String seq : seqNumbers)
+                for (String seq : seqNumbers){
                     mediaDetails = flexPanel.getRowMediaByRowTypeSeqNumber(mainRowType, seq, true, true).stream().collect(Collectors.toList());
+                    if (mediaDetails.get(0).get("mediaType").equals("product_pool"))
+                        break;
+                }
             } else {
                 mediaDetails = flexPanel.getRowMediaByRowTypeSeqNumber(mainRowType, String.valueOf(sequence), true, true).stream().collect(Collectors.toList());
             }
