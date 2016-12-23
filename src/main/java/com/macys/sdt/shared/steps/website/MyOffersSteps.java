@@ -51,7 +51,7 @@ public class MyOffersSteps extends StepUtils {
                 }
             }*/
         } else
-            Assert.fail("ERROR - DATA : Eligible Wallet Offers not present Deals and Promotion Page!!");
+            Assert.fail("ERROR - DATA : Eligible Wallet Offers not present in Deals and Promotion Page!!");
     }
 
     @Then("^I should see the added offers in my wallet page$")

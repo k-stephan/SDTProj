@@ -1006,7 +1006,7 @@ public class MediaService {
                 catIds.removeIf(cat -> cat.equals("1003990") && mode.equals("WEDDING_REGISTRY"));
                 catIds.removeIf(cat -> Arrays.asList(tempMediaNames).contains("SLIDESHOW") && cat.equals("1002984"));
                 values.clear();
-                Assert.assertFalse("ERROR - DATA: Category_ids are not available in site database with expected media:" + String.join(", ", tempMediaNames) + " after exluding all chanel brand categories", catIds.isEmpty());
+                Assert.assertFalse("ERROR - DATA: Category_ids are not available in site database with expected media:" + String.join(", ", tempMediaNames) + " after excluding all chanel brand categories", catIds.isEmpty());
                 values.add(catIds.toArray(new String[catIds.size()]));
                 resultSet = statement.executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("category_site_chanel").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
                 while (resultSet.next())

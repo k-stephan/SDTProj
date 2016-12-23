@@ -108,7 +108,7 @@ public class WebsiteMcomFlexTemplatePage extends StepUtils {
         if (mediaType == null)
             mediaType = getMediaTypeByRow(rowElement, exceptEmptyRow);
         if(mediaType == null)
-            Assert.fail("ERROR - APP: invalid media type (null)!!");
+            Assert.fail("ERROR - APP: Invalid media type (null)!!");
         switch (mediaType) {
             case "video":
                 mediaData = getVideoMediaData(rowElement);
@@ -245,7 +245,7 @@ public class WebsiteMcomFlexTemplatePage extends StepUtils {
                     mediaData.put("copyElement", copyElement.findElement(By.id("copyBlockContainer")).isEnabled() ? copyElement.findElement(By.id("copyBlockContainer")) : (copyElement.findElement(By.xpath("..")).findElement(By.id("copyBlockContainer")).isEnabled() ? copyElement.findElement(By.xpath("..")).findElement(By.id("copyBlockContainer")) : rowElement.findElement(By.id("copyBlockArea"))));
                 break;
             default:
-                Assert.fail("ERROR - APP: invalid media type");
+                Assert.fail("ERROR - APP: Invalid media type");
         }
         return mediaData;
     }

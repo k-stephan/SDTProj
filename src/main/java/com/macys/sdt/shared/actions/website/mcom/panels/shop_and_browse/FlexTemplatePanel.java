@@ -122,7 +122,7 @@ public class FlexTemplatePanel extends StepUtils {
         Map mediaData = new HashMap<>();
         if (mediaType == null)
             mediaType = getMediaTypeByRow(rowElement, exceptEmptyRow);
-        Assert.assertFalse("ERROR - APP: invalid media type (null)!!", mediaType == null);
+        Assert.assertFalse("ERROR - APP: Invalid media type (null)!!", mediaType == null);
         switch (mediaType) {
             case "video":
                 mediaData = getVideoMediaData(rowElement);
@@ -263,7 +263,7 @@ public class FlexTemplatePanel extends StepUtils {
                     mediaData.put("copyElement", copyElement.findElement(By.id("copyBlockContainer")).isEnabled() ? copyElement.findElement(By.id("copyBlockContainer")) : (copyElement.findElement(By.xpath("..")).findElement(By.id("copyBlockContainer")).isEnabled() ? copyElement.findElement(By.xpath("..")).findElement(By.id("copyBlockContainer")) : rowElement.findElement(By.id("copyBlockArea"))));
                 break;
             default:
-                Assert.fail("ERROR - APP: invalid media type");
+                Assert.fail("ERROR - APP: Invalid media type");
         }
         return mediaData;
     }
