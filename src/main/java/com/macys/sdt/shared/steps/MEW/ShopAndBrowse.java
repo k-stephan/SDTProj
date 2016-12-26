@@ -8,6 +8,7 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.shared.actions.MEW.pages.Browse;
 import com.macys.sdt.shared.actions.MEW.pages.ProductDisplay;
 import com.macys.sdt.shared.actions.MEW.panels.MEWLeftFacet;
+import com.macys.sdt.shared.actions.MEW.panels.RecentlyViewed;
 import com.macys.sdt.shared.utils.CommonUtils;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -116,6 +117,31 @@ public class ShopAndBrowse extends StepUtils {
         }
         if (!found) {
             Assert.fail("Failed to find " + prod_type + " product after " + max + " tries.");
+        }
+    }
+
+    @When("^I click on \"(left|right)\" arrow key inside Recently Viewed panel using mobile website$")
+    public void I_click_on_arrow_key_inside_Recently_Viewed_panel(String arrow) throws Throwable {
+        RecentlyViewed.updateProducts();
+        if (!Clicks.clickIfPresent("recently_viewed_items.scroll_" + arrow))
+            Assert.fail("ERROR - APP: Cannot scroll to the " + arrow);
+        // wait for the scroll animation - can't find it programmatically but it always takes the same amount of time
+        Utils.threadSleep(2000, null);
+    }
+
+    @When("^I view (\\d+) random (member|master|member_alternate_image|master_alternate_image) products using mobile website$")
+    public void I_view_random_member_products(int count,String prod_type) throws Throwable {
+        int i = 0;
+
+        if (!onPage("category_browse", "search_result")) {
+            Assert.fail("No products to select");;
+        }
+
+        while(i < count){
+            I_select_a_random_product_using_mobile_website(prod_type,"");
+            Navigate.browserBack();
+            i++;
+            System.out.println("Navigate to "+i+" product");
         }
     }
 
