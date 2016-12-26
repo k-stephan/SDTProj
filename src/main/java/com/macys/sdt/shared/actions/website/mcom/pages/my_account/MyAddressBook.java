@@ -17,7 +17,7 @@ public class MyAddressBook extends StepUtils{
         ProfileAddress addressObject = TestUsers.getRandomValidAddress(opts);
         String pageName = "my_address_book";
         List<WebElement> allAddress = Elements.findElements(pageName + ".addresses");
-        Clicks.click(allAddress.get(index).findElement((macys() ? By.linkText("edit") : By.className("account_addressLink"))));
+        Clicks.click(allAddress.get(index).findElement((macys() ? (Elements.elementPresent(By.linkText("edit")) ? By.linkText("edit") : By.linkText("Edit")) : By.className("account_addressLink"))));
         addressBookCommonFields(pageName, addressObject);
         Wait.forPageReady();
         System.out.println("->editAddress(): Address updated!!");

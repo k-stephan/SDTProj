@@ -150,7 +150,7 @@ public class CampaignService extends StepUtils {
      *
      * @return active campaign details
      */
-    private static List<Map<String, Object>> getActiveCampaignDetails(String campaignCode) {
+    public static List<Map<String, Object>> getActiveCampaignDetails(String campaignCode) {
         List<Map<String, Object>> activeCampaigns = new ArrayList<>();
 
         try {
