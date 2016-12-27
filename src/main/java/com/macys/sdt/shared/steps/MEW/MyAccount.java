@@ -5,10 +5,7 @@ import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.Utils;
-import com.macys.sdt.shared.actions.MEW.pages.CreateProfileMEW;
-import com.macys.sdt.shared.actions.MEW.pages.MyOffers;
-import com.macys.sdt.shared.actions.MEW.pages.MyWallet;
-import com.macys.sdt.shared.actions.MEW.pages.LoyaltyEnrollment;
+import com.macys.sdt.shared.actions.MEW.pages.*;
 import com.macys.sdt.shared.actions.MEW.panels.GlobalNav;
 import com.macys.sdt.shared.utils.CommonUtils;
 import cucumber.api.java.en.And;
@@ -280,6 +277,31 @@ public class MyAccount extends StepUtils {
         shouldBeOnPage("loyalty_enrollment");
     }
 
+    @When("^I navigate to the loyallist account association page using mobile website$")
+    public void iNavigateToTheLoyallistAccountAssociationPage() throws Throwable {
+        // Before landing to the Loyalty association page check whether the loyalty account already associated to the signed in account
+        if (Elements.elementPresent("my_account.view_my_loyalllist_account")) {
+            Clicks.click("my_account.view_my_loyalllist_account");
+            shouldBeOnPage("loyallist_account_summary");
+            Clicks.click("loyallist_account_summary.remove_button");
+            Wait.untilElementPresent("loyallist_account_summary.lty_account_panel");
+            Clicks.click("loyallist_account_summary.remove_confirmation_btn");
+        } else {
+            Clicks.clickWhenPresent("my_account.goto_my_loyallist");
+        }
+        Wait.untilElementPresent("loyalty_association.verify_page");
+        shouldBeOnPage("loyalty_association");
+    }
+
+    @And("^I should be able to associate my account by loyallist number using \"([^\"]*)\" details on mobile website$")
+    public void iShouldBeAbleToAssociateMyAccountByLoyallistNumberUsingDetails(String loyallist_type) throws Throwable {
+        if (prodEnv())
+            throw new Exceptions.ProductionException("iShouldBeAbleToAssociateMyAccountByLoyallistNumberUsingDetails()");
+
+        LoyallistAssociation.loyaltyAssociation(TestUsers.getLoyallistInformation(loyallist_type));
+        Wait.untilElementPresent("loyallist_account_summary.verify_page");
+        shouldBeOnPage("loyallist_account_summary");
+    }
     @Then("^I should be able to enroll in to the loyalty program as a \"([^\"]*)\" user using mobile website$")
     public void iShouldBeAbleToEnrollInToTheLoyaltyProgramAsAUser(String user_type) throws Throwable {
         if (prodEnv())
