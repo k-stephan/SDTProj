@@ -91,6 +91,21 @@ public class DBConfig {
         return "com.ibm.db2.jcc.DB2Driver";
     }
 
+    /**
+     * get database driver path depending on database. If no match for database, db2 driver path returns
+     *
+     * @param databaseName name of database
+     * @return database driver path
+     */
+    public String getDriver(String databaseName) {
+        switch (databaseName) {
+            case "postgresql":
+                return "org.postgresql.Driver";
+            default:
+                return "com.ibm.db2.jcc.DB2Driver";
+        }
+    }
+
     public String getDBUrl() {
         if (dbUrl != null) {
             return dbUrl;

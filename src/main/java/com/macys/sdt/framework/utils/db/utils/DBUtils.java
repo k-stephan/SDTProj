@@ -53,6 +53,28 @@ public class DBUtils {
     }
 
     /**
+     * This method setup database connection depends on input given
+     *
+     * @param databaseName : name of database : postgresql, db2 (db2 is by default)
+     * @param dbUrl : url to access database
+     * @param username : username to access database
+     * @param password : password to access database
+     * @return database connection
+     */
+    public static Connection setupDBConnection(String databaseName, String dbUrl, String username, String password) {
+        DBConnection dbConnection = new DBConnection();
+        return dbConnection.createConnection(databaseName, dbUrl, username, password);
+    }
+
+    /**
+     * Method to remove DB connection
+     */
+    public static void removeDBConnection() {
+        new DBConnection().closeConnection();
+    }
+
+
+    /**
      * Attempts to retrieve the database configuration from Odin
      *
      * @return DBConfig object with config details
