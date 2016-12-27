@@ -60,7 +60,12 @@ public class ProductDisplay extends StepUtils {
 
     public void addRandomMemberProductOnMasterPDP() {
         try {
-            Clicks.clickRandomElement("product_display_master.add_member_to_bag");
+            if (bloomingdales()) {
+                Clicks.randomJavascriptClick(Elements.element("product_display_master.choose_member_items"));
+                Clicks.click("product_display_master.add_member_to_bag");
+            } else {
+                Clicks.clickRandomElement("product_display_master.add_member_to_bag");
+            }
             Wait.secondsUntilElementNotPresent("product_display_master.add_member_to_bag", 5);
         } catch (NoSuchElementException e) {
             Assert.fail("addRandomMemberProductOnMasterPDP(): Unable to select product");
