@@ -138,7 +138,7 @@ public class ShopAndBrowse extends StepUtils {
         }
 
         while(i < count){
-            I_select_a_random_product_using_mobile_website(prod_type,"");
+            I_select_a_random_product_using_mobile_website(prod_type,null);
             Navigate.browserBack();
             i++;
             System.out.println("Navigate to "+i+" product");
