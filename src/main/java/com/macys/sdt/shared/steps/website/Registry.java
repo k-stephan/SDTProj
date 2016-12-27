@@ -85,16 +85,6 @@ public class Registry extends StepUtils {
         if (userRegistry.getId() != null) {
             System.out.println("User is already logged into registry");
         } else {
-            if (onPage("registry_sign_in") && Elements.elementPresent("registry_sign_in.error_message")) {
-                if (prodEnv())
-                    throw new Exceptions.ProductionException("Cannot create accounts on prod!");
-                TextBoxes.typeTextbox("registry_sign_in.new_user_email", userAddress.getEmail());
-                TextBoxes.typeTextbox("registry_sign_in.new_user_email_verify", userAddress.getEmail());
-                TextBoxes.typeTextbox("registry_sign_in.new_user_password", credentials.getPassword());
-                TextBoxes.typeTextbox("registry_sign_in.new_user_password_verify", credentials.getPassword());
-                Clicks.click("registry_sign_in.new_user_continue_button");
-                CreateRegistry.fillRegistryUserDetails(user_details);
-            }
             Wait.forPageReady();
             CreateProfile.closeSecurityAlertPopUp();
             if (newRegistryEnabled) {
@@ -126,10 +116,9 @@ public class Registry extends StepUtils {
                     TextBoxes.typeTextbox("registry_sign_in.new_user_password_verify", credentials.getPassword());
                     Clicks.click("registry_sign_in.new_user_continue_button");
                     CreateRegistry.fillRegistryUserDetails(user_details);
-                }
-                Wait.forPageReady();
-                if (onPage("create_registry"))
+                } else if (onPage("create_registry"))
                     CreateRegistry.fillRegistryUserDetailsForExistingUser(user_details);
+                Wait.forPageReady();
             }
         }
         if (safari()) {
