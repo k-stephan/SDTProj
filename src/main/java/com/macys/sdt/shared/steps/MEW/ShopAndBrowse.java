@@ -221,11 +221,13 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I select \"([^\"]*)\" facet on left nav using mobile website$")
     public void I_select_facet_on_left_nav_using_mobile_website(String facet_name) throws Throwable {
         Wait.forPageReady();
-        String element = onPage("category_browse") ? "category_browse.sort_by" : "search_result.filter_by_select";
-        if (!Clicks.clickWhenPresent(element))
+        if (macys()) {
+            String element = onPage("category_browse") ? "category_browse.sort_by" : "search_result.filter_by_select";
+            if (!Clicks.clickWhenPresent(element))
                 Assert.fail("Unable to find facets on current page");
-        // We have no better way to wait for this animation
-        Utils.threadSleep(1000, null);
+            // We have no better way to wait for this animation
+            Utils.threadSleep(1000, null);
+        }
         MEWLeftFacet.selectFacetOnLeftNav(facet_name);
     }
 
