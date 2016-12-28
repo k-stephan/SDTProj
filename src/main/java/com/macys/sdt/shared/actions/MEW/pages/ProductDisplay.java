@@ -66,7 +66,7 @@ public class ProductDisplay extends StepUtils {
             } else {
                 Clicks.clickRandomElement("product_display_master.add_member_to_bag");
             }
-            Wait.secondsUntilElementNotPresent("product_display_master.add_member_to_bag", 5);
+            Wait.secondsUntilElementNotPresent("product_display_master.add_member_to_bag", 10);
         } catch (NoSuchElementException e) {
             Assert.fail("addRandomMemberProductOnMasterPDP(): Unable to select product");
         }
