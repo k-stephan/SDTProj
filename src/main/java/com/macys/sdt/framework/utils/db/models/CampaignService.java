@@ -314,7 +314,7 @@ public class CampaignService extends StepUtils {
      * @param campaignType to get campaign details
      * @return campaign details
      */
-    private static Map<String, Object> getCampaignDetails(String campaignType, boolean insertCampaignFlag) {
+    public static Map<String, Object> getCampaignDetails(String campaignType, boolean insertCampaignFlag) {
         Map<String, Object> campaignDetails = new HashMap<>();
 
         try {
