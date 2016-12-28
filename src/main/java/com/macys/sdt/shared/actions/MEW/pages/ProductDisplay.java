@@ -4,6 +4,7 @@ import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.DropDowns;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -66,7 +67,7 @@ public class ProductDisplay extends StepUtils {
             } else {
                 Clicks.clickRandomElement("product_display_master.add_member_to_bag");
             }
-            Wait.secondsUntilElementNotPresent("product_display_master.add_member_to_bag", 10);
+            Wait.secondsUntilElementNotPresent("product_display_master.add_member_to_bag", MainRunner.timeout);
         } catch (NoSuchElementException e) {
             Assert.fail("addRandomMemberProductOnMasterPDP(): Unable to select product");
         }
