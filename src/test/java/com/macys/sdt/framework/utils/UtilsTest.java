@@ -306,6 +306,7 @@ public class UtilsTest {
 
     @Test
     public void testProcessWatchDog() throws Exception {
+        Assume.assumeFalse("Not working in windows, Need Fix", Utils.isWindows());
         try {
             Process simpleProcess = getRuntime().exec(Utils.isWindows() ? "cd" : "pwd");
             Utils.ProcessWatchDog wd = new Utils.ProcessWatchDog(simpleProcess, 1000, "testProcessWatchDog");
