@@ -28,7 +28,9 @@ public class MEWLeftFacet extends StepUtils {
     }
 
     public static void confirmFacets() {
-        Clicks.clickIfPresent("left_facet.done");
+        if(macys()) {
+            Clicks.clickIfPresent("left_facet.done");
+        }
         Clicks.clickIfPresent("left_facet.apply");
         closePopup();
         Wait.forPageReady();

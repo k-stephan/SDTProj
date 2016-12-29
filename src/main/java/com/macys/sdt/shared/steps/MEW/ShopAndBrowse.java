@@ -230,15 +230,16 @@ public class ShopAndBrowse extends StepUtils {
             Utils.threadSleep(1000, null);
             MEWLeftFacet.selectFacetOnLeftNav(facet_name);
         } else {
-            //Only for expand default collapsed facets
             if (Elements.elementPresent("left_facet.select_facet")) {
-                switch (facet_name) {
-                    case "Department":
+                List<WebElement> facetsLists = Elements.findElements("left_facet.select_facet");
+                for (WebElement facetWebElement : facetsLists) {
+                    String facetName = facetWebElement.getText();
+                    if (!facetName.isEmpty() && facetName.equalsIgnoreCase(facet_name)) {
                         Clicks.clickElementByText("left_facet.select_facet", facet_name);
                         break;
-                    case "Style":
-                        Clicks.clickElementByText("left_facet.select_facet", facet_name);
-                        break;
+                    } else {
+                        Assert.fail("Unable to expand " + facet_name + " facet");
+                    }
                 }
             }
         }
