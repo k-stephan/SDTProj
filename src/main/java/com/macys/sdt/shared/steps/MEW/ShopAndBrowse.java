@@ -221,14 +221,27 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I select \"([^\"]*)\" facet on left nav using mobile website$")
     public void I_select_facet_on_left_nav_using_mobile_website(String facet_name) throws Throwable {
         Wait.forPageReady();
+        //mew bcom and mcom have too different facet selection
         if (macys()) {
             String element = onPage("category_browse") ? "category_browse.sort_by" : "search_result.filter_by_select";
             if (!Clicks.clickWhenPresent(element))
                 Assert.fail("Unable to find facets on current page");
             // We have no better way to wait for this animation
             Utils.threadSleep(1000, null);
+            MEWLeftFacet.selectFacetOnLeftNav(facet_name);
+        } else {
+            //Only for expand default collapsed facets
+            if (Elements.elementPresent("left_facet.select_facet")) {
+                switch (facet_name) {
+                    case "Department":
+                        Clicks.clickElementByText("left_facet.select_facet", facet_name);
+                        break;
+                    case "Style":
+                        Clicks.clickElementByText("left_facet.select_facet", facet_name);
+                        break;
+                }
+            }
         }
-        MEWLeftFacet.selectFacetOnLeftNav(facet_name);
     }
 
     @And("^I select \"([^\"]*)\" sub facet on left nav using mobile website$")
@@ -351,5 +364,12 @@ public class ShopAndBrowse extends StepUtils {
         } else {
             Assert.fail("Unable to find home page assets");
         }
+    }
+
+    @When("^I click show more to expand facet panel using mobile website$")
+    public void I_click_show_more_to_expand_facet_panel_using_mobile_website() throws Throwable {
+        //expand show more button from browse/search result page
+        Clicks.clickIfPresent("left_facet.show_more_facets");
+        Wait.until(() -> Elements.getText("left_facet.show_more_facets").equalsIgnoreCase("show less"));
     }
 }
