@@ -873,6 +873,10 @@ public class MainRunner {
         return 1;
     }
 
+    public static Timeouts timeouts() {
+        return Timeouts.instance();
+    }
+
     // protected methods
     // windows authentication dialog login
     protected static class AuthenticationDialog extends Thread {
