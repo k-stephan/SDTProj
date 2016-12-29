@@ -11,6 +11,7 @@ import net.lightbody.bmp.client.ClientUtil;
 import org.junit.Assert;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -380,7 +381,7 @@ class WebDriverConfigurator {
             if (!StepUtils.mobileDevice() && !remoteOS.matches("^Windows 10|(.*?)10.11$")) {
                 capabilities.setCapability("screenResolution", "1280x1024");
             }
-            if (remoteOS.matches("^(.*?)10.11$") || remoteOS.matches("^(.*?)10.12$") || StepUtils.edge()) {
+            if (remoteOS.matches("^(.*?)10.11$") || remoteOS.matches("^(.*?)10.12$") || StepUtils.edge() || StepUtils.firefox()) {
                 capabilities.setCapability("screenResolution", "1152x864");
             }
 
@@ -396,6 +397,13 @@ class WebDriverConfigurator {
                             Assert.fail("Failed to initialize saucelabs connection: " + e);
                         }
                     }
+            } else if (StepUtils.firefox()) {
+                try {
+                    return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
+                } catch (IllegalStateException | SessionNotCreatedException e) {
+                    capabilities.setCapability("marionette", false);
+                    return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
+                }
             } else if (useAppium) {
                 return initAppiumDevice(capabilities);
             } else {
