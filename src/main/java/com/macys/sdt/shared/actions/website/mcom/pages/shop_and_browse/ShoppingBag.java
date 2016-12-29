@@ -127,7 +127,7 @@ public class ShoppingBag extends StepUtils {
             Product p = new Product(Integer.parseInt(Elements.findElements(Elements.element("shopping_bag.product_ids")).get(i).getText()));
             p.name = Elements.findElements(Elements.element("shopping_bag.item_names")).get(i).getText();
 
-            if (macys() || (!Elements.findElements(Elements.element("shopping_bag.quantities")).get(i).getSize().toString().isEmpty())) {
+            if (macys() && (!Elements.findElements(Elements.element("shopping_bag.quantities")).get(i).getSize().toString().isEmpty())) {
                 p.quantity = Integer.parseInt(new Select(Elements.findElements("shopping_bag.quantities").get(i)).getFirstSelectedOption().getText());
                 p.giftCard = false;
             } else if (bloomingdales() && Elements.findElements(By.cssSelector((Elements.elementPresent(By.cssSelector(".itemQtyDropdown>.current"))? ".itemQtyDropdown>.current" : "select.itemQtyDropdown"))).get(i).isDisplayed()) {

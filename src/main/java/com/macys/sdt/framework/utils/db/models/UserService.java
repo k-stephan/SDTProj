@@ -21,7 +21,7 @@ public class UserService {
     /**
      * Unlink all user which are linked to USL ID
      *
-     * @param  uslId
+     * @param  uslId usl id
      */
     public static void removeUslIdFromAllUsers(String uslId){
         if (statement == null)
