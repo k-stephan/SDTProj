@@ -24,12 +24,12 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
 public class Wait {
 
     public static boolean until(BooleanSupplier condition) {
-        return until(condition, null);
+        return until(condition, MainRunner.timeouts().general());
     }
 
     public static boolean until(BooleanSupplier condition, Integer seconds) {
         try {
-            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds != null ? seconds : 5);
+            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds);
             wait.until((WebDriver driver) -> condition.getAsBoolean());
             return true;
         } catch (Exception ex) {
@@ -119,7 +119,7 @@ public class Wait {
      * @return true if element is present
      */
     public static boolean untilElementPresent(String selector) {
-        return secondsUntilElementPresent(Elements.element(selector), 5);
+        return secondsUntilElementPresent(Elements.element(selector), MainRunner.timeouts().untilElementPresent());
     }
 
     /**
@@ -129,7 +129,7 @@ public class Wait {
      * @return true if element is present
      */
     public static boolean untilElementPresent(By selector) {
-        return secondsUntilElementPresent(selector, 3);
+        return secondsUntilElementPresent(selector, MainRunner.timeouts().untilElementPresent());
     }
 
     /**
@@ -212,7 +212,7 @@ public class Wait {
     public static void untilElementPresentWithRefresh(By selector) {
         try {
             for (int i = 0; i < 2; i++) {
-                if (secondsUntilElementPresent(selector, 3)) {
+                if (secondsUntilElementPresent(selector, MainRunner.timeouts().untilElementPresent())) {
                     return;
                 }
                 Navigate.browserRefresh();
@@ -256,7 +256,7 @@ public class Wait {
     public static void untilElementPresentWithRefreshAndClick(By waitFor, By toClick) {
         try {
             for (int i = 0; i < 2; i++) {
-                if (secondsUntilElementPresent(waitFor, 3)) {
+                if (secondsUntilElementPresent(waitFor, MainRunner.timeouts().untilElementPresent())) {
                     Clicks.click(toClick);
                     return;
                 }
