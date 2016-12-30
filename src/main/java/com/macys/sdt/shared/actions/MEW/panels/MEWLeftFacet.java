@@ -33,7 +33,7 @@ public class MEWLeftFacet extends StepUtils {
         }
         Clicks.clickIfPresent("left_facet.apply");
         closePopup();
-        Wait.forPageReady();
+        Wait.secondsUntilElementNotPresent("left_facet.apply", 50);
         //bcom mew facet panel collapse again after refresh
         //Navigate.browserRefresh();
     }
