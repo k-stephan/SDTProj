@@ -30,8 +30,11 @@ public class MEWLeftFacet extends StepUtils {
     public static void confirmFacets() {
         if(macys()) {
             Clicks.clickIfPresent("left_facet.done");
+            Clicks.clickIfPresent("left_facet.apply");
         }
-        Clicks.clickIfPresent("left_facet.apply");
+        else {
+            Clicks.javascriptClick(Elements.findElement("left_facet.apply"));
+        }
         closePopup();
         Wait.secondsUntilElementNotPresent("left_facet.apply", 50);
         //bcom mew facet panel collapse again after refresh

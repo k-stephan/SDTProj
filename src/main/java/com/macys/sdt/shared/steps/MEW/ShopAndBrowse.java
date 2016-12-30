@@ -232,15 +232,20 @@ public class ShopAndBrowse extends StepUtils {
         } else {
             if (Elements.elementPresent("left_facet.select_facet")) {
                 List<WebElement> facetsLists = Elements.findElements("left_facet.select_facet");
-                for (WebElement facetWebElement : facetsLists) {
-                    String facetName = facetWebElement.getText();
-                    if (!facetName.isEmpty() && facetName.equalsIgnoreCase(facet_name)) {
+                int size = facetsLists.size();
+                for (int i = 0; i < size; i++) {
+                    boolean isCollapsed = Elements.getText("left_facet.show_more_facets").equalsIgnoreCase("show more");
+                    if (i > 1 && isCollapsed) {
+                        Clicks.click("left_facet.show_more_facets");
+                    }
+                    boolean foundMatch = facetsLists.get(i).getText().equalsIgnoreCase(facet_name);
+                    if (foundMatch) {
                         Clicks.clickElementByText("left_facet.select_facet", facet_name);
                         break;
-                    } else {
-                        Assert.fail("Unable to expand " + facet_name + " facet");
                     }
                 }
+            } else {
+                Assert.fail("Unable to expand " + facet_name + " facet");
             }
         }
     }
