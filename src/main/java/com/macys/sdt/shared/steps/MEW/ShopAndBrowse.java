@@ -221,33 +221,20 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I select \"([^\"]*)\" facet on left nav using mobile website$")
     public void I_select_facet_on_left_nav_using_mobile_website(String facet_name) throws Throwable {
         Wait.forPageReady();
+        // We have no better way to wait for this animation
+        Utils.threadSleep(1000, null);
         //mew bcom and mcom have too different facet selection
         if (macys()) {
             String element = onPage("category_browse") ? "category_browse.sort_by" : "search_result.filter_by_select";
             if (!Clicks.clickWhenPresent(element))
                 Assert.fail("Unable to find facets on current page");
-            // We have no better way to wait for this animation
-            Utils.threadSleep(1000, null);
-            MEWLeftFacet.selectFacetOnLeftNav(facet_name);
-        } else {
-            if (Elements.elementPresent("left_facet.select_facet")) {
-                List<WebElement> facetsLists = Elements.findElements("left_facet.select_facet");
-                int size = facetsLists.size();
-                for (int i = 0; i < size; i++) {
-                    boolean isCollapsed = Elements.getText("left_facet.show_more_facets").equalsIgnoreCase("show more");
-                    if (i > 1 && isCollapsed) {
-                        Clicks.click("left_facet.show_more_facets");
-                    }
-                    boolean foundMatch = facetsLists.get(i).getText().equalsIgnoreCase(facet_name);
-                    if (foundMatch) {
-                        Clicks.clickElementByText("left_facet.select_facet", facet_name);
-                        break;
-                    }
-                }
-            } else {
-                Assert.fail("Unable to expand " + facet_name + " facet");
+        }else{
+            boolean isCollapsed = Elements.getText("left_facet.show_more_facets").equalsIgnoreCase("show more");
+            if (isCollapsed) {
+                Clicks.click("left_facet.show_more_facets");
             }
         }
+        MEWLeftFacet.selectFacetOnLeftNav(facet_name);
     }
 
     @And("^I select \"([^\"]*)\" sub facet on left nav using mobile website$")

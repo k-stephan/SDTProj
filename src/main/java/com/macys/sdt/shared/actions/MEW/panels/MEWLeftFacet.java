@@ -62,6 +62,15 @@ public class MEWLeftFacet extends StepUtils {
             case "pattern":
                 alt = "FABRIC_PATTERN";
                 break;
+            case "department":
+                alt = "FOB";
+                break;
+            case "designer":
+                alt = "BRAND";
+                break;
+            case "sales & offers":
+                alt = "SPECIAL_OFFERS";
+                break;
             default:
                 alt = facet.toUpperCase().replaceAll(" ", "_").replaceAll("-", "_");
         }
