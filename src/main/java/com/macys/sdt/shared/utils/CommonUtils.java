@@ -503,6 +503,7 @@ public abstract class CommonUtils extends StepUtils {
         Product p = getRandomProduct(opts);
         Assert.assertNotNull("ERROR - DATA:  No " + productTrue + " product" + (productFalse != null ? " that is not " + productFalse : "") + " was found in products list.", p);
         CommonUtils.navigateDirectlyToProduct(p.id);
+        Assert.assertFalse("ERROR - DATA: This product is no longer available!!", (macys() && Elements.elementPresent(By.className("prodNotavailableMsg"))));
         shouldBeOnPage("product_display");
         return p;
     }
