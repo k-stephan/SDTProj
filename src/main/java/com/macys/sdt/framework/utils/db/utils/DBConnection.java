@@ -12,7 +12,8 @@ public class DBConnection {
     private static Connection con = null;
 
     /**
-     * This method close the database connection
+     * This method close the database connection.
+     * Close the db connection esp when switching between different database.
      */
     public void closeConnection() {
         try {

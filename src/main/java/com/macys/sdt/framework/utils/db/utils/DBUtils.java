@@ -43,7 +43,7 @@ public class DBUtils {
     }
 
     /**
-     * Method to setup DB connection
+     * Method to setup DB connection for db2 database of test environment based on REAPPS URL
      *
      * @return DB connection object
      */
@@ -53,13 +53,13 @@ public class DBUtils {
     }
 
     /**
-     * This method setup database connection depends on input given
+     * This method setup database connection based on input given
      *
      * @param databaseName : name of database : postgresql, db2 (db2 is by default)
      * @param dbUrl : url to access database
      * @param username : username to access database
      * @param password : password to access database
-     * @return database connection
+     * @return database connection object
      */
     public static Connection setupDBConnection(String databaseName, String dbUrl, String username, String password) {
         DBConnection dbConnection = new DBConnection();
@@ -67,9 +67,10 @@ public class DBUtils {
     }
 
     /**
-     * Method to remove DB connection
+     * Method to remove DB connection.
+     * Close the db connection esp when switching between different database.
      */
-    public static void removeDBConnection() {
+    public static void closeDBConnection() {
         new DBConnection().closeConnection();
     }
 
