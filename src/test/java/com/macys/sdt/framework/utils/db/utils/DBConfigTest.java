@@ -88,7 +88,7 @@ public class DBConfigTest {
         config.setHost(host);
         config.setPort(port);
 
-        Class.forName(config.getDriver());
+        Class.forName(config.getDriver(null));
         String str = "jdbc:db2://" + host + ":" + port + "/" + dbName;
         Assert.assertEquals(str, config.generateDBUrl());
     }

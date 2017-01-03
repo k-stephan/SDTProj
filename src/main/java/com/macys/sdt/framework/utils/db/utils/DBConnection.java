@@ -37,7 +37,7 @@ public class DBConnection {
             DBConfig config = util.getConfig();
 
             try {
-                Class.forName(config.getDriver());
+                Class.forName(config.getDriver(null));
                 System.out.println("Connecting to database...");
                 Assert.assertFalse("ERROR - ENV : Unable to fetch database details from REAPPS URL",
                         (config.getDBUrl() == null || config.getUserName() == null || config.getPassword() == null));
@@ -46,14 +46,15 @@ public class DBConnection {
             } catch (Exception e) {
                 System.out.println("Error occurred while creating database connection" + e.getMessage());
             }
+        } else {
+            System.out.println("INFO : Database connection already exists hence no new connection created");
         }
 
         return con;
-
     }
 
     /**
-     * This method create connection for database depending on inputs given
+     * This method create connection for database based on inputs given
      *
      * @param databaseName : name of database : postgresql, db2 (db2 is by default)
      * @param dbUrl : url to access database
@@ -74,7 +75,10 @@ public class DBConnection {
             } catch (Exception e) {
                 System.out.println("Error occurred while creating database connection" + e.getMessage());
             }
+        } else {
+            System.out.println("INFO : Database connection already exists hence no new connection created");
         }
+
         return con;
     }
 

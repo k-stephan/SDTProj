@@ -87,17 +87,17 @@ public class DBConfig {
         this.dbType = dbType;
     }
 
-    public String getDriver() {
-        return "com.ibm.db2.jcc.DB2Driver";
-    }
-
     /**
-     * get database driver path depending on database. If no match for database, db2 driver path returns
+     * Get database driver path based on database name.
+     * If no match for valid database, db2 driver path returns
      *
      * @param databaseName name of database
      * @return database driver path
      */
     public String getDriver(String databaseName) {
+        if (databaseName == null) {
+            return "com.ibm.db2.jcc.DB2Driver";
+        }
         switch (databaseName) {
             case "postgresql":
                 return "org.postgresql.Driver";
