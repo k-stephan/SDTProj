@@ -1,14 +1,12 @@
 package com.macys.sdt.shared.steps.MEW;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.utils.Exceptions;
-import com.macys.sdt.framework.utils.StepUtils;
-import com.macys.sdt.framework.utils.TestUsers;
-import com.macys.sdt.framework.utils.Utils;
+import com.macys.sdt.framework.utils.*;
 import com.macys.sdt.shared.actions.MEW.pages.*;
 import com.macys.sdt.shared.actions.MEW.panels.GlobalNav;
 import com.macys.sdt.shared.utils.CommonUtils;
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.Assert;
@@ -75,6 +73,10 @@ public class MyAccount extends StepUtils {
 
     @And("^I add a credit card from my wallet page using mobile website$")
     public void I_add_a_credit_card_from_my_account_page_using_mobile_website() throws Throwable {
+        if (MEW() && bloomingdales()){
+            CommonUtils.addCreditCardFromBWallet(null, null);
+            return;
+        }
         if (!onPage("my_account")) {
             GlobalNav.openGlobalNav();
             GlobalNav.navigateOnGnByName("My Account");
@@ -291,6 +293,29 @@ public class MyAccount extends StepUtils {
         }
         Wait.untilElementPresent("loyalty_association.verify_page");
         shouldBeOnPage("loyalty_association");
+    }
+
+    @And("^I click on add offer on wallet page using mobile website$")
+    public void iClickOnAddOfferOnWalletPage() throws Throwable {
+        Clicks.click((macys() ? "oc_my_wallet" : "my_bwallet")+".add_offer_btn");
+    }
+
+    @Given("^I visit the mobile web site as a (guest|registered) user without add CC$")
+    public void I_visit_the_mobile_web_site_as_a_registered_user(String registered) throws Throwable {
+        Navigate.visit("home");
+        pausePageHangWatchDog();
+        // close popup
+        Clicks.clickIfPresent("home.popup_close");
+
+        closeMewTutorial();
+        Thread.sleep(5000);
+        if (registered.equals("registered")) {
+            CommonUtils.signInOrCreateAccount();
+            // close CC popup
+            Clicks.clickIfPresent("my_account.add_card_overlay_close_button");
+        }
+        Navigate.visit("home");
+        Cookies.disableForeseeSurvey();
     }
 
     @And("^I should be able to associate my account by loyallist number using \"([^\"]*)\" details on mobile website$")

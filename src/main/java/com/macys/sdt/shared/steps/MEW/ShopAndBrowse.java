@@ -44,6 +44,24 @@ public class ShopAndBrowse extends StepUtils {
         System.out.println("Sucessfuly added product");
     }
 
+    @And("^I select the bwallet offer in shopping bag using mobile website$")
+    public void I_select_the_bwallet_offer_in_shopping_bag() throws Throwable {
+        Wait.forPageReady();
+        Clicks.clickIfPresent("shopping_bag.apply_offer");
+        int size = Elements.findElements("shopping_bag.bwallet_offers").size();
+        boolean displayed = false;
+        for (int i = 0; i < size; i++) {
+            if (Elements.findElements("shopping_bag.bwallet_offers").get(i).isDisplayed()) {
+                Clicks.click(Elements.findElements("shopping_bag.bwallet_offers").get(i));
+                displayed = true;
+                break;
+            }
+        }
+        if (!displayed) {
+            Assert.fail("The offers are not eligible for the products in the shopping bag");
+        }
+    }
+
     @And("^I add product to my bag from standard PDP page$")
     public void I_add_product_to_my_bag_from_standard_PDP_page() throws Throwable {
         boolean addedToBag = false;

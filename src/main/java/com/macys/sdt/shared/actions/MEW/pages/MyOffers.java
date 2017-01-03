@@ -34,7 +34,7 @@ public class MyOffers extends StepUtils {
     }
 
     public static void addValidOffers(String code) {
-        Navigate.browserRefresh();
+      //  Navigate.browserRefresh();
         TextBoxes.typeTextbox("oc_my_wallet.input_offer_code", code);
         Clicks.javascriptClick("oc_my_wallet.add_offer_code_button");
         By el = Elements.element("oc_my_wallet.add_offer_error_msg");
