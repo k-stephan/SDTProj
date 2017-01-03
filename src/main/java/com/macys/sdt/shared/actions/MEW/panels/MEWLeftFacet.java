@@ -6,6 +6,7 @@ import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
+import org.openqa.selenium.By;
 
 public class MEWLeftFacet extends StepUtils {
 
@@ -33,7 +34,7 @@ public class MEWLeftFacet extends StepUtils {
             Clicks.clickIfPresent("left_facet.apply");
         }
         else {
-            Clicks.javascriptClick(Elements.findElement("left_facet.apply"));
+            Clicks.javascriptClick(Elements.findElement(By.cssSelector("button.btn.apply-facets-btn")));
         }
         closePopup();
         Wait.secondsUntilElementNotPresent("left_facet.apply", 50);

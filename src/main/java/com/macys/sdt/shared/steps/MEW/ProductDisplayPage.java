@@ -298,4 +298,11 @@ public class ProductDisplayPage extends StepUtils {
         }
     }
 
+    @When("^I click on the continue shopping button from ATB page using mobile website$")
+    public void iClickOnTheContinueShoppingButtonFromATBPageUsingMobileWebsite() throws Throwable {
+        shouldBeOnPage("add_to_bag");
+        Wait.untilElementPresent("add_to_bag.continue_shopping");
+        Clicks.click("add_to_bag.continue_shopping");
+    }
+
 }
