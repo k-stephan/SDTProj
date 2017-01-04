@@ -247,7 +247,7 @@ public class ShopAndBrowse extends StepUtils {
             if (!Clicks.clickWhenPresent(element))
                 Assert.fail("Unable to find facets on current page");
         }else{
-            boolean isCollapsed = Elements.getText("left_facet.show_more_facets").equalsIgnoreCase("show more");
+            boolean isCollapsed = Elements.findElement(By.cssSelector("#b-j-show-facets-btn")).getText().equalsIgnoreCase("show more");
             if (isCollapsed) {
                 Clicks.click("left_facet.show_more_facets");
             }
