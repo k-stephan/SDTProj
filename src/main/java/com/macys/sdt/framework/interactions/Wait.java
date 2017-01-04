@@ -23,10 +23,23 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
  */
 public class Wait {
 
+    /**
+     * Wait until condition is true
+     *
+     * @param condition BooleanSupplier
+     * @return true if condition is true
+     */
     public static boolean until(BooleanSupplier condition) {
         return until(condition, MainRunner.timeouts().general());
     }
 
+    /**
+     * Wait until condition is true
+     *
+     * @param condition BooleanSupplier
+     * @param seconds time to wait in seconds
+     * @return true if condition is true
+     */
     public static boolean until(BooleanSupplier condition, Integer seconds) {
         try {
             WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds);

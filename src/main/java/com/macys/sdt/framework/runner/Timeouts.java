@@ -3,6 +3,9 @@ package com.macys.sdt.framework.runner;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A collection of Default wait Time in Seconds
+ */
 public class Timeouts {
 
     private Timeouts() {
@@ -16,10 +19,20 @@ public class Timeouts {
     private static Map<String, Integer> timeouts = new HashMap<>();
     private static Timeouts instance;
 
+    /**
+     * Gets Default wait Time for element
+     *
+     * @return Default wait Time for element
+     */
     public int untilElementPresent() {
         return getTimeout(UNTIL_ELEMENT_PRESENT_TIMEOUT_KEY, DEFAULT_UNTIL_ELEMENT_PRESENT_TIMEOUT);
     }
 
+    /**
+     * Gets Default general wait Time
+     *
+     * @return Default general wait Time
+     */
     public int general() {
         return getTimeout(GENERAL_TIMEOUT_KEY, DEFAULT_GENERAL_TIMEOUT);
     }

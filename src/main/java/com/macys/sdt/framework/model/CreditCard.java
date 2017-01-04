@@ -1,5 +1,8 @@
 package com.macys.sdt.framework.model;
 
+/**
+ * This class represents a CreditCard and contains all the information about that CreditCard
+ */
 public class CreditCard {
     private CardType cardType;
     private String cardNumber;
@@ -34,78 +37,171 @@ public class CreditCard {
         this.securePassword = securePassword;
     }
 
+    /**
+     * Gets the CardType of CreditCard
+     *
+     * @return CreditCard CardType
+     */
     public CardType getCardType() {
         return cardType;
     }
 
+    /**
+     * Sets the CardType of CreditCard
+     *
+     * @param cardType Credit Card Type enum
+     */
     public void setCardType(CardType cardType) {
         this.cardType = cardType;
     }
 
+    /**
+     * Gets the CardNumber of CreditCard
+     *
+     * @return CreditCard CardNumber
+     */
     public String getCardNumber() {
         return cardNumber;
     }
 
+    /**
+     * Sets the CardNumber of CreditCard
+     *
+     * @param cardNumber Credit Card
+     */
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
+    /**
+     * Gets the SecurityCode of CreditCard
+     *
+     * @return CreditCard SecurityCode
+     */
     public String getSecurityCode() {
         return securityCode;
     }
 
+    /**
+     * Sets the SecurityCode of CreditCard
+     *
+     * @param securityCode Credit Card
+     */
     public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
     }
 
+    /**
+     * Gets the Balance of CreditCard
+     *
+     * @return CreditCard Balance
+     */
     public double getBalance() {
         return balance;
     }
 
+    /**
+     * Sets the Balance of CreditCard
+     *
+     * @param balance Credit Card
+     */
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
+    /**
+     * Gets the ExpiryMonth of CreditCard
+     *
+     * @return CreditCard ExpiryMonth
+     */
     public String getExpiryMonth() {
         return expiryMonth;
     }
 
+    /**
+     * Sets the ExpiryMonth of CreditCard
+     *
+     * @param expiryMonth Credit Card
+     */
     public void setExpiryMonth(String expiryMonth) {
         this.expiryMonth = expiryMonth;
     }
 
+    /**
+     * Gets the ExpiryMonthIndex of CreditCard
+     *
+     * @return CreditCard ExpiryMonthIndex
+     */
     public String getExpiryMonthIndex() {
         return expiryMonthIndex;
     }
 
+    /**
+     * Sets the ExpiryMonthIndex of CreditCard
+     *
+     * @param expiryMonthIndex Credit Card
+     */
     public void setExpiryMonthIndex(String expiryMonthIndex) {
         this.expiryMonthIndex = expiryMonthIndex;
     }
 
+    /**
+     * Gets the ExpiryYear of CreditCard
+     *
+     * @return CreditCard ExpiryYear
+     */
     public String getExpiryYear() {
         return expiryYear;
     }
 
+    /**
+     * Sets the ExpiryYear of CreditCard
+     *
+     * @param expiryYear Credit Card
+     */
     public void setExpiryYear(String expiryYear) {
         this.expiryYear = expiryYear;
     }
 
+    /**
+     * Gets the SecurePassword of CreditCard
+     *
+     * @return CreditCard SecurePassword
+     */
     public String getSecurePassword() {
         return securePassword;
     }
 
+    /**
+     * Sets the SecurePassword of CreditCard
+     *
+     * @param securePassword Credit Card
+     */
     public void setSecurePassword(String securePassword) {
         this.securePassword = securePassword;
     }
 
+    /**
+     * Gets the has3DSecure of CreditCard
+     *
+     * @return CreditCard 3DSecure
+     */
     public boolean has3DSecure() {
         return has3DSecure;
     }
 
+    /**
+     * Sets the has3DSecure of CreditCard
+     *
+     * @param has3DSecure Credit Card
+     */
     public void setHas3DSecure(boolean has3DSecure) {
         this.has3DSecure = has3DSecure;
     }
 
+    /**
+     * Different Card Types
+     */
     public enum CardType {
         VISA("Visa"),
         MASTER_CARD("MasterCard"),
@@ -123,9 +219,7 @@ public class CreditCard {
                 if (value.equals(type.name)) {
                     return type;
                 }
-
             return null;
         }
     }
-
 }

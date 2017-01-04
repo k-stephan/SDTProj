@@ -148,6 +148,7 @@ public class CampaignService extends StepUtils {
     /**
      * To get the active campaign details from database
      *
+     * @param campaignCode Campaign Code
      * @return active campaign details
      */
     public static List<Map<String, Object>> getActiveCampaignDetails(String campaignCode) {
@@ -312,6 +313,7 @@ public class CampaignService extends StepUtils {
      * Returns an active record with all the details of a campaign using campaign name from site DB
      *
      * @param campaignType to get campaign details
+     * @param insertCampaignFlag true or false
      * @return campaign details
      */
     public static Map<String, Object> getCampaignDetails(String campaignType, boolean insertCampaignFlag) {
