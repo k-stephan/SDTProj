@@ -399,6 +399,8 @@ class WebDriverConfigurator {
                     }
             } else if (StepUtils.firefox()) {
                 try {
+                    if (browserVersion != null && Double.parseDouble(browserVersion) >= 48)
+                        capabilities.setCapability("seleniumVersion", "3.0.1");
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
                     capabilities.setCapability("marionette", false);
