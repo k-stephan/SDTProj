@@ -383,4 +383,21 @@ public class ShopAndBrowse extends StepUtils {
         Clicks.clickIfPresent("left_facet.show_more_facets");
         Wait.until(() -> Elements.getText("left_facet.show_more_facets").equalsIgnoreCase("show less"));
     }
+
+    @And("^I navigate to registry \"([^\"]*)\" browse page from site menu using mobile website$")
+    public void I_navigate_to_registry_browse_page_from_site_menu_using_mobile_website(String pageType) throws Throwable {
+
+        try {
+            scrollToLazyLoadElement("site_menu.site_menu_title");
+            Clicks.click("site_menu.site_menu_title");
+            Wait.untilElementPresent("site_menu.shop_all_products");
+            Clicks.click("site_menu.shop_all_products");
+            Wait.untilElementPresent("site_menu.category_names");
+            Clicks.clickElementByText("site_menu.category_names", pageType);
+        } catch (Exception e) {
+            Assert.fail("Element not present " + e);
+        }
+        shouldBeOnPage("category_browse");
+    }
+
 }
