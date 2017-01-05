@@ -447,7 +447,7 @@ public class Wait {
             // TEMPORARY - currently a bug in BCOM sign in, checkout, MEW search and MCOM VGC PDP page that leaves AJAX calls hanging
             MainRunner.getCurrentUrl();
             if ((StepUtils.bloomingdales() || StepUtils.MEW()) || (StepUtils.macys() && MainRunner.currentURL.contains("product"))) {
-                if (MainRunner.currentURL.matches(".*?(signin|chkout|profile|product).*?")
+                if (MainRunner.currentURL.matches(".*?(signin|chkout|profile|product|myaccount).*?")
                         || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop"))) {
                     return queries <= 1;
                 }
