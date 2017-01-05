@@ -623,6 +623,14 @@ public class Utils {
         return resPath + fName;
     }
 
+    /**
+     * Convert List Object To String
+     *
+     * @param list List Object of Strings
+     * @param token separator to used for string list
+     * @param cleans strings to remove from list
+     * @return List of strings separated by token
+     */
     public static String listToString(List<String> list, String token, String[] cleans) {
         if (cleans != null) {
             for (int i = list.size() - 1; i >= 0; i--) {
@@ -664,6 +672,14 @@ public class Utils {
         }
     }
 
+    /**
+     * Gets List of files inside a given tar file
+     *
+     * @param tar tar file
+     * @param filepath file path
+     * @return list of files
+     * @throws IOException throws IOException
+     */
     public static ArrayList getTarFileList(File tar, String filepath) throws IOException {
         ArrayList<HashMap> list = new ArrayList<>();
         try (
@@ -676,6 +692,14 @@ public class Utils {
         return list;
     }
 
+    /**
+     * Gets List of files inside a given jar file
+     *
+     * @param jar jar file
+     * @param filepath file path
+     * @return list of files
+     * @throws IOException throws IOException
+     */
     public static ArrayList getJarFileList(File jar, String filepath) throws IOException {
         ArrayList<HashMap> list = new ArrayList<>();
         try (
@@ -750,6 +774,14 @@ public class Utils {
         return true;
     }
 
+    /**
+     * Extract Resources from the given repoJar
+     *
+     * @param repoJar repo Jar File
+     * @param workspace workspace path
+     * @param project project name
+     * @throws IOException throws IOException
+     */
     public static void extractResources(File repoJar, String workspace, String project) throws IOException {
         if (resourcesExtracted) {
             return;
@@ -1032,6 +1064,12 @@ public class Utils {
         return statusCode;
     }
 
+    /**
+     * Convert Json Array to ArrayList
+     *
+     * @param json JSON Array
+     * @return Array List
+     */
     public static ArrayList<JSONObject> jsonArrayToList(JSONArray json) {
         ArrayList<JSONObject> items = new ArrayList<>(json.length());
         for (int i = 0; i < json.length(); i++) {
@@ -1230,6 +1268,12 @@ public class Utils {
         }
     }
 
+    /**
+     * Get Order number of given orderType from order_mods_data.json
+     *
+     * @param orderType order Type
+     * @return Order Number
+     */
     public static String getOrderNumber(String orderType) {
         String order = null;
         try {
@@ -1247,6 +1291,12 @@ public class Utils {
         return order;
     }
 
+    /**
+     * Method to return Decrypted Password for the given encrypted password
+     *
+     * @param password Encrypted password
+     * @return Decrypted Password
+     */
     public static String decryptPassword(String password) {
         String pWord = null;
         try {
@@ -1281,12 +1331,24 @@ public class Utils {
 
     }
 
+    /**
+     * Watchdog for Threads, to monitor it for timeouts
+     *
+     */
     public static class ThreadWatchDog extends Thread {
         private Thread m_thread;
         private long m_timeout;
         private String m_name;
         private Runnable m_callback;
 
+        /**
+         * Creates a watchdog for a Thread to monitor it for timeouts
+         *
+         * @param th th Thread
+         * @param timeout timeout in milliseconds
+         * @param name Thread name
+         * @param callback Runnable
+         */
         public ThreadWatchDog(Thread th, long timeout, String name, Runnable callback) {
             this.m_thread = th;
             this.m_timeout = timeout;
@@ -1295,6 +1357,9 @@ public class Utils {
             this.start();
         }
 
+        /**
+         * Interrupt the monitored Thread if it is still running
+         */
         public void run() {
             if (Utils.threadSleep(this.m_timeout, "--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout)) {
                 System.err.println("--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout + ": exit normally.");
