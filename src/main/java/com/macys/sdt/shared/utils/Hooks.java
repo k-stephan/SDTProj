@@ -234,10 +234,6 @@ public class Hooks extends StepUtils {
             checkForErrorPage();
             CommonUtils.checkProductUnavailability();
         }
-        if (MainRunner.PageHangWatchDog.timedOut) {
-            resumePageHangWatchDog();
-            Assert.fail("PageHangWatchDog timed out, failing test");
-        }
         if (MEW() && !mewFixSet && Elements.elementPresent("home.sidebar_iframe")) {
             Navigate.addBeforeNavigation(CommonUtils::scrollDownPageWhenSidebarPresent);
             mewFixSet = true;

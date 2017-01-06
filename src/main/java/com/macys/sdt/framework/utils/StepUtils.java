@@ -443,7 +443,6 @@ public abstract class StepUtils {
      * @return true if stop was successful
      */
     public static boolean stopPageLoad() {
-        System.out.print("--> stopPageLoad(): ");
         try {
             Navigate.execJavascript("window.stop()");
             Utils.threadSleep(500, null);
