@@ -328,4 +328,15 @@ public class PageNavigation extends StepUtils {
         }
         shouldBeOnPage("dynamic_landing");
     }
+
+    @Then("^I should be redirected to designer page using mobile website$")
+    public void I_should_be_redirected_to_designer_page_using_mobile_website() throws Throwable {
+        shouldBeOnPage("brand_index");
+    }
+
+    @And("^I navigate to \"([^\"]*)\" designer category browse page using mobile website$")
+    public void I_navigate_to_designer_category_browse_page_using_mobile_website(String categoryType) throws Throwable {
+        shouldBeOnPage("brand_index");
+        Clicks.clickElementByText("brand_index.brand_links", categoryType);
+    }
 }
