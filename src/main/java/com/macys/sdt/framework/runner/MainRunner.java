@@ -1041,6 +1041,10 @@ public class MainRunner {
         }
     }
 
+    /**
+     * Watchdog for Web Page
+     *
+     */
     public static class PageHangWatchDog extends Thread {
         private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 130 : 95) * 1000;
         private final static int MAX_FAILURES = 5;

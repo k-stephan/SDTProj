@@ -33,6 +33,12 @@ public class ProxyFilters {
         filterDomains.add("assets." + domain);
     }
 
+    /**
+     * Gets the Domain from the given URL
+     *
+     * @return Domain from the given URL
+     * @param url URL
+     */
     public static String getDomain(String url) {
         try {
             return new URL(url).getHost().replace("www1", "").replace("www", "").replace("http://", "").replaceFirst("m\\.", "");
