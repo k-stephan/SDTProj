@@ -312,7 +312,8 @@ public class Clicks {
             MainRunner.analytics.recordClickElement(contents);
         }
         try {
-            if (StepUtils.safari()) {  // actions not supported in safari
+            // actions not supported in safari and still in progress for FF marionette driver
+            if (StepUtils.safari() || (StepUtils.firefox() && MainRunner.browserVersion.compareTo("48.0") >= 0)) {
                 javascriptHover(el);
                 el.click();
             } else if (StepUtils.ipad()) {
