@@ -72,4 +72,16 @@ public class ProductDisplay extends StepUtils {
             Assert.fail("addRandomMemberProductOnMasterPDP(): Unable to select product");
         }
     }
+
+    public static void selectQuantity(String quantity) {
+        if (Elements.elementPresent("product_display.select_size_dropdown")) {
+            if (macys()) {
+                //implement code
+            } else {
+                DropDowns.selectByText("product_display.quantity", quantity);
+            }
+        } else {
+            System.out.println("Unable to find size option");
+        }
+    }
 }

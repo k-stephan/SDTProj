@@ -400,4 +400,10 @@ public class ShopAndBrowse extends StepUtils {
         shouldBeOnPage("category_browse");
     }
 
+    @And("^I add \"([^\"]*)\" quantity to my bag from mobile standard PDP Page$")
+    public void I_add_quantity_to_my_bag_from_mobile_standard_pdp_page(String quantity) throws Throwable {
+        shouldBeOnPage("product_display");
+        ProductDisplay.selectQuantity(quantity);
+    }
+
 }
