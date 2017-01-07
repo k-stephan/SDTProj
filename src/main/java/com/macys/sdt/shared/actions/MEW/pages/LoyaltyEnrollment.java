@@ -24,8 +24,8 @@ public class LoyaltyEnrollment extends StepUtils {
         TextBoxes.typeTextbox("loyalty_enrollment.address_zip_code", profileAddress.getZipCode().toString());
         TextBoxes.typeTextbox("loyalty_enrollment.phone_number", profileAddress.getBestPhone());
         Clicks.click("loyalty_enrollment.goto_terms_and_conditions");
-        Wait.untilElementPresent("loyalty_enrollment.accept_terms_and_conditions");
-        Clicks.click("loyalty_enrollment.accept_terms_and_conditions");
+        Wait.secondsUntilElementPresent("loyalty_enrollment.accept_terms_and_conditions", 20);
+        Clicks.javascriptClick("loyalty_enrollment.accept_terms_and_conditions");
         Wait.until(() -> Elements.getText("loyalty_enrollment.terms_and_conditions_status").equals("Accepted"));
         Clicks.javascriptClick("loyalty_enrollment.submit_btn");
         Wait.untilElementPresent("loyalty_enrollment_confirmation.loyalty_number");

@@ -152,6 +152,15 @@ public abstract class StepUtils {
     }
 
     /**
+     * Checks if on mobile version due to device or website
+     *
+     * @return true if using a mobile device or on MEW
+     */
+    public static boolean mobile()  {
+        return mobileDevice() || MEW();
+    }
+
+    /**
      * Checks if using a tablet device
      *
      * @return true if using a tablet device

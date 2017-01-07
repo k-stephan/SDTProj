@@ -10,6 +10,7 @@ import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.shared.actions.MEW.pages.ProductDisplay;
 import com.macys.sdt.shared.actions.MEW.panels.GlobalNav;
 import com.macys.sdt.shared.utils.CommonUtils;
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -210,6 +211,9 @@ public class PageNavigation extends StepUtils {
     @Given("^I visit the mobile web site as a (guest|registered) user$")
     public void I_visit_the_mobile_web_site_as_a_registered_user(String registered) throws Throwable {
         Navigate.visit("home");
+        if (StepUtils.bloomingdales() && StepUtils.mobile()) {
+            Navigate.browserRefresh();
+        }
         pausePageHangWatchDog();
         // close popup
         Clicks.clickIfPresent("home.popup_close");
