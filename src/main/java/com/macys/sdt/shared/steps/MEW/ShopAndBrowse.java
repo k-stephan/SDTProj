@@ -408,7 +408,7 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I select \"([^\"]*)\" in sort by drop down on designer page using mobile website$")
     public void I_select_in_sort_by_drop_down_on_designer_page_using_mobile_website(String toSelect) throws Throwable {
-        Wait.forLoading("brand_index.sort_by_select");
+        Wait.untilElementPresent("brand_index.sort_by_select");
         DropDowns.selectByText("brand_index.sort_by_select", toSelect);
     }
 
