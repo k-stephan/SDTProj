@@ -249,7 +249,8 @@ public class ShopAndBrowse extends StepUtils {
         }else{
             boolean isCollapsed = Elements.findElement(By.cssSelector("#b-j-show-facets-btn")).getText().equalsIgnoreCase("show more");
             if (isCollapsed) {
-                Clicks.click("left_facet.show_more_facets");
+                //Temporary solution for expand show-more button bcom_mew
+                Clicks.click(Elements.findElement(By.id("b-j-show-facets-btn")));
             }
         }
         MEWLeftFacet.selectFacetOnLeftNav(facet_name);
@@ -416,6 +417,12 @@ public class ShopAndBrowse extends StepUtils {
     public void I_scroll_to_bottom_and_select_back_to_top_arrow_using_mobile_website() throws Throwable {
         scrollToLazyLoadElement("footer.footer_bottom_links");
         Clicks.clickWhenPresent("brand_index.back_to_top");
+
+    }
+
+    @And("^I select \"([^\"]*)\" size facet on left nav using mobile website$")
+    public void I_select_size_facet_on_left_nav_using_mobile_website(String sizeFacet) throws Throwable {
+        MEWLeftFacet.selectSizeFacetOnLeftNav(sizeFacet);
 
     }
 }
