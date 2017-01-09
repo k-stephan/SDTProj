@@ -106,6 +106,7 @@ public class ContextualContent extends StepUtils {
                 componentId = categoryAndCanvasId.get(2).toString();
             finalExpectedData = new ArrayList<>();
             finalExpectedData = finalMediaData.stream().filter(data -> (data.get("canvasId").toString().equals(canvasId))).collect(Collectors.toList());
+            finalExpectedData.sort((Map m1, Map m2) -> (Integer.parseInt(m1.get("canvasRowSeq").toString()) - Integer.parseInt(m2.get("canvasRowSeq").toString())));
             if (pageType.equals("Home Page")) {
                 Assert.assertTrue("User is not in international site!!", (regionCode.equals("INTL") && Elements.anyPresent("home.goto_us_site")));
             } else {

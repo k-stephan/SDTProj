@@ -347,7 +347,7 @@ public class MediaService {
                         if (mediaParameterData.stream().anyMatch(param -> (param.get("linkType").toString().equals("4") || popupComponentIds.contains(param.get("componentId").toString())))) {
                             type.put("mediaTypeDesc", "CUSTOM_POPUP");
                         }
-                        if (mediaParameterData.stream().anyMatch(param -> (!param.get("regionCoordinates").equals("") || param.get("regionCoordinates") != null))) {
+                        if (mediaParameterData.stream().anyMatch(param -> !(param.get("regionCoordinates").equals("") || param.get("regionCoordinates") == null))) {
                             type.put("mediaTypeDesc", "IMAGE_MAP");
                         }
                     }
