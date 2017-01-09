@@ -343,13 +343,11 @@ public class MediaService {
                         .map(pop -> pop.get("componentId").toString())
                         .collect(Collectors.toList());
                 mediaGroupData = mediaGroupData.stream().map(type -> {
-                    if (mediaParameterData.stream().anyMatch(param -> type.get("componentId").toString().equals(param.get("componentId").toString()))) {
-                        if (mediaParameterData.stream().anyMatch(param -> (param.get("linkType").toString().equals("4") || popupComponentIds.contains(param.get("componentId").toString())))) {
-                            type.put("mediaTypeDesc", "CUSTOM_POPUP");
-                        }
-                        if (mediaParameterData.stream().anyMatch(param -> !(param.get("regionCoordinates").equals("") || param.get("regionCoordinates") == null))) {
-                            type.put("mediaTypeDesc", "IMAGE_MAP");
-                        }
+                    if (mediaParameterData.stream().anyMatch(param -> ((type.get("componentId").toString().equals(param.get("componentId").toString())) && (param.get("linkType").toString().equals("4") || popupComponentIds.contains(param.get("componentId").toString()))))) {
+                        type.put("mediaTypeDesc", "CUSTOM_POPUP");
+                    }
+                    if (mediaParameterData.stream().anyMatch(param -> (((type.get("componentId").toString().equals(param.get("componentId").toString()))) && !(param.get("regionCoordinates").equals("") || param.get("regionCoordinates") == null)))) {
+                        type.put("mediaTypeDesc", "IMAGE_MAP");
                     }
                     return type;
                 }).collect(Collectors.toList());
