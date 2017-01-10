@@ -3,13 +3,11 @@ package com.macys.sdt.framework.runner;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.macys.sdt.framework.interactions.Navigate;
-import com.macys.sdt.framework.utils.ScenarioHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import com.macys.sdt.framework.utils.analytics.DATagCollector;
 import com.macys.sdt.framework.utils.analytics.DigitalAnalytics;
-import com.macys.sdt.shared.utils.Hooks;
 import cucumber.api.cli.Main;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
@@ -27,9 +25,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.macys.sdt.framework.utils.StepUtils.ie;
@@ -40,30 +35,38 @@ import static java.lang.Runtime.getRuntime;
  * This class handles the configuration and running of cucumber scenarios and features
  */
 public class MainRunner {
+
     /**
      * BrowserMob proxy server
      */
     public static BrowserMobProxy browsermobServer = null;
+
     /**
      * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
      */
     public static boolean useSauceLabs;
+
     /**
      * Name of Sauce Connect tunnel to use
      */
     public static String tunnelIdentifier = getEnvOrExParam("tunnel_identifier");
+
     /**
      * True if using chrome device emulation
      */
     public static boolean useChromeEmulation;
+
     /**
      * True if using appium to connect to a mobile device
      */
     public static boolean useAppium = booleanParam("use_appium");
+
     /**
      * True if testing a mobile application
      */
     public static boolean appTest;
+
+
     /**
      * Contains OS to use when executing on sauce labs or os version for app as given in "remote_os" env variable
      * <p>
@@ -73,102 +76,127 @@ public class MainRunner {
      * </p>
      */
     public static String remoteOS = getEnvOrExParam("remote_os");
+
     /**
      * Workspace path as given in "WORKSPACE" env variable
      */
     public static String workspace = getEnvVar("WORKSPACE");
+
     /**
      * Path to logging folder
      */
     public static String logs;
+
     /**
      * Path to "temp" directory
      */
     public static String temp;
+
     /**
      * Map of current cucumber features
      */
     public static HashMap<String, Map> features = new HashMap<>();
+
     /**
      * Path to feature file to execute from
      */
     public static String scenarios = getEnvVar("scenarios");
+
     /**
      * Browser to use as given in "browser" env variable. Default firefox.
      */
     public static String browser = getEnvVar("browser");
+
     /**
      * Version of browser to use as given in "browser_version" env variable
      */
     public static String browserVersion = getEnvOrExParam("browser_version");
+
     /**
      * Analytics object
      */
     public static Analytics analytics;
+
     /**
      * Whether to close browser or not after testing is complete. False if "DEBUG" env variable is true
      */
     public static Boolean closeBrowserAtExit = true;
+
     /**
      * Whether to collect coremetrics tags or not as given in "tag_collection" env variable
      */
     public static Boolean tagCollection = false;
+
     /**
      * Whether to run on QA env in batch mode as given in "batch_mode" env variable
      */
     public static Boolean batchMode = booleanParam("batch_mode");
+
     /**
      * URL to start at and use as a base as given in "website" env variable
      */
     public static String url = getEnvVar("website");
+
     /**
      * Domain - MCOM or BCOM, only needed when resolving website with IP
      */
     public static String brand = getEnvOrExParam("brand");
+
     /**
      * Time the tests were started
      */
     public static long startTime = System.currentTimeMillis();
+
     /**
      * Current run status. 0 is good, anything else is bad
      */
     public static int runStatus = 0;
+
     /**
      * Wait timeout as given in "timeout" env variable. Default 95 seconds (125 seconds for safari)
      */
     public static int timeout;
+
     /**
      * Device in use as given by "device" env variable
      */
     public static String device = getEnvOrExParam("device");
+
     /**
      * List containing URL's that have been visited
      */
     public static ArrayList<String> URLStack = new ArrayList<>();
+
     /**
      * Path to project currently being run optionally given by "sdt_project" env variable
      */
     public static String project = getEnvVar("sdt_project");
+
     /**
      * Path to active project files on file system
      */
     public static String projectDir = null;
+
     /**
      * The current URL of the browser
      */
     public static String currentURL = "";
+
     /**
      * Whether the proxy is disabled
      */
     public static boolean disableProxy = true;
+
     /**
      * Whether we're running in debug mode
      */
     public static boolean debugMode = booleanParam("debug");
+
     /**
      * The Sauce Labs username to use
      */
     public static String sauceUser = getEnvOrExParam("sauce_user");
+
     /**
      * The Sauce Labs API key for the user
      */
@@ -192,8 +220,8 @@ public class MainRunner {
         getEnvVars();
 
         System.out.println("Using project: " + project + "\nIf this does not match your project, please" +
-                "add an environment variable \"sdt_project\" (previously called \"project\")" +
-                "with project name in format \"<domain>.<project>\"");
+                " add an environment variable \"sdt_project\" (previously called \"project\")" +
+                " with project name in format \"<domain>.<project>\"");
         if (repoJar != null) {
             projectDir = project.replace(".", "/");
             Utils.extractResources(new File(repoJar), workspace, projectDir);
@@ -291,6 +319,9 @@ public class MainRunner {
         }
     }
 
+    /**
+     * get and set environment variables
+     */
     public static void getEnvVars() {
         if (workspace == null) {
             workspace = ".";
