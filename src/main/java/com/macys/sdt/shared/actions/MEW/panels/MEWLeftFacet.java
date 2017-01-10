@@ -80,6 +80,6 @@ public class MEWLeftFacet extends StepUtils {
 
     public static void selectSizeFacetOnLeftNav(String sizeFacet) {
         //Temporary solution for size facet selection bcom_mew
-        Elements.findElement(By.cssSelector(".facet-selection-items>li[data-facet-value$=" + sizeFacet));
+        Elements.findElement(By.cssSelector(".facet-selection-items>li[data-facet-value$="+"\""+ sizeFacet +"\"")).click();
     }
 }
