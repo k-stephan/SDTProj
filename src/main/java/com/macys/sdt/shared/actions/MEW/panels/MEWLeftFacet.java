@@ -18,14 +18,24 @@ public class MEWLeftFacet extends StepUtils {
 
     public static void selectSubFacetOnLeftNav(String subFacet) {
         if (subFacet.matches("^\\$[0-9][0-9][0-9]? - \\$[0-9][0-9][0-9]?")) {
-            String rangeStart = subFacet.substring(1, 3);
-            Clicks.click(Elements.paramElement("left_facet.select_price_sub_facet", rangeStart));
+            if(bloomingdales())
+            {
+                Clicks.clickElementByText("left_facet.select_price_sub_facet", subFacet);
+            }
+            else {
+                String rangeStart = subFacet.substring(1, 3);
+                Clicks.click(Elements.paramElement("left_facet.select_price_sub_facet", rangeStart));
+            }
         } else {
             closePopup();
             Utils.threadSleep(1000, null);
             Wait.untilElementPresent(Elements.paramElement("left_facet.select_sub_facet", subFacet));
             Clicks.clickWhenPresent(Elements.paramElement("left_facet.select_sub_facet", subFacet));
         }
+    }
+
+    public static void selectSubFacetsFromLeftNav(String subFacet) {
+        Clicks.clickElementByText("left_facet.select_sub_facets", subFacet);
     }
 
     public static void confirmFacets() {

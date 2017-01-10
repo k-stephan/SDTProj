@@ -425,4 +425,9 @@ public class ShopAndBrowse extends StepUtils {
         MEWLeftFacet.selectSizeFacetOnLeftNav(sizeFacet);
 
     }
+
+    @And("^I select \"([^\"]*)\" sub facet from left nav using mobile website$")
+    public void I_select_sub_facet_from_left_nav_using_mobile_website(String sub_facet_name) throws Throwable {
+        MEWLeftFacet.selectSubFacetsFromLeftNav(sub_facet_name);
+    }
 }
