@@ -82,7 +82,8 @@ public class ShopAndBrowse extends StepUtils {
                     }
                 }
             } else {
-                pageCount = Integer.parseInt(Elements.getText("category_browse.last_page_number"));
+                String currentPage = (Elements.getText("category_browse.goto_current_page_number"));
+                pageCount = Integer.parseInt(currentPage.split(" of ")[1]);
             }
         }
         return pageCount;
@@ -124,7 +125,8 @@ public class ShopAndBrowse extends StepUtils {
     }
 
     public int getCurrentPageNumber() {
-        return Integer.parseInt(Elements.getText("category_browse.goto_current_page_number"));
+        String currentPage = (Elements.getText("category_browse.goto_current_page_number"));
+        return Integer.parseInt((macys() ? currentPage : currentPage.split(" of ")[0]));
     }
 
     public boolean sortByAvailable() {
