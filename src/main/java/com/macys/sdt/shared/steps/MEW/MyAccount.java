@@ -73,6 +73,7 @@ public class MyAccount extends StepUtils {
 
     @And("^I add a credit card from my wallet page using mobile website$")
     public void I_add_a_credit_card_from_my_account_page_using_mobile_website() throws Throwable {
+        Wait.forPageReady();
         if ((!onPage("my_account")) && (!onPage("my_bwallet"))) {
             GlobalNav.openGlobalNav();
             GlobalNav.navigateOnGnByName("My Account");

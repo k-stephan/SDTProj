@@ -201,10 +201,17 @@ public class CheckoutSteps extends StepUtils {
 
     @And("^I select pick up option for bops item using mobile website$")
     public void I_select_pick_up_option_for_bops_item_using_mobile_website() throws Throwable {
-        Clicks.click(Elements.element("shopping_bag.bops_available"));
-        Clicks.click(Elements.element("shopping_bag.select_bops"));
-        Clicks.click(Elements.element("shopping_bag.apply"));
-        Wait.untilElementPresent(Elements.element("shopping_bag.bag_items"));
+        Clicks.click("shopping_bag.bops_available");
+        if (Elements.elementPresent("shopping_bag.bops_stores")) {
+            Clicks.click("shopping_bag.bops_stores");
+            Clicks.click("shopping_bag.select_bops");
+            Clicks.click("shopping_bag.apply");
+            Wait.untilElementPresent("shopping_bag.bag_items");
+        } else {
+            Assert.fail("ERROR-DATA: BOPS stores not available");
+        }
+
+
     }
 
     @When("^I place an Order using mobile site$")
