@@ -247,6 +247,7 @@ public class ShopAndBrowse extends StepUtils {
             if (!Clicks.clickWhenPresent(element))
                 Assert.fail("Unable to find facets on current page");
         }else{
+            Wait.untilElementPresent("left_facet.show_more_facets");
             boolean isCollapsed = Elements.findElement(By.cssSelector("#b-j-show-facets-btn")).getText().equalsIgnoreCase("show more");
             if (isCollapsed) {
                 //Temporary solution for expand show-more button bcom_mew
@@ -268,13 +269,20 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I input \"([^\"]*)\" as zip code in bops facet and select a store$")
     public void I_input_as_zip_code_in_bops_facet_and_select_a_store(String zipcode) throws Throwable {
-        if (Wait.untilElementPresent("left_facet.bops_facet_value")) {
-            Clicks.randomJavascriptClick("left_facet.bops_facet_value");
-            return;
+        if (bloomingdales()) {
+            Clicks.clickIfPresent("left_facet.bops_change_button");
+            TextBoxes.typeTextbox("left_facet.bops_zip_code", zipcode);
+            DropDowns.selectByValue("left_facet.search_distance", "100");
+        } else {
+            if (Wait.untilElementPresent("left_facet.bops_facet_value")) {
+                Clicks.randomJavascriptClick("left_facet.bops_facet_value");
+                return;
+            }
+            Assert.assertTrue("ERROR-ENV: zip code text box not present", Elements.elementPresent("left_facet.bops_zip_code"));
+            TextBoxes.typeTextbox("left_facet.bops_zip_code", zipcode);
+            DropDowns.selectByValue("change_pickup_store_dialog.search_distance", "100");
         }
-        Assert.assertTrue("ERROR-ENV: zip code text box not present", Elements.elementPresent("left_facet.bops_zip_code"));
-        TextBoxes.typeTextbox("left_facet.bops_zip_code", zipcode);
-        DropDowns.selectByValue("change_pickup_store_dialog.search_distance", "100");
+
         Clicks.javascriptClick("left_facet.bops_search");
         Wait.secondsUntilElementPresent(("left_facet.bops_facet_value"), 50);
         if (Elements.elementPresent("left_facet.bops_error"))
