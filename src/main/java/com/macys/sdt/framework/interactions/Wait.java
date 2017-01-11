@@ -24,21 +24,21 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
 public class Wait {
 
     /**
-     * Wait until condition is true
+     * Waits until the given condition method returns true
      *
-     * @param condition BooleanSupplier
-     * @return true if condition is true
+     * @param condition method to check whether we're done waiting
+     * @return true if condition returned true, false if timeout occurred
      */
     public static boolean until(BooleanSupplier condition) {
         return until(condition, MainRunner.timeouts().general());
     }
 
     /**
-     * Wait until condition is true
+     * Waits a number of seconds until the given condition method returns true
      *
-     * @param condition BooleanSupplier
-     * @param seconds time to wait in seconds
-     * @return true if condition is true
+     * @param condition method to check whether we're done waiting
+     * @param seconds number of seconds to wait before timing out (default 5)
+     * @return true if condition returned true, false if timeout occurred
      */
     public static boolean until(BooleanSupplier condition, Integer seconds) {
         try {
