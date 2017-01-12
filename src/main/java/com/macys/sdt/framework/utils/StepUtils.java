@@ -36,11 +36,20 @@ public abstract class StepUtils {
      * A regex string that will match allowed mobile devices
      */
     public static final String MOBILE_DEVICES = "(?i)Android|iPhone 6|Google Nexus [0-9](p|x)?|Samsung Galaxy S4|Android Emulator|Nexus [0-9]";
+
     /**
      * A regex string that will match allowed tablets
      */
     public static final String TABLETS = "(?i)ipad( 2)?|galaxy note 10.1|Google Nexus ([0-9][0-9]|[7-9])";
+
+    /**
+     * A regex string that will match allowed ipads
+     */
     public static final String IPAD = "(?i)ipad( 2)?";
+
+    /**
+     * to track ajax check
+     */
     public static boolean ajaxCheck = false;
 
     /**
@@ -169,6 +178,11 @@ public abstract class StepUtils {
         return MainRunner.device != null && MainRunner.device.matches(TABLETS);
     }
 
+    /**
+     * Checks if using an IPAD
+     *
+     * @return true if using an IPAD
+     */
     public static boolean ipad() {
         return MainRunner.device != null && MainRunner.device.matches(IPAD);
     }
