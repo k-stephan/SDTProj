@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.macys.sdt.framework.model.registry.Registry;
 
 /**
  * This class represents a UserProfile and contains all the information about that UserProfile

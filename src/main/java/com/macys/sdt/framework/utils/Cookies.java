@@ -481,6 +481,15 @@ public class Cookies {
         return setSingleSegment("");
     }
 
+    /**
+     * Retrieves the secure user token from the cookie to use for service calls
+     * @return value of secure user token cookie
+     */
+    public static String getSecureUserToken() {
+        return getCookieValue("secure_user_token");
+    }
+
+
     private static String encodeURL(String value) {
         try {
             return URLEncoder.encode(value, "UTF-8");

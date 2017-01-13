@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
 import com.macys.sdt.framework.model.*;
+import com.macys.sdt.framework.model.registry.Registry;
 import com.macys.sdt.framework.utils.rest.services.ProductService;
 import com.macys.sdt.framework.utils.rest.services.UserProfileService;
 import org.apache.commons.io.IOUtils;
@@ -100,7 +101,7 @@ public class TestUsers {
                 Map<String, String> registryMap = customer.get("registry");
                 Registry reg = prodCustomer.getRegistry();
 
-                reg.setEventType(registryMap.get("event_type"));
+                reg.setType(registryMap.get("event_type"));
                 reg.setEventMonth(registryMap.get("event_month"));
                 reg.setEventDay(registryMap.get("event_day"));
                 reg.setEventYear(registryMap.get("event_year"));
@@ -203,7 +204,7 @@ public class TestUsers {
         Registry registry = new Registry();
         registry.setCoRegistrantFirstName(generateRandomFirstName());
         registry.setCoRegistrantLastName(generateRandomLastName());
-        registry.setEventType("WEDDING");
+        registry.setType("WEDDING");
         registry.setEventMonth("April");
         registry.setEventDay("18");
         registry.setEventYear("2016");
@@ -229,7 +230,7 @@ public class TestUsers {
         Registry registry = new Registry();
         registry.setCoRegistrantFirstName(generateRandomFirstName());
         registry.setCoRegistrantLastName(generateRandomLastName());
-        registry.setEventType("WEDDING");
+        registry.setType("WEDDING");
         registry.setEventMonth("April");
         registry.setEventDay("18");
         registry.setEventYear("2016");

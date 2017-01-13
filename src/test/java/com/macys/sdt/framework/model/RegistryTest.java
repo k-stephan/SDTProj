@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.model;
 
+import com.macys.sdt.framework.model.registry.Registry;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,8 +14,8 @@ public class RegistryTest {
 
     @Test
     public void testGetEventType() throws Exception {
-        registry.setEventType("WEDDING");
-        String eventType = registry.getEventType();
+        registry.setType("WEDDING");
+        String eventType = registry.getType();
         Assert.assertEquals("WEDDING", eventType);
     }
 

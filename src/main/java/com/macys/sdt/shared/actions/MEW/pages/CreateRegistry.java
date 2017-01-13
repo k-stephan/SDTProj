@@ -3,7 +3,7 @@ package com.macys.sdt.shared.actions.MEW.pages;
 
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.Registry;
+import com.macys.sdt.framework.model.registry.Registry;
 import com.macys.sdt.framework.model.UserProfile;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
@@ -25,14 +25,14 @@ public class CreateRegistry extends StepUtils {
 
         Wait.forPageReady();
         Registry registry = customer.getRegistry();
-        DropDowns.selectByText("create_registry.event_type", registry.getEventType());
+        DropDowns.selectByText("create_registry.event_type", registry.getType());
         DropDowns.selectByText("create_registry.event_month", registry.getEventMonth());
         DropDowns.selectByText("create_registry.event_day", registry.getEventDay());
         DropDowns.selectByText("create_registry.event_year", registry.getEventYear());
 
         if (macys()) {
-            DropDowns.selectByText("create_registry.event_location", registry.getEventLocation());
-            DropDowns.selectByText("create_registry.preferred_store_state", registry.getPreferredStoreState());
+            DropDowns.selectRandomValue("create_registry.event_location");
+            DropDowns.selectRandomValue("create_registry.preferred_store_state");
         }
         TextBoxes.typeTextbox("create_registry.number_of_guests", registry.getNumberOfGuest());
         TextBoxes.typeTextbox("create_registry.first_name", customer.getUser().getProfileAddress().getFirstName());
@@ -72,14 +72,14 @@ public class CreateRegistry extends StepUtils {
         Wait.forPageReady();
         Registry registry = customer.getRegistry();
         ProfileAddress profileAddress = customer.getUser().getProfileAddress();
-        DropDowns.selectByText("create_registry.event_type", registry.getEventType());
+        DropDowns.selectByText("create_registry.event_type", registry.getType());
         DropDowns.selectByText("create_registry.event_month", registry.getEventMonth());
         DropDowns.selectByText("create_registry.event_day", registry.getEventDay());
         DropDowns.selectByText("create_registry.event_year", registry.getEventYear());
 
         if (macys()) {
-            DropDowns.selectByText("create_registry.event_location", registry.getEventLocation());
-            DropDowns.selectByText("create_registry.preferred_store_state", registry.getPreferredStoreState());
+            DropDowns.selectRandomValue("create_registry.event_location");
+            DropDowns.selectRandomValue("create_registry.preferred_store_state");
         }
 
         if (MEW() && bloomingdales()) {

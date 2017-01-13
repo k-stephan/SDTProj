@@ -236,8 +236,8 @@ public class Registry extends StepUtils {
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
         String month_name = WordUtils.capitalizeFully(Month.of(month + 1).name());
         regUser = TestUsers.getNewRegistryUser();
-        com.macys.sdt.framework.model.Registry registry = regUser.getRegistry();
-        registry.setEventType(event_type);
+        com.macys.sdt.framework.model.registry.Registry registry = regUser.getRegistry();
+        registry.setType(event_type);
         registry.setEventMonth(month_name);
         registry.setEventDay(day);
         registry.setEventYear(year);

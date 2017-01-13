@@ -8,6 +8,7 @@ public class RESTEndPoints {
     public static final String INITIATE_CHECKOUT = "order/v1/checkout/initiate";
     public static final String PROCESS_CHECKOUT = "order/v1/checkout/process";
     public static final String SIM_URL = "http://sim.delivery.fds/sim/environments/";
+    public static final String REGISTRY = "api/customer/v3/registries";
 
 
 

@@ -55,7 +55,7 @@ public class Registry extends StepUtils {
     public void sign_in_or_create_registry(UserProfile user_details) throws Throwable {
         ProfileAddress userAddress = regUser.getUser().getProfileAddress();
         LoginCredentials credentials = regUser.getUser().getLoginCredentials();
-        com.macys.sdt.framework.model.Registry userRegistry = regUser.getRegistry();
+        com.macys.sdt.framework.model.registry.Registry userRegistry = regUser.getRegistry();
 
         new PageNavigation().I_visit_the_web_site_as_a_guest_user();
         Clicks.click("home.goto_wedding_registry");
@@ -276,7 +276,7 @@ public class Registry extends StepUtils {
     public void I_should_see_updated_data_in_registry_manager_page(String fieldName) throws Throwable {
         Wait.secondsUntilElementPresent("registry_manager.registry_title", 5);
         String actualRegistryTitle = Elements.getText("registry_manager.registry_title");
-        String expectedRegistryTitle = regUser.getUser().getProfileAddress().getFirstName() + " & " + regUser.getRegistry().getCoRegistrantFirstName() + "'S " + regUser.getRegistry().getEventType();
+        String expectedRegistryTitle = regUser.getUser().getProfileAddress().getFirstName() + " & " + regUser.getRegistry().getCoRegistrantFirstName() + "'S " + regUser.getRegistry().getType();
         if (!actualRegistryTitle.equalsIgnoreCase(expectedRegistryTitle)) {
             Assert.fail("Registry title is not updated properly!!");
         }
@@ -357,7 +357,7 @@ public class Registry extends StepUtils {
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
         String month_name = WordUtils.capitalizeFully(Month.of(month + 1).name());
         regUser = TestUsers.getNewRegistryUser();
-        regUser.getRegistry().setEventType(event_type);
+        regUser.getRegistry().setType(event_type);
         regUser.getRegistry().setEventMonth(month_name);
         regUser.getRegistry().setEventDay(day);
         regUser.getRegistry().setEventYear(year);

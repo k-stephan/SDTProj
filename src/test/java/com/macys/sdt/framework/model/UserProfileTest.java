@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.model;
 
+import com.macys.sdt.framework.model.registry.Registry;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class UserProfileTest {
     @Test
     public void testGetRegistry() throws Exception {
         Registry registry = new Registry();
-        registry.setEventType("WEDDING");
+        registry.setType("WEDDING");
         registry.setEventMonth("December");
         registry.setEventDay("17");
         registry.setEventYear("2016");
@@ -50,7 +51,7 @@ public class UserProfileTest {
         userProfile.setRegistry(registry);
         Registry registryInfo = userProfile.getRegistry();
         Assert.assertNotNull(registryInfo);
-        Assert.assertEquals(registryInfo.getEventType(), "WEDDING");
+        Assert.assertEquals(registryInfo.getType(), "WEDDING");
         Assert.assertEquals(registryInfo.getEventMonth(), "December");
         Assert.assertEquals(registryInfo.getEventDay(), "17");
         Assert.assertEquals(registryInfo.getEventYear(), "2016");

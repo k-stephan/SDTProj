@@ -1,15 +1,27 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.registry;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * This class represents a Registry and contains all the information about that Registry
  */
-//@SuppressWarnings("unused")
 public class Registry {
 
-    private String eventType;
-    private String eventMonth;
-    private String eventDay;
-    private String eventYear;
+    public String userId;
+    public String type;
+    public String guestMessage = "Welcome to registry";
+    public String weddingWebsite = "www.mywedding.com";
+    public String registryType;
+    public String sourceType = "Internet";
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public int macysAccountNumber;
+    public Event event;
+    public Preferences preferences;
+    public ContactInfo contactInfo;
+    public ContactInfo coRegistrantContactInfo;
+    public CurrentAddress currentAddress;
+    public FutureAddress futureAddress;
+
     private String eventLocation;
     private String numberOfGuest;
     private String preferredStoreState;
@@ -23,17 +35,17 @@ public class Registry {
      *
      * @return Registry EventType
      */
-    public String getEventType() {
-        return eventType;
+    public String getType() {
+        return type;
     }
 
     /**
      * Sets the EventType of Registry
      *
-     * @param eventType Registry
+     * @param type Event type
      */
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
@@ -42,7 +54,7 @@ public class Registry {
      * @return Registry EventMonth
      */
     public String getEventMonth() {
-        return eventMonth;
+        return event.eventMonth;
     }
 
     /**
@@ -51,7 +63,7 @@ public class Registry {
      * @param eventMonth Registry
      */
     public void setEventMonth(String eventMonth) {
-        this.eventMonth = eventMonth;
+        event.eventMonth = eventMonth;
     }
 
     /**
@@ -60,7 +72,7 @@ public class Registry {
      * @return Registry EventDay
      */
     public String getEventDay() {
-        return eventDay;
+        return event.eventDay;
     }
 
     /**
@@ -69,7 +81,7 @@ public class Registry {
      * @param eventDay Registry
      */
     public void setEventDay(String eventDay) {
-        this.eventDay = eventDay;
+        event.eventDay = eventDay;
     }
 
     /**
@@ -78,7 +90,7 @@ public class Registry {
      * @return Registry EventYear
      */
     public String getEventYear() {
-        return eventYear;
+        return event.eventYear;
     }
 
     /**
@@ -87,7 +99,7 @@ public class Registry {
      * @param eventYear Registry
      */
     public void setEventYear(String eventYear) {
-        this.eventYear = eventYear;
+        event.eventYear = eventYear;
     }
 
     /**

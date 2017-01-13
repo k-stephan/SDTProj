@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.model.*;
+import com.macys.sdt.framework.model.registry.Registry;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -62,7 +63,7 @@ public class TestUsersTest {
         Assert.assertNotNull(registry);
         Assert.assertNotNull(registry.getCoRegistrantFirstName());
         Assert.assertNotNull(registry.getCoRegistrantLastName());
-        Assert.assertNotNull(registry.getEventType());
+        Assert.assertNotNull(registry.getType());
         Assert.assertNotNull(registry.getEventMonth());
         Assert.assertNotNull(registry.getEventDay());
         Assert.assertNotNull(registry.getEventYear());
@@ -80,7 +81,7 @@ public class TestUsersTest {
         Assert.assertNotNull(registry);
         Assert.assertNotNull(registry.getCoRegistrantFirstName());
         Assert.assertNotNull(registry.getCoRegistrantLastName());
-        Assert.assertNotNull(registry.getEventType());
+        Assert.assertNotNull(registry.getType());
         Assert.assertNotNull(registry.getEventMonth());
         Assert.assertNotNull(registry.getEventDay());
         Assert.assertNotNull(registry.getEventYear());

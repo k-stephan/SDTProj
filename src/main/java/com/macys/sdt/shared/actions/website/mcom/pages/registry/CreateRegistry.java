@@ -3,7 +3,7 @@ package com.macys.sdt.shared.actions.website.mcom.pages.registry;
 
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.Registry;
+import com.macys.sdt.framework.model.registry.Registry;
 import com.macys.sdt.framework.model.User;
 import com.macys.sdt.framework.model.UserProfile;
 import com.macys.sdt.framework.utils.StatesUtils;
@@ -34,14 +34,14 @@ public class CreateRegistry extends StepUtils {
             Registry registry = customer.getRegistry();
             User user = customer.getUser();
             ProfileAddress profileAddress = user.getProfileAddress();
-            selectDropDownText("create_registry.event_type", registry.getEventType());
+            selectDropDownText("create_registry.event_type", registry.getType());
             selectDropDownText("create_registry.event_month", registry.getEventMonth());
             selectDropDownText("create_registry.event_day", registry.getEventDay());
             selectDropDownText("create_registry.event_year", registry.getEventYear());
 
             if (macys()) {
-                DropDowns.selectByText("create_registry.event_location", registry.getEventLocation());
-                DropDowns.selectByText("create_registry.preferred_store_state", registry.getPreferredStoreState());
+                DropDowns.selectRandomValue("create_registry.event_location");
+                DropDowns.selectRandomValue("create_registry.preferred_store_state");
             }
             TextBoxes.typeTextbox("create_registry.number_of_guests", registry.getNumberOfGuest());
             TextBoxes.typeTextbox("create_registry.first_name", profileAddress.getFirstName());
@@ -83,14 +83,14 @@ public class CreateRegistry extends StepUtils {
         Wait.forPageReady();
         Registry registry = customer.getRegistry();
         ProfileAddress profileAddress = customer.getUser().getProfileAddress();
-        selectDropDownText("create_registry.event_type", registry.getEventType());
+        selectDropDownText("create_registry.event_type", registry.getType());
         selectDropDownText("create_registry.event_month", registry.getEventMonth());
         selectDropDownText("create_registry.event_day", registry.getEventDay());
         selectDropDownText("create_registry.event_year", registry.getEventYear());
 
         if (macys()) {
-            DropDowns.selectByText(Elements.element("create_registry.event_location"), registry.getEventLocation());
-            DropDowns.selectByText(Elements.element("create_registry.preferred_store_state"), registry.getPreferredStoreState());
+            DropDowns.selectRandomValue("create_registry.event_location");
+            DropDowns.selectRandomValue("create_registry.preferred_store_state");
         }
         TextBoxes.typeTextbox("create_registry.number_of_guests", registry.getNumberOfGuest());
         TextBoxes.typeTextbox("create_registry.co_registrant_first_name", registry.getCoRegistrantFirstName());
