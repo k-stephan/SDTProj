@@ -14,6 +14,9 @@ import org.openqa.selenium.NoAlertPresentException;
 
 public class CreateProfile extends StepUtils {
     public static void createProfile(UserProfile customer, boolean... edgeCase) {
+        if (!onPage("create_profile")) {
+            Navigate.visit("create_profile");
+        }
         pausePageHangWatchDog();
         User user = customer.getUser();
         ProfileAddress profileAddress = user.getProfileAddress();

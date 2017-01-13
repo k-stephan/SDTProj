@@ -218,16 +218,6 @@ public class Registry extends StepUtils {
         }
     }
 
-    @And("^I create a new registry$")
-    public void I_create_a_new_registry() throws Throwable {
-        if (prodEnv()) {
-            throw new Exceptions.ProductionException("Cannot Create New Registries in Production");
-        }
-
-        shouldBeOnPage("create_registry", "new_create_registry");
-        CreateRegistry.fillRegistryUserDetails(TestUsers.getNewRegistryUser());
-    }
-
     @Then("^I should see the registry created successfully$")
     public void I_should_see_the_registry_created_successfully() throws Throwable {
         Wait.untilElementPresent("create_registry.create_message");

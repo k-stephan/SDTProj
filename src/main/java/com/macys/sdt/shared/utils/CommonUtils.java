@@ -262,15 +262,10 @@ public abstract class CommonUtils extends StepUtils {
                 }
                 new MyAccount().setSecurityQuestion();
                 if (MEW()) {
-                    if (Elements.elementPresent("sign_in.verify_page") || Elements.elementPresent("sign_in.error_message")) {
-                        Clicks.javascriptClick("sign_in.create_account");
-                        CreateProfileMEW.createProfile(customer);
-                    }
+                    CreateProfileMEW.createProfile(customer);
+                    isNewProfileCreated = true;
                 } else {
-                    if (Elements.elementPresent("sign_in.error_message") && MainRunner.getWebDriver().getTitle().contains("Sign In")) {
-                        Clicks.click("sign_in.create_profile");
-                        CreateProfile.createProfile(customer);
-                    }
+                    CreateProfile.createProfile(customer);
                     Wait.forPageReady();
                     Assert.assertTrue("New Profile could not be created", onPage("my_account") || onPage("my_profile"));
                     Clicks.clickIfPresent("my_account.add_card_overlay_no_thanks_button");

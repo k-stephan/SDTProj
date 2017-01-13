@@ -25,7 +25,6 @@ public class CreateRegistry extends StepUtils {
     public static void fillRegistryUserDetails(UserProfile customer) {
         if (onPage("new_create_registry")) {
             createRegistryUser(customer);
-
         } else {
             closeFSRDialogIfAppeared();
             int date = TestUsers.generateRandomDateIndex();

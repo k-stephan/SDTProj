@@ -570,22 +570,6 @@ public class ShopAndBrowse extends StepUtils {
         resumePageHangWatchDog();
     }
 
-    @When("^I add an? \"(.*?)\" product to my bag(?: that is not(?: an?)? \"(.*?)\")?(?: and \"?(.*?)\"? ?checkout)?$")
-    public void I_add_a_product_to_my_bag(String productTrue, String productFalse, String checkout) throws Throwable {
-        iNavigateToPdp(productTrue, productFalse);
-        I_add_product_to_my_bag_from_standard_PDP_Page();
-
-        if (checkout != null) {
-            if (onPage("add_to_bag"))
-                Clicks.click("add_to_bag.checkout");
-            else if (Elements.elementPresent("add_to_bag_dialog.add_to_bag_checkout"))
-                Clicks.click("add_to_bag_dialog.add_to_bag_checkout");
-            else
-                Clicks.click("product_display.member_atb_checkout");
-        }
-    }
-
-
     @When("^I directly add an available and orderable product \"([^\"]*)\" to my bag$")
     public void I_directly_add_an_available_and_orderable_product_to_my_bag(String avilable_prodcut_id) throws Throwable {
         CommonUtils.navigateDirectlyToProduct(avilable_prodcut_id);

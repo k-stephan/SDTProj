@@ -1,9 +1,6 @@
 package com.macys.sdt.shared.actions.MEW.pages;
 
-import com.macys.sdt.framework.interactions.Clicks;
-import com.macys.sdt.framework.interactions.DropDowns;
-import com.macys.sdt.framework.interactions.TextBoxes;
-import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.ProfileAddress;
 import com.macys.sdt.framework.model.User;
 import com.macys.sdt.framework.model.UserProfile;
@@ -21,6 +18,9 @@ public class CreateProfileMEW extends StepUtils {
     public static void createProfile(final UserProfile customer) {
         final User user = customer.getUser();
         final ProfileAddress profileAddress = user.getProfileAddress();
+        if (!onPage("create_profile")) {
+            Navigate.visit("create_profile");
+        }
 
         Wait.forPageReady();
         TextBoxes.typeTextbox("create_profile.verify_page", profileAddress.getFirstName());
