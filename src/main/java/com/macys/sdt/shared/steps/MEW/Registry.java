@@ -36,7 +36,7 @@ public class Registry extends StepUtils {
     public void I_add_the_product_to_a_registry_using_mobile_website() throws Throwable {
         // There are two element with same id. One for tablet and another for mobile.
         // so had to filter out the displayed element and click in below step
-        Clicks.clickRandomElement("product_display.add_to_registry", WebElement::isDisplayed);
+        Clicks.click("product_display.add_to_registry");
         Assert.assertTrue("ERROR-DATA: Unable to add product in registry", Wait.untilElementPresent
                 ("add_to_registry_overlay.add_to_registry_overlay"));
     }

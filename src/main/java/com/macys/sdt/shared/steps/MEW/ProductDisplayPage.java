@@ -221,7 +221,7 @@ public class ProductDisplayPage extends StepUtils {
     @And("^I click Add to Wish List button on PDP using mobile website$")
     public void I_click_add_to_Wish_List_button_on_PDP_using_mobile_website() throws Throwable {
         Clicks.click("product_display.add_to_wishlist");
-        Assert.assertTrue("ERROR-ENV: Unable to navigate wish list overlay", Wait.untilElementPresent("product_display.wish_list_overlay"));
+        Assert.assertTrue("ERROR-ENV: Unable to navigate wish list overlay", Wait.secondsUntilElementPresent("product_display.wish_list_overlay", 5));
     }
 
     @When("^I click on view list in ATW overlay from PDP using mobile website$")
