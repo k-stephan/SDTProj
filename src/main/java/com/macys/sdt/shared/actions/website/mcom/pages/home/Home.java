@@ -32,9 +32,12 @@ public class Home extends StepUtils {
         if (safari())
             Elements.findElements(Elements.element("category_splash.subcategory")).stream().filter(el -> el.isDisplayed() && el.getText().equalsIgnoreCase(subCategory)).findFirst().get().click();
         else {
-            if (macys())
-                Clicks.clickElementByText("category_splash.subcategory", subCategory);
-            else
+            if (macys()){
+                if (edge())
+                    Clicks.javascriptClick(Elements.findElements(Elements.element("category_splash.subcategory")).stream().filter(el -> el.isDisplayed() && el.getText().equalsIgnoreCase(subCategory)).findFirst().get());
+                else
+                    Clicks.clickElementByText("category_splash.subcategory", subCategory);
+            } else
                 Clicks.clickElementByText("category_splash.subcategory", subCategory);
         }
         try {

@@ -208,7 +208,7 @@ public class Returns extends StepUtils {
                 Assert.fail("line item not found");
             actualQuantity = lineItemDetails.get("itemQty").toString();
         } else
-            actualQuantity = ((List<Map>) shipment.get("lineItems")).get(0).get("itemQty").toString();
+            actualQuantity = ((List<Map>) shipment.get("lineItems")).get(0).get("itemQty").toString().trim();
         if (!actualQuantity.equals(expectedQuantity))
             Assert.fail(actualQuantity + " is not equal to " + expectedQuantity);
     }

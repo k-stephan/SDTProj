@@ -48,7 +48,7 @@ public class USLAccountSummary extends StepUtils {
             String actualRedeemMessage = Elements.getText(Elements.element("usl_account_summary.redeem_message"));
             String expectedRedeemMessage = TestUsers.getCustomerInformation().getUser().getProfileAddress().getFirstName() + " 's Plenti points balance:";
 
-            if (!actualRedeemMessage.equals(expectedRedeemMessage))
+            if (!actualRedeemMessage.contains(expectedRedeemMessage))
                 Assert.fail("Redeem message is not displayed correctly on USL account summary page");
 
             if (status.equals("fully enrolled")) {
