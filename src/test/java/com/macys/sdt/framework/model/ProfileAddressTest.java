@@ -3,6 +3,9 @@ package com.macys.sdt.framework.model;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for ProfileAddress Model
+ */
 public class ProfileAddressTest {
 
     private ProfileAddress profileAddress;

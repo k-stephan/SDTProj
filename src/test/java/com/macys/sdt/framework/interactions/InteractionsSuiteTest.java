@@ -9,6 +9,9 @@ import org.junit.runners.Suite;
 
 import java.io.File;
 
+/**
+ * Interactions Tests Suite
+ */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         ClicksTests.class,
@@ -39,6 +42,7 @@ public class InteractionsSuiteTest {
             MainRunner.workspace = "";
             MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
             MainRunner.browser = "firefox";
+            MainRunner.browserVersion = "";
             MainRunner.remoteOS = "Windows 7";
             MainRunner.timeout = 90;
             MainRunner.url = "http://ui-standards.herokuapp.com";

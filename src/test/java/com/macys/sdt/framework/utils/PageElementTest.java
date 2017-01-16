@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Tests for PageElement
+ */
 public class PageElementTest {
 
     @BeforeClass

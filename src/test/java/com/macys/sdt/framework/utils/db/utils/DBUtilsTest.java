@@ -10,6 +10,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+/**
+ * Tests for DBUtils
+ */
 public class DBUtilsTest {
 
     @BeforeClass

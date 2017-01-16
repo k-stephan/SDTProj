@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
+/**
+ * Tests for KillSwitch
+ */
 public class KillSwitchTest {
 
     @BeforeClass

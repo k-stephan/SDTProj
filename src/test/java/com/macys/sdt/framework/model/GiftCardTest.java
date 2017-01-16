@@ -3,6 +3,9 @@ package com.macys.sdt.framework.model;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for GiftCard Model
+ */
 public class GiftCardTest {
 
     private GiftCard giftCard;

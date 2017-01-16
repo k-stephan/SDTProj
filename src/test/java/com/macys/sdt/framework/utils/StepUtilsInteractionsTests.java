@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
+ * Tests for StepUtils Methods Related to UI Interactions
  * These test can be executed from InteractionsSuiteTest only, hence the class name is ending with 'Tests' instead of 'Test'
  */
 public class StepUtilsInteractionsTests {

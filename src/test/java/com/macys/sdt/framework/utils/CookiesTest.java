@@ -11,6 +11,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Tests for Cookies
+ */
 public class CookiesTest {
 
     @BeforeClass

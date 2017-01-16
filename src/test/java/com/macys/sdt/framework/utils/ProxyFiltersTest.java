@@ -3,7 +3,9 @@ package com.macys.sdt.framework.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
-
+/**
+ * Tests for ProxyFilters
+ */
 public class ProxyFiltersTest {
 
     @Test

@@ -11,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 /**
+ * Tests for Wait Interactions
  * These test can be executed from InteractionsSuiteTest only, hence the class name is ending with 'Tests' instead of 'Test'
  */
 public class WaitTests {

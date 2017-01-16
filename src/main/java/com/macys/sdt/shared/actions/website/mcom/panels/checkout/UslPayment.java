@@ -10,6 +10,9 @@ import org.junit.Assert;
 
 public class UslPayment extends StepUtils {
 
+    /**
+     * Method to apply usl points as payment type in checkout page
+     */
     public void addUslAsPayment() {
         String payment = "apply_my_plenti";
         Wait.secondsUntilElementPresent(payment + ".use_usl", (safari() ? 20 : 5));
