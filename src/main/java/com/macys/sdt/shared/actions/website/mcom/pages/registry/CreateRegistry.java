@@ -53,7 +53,7 @@ public class CreateRegistry extends StepUtils {
             selectDropDownText("create_registry.address_state", profileAddress.getState());
             TextBoxes.typeTextbox("create_registry.address_zip_code", String.valueOf(profileAddress.getZipCode()));
 
-            selectDropDownText("create_registry.security_question", user.getUserPasswordHint().getQuestion());
+            selectDropDownText("create_registry.security_question", ((edge() && bloomingdales()) ? (user.getUserPasswordHint().getQuestion() + " ") : user.getUserPasswordHint().getQuestion()));
             TextBoxes.typeTextbox("create_registry.security_answer", user.getUserPasswordHint().getAnswer());
             selectDropDownText("create_registry.dob_month", TestUsers.generateRandomMonth());
             selectDropDownIndex("create_registry.dob_day", date);
@@ -200,12 +200,18 @@ public class CreateRegistry extends StepUtils {
         DropDowns.selectByValue("new_create_registry.address_state", (profileAddress.getState().length() == 2 ? profileAddress.getState() : StatesUtils.getAbbreviation(profileAddress.getState())));
         TextBoxes.typeTextbox("new_create_registry.address_zip_code", String.valueOf(profileAddress.getZipCode()));
         TextBoxes.typeTextbox("new_create_registry.phone", profileAddress.getBestPhone());
-        Clicks.click("new_create_registry.contact_info_continue_button");
+        if (edge())
+            Clicks.javascriptClick("new_create_registry.contact_info_continue_button");
+        else
+            Clicks.click("new_create_registry.contact_info_continue_button");
     }
 
     private static void fillRegistryShippingInfo() {
         Clicks.selectCheckbox("new_create_registry.go_green_checkbox");
-        Clicks.click("new_create_registry.shipping_info_continue_button");
+        if (edge())
+            Clicks.javascriptClick("new_create_registry.shipping_info_continue_button");
+        else
+            Clicks.click("new_create_registry.shipping_info_continue_button");
     }
 
     private static void fillRegistryStoreInfo(UserProfile customer) {

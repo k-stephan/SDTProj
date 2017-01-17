@@ -78,6 +78,8 @@ public class PageNavigation extends StepUtils {
         if (tablet()) {
             new Home().selectSubCategory(subCategory);
         }
+        // Adding extra space in link text for edge browser
+        subCategory = (edge() ? (subCategory + " ") : subCategory);
         if (!Wait.untilElementPresent(By.linkText(subCategory)))
             Assert.fail("Could not click fly-out \"" + subCategory + "\"");
         if (ie())
@@ -90,8 +92,10 @@ public class PageNavigation extends StepUtils {
     public void iSelectCreateRegistry() throws Throwable {
         if ( (firefox() || chrome()) && macys() && !Elements.elementPresent("registry_home.goto_create_registry"))
             Clicks.clickArea("alt", "create your registry. couples start here!");
-        else
-            Clicks.click("registry_home.goto_create_registry");
+        else if (edge())
+                Clicks.javascriptClick("registry_home.goto_create_registry");
+            else
+                Clicks.click("registry_home.goto_create_registry");
         Wait.forPageReady();
     }
 

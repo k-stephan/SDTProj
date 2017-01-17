@@ -60,7 +60,10 @@ public class LoyaltyEnrollment extends StepUtils {
         TextBoxes.typeTextbox("loyalty_enrollment.phone_subscriber", profileAddress.getPhoneSubscriber());
         Clicks.selectCheckbox("loyalty_enrollment.agree_to_terms_and_conditions");
         try {
-            Clicks.click("loyalty_enrollment.enroll_now_signed_in");
+            if(edge())
+                Clicks.javascriptClick("loyalty_enrollment.enroll_now_signed_in");
+            else
+                Clicks.click("loyalty_enrollment.enroll_now_signed_in");
             Wait.untilElementPresent("loyalty_enrollment_confirmation.loyalty_number");
         } catch (Exception e) {
             Assert.fail("Failed to validate loyalty data in the page: " + e);

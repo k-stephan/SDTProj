@@ -459,6 +459,10 @@ public class MyAccountSteps extends StepUtils {
             }
             pageName = "loyalty_enrollment_confirmation";
         }
+        if (edge()) {
+            Wait.secondsUntilElementPresent(By.className("extole-js-widget-close-button"), 5);
+            Clicks.javascriptClick(By.className("extole-js-widget-close-button"));
+        }
         if (!Elements.elementPresent(pageName + ".loyalty_number")) {
             Assert.fail("Loyalty Enrollment Confirmation Page Not Loaded Properly");
         } else {
