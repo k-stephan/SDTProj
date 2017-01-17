@@ -229,7 +229,7 @@ public class ShopAndBrowse extends StepUtils {
         if (newDropDownEnabled)
             DropDowns.selectCustomText("international_shipping.country_options", "international_shipping.country_list", selectCountry);
         else
-            DropDowns.selectByText("international_shipping.country", country);
+            DropDowns.selectByText("international_shipping.country", selectCountry);
         Clicks.click("international_shipping.save_continue");
         Wait.forPageReady();
         Clicks.clickIfPresent("home.close_overlay_country");
