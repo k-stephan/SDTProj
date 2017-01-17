@@ -1144,8 +1144,15 @@ public class MainRunner {
         public void run() {
             while (true) {
                 try {
-                    if (pause || !driverInitialized()) {
+                    if (!driverInitialized()) {
                         continue;
+                    } else if (pause) {
+                        // if we've been waiting a while, send any browser command to prevent
+                        // dropping the sauce labs connection
+                        if (System.currentTimeMillis() - this.ts > TIMEOUT) {
+                            getWebDriver().getTitle();
+                            this.reset(null);
+                        }
                     }
                     String url = currentURL;
                     //System.err.println("Watchdog tick:\n>old url: " + this.m_url + "\n>new url: " + url);
