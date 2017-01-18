@@ -21,7 +21,7 @@ import static com.macys.sdt.framework.utils.StepUtils.*;
  */
 public class Cookies {
 
-    private static String domain = MainRunner.url.replaceFirst("www1", "").
+    private static String domain = "." + MainRunner.url.replaceFirst("www1", "").
             replaceFirst("www", "").replaceFirst("http://", "").replaceFirst("m\\.", "");
 
     /**
@@ -77,7 +77,7 @@ public class Cookies {
                 options.deleteCookieNamed(name);
                 options.addCookie(new Cookie(name, encodedValue, domain, path, expiry));
             } catch (Exception e) {
-                System.out.println("Unable to set " + name + " cookie value");
+                System.out.println("Unable to set " + name + " cookie value: " + e);
                 return false;
             }
         }

@@ -46,7 +46,7 @@ public class MediaService {
 
     /*
     # To Get only row_contextualized media details based upon media_name, row_type ,context_attr_name,context_attr_value
-    # @param[String[], String, String[], String[]] expected media names, row type and context attr name and value
+    # @param[String[], String, String[], String[]] expected media names, row eventType and context attr name and value
     # @return[Array[Hashes]] return all media details for only row contextualize media ex => copy_block, text, recently_review, Horizontal_rule
     # EX [{:canvas_id=>"401130", :canvas_row_id=>5025325, :media_name => 'dhhfj.jpg', :text=>"Alt", :description=>"Ad"},{....}]
     #
@@ -104,7 +104,7 @@ public class MediaService {
     /*
     #
     # To Get all contextualized, non contextualized media details based upon media_name, row_type ,context_attr_name,context_attr_value
-    # @param[String[], String, String[], String[]] expected media names, row type and context attr name and value
+    # @param[String[], String, String[], String[]] expected media names, row eventType and context attr name and value
     # @return[Array[Hashes]] return all non contextualized and contextualized media details
     # EX [{:canvas_id=>"401130", :canvas_row_id=>5025325, :media_key=>632522, :media_type_desc=>"AD", :media_info=>[{:media_key=>632522, :media_name=>"Row1.3).png", :text=>"Alt", :description=>"Ad"}]},{....}]
     #
@@ -210,7 +210,7 @@ public class MediaService {
             if (Arrays.asList(mediaNamesArray).contains("AD")) {
                 adFlag = 1;
             }
-            //For IMAGE_MAP media type replace with AD
+            //For IMAGE_MAP media eventType replace with AD
             if (Arrays.asList(mediaNamesArray).contains("IMAGE_MAP")) {
                 for (int index = 0; index < mediaNamesArray.length; index++)
                     if (mediaNamesArray[index].equals("IMAGE_MAP")) {
@@ -268,7 +268,7 @@ public class MediaService {
         }
         //Get all group media data for direct media
         if (!(groupContextualizeMedia.isEmpty() && catIconMediaKeys.isEmpty())) {
-            //get the data for Image map and AD media type
+            //get the data for Image map and AD media eventType
             List mediaGroupDataOne = new ArrayList<>();
             List mediaGroupDataTwo = new ArrayList<>();
             List mediaGroupDataSecond = new ArrayList<>();
@@ -501,7 +501,7 @@ public class MediaService {
             mediaParameterData.add(type);
         }
         if (widgetFlag == 1) {
-            String mode = (Arrays.asList(attrValues).contains("WEDDING_REGISTRY")) ? "REGISTRY" : "SITE";
+            String mode = (Arrays.asList(attrValues).contains("WEDDING_REGISTRY")) ? "CREATE_REGISTRY" : "SITE";
             List<String> paramIds = mediaParameterData.stream()
                     .map(param -> param.get("parameterId").toString())
                     .collect(Collectors.toList());

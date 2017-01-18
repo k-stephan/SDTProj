@@ -1,23 +1,23 @@
 package com.macys.sdt.framework.utils.rest.services;
 
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.macys.sdt.framework.model.registry.Registry;
+import com.macys.sdt.framework.model.user.UserProfile;
+import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 public class RegistryServiceTest {
 
     @Test
     public void testCreateRegistry() {
-        try {
-            Registry registry = new XmlMapper().readValue(new File("test.xml"), Registry.class);
-            System.out.println(registry.userId);
-        } catch (IOException e) {
-            System.out.println("fuck");
-            //fuckall
-        }
+        MainRunner.url = "http://www.qa15codemacys.fds.com";
+        UserProfile profile = UserProfileService.createRandomUserProfile();
+
+        Registry registry = new Registry();
+        registry.addRandomData();
+        registry.setUserId("2158517601");
+        registry = RegistryService.createRegistry(registry);
+        System.out.println(registry);
+
     }
 }

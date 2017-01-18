@@ -149,7 +149,7 @@ class WebDriverConfigurator {
                 capabilities = DesiredCapabilities.chrome();
                 setChromeDriverLocation();
                 ChromeOptions chrome = new ChromeOptions();
-                chrome.addArguments("test-type");
+                chrome.addArguments("test-eventType");
                 chrome.addArguments("--disable-extensions");
                 capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
                 return disabledProxyCap(capabilities);

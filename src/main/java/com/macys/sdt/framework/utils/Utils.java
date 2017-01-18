@@ -539,7 +539,7 @@ public class Utils {
 
         // project data
         String full_path = getResourcePath(fname);
-        String path = MainRunner.projectDir + "/resources/data/" + full_path;
+        String path = "C:/Repos/SDT/shared/resources/data/website/mcom/" + fname;// MainRunner.projectDir + "/resources/data/" + full_path;
         File resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;

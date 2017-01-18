@@ -3,7 +3,7 @@ package com.macys.sdt.shared.utils;
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.CreditCard;
 import com.macys.sdt.framework.model.Product;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.*;
 import com.macys.sdt.shared.actions.MEW.pages.CreateProfileMEW;

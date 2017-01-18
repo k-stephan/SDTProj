@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils.rest.utils;
 
 
+import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,6 @@ public class RESTUtils {
      * @return base address
      */
     public static Optional<String> getBaseAddress() {
-        return Optional.ofNullable(System.getenv("website"));
+        return Optional.ofNullable(MainRunner.url);
     }
 }

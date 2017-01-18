@@ -1,11 +1,11 @@
 package com.macys.sdt.shared.actions.website.mcom.pages.my_account;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.StatesUtils;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.openqa.selenium.Alert;
@@ -28,7 +28,7 @@ public class CreateProfile extends StepUtils {
         typeTextBoxIfPresent("create_profile.address_city", profileAddress.getCity());
 
         if (macys() || Elements.elementPresent("create_profile.address_state")) {
-            selectDropDownIfPresent("create_profile.address_state", ((profileAddress.getState().length() == 2) ? StatesUtils.translateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
+            selectDropDownIfPresent("create_profile.address_state", ((profileAddress.getState().length() == 2) ? AbbreviationHelper.translateStateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
             if(edgeCase.length > 0 && edgeCase[0]) {
                 selectDropDownIfPresent("create_profile.dob_month", "February");
                 selectDropDownIfPresent("create_profile.dob_day", "31");//February doesn't have 31 days thereby making this date as invalid date.
@@ -42,7 +42,7 @@ public class CreateProfile extends StepUtils {
             selectDropDownIfPresent("create_profile.security_question", user.getUserPasswordHint().getQuestion());
         } else {
             //Bloomingdales
-            selectCustomDropDownIfPresent("create_profile.address_state_list", "create_profile.state_options", ((profileAddress.getState().length() == 2) ? StatesUtils.translateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
+            selectCustomDropDownIfPresent("create_profile.address_state_list", "create_profile.state_options", ((profileAddress.getState().length() == 2) ? AbbreviationHelper.translateStateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
             if(Elements.elementPresent("create_profile.dob_month")) {
                 if (edgeCase.length > 0 && edgeCase[0])
                     selectDropDownIfPresent("create_profile.dob_month", "February");

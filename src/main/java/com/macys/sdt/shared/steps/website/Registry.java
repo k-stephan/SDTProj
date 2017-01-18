@@ -2,9 +2,9 @@ package com.macys.sdt.shared.steps.website;
 
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.LoginCredentials;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.LoginCredentials;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.utils.Cookies;
 import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
@@ -276,7 +276,7 @@ public class Registry extends StepUtils {
     public void I_should_see_updated_data_in_registry_manager_page(String fieldName) throws Throwable {
         Wait.secondsUntilElementPresent("registry_manager.registry_title", 5);
         String actualRegistryTitle = Elements.getText("registry_manager.registry_title");
-        String expectedRegistryTitle = regUser.getUser().getProfileAddress().getFirstName() + " & " + regUser.getRegistry().getCoRegistrantFirstName() + "'S " + regUser.getRegistry().getType();
+        String expectedRegistryTitle = regUser.getUser().getProfileAddress().getFirstName() + " & " + regUser.getRegistry().getCoRegistrantFirstName() + "'S " + regUser.getRegistry().getEventType();
         if (!actualRegistryTitle.equalsIgnoreCase(expectedRegistryTitle)) {
             Assert.fail("Registry title is not updated properly!!");
         }
@@ -357,7 +357,7 @@ public class Registry extends StepUtils {
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
         String month_name = WordUtils.capitalizeFully(Month.of(month + 1).name());
         regUser = TestUsers.getNewRegistryUser();
-        regUser.getRegistry().setType(event_type);
+        regUser.getRegistry().setEventType(event_type);
         regUser.getRegistry().setEventMonth(month_name);
         regUser.getRegistry().setEventDay(day);
         regUser.getRegistry().setEventYear(year);

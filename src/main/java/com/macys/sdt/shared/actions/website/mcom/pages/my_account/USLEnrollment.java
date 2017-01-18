@@ -2,9 +2,9 @@ package com.macys.sdt.shared.actions.website.mcom.pages.my_account;
 
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import org.apache.commons.lang3.text.WordUtils;
@@ -17,7 +17,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Random;
 
-import static com.macys.sdt.framework.utils.StatesUtils.translateAbbreviation;
+import static com.macys.sdt.framework.utils.AbbreviationHelper.translateStateAbbreviation;
 
 public class USLEnrollment extends StepUtils {
 
@@ -49,7 +49,7 @@ public class USLEnrollment extends StepUtils {
             TextBoxes.typeTextbox(Elements.element("usl_enrollment.address_line_2"), "");
             TextBoxes.typeTextbox(Elements.element("usl_enrollment.address_city"), profileAddress.getCity());
             String state = profileAddress.getState();
-            state = state.length() == 2 ? translateAbbreviation(state) : state;
+            state = state.length() == 2 ? translateStateAbbreviation(state) : state;
             DropDowns.selectByText(Elements.element("usl_enrollment.address_state"), state);
             TextBoxes.typeTextbox(Elements.element("usl_enrollment.address_zip_code"), String.valueOf(profileAddress.getZipCode()));
             TextBoxes.typeTextbox(Elements.element("usl_enrollment.email"), profileAddress.getEmail());

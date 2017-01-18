@@ -7,6 +7,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -23,6 +25,7 @@ import java.io.StringWriter;
 
 public class UserService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileService.class);
     private static final String SERVICE_ENDPOINT = "customer/v1/users?_body=true";
 
     public static String createUser() {
@@ -31,8 +34,12 @@ public class UserService {
             String serviceUrl = getServiceURL();
             System.out.println(getServiceURL());
             PostMethod post = new PostMethod(serviceUrl);
-            String postdata = userServiceXML();
-            post.setRequestEntity(new StringRequestEntity(postdata, "application/xml", "UTF-8"));
+            String postData = userServiceXML();
+            if (postData == null) {
+                LOGGER.error("Failed to create user XML");
+                return null;
+            }
+            post.setRequestEntity(new StringRequestEntity(postData, "application/xml", "UTF-8"));
             HttpClient httpclient = new HttpClient();
             int result = httpclient.executeMethod(post);
             System.out.println("Response status code: " + result);

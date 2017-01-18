@@ -2,7 +2,7 @@ package com.macys.sdt.shared.actions.MEW.pages;
 
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.CreditCard;
-import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.utils.*;
 import com.macys.sdt.shared.utils.CheckoutUtils;
 import com.macys.sdt.shared.utils.CheckoutUtils.RCPage;
@@ -19,7 +19,8 @@ public class Checkout extends StepUtils {
         String page = responsive ? "responsive_checkout" : (iship ? "iship_checkout" : "shipping_payment_signed_in");
         String type = bops ? ".pickup" : ".shipping";
 
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         String phoneNum = TestUsers.generateRandomPhoneNumber();
 
         if (safari())
@@ -43,7 +44,7 @@ public class Checkout extends StepUtils {
                     TextBoxes.typeTextbox(page + ".shipping_email_address", TestUsers.generateRandomEmail(5));
                 } else {
                     String state = responsive ? address.getState() :
-                            StatesUtils.translateAbbreviation(address.getState());
+                            AbbreviationHelper.translateStateAbbreviation(address.getState());
                     DropDowns.selectByText(page + ".shipping_address_state", state);
                 }
                 TextBoxes.typeTextbox(page + ".shipping_address_" + (iship ? "postal_code" : "zip_code"), address.getZipCode().toString());
@@ -103,7 +104,8 @@ public class Checkout extends StepUtils {
             Wait.untilElementPresent(page + ".card_number");
         }
 
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address =  new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         CreditCard visaCard = TestUsers.getValidVisaCreditCard();
 
         TextBoxes.typeTextbox(page + ".card_number", visaCard.getCardNumber());
@@ -128,7 +130,7 @@ public class Checkout extends StepUtils {
             if (responsive) {
                 TextBoxes.typeTextbox(page + ".phone_number", address.getBestPhone());
             } else {
-                state = StatesUtils.translateAbbreviation(state);
+                state = AbbreviationHelper.translateStateAbbreviation(state);
                 TextBoxes.typeTextbox(page + ".card_phone_area_code", address.getPhoneAreaCode());
                 TextBoxes.typeTextbox(page + ".card_phone_exchange", address.getPhoneExchange());
                 TextBoxes.typeTextbox(page + ".card_phone_subscriber", address.getPhoneSubscriber());

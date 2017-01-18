@@ -4,7 +4,7 @@ package com.macys.sdt.shared.steps.website;
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.CreditCard;
 import com.macys.sdt.framework.model.Product;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.model.GiftCard;
 import com.macys.sdt.framework.utils.rest.services.GiftCardService;
 import com.macys.sdt.framework.runner.MainRunner;

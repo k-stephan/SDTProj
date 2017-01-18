@@ -63,14 +63,14 @@ public class Home extends StepUtils {
     public List<String> getExpectedMainCategories(String mode) {
         if (macys()) {
             if (mode.equalsIgnoreCase("registry"))
-                return Arrays.asList("WEDDING REGISTRY", "DINING & ENTERTAINING", "KITCHEN", "BED & BATH", "HOME DECOR", "LUGGAGE", "CLEANING & ORGANIZING");
+                return Arrays.asList("WEDDING CREATE_REGISTRY", "DINING & ENTERTAINING", "KITCHEN", "BED & BATH", "HOME DECOR", "LUGGAGE", "CLEANING & ORGANIZING");
             else
                 return Arrays.asList("HOME", "BED & BATH", "WOMEN", "MEN", "JUNIORS", "KIDS", "ACTIVE", "BEAUTY", "SHOES", "HANDBAGS", "JEWELRY", "WATCHES", "BRANDS");
         } else {
             if (mode.equalsIgnoreCase("registry"))
                 return Arrays.asList("GETTING STARTED", "BRANDS", "DINING & ENTERTAINING", "KITCHEN", "BED & BATH", "HOME DECOR", "LUGGAGE", "CLEANING & ORGANIZING", "SALE");
             else
-                return Arrays.asList("DESIGNERS", "WHAT'S NEW", "WOMEN", "SHOES", "HANDBAGS", "JEWELRY & ACCESSORIES", "BEAUTY", "MEN", "KIDS", "HOME", "GIFTS", "THE REGISTRY", "SALE", "OUTLET");
+                return Arrays.asList("DESIGNERS", "WHAT'S NEW", "WOMEN", "SHOES", "HANDBAGS", "JEWELRY & ACCESSORIES", "BEAUTY", "MEN", "KIDS", "HOME", "GIFTS", "THE CREATE_REGISTRY", "SALE", "OUTLET");
         }
     }
 

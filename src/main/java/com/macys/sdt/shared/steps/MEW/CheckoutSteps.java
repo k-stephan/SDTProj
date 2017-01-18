@@ -1,7 +1,7 @@
 package com.macys.sdt.shared.steps.MEW;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.User;
+import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;

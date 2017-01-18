@@ -1,0 +1,30 @@
+
+<user>
+    <dateOfBirth>1930-11-3</dateOfBirth>
+    <gender>F</gender>
+    <subscribedToNewsLetter>true</subscribedToNewsLetter>
+    <userPasswordHint>
+        <id>2</id>
+        <answer>Captain Carter</answer>
+    </userPasswordHint>
+    <profileAddress>
+        <id>1234</id>
+        <attention>testattention</attention>
+        <sequenceNumber>11</sequenceNumber>
+        <firstName>Zetta</firstName>
+        <lastName>Graham</lastName>
+        <middleName></middleName>
+        <addressLine1>101 S Capital Blvd</addressLine1>
+        <addressLine2>Suite 1200</addressLine2>
+        <city>Boise</city>
+        <state>ID</state>
+        <zipCode>83702</zipCode>
+        <countryCode>USA</countryCode>
+        <email>sghpwsjiondamimr@blackhole.macys.com</email>
+        <bestPhone>208-834-7281</bestPhone>
+        <primaryFlag>true</primaryFlag>
+    </profileAddress>
+    <loginCredentials>
+        <password>Macys12345</password>
+    </loginCredentials>
+</user>

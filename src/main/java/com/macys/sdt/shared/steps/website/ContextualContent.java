@@ -178,7 +178,7 @@ public class ContextualContent extends StepUtils {
         mainRowType = rowType;
         mainRowTypeId = "row_" + rowType + "_" + String.valueOf(sequence);
         if (!sequenceSet)
-            Assert.fail("ERROR - DATA: Navigated category may have inherited canvas id, so we cannot find row type:'" + rowType + "' with media:'" + mediaNames + "' on the page");
+            Assert.fail("ERROR - DATA: Navigated category may have inherited canvas id, so we cannot find row eventType:'" + rowType + "' with media:'" + mediaNames + "' on the page");
         System.out.println("--> Required media is present in page!!");
         StepUtils.resumePageHangWatchDog();
     }
@@ -236,7 +236,7 @@ public class ContextualContent extends StepUtils {
                 uiData = mediaDetails;
                 finalExpectedData.removeIf(type -> (!type.get("mediaTypeDesc").toString().toLowerCase().replace(" ", "_").equals(name)));
                 dbData = finalExpectedData;
-                String errorMessage = "ERROR - APP: Expected media type: '" + name + "' is not displayed";
+                String errorMessage = "ERROR - APP: Expected media eventType: '" + name + "' is not displayed";
                 switch (name) {
                     case "widget":
                         int counter = (int)uiData.stream().filter(data -> (((Map)data.get("mediaInfo")).isEmpty())).count();
@@ -255,8 +255,8 @@ public class ContextualContent extends StepUtils {
                         }
                         break;
                     case "category_icon":
-                        String textErrorMessage = "ERROR - APP: Category icons text is not displayed with media type:'" + name + "'";
-                        String imageErrorMessage = "ERROR - APP: Category icon images are not displayed with media type:'" + name + "'";
+                        String textErrorMessage = "ERROR - APP: Category icons text is not displayed with media eventType:'" + name + "'";
+                        String imageErrorMessage = "ERROR - APP: Category icon images are not displayed with media eventType:'" + name + "'";
                         List<String> dbText = new ArrayList<>();
                         List<String> catIconText = new ArrayList<>();
                         List<String> dbImageNames = new ArrayList<>();
@@ -302,8 +302,8 @@ public class ContextualContent extends StepUtils {
                         }
                         break;
                     case "flexible_pool":
-                        String titleErrorMessage = "ERROR - APP: Flexible title is not displayed with media type:'" + name + "'";
-                        String headerErrorMessage = "ERROR - APP: Flexible header is not displayed with media type:'" + name + "'";
+                        String titleErrorMessage = "ERROR - APP: Flexible title is not displayed with media eventType:'" + name + "'";
+                        String headerErrorMessage = "ERROR - APP: Flexible header is not displayed with media eventType:'" + name + "'";
                         List<String> uiTitleList = new ArrayList<>();
                         List<String> dbTitleList = new ArrayList<>();
                         List<String> uiHeaderList = new ArrayList<>();
@@ -333,7 +333,7 @@ public class ContextualContent extends StepUtils {
                                 .map(type -> type.get("mediaName").toString())
                                 .collect(Collectors.toList())));
                         String dbAdSource = mediaNamesList.get(0);
-                        String adErrorMessage = "ERROR - APP: Expected media type:'ad' source:'" + dbAdSource + "' is not displayed as per astra";
+                        String adErrorMessage = "ERROR - APP: Expected media eventType:'ad' source:'" + dbAdSource + "' is not displayed as per astra";
                         uiMediaNamesList = uiData.stream()
                                 .map(data -> ((Map) data.get("mediaInfo")).get("imageName").toString())
                                 .collect(Collectors.toList());
@@ -428,7 +428,7 @@ public class ContextualContent extends StepUtils {
                             uiData.forEach(data -> Assert.assertTrue(errorMessage, ((boolean) ((Map) data.get("mediaInfo")).get("jspExists"))));
                         break;
                     default:
-                        Assert.fail("ERROR - ENV : Required media type data is not displayed in UI!!");
+                        Assert.fail("ERROR - ENV : Required media eventType data is not displayed in UI!!");
                 }
             }
         } else {

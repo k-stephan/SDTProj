@@ -109,7 +109,7 @@ public class PageNavigation extends StepUtils {
                 Clicks.click("home.goto_sign_in_link");
                 CommonUtils.closeIECertError();
                 break;
-            case "REGISTRY":
+            case "CREATE_REGISTRY":
                 Clicks.click("home.goto_wedding_registry");
                 Clicks.click("registry_home.manage_box");
                 Wait.untilElementPresent("registry_home.sign_in_email");

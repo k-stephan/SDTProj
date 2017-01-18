@@ -2,9 +2,9 @@ package com.macys.sdt.shared.actions.MEW.pages;
 
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.model.registry.Registry;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import org.junit.Assert;
@@ -25,7 +25,7 @@ public class CreateRegistry extends StepUtils {
 
         Wait.forPageReady();
         Registry registry = customer.getRegistry();
-        DropDowns.selectByText("create_registry.event_type", registry.getType());
+        DropDowns.selectByText("create_registry.event_type", registry.getEventType());
         DropDowns.selectByText("create_registry.event_month", registry.getEventMonth());
         DropDowns.selectByText("create_registry.event_day", registry.getEventDay());
         DropDowns.selectByText("create_registry.event_year", registry.getEventYear());
@@ -72,7 +72,7 @@ public class CreateRegistry extends StepUtils {
         Wait.forPageReady();
         Registry registry = customer.getRegistry();
         ProfileAddress profileAddress = customer.getUser().getProfileAddress();
-        DropDowns.selectByText("create_registry.event_type", registry.getType());
+        DropDowns.selectByText("create_registry.event_type", registry.getEventType());
         DropDowns.selectByText("create_registry.event_month", registry.getEventMonth());
         DropDowns.selectByText("create_registry.event_day", registry.getEventDay());
         DropDowns.selectByText("create_registry.event_year", registry.getEventYear());

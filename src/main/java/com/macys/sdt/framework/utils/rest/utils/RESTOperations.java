@@ -14,7 +14,7 @@ public class RESTOperations {
      * POST operation
      *
      * @param resource       : REST uri
-     * @param mediaType      : media type (eg: application/json)
+     * @param mediaType      : media eventType (eg: application/json)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response
      */
@@ -36,7 +36,7 @@ public class RESTOperations {
      * POST operation
      *
      * @param resource       : REST uri
-     * @param mediaType      : media type (eg: application/json)
+     * @param mediaType      : media eventType (eg: application/json)
      * @param headers        : headers (put null if no data)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response
@@ -152,7 +152,7 @@ public class RESTOperations {
      * PUT operation
      *
      * @param resource       : REST uri
-     * @param mediaType      : media type (eg: application/json)
+     * @param mediaType      : media eventType (eg: application/json)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response
      */
@@ -174,7 +174,7 @@ public class RESTOperations {
      * PUT operation
      *
      * @param resource       : REST uri
-     * @param mediaType      : media type (eg: application/json)
+     * @param mediaType      : media eventType (eg: application/json)
      * @param headers        : headers (put null if no data)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response

@@ -1,0 +1,33 @@
+<user>
+    <dateOfBirth>1959-12-02</dateOfBirth>
+    <gender>Female</gender>
+    <subscribedToNewsLetter>true</subscribedToNewsLetter>
+    <userPasswordHint>
+        <id>1</id>
+        <answer>Michael Jackson</answer>
+        <question>What was the first concert you attended?</question>
+    </userPasswordHint>
+    <profileAddress>
+        <id/>
+        <attention/>
+        <sequenceNumber/>
+        <firstName>JOSEPH</firstName>
+        <lastName>GARCIA</lastName>
+        <middleName/>
+        <addressLine1>4416 Walnut St</addressLine1>
+        <addressLine2>Apt 100</addressLine2>
+        <city>Philadelphia</city>
+        <state>PA</state>
+        <zipCode>19104</zipCode>
+        <countryCode/>
+        <email>inhu4sr8l55m0pa7@blackhole.macys.com</email>
+        <bestPhone>8076570548</bestPhone>
+        <primaryFlag>true</primaryFlag>
+        <phoneExchange>657</phoneExchange>
+        <phoneAreaCode>807</phoneAreaCode>
+        <phoneSubscriber>0548</phoneSubscriber>
+    </profileAddress>
+    <loginCredentials>
+        <password>Macys12345</password>
+    </loginCredentials>
+</user>

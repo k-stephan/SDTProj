@@ -10,7 +10,6 @@ import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.shared.actions.MEW.pages.ProductDisplay;
 import com.macys.sdt.shared.actions.MEW.panels.GlobalNav;
 import com.macys.sdt.shared.utils.CommonUtils;
-import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;

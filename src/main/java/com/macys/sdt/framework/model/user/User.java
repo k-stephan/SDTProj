@@ -1,22 +1,29 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.user;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 /**
  * This class represents a User and contains all the information about that User
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     private String dateOfBirth;
     private String gender;
-    private Boolean subscribedToNewsLetter;
+    private Boolean subscribedToNewsLetter = true;
     private UserPasswordHint userPasswordHint;
     private ProfileAddress profileAddress;
     private LoginCredentials loginCredentials;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String id;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UslInfo uslInfo;
@@ -34,6 +41,15 @@ public class User {
         this.userPasswordHint = userPasswordHint;
         this.profileAddress = profileAddress;
         this.loginCredentials = loginCredentials;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**

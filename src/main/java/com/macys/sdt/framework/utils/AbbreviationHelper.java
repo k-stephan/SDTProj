@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * This class is for translating to and from state abbreviations
  */
-public class StatesUtils {
+public class AbbreviationHelper {
 
     /**
      * HashMap containing translation between state/area abbreviation and name
@@ -97,7 +97,7 @@ public class StatesUtils {
      * @param abbreviation state abbreviation to translate
      * @return Full state name
      */
-    public static String translateAbbreviation(String abbreviation) {
+    public static String translateStateAbbreviation(String abbreviation) {
         return STATE_MAP.get(abbreviation.toUpperCase());
     }
 
@@ -107,7 +107,7 @@ public class StatesUtils {
      * @param state full name of the state/province
      * @return 2-letter name abbreviation
      */
-    public static String getAbbreviation(String state) {
+    public static String getStateAbbreviation(String state) {
         // check if already state Abbreviation format
         if ((state.length() == 2) && STATE_MAP.containsKey(state.toUpperCase())) {
             return state.toUpperCase();
@@ -118,5 +118,55 @@ public class StatesUtils {
                 .findFirst();
         return result.isPresent() ? result.get() : null;
     }
+
+    /**
+     * HashMap containing translation between 2-digit month abbreviation and full name
+     */
+    private static final HashMap<String, String> MONTH_MAP;
+
+    static {
+        MONTH_MAP = new HashMap<>();
+        MONTH_MAP.put("01", "January");
+        MONTH_MAP.put("02", "February");
+        MONTH_MAP.put("03", "March");
+        MONTH_MAP.put("04", "April");
+        MONTH_MAP.put("05", "May");
+        MONTH_MAP.put("06", "June");
+        MONTH_MAP.put("07", "July");
+        MONTH_MAP.put("08", "August");
+        MONTH_MAP.put("09", "September");
+        MONTH_MAP.put("10", "October");
+        MONTH_MAP.put("11", "November");
+        MONTH_MAP.put("12", "December");
+    }
+
+    /**
+     * Translates the 2-digit month number into the full month name
+     *
+     * @param abbreviation 2-digit month number to translate
+     * @return Full month name
+     */
+    public static String translateMonthAbbreviation(String abbreviation) {
+        return MONTH_MAP.get(abbreviation.toUpperCase());
+    }
+
+    /**
+     * Gets the 2-digit equivalent for a month
+     *
+     * @param month full name of the month
+     * @return 2-digit state number
+     */
+    public static String getMonthAbbreviation(String month) {
+        // check if already state Abbreviation format
+        if ((month.length() == 2) && MONTH_MAP.containsKey(month.toUpperCase())) {
+            return month.toUpperCase();
+        }
+
+        Optional<String> result = MONTH_MAP.keySet().stream()
+                .filter(abb -> MONTH_MAP.get(abb).equalsIgnoreCase(month))
+                .findFirst();
+        return result.isPresent() ? result.get() : null;
+    }
+
 
 }

@@ -2,11 +2,11 @@ package com.macys.sdt.shared.actions.website.mcom.pages.registry;
 
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.model.registry.Registry;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserProfile;
-import com.macys.sdt.framework.utils.StatesUtils;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.models.RegistryService;
@@ -34,7 +34,7 @@ public class CreateRegistry extends StepUtils {
             Registry registry = customer.getRegistry();
             User user = customer.getUser();
             ProfileAddress profileAddress = user.getProfileAddress();
-            selectDropDownText("create_registry.event_type", registry.getType());
+            selectDropDownText("create_registry.event_type", registry.getEventType());
             selectDropDownText("create_registry.event_month", registry.getEventMonth());
             selectDropDownText("create_registry.event_day", registry.getEventDay());
             selectDropDownText("create_registry.event_year", registry.getEventYear());
@@ -83,7 +83,7 @@ public class CreateRegistry extends StepUtils {
         Wait.forPageReady();
         Registry registry = customer.getRegistry();
         ProfileAddress profileAddress = customer.getUser().getProfileAddress();
-        selectDropDownText("create_registry.event_type", registry.getType());
+        selectDropDownText("create_registry.event_type", registry.getEventType());
         selectDropDownText("create_registry.event_month", registry.getEventMonth());
         selectDropDownText("create_registry.event_day", registry.getEventDay());
         selectDropDownText("create_registry.event_year", registry.getEventYear());
@@ -197,7 +197,7 @@ public class CreateRegistry extends StepUtils {
         TextBoxes.typeTextbox("new_create_registry.address_line_1", profileAddress.getAddressLine1());
         TextBoxes.typeTextbox("new_create_registry.address_line_2", profileAddress.getAddressLine2());
         TextBoxes.typeTextbox("new_create_registry.address_city", profileAddress.getCity());
-        DropDowns.selectByValue("new_create_registry.address_state", (profileAddress.getState().length() == 2 ? profileAddress.getState() : StatesUtils.getAbbreviation(profileAddress.getState())));
+        DropDowns.selectByValue("new_create_registry.address_state", (profileAddress.getState().length() == 2 ? profileAddress.getState() : AbbreviationHelper.getStateAbbreviation(profileAddress.getState())));
         TextBoxes.typeTextbox("new_create_registry.address_zip_code", String.valueOf(profileAddress.getZipCode()));
         TextBoxes.typeTextbox("new_create_registry.phone", profileAddress.getBestPhone());
         Clicks.click("new_create_registry.contact_info_continue_button");

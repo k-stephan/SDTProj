@@ -3,9 +3,9 @@ package com.macys.sdt.shared.steps.website;
 
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.CreditCard;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.utils.*;
 import com.macys.sdt.framework.utils.db.models.UserService;
 import com.macys.sdt.shared.actions.website.bcom.pages.LoyallistAssociation;
@@ -495,9 +495,9 @@ public class MyAccountSteps extends StepUtils {
             TextBoxes.typeTextbox("my_profile.address_line_1", profileAddress.getAddressLine1());
             TextBoxes.typeTextbox("my_profile.address_city", profileAddress.getCity());
             if(macys() || MEW())
-                DropDowns.selectByText("my_profile.address_state", ((profileAddress.getState().length() == 2) ? StatesUtils.translateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
+                DropDowns.selectByText("my_profile.address_state", ((profileAddress.getState().length() == 2) ? AbbreviationHelper.translateStateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
             else{
-                DropDowns.selectCustomText("create_profile.address_state_list", "create_profile.state_options", ((profileAddress.getState().length() == 2) ? StatesUtils.translateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
+                DropDowns.selectCustomText("create_profile.address_state_list", "create_profile.state_options", ((profileAddress.getState().length() == 2) ? AbbreviationHelper.translateStateAbbreviation(profileAddress.getState()) : profileAddress.getState()));
                 Clicks.clickIfPresent("my_profile.gender_female");
             }
             TextBoxes.typeTextbox("my_profile.address_zip_code", String.valueOf(profileAddress.getZipCode()));

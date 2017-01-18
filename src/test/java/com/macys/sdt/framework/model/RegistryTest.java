@@ -14,8 +14,8 @@ public class RegistryTest {
 
     @Test
     public void testGetEventType() throws Exception {
-        registry.setType("WEDDING");
-        String eventType = registry.getType();
+        registry.setEventType("WEDDING");
+        String eventType = registry.getEventType();
         Assert.assertEquals("WEDDING", eventType);
     }
 

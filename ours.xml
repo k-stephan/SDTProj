@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<Registry>
+    <userId>2158517601</userId>
+    <guestMessage>Welcome to registry</guestMessage>
+    <weddingWebsite>www.mywedding.com</weddingWebsite>
+    <registryType>ANNIVERSARY</registryType>
+    <sourceType>Internet</sourceType>
+    <macysAccountNumber></macysAccountNumber>
+    <event>
+        <noOfGuests>110</noOfGuests>
+        <locationStateCode>AK</locationStateCode>
+        <locationStateName>Alaska</locationStateName>
+        <date>04/18/2016</date>
+    </event>
+    <preferences>
+        <datePrintFormat>MM_DD_YY</datePrintFormat>
+        <availableOnInternet>true</availableOnInternet>
+        <publicRegistry>true</publicRegistry>
+        <subscribeWeddingSale>false</subscribeWeddingSale>
+        <goGreen>true</goGreen>
+        <store>
+            <storeId>139</storeId>
+            <storeDivId>71</storeDivId>
+            <locationNumber>5467</locationNumber>
+        </store>
+    </preferences>
+    <contactInfo>
+        <firstName>CHARLES</firstName>
+        <lastName>JOHNSON</lastName>
+        <middleName/>
+        <namePrefix/>
+        <nameSuffix/>
+        <bestPhone>7064329544</bestPhone>
+        <email>1eakebm6aq@blackhole.macys.com</email>
+        <currentAddress>
+            <addressLine1>548 Market St</addressLine1>
+            <addressLine2></addressLine2>
+            <addressLine3/>
+            <attention>CHARLES</attention>
+            <city>Test City</city>
+            <state>CA</state>
+            <postalCode>94104</postalCode>
+            <country>United States</country>
+        </currentAddress>
+    </contactInfo>
+    <coRegistrantContactInfo>
+        <firstName>WILLIAM</firstName>
+        <lastName>GARCIA</lastName>
+        <middleName/>
+        <namePrefix/>
+        <nameSuffix/>
+        <bestPhone>9694925322</bestPhone>
+        <email>t051h5g4xt@blackhole.macys.com</email>
+        <currentAddress>
+            <addressLine1>2000 walnut avenue</addressLine1>
+            <addressLine2>apt 100</addressLine2>
+            <addressLine3/>
+            <attention>WILLIAM</attention>
+            <city>Fremont</city>
+            <state>CA</state>
+            <postalCode>94538</postalCode>
+            <country>United States</country>
+        </currentAddress>
+    </coRegistrantContactInfo>
+    <currentAddress>
+        <addressLine1>548 Market St</addressLine1>
+        <addressLine2></addressLine2>
+        <addressLine3/>
+        <attention>CHARLES</attention>
+        <city>Test City</city>
+        <state>CA</state>
+        <postalCode>94104</postalCode>
+        <country>United States</country>
+    </currentAddress>
+    <futureAddress>
+        <addressLine1>548 Market St</addressLine1>
+        <addressLine2></addressLine2>
+        <addressLine3/>
+        <attention/>
+        <city>San Francisco</city>
+        <state>CA</state>
+        <postalCode>94104</postalCode>
+        <country>United States</country>
+        <effectiveDate>1/17/2022</effectiveDate>
+        <futureShipAddressEffectiveDate/>
+        <futureShippingAddressSource>REGISTRANT</futureShippingAddressSource>
+        <shippingAddressSource>REGISTRANT</shippingAddressSource>
+        <creationType>Internet</creationType>
+    </futureAddress>
+    <eventLocation>Alaska</eventLocation>
+    <numberOfGuest>110</numberOfGuest>
+    <preferredStoreState>New York</preferredStoreState>
+    <preferredStore>New York - Herald Square</preferredStore>
+    <coRegistrantFirstName>WILLIAM</coRegistrantFirstName>
+    <coRegistrantLastName>GARCIA</coRegistrantLastName>
+    <eventMonth>April</eventMonth>
+    <eventDay>18</eventDay>
+    <eventYear>2016</eventYear>
+    <type>WEDDING</type>
+</Registry>

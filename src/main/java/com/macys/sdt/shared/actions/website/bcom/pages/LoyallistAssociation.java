@@ -4,7 +4,7 @@ import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.TextBoxes;
 import com.macys.sdt.framework.interactions.Wait;
-import com.macys.sdt.framework.model.LoyalistDetails;
+import com.macys.sdt.framework.model.user.LoyalistDetails;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.junit.Assert;
 
