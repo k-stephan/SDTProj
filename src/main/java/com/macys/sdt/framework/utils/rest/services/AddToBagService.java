@@ -33,7 +33,7 @@ public class AddToBagService {
         return RESTOperations.doPOST(getServiceURL() + "?userId=" + uid, MediaType.APPLICATION_JSON, payload.toString(), headers).readEntity(String.class);
     }
 
-    private static JSONObject getAddTUXItemPayload() {
+    public static JSONObject getAddTUXItemPayload() {
         ProfileAddress address = ProfileAddress.getDefaultProfileAddress();
 
         // For Random Address
@@ -51,13 +51,20 @@ public class AddToBagService {
         c.add(Calendar.DAY_OF_YEAR, -3);
         String estimatedShipDate = new SimpleDateFormat("MM/dd/yy").format(c.getTime());
 
+        String[] eventTypes = {"WEDDING", "SPECIAL"};
+        String[] garmentTypes = {"COAT", "PANT", "VEST", "TIE", "SHOES", "SHIRT", "CUFFLINKS"};
+        String[] garmentIds = {"8857HBBLO", "8857HBBLN", "8857HBBLM", "8857HBBLK", "8857HBBLS"};
+        String[] itemDescriptions = {"Flat-front trousers feature", "Grosgrain stripe down", "Leg adding polish", "This classic two-button Side Vented tuxedo", "Cut from high-quality 100% wool", "Covered jacket buttons and satin-striped pants"};
+        String[] descriptions = {"BLACK by Vera Wans", "Joseph Abboud Light", "Gray Satin Edged Notch Lapel", "Calvin Klein Lapel", "Black Satin Edged Notch"};
+        String[] imageUrls = {"https://image1", "https://image2", "https://image3", "https://image4", "https://image5"};
+        
         JSONObject warehouseAddress = new JSONObject();
         warehouseAddress.put("addressLine1", address.getAddressLine1());
-        warehouseAddress.put("city",address.getCity());
+        warehouseAddress.put("city", address.getCity());
         warehouseAddress.put("countryCode", address.getCountryCode());
-        warehouseAddress.put("postalCode",address.getZipCode());
-        warehouseAddress.put("stateAbbrev",address.getState());
-        warehouseAddress.put("validatedFlag",true);
+        warehouseAddress.put("postalCode", address.getZipCode());
+        warehouseAddress.put("stateAbbrev", address.getState());
+        warehouseAddress.put("validatedFlag", true);
 
         JSONObject upc1 = new JSONObject();
         upc1.put("number", 492018595416L);
@@ -71,32 +78,32 @@ public class AddToBagService {
         mkpUpcs.put(upc1);
         mkpUpcs.put(upc2);
 
-        JSONObject description = new JSONObject();
-        description.put("description", "BLACK by Vera Wang Gray Satin Edged Notch Lapel Tuxedo (1170)");
-        description.put("garmentType","COAT");
-        description.put("garmentId","1170");
-        description.put("imageUrl","https://images.menswearhouse.com/is/image/TMW/1170_Vera_Coat_Gray_Hero");
+        JSONObject garment = new JSONObject();
+        garment.put("description", itemDescriptions[new Random().nextInt(itemDescriptions.length)]);
+        garment.put("garmentType", garmentTypes[new Random().nextInt(garmentTypes.length)]);
+        garment.put("garmentId", garmentIds[new Random().nextInt(garmentIds.length)]);
+        garment.put("imageUrl", imageUrls[new Random().nextInt(imageUrls.length)]);
 
         JSONArray mkpItems = new JSONArray();
-        mkpItems.put(description);
+        mkpItems.put(garment);
 
         JSONObject data = new JSONObject();
-        data.put("mkpToken","a4ec2af112d41f4a470ed");
-        data.put("description","BLACK by Vera Wang Gray Satin Edged Notch Lapel Tuxedo");
+        data.put("mkpToken", Integer.toString(new Random().nextInt(9999) + 1111));
+        data.put("description", descriptions[new Random().nextInt(descriptions.length)]);
         data.put("mkpReservationId", Long.toString((long) (Math.random() * 999999999999L + 111111111111L)));
         // TODO: Remove mkpReservationId from DB if already present
-        data.put("eventType","WEDDING");
+        data.put("eventType", eventTypes[new Random().nextInt(eventTypes.length)]);
         data.put("renterToFirstName", TestUsers.generateRandomFirstName());
         data.put("renterToLastName", TestUsers.generateRandomLastName());
-        data.put("eventDate",eventDate);
-        data.put("estimatedShipDate",estimatedShipDate);
-        data.put("estimatedReturnDate",estimatedReturnDate);
-        data.put("expectedDeliveryDate",expectedDeliveryDate);
-        data.put("imageUrl","https://images.menswearhouse.com/is/image/TMW/1170_Vera_Coat_Gray_Hero");
-        data.put("pdpUrl","https://tuxedo.qa20codemacys.fds.com:38080/create-your-look/reservation/90599009#https://tuxedo.qa20codemacys.fds.com:38080/create-your-look/reservation/90599009");
-        data.put("warehouseAddress",warehouseAddress);
-        data.put("mkpUpcs",mkpUpcs);
-        data.put("mkpItems",mkpItems);
+        data.put("eventDate", eventDate);
+        data.put("estimatedShipDate", estimatedShipDate);
+        data.put("estimatedReturnDate", estimatedReturnDate);
+        data.put("expectedDeliveryDate", expectedDeliveryDate);
+        data.put("imageUrl", imageUrls[new Random().nextInt(imageUrls.length)]);
+        data.put("pdpUrl", "https://something.com/someurl#https://something.com/someurl");
+        data.put("warehouseAddress", warehouseAddress);
+        data.put("mkpUpcs", mkpUpcs);
+        data.put("mkpItems", mkpItems);
 
         JSONArray mkpReservations = new JSONArray();
         mkpReservations.put(data);
