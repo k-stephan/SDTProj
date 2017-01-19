@@ -34,7 +34,7 @@ public class RegistryService {
             Response response = RESTOperations.doPOST(getServiceURL(), MediaType.APPLICATION_XML, registryXml, headers);
 
             System.out.println("response : " + response);
-            Assert.assertEquals(response.getStatus(), 201);
+            Assert.assertEquals(response.getStatus(), 200);
             LOGGER.info("User profile created successfully");
             return registry;
         } catch (JsonProcessingException e) {
