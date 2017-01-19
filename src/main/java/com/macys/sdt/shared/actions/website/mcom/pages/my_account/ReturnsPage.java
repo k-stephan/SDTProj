@@ -21,7 +21,7 @@ public class ReturnsPage extends StepUtils {
     public List itemsSelected;
 
     /*
-        Navigate to order selection page with given order eventType and user eventType
+        Navigate to order selection page with given order type and user type
         @param[String, String] orderType, userType
     */
     public void navigateToSelectionPage(String orderType, String userType) {
@@ -176,11 +176,11 @@ public class ReturnsPage extends StepUtils {
             boolean isLineItemVisible = (line.findElements(By.name("returnDetails.returnShipment.lineItemList[" + index + "].itemSelected")).size() > 0);
             String callToAction = ((line.findElements(By.className((macys() ? "selectionReminder" : "orReturns_itemCtaMessage"))).size() > 0) ? (line.findElement(By.className((macys() ? "selectionReminder" : "orReturns_itemCtaMessage"))).getText()) : "NA");
             if (isLineItemVisible)
-                isLineItemDisabled = (line.findElement(By.name("returnDetails.returnShipment.lineItemList[" + index + "].itemSelected"))).getAttribute("eventType").equals("hidden");
+                isLineItemDisabled = (line.findElement(By.name("returnDetails.returnShipment.lineItemList[" + index + "].itemSelected"))).getAttribute("type").equals("hidden");
             boolean vrFlag = (isLineItemDisabled || !(isLineItemVisible));
             List returnQuantity = new ArrayList<>();
             String quantitySelected;
-            if (!line.findElement(By.name("returnDetails.returnShipment.lineItemList[" + index + "].selectedQuantity")).getAttribute("eventType").equals("hidden")) {
+            if (!line.findElement(By.name("returnDetails.returnShipment.lineItemList[" + index + "].selectedQuantity")).getAttribute("type").equals("hidden")) {
                 if (!callToAction.equals("NA"))
                     returnQuantity = DropDowns.getAllValues(By.name("returnDetails.returnShipment.lineItemList[" + index + "].selectedQuantity"));
                 quantitySelected = DropDowns.getSelectedValue(By.name("returnDetails.returnShipment.lineItemList[" + index + "].selectedQuantity"));

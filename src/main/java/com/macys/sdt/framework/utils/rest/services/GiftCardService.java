@@ -53,7 +53,7 @@ public class GiftCardService {
     /**
      * Returns getGiftCardsResponse
      *
-     * @param cardType eventType of gift card to retrieve
+     * @param cardType type of gift card to retrieve
      * @return getGiftCardsResponse
      * @throws IOException if response is unreadable
      */

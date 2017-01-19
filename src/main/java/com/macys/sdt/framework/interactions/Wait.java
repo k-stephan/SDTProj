@@ -432,7 +432,7 @@ public class Wait {
         Utils.redirectSErr();
         try {
 
-            //below script returns either string or long value, so fetching the results conditionally to avoid eventType cast error
+            //below script returns either string or long value, so fetching the results conditionally to avoid type cast error
             Object jsResponse = Navigate.execJavascript("return jQuery.active;");
             Long queries;
 

@@ -620,7 +620,7 @@ public class TestUsers {
     /**
      * Gets a random valid 3DSecure card from "valid_cards.json"
      *
-     * @param cardType the eventType of card to look for (Visa, Discover, etc.)
+     * @param cardType the type of card to look for (Visa, Discover, etc.)
      * @return JSONObject containing 3DSecure card information
      */
     public static CreditCard getValid3DSecureCard(String cardType) {
@@ -681,7 +681,7 @@ public class TestUsers {
     /**
      * Gets a random valid USL id from "loyalty.json"
      *
-     * @param loyallistType eventType of loyallist - currently only "toptier_loyallist" is available
+     * @param loyallistType type of loyallist - currently only "toptier_loyallist" is available
      * @return JSONObject containing loyallist information
      */
     public static LoyalistDetails getLoyallistDetails(String loyallistType) {
@@ -728,7 +728,7 @@ public class TestUsers {
     }
 
     /**
-     * Gets a random valid address with given options and eventType from "valid_addresses.json"
+     * Gets a random valid address with given options and type from "valid_addresses.json"
      * <p>
      * Fills the given Address object with the found details
      * </p>

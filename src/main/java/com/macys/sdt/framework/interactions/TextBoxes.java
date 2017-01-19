@@ -18,7 +18,7 @@ public class TextBoxes {
      * Types text into a text box
      *
      * @param selector String selector in format "page_name.element_name"
-     * @param text     text to eventType in
+     * @param text     text to type in
      */
     public static void typeTextbox(String selector, String text) {
         typeTextbox(Elements.element(selector), text);
@@ -28,7 +28,7 @@ public class TextBoxes {
      * Types text into a text box
      *
      * @param selector By selector to use
-     * @param text     text to eventType in
+     * @param text     text to type in
      */
     public static void typeTextbox(By selector, String text) {
         Navigate.runBeforeNavigation();
@@ -40,7 +40,7 @@ public class TextBoxes {
             element.sendKeys(text);
             Wait.forPageReady();
         } else {
-            System.err.println("Could not eventType text \"" + text +
+            System.err.println("Could not type text \"" + text +
                     "\"\n into text box " + selector + "\nbecause no element was found");
         }
         Navigate.runAfterNavigation();
@@ -50,7 +50,7 @@ public class TextBoxes {
      * Types text into element and sends an enter key
      *
      * @param selector String selector in format "page_name.element_name"
-     * @param text     text to eventType in
+     * @param text     text to type in
      */
     public static void typeTextNEnter(String selector, String text) {
         typeTextNEnter(Elements.element(selector), text);
@@ -60,7 +60,7 @@ public class TextBoxes {
      * Types text into element and sends an enter key
      *
      * @param selector By selector to use
-     * @param text     text to eventType in
+     * @param text     text to type in
      */
     public static void typeTextNEnter(By selector, String text) {
         Navigate.runBeforeNavigation();

@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.*;
 
-public class WebsiteMcomFlexTemplatePage extends StepUtils {
+public class FlexTemplate extends StepUtils {
 
     public List getSequenceByRowTypes(String rowType) {
         List<String> seqNumbers = new ArrayList<>();
@@ -75,7 +75,7 @@ public class WebsiteMcomFlexTemplatePage extends StepUtils {
             }
         } else {
             for (int columnIndex = 0; columnIndex < Integer.parseInt(rowType.split("")[rowType.split("").length - 1]); columnIndex++) {
-                // Generate zone element ID for the given row eventType and sequence number based on index (ex: row_type_id: 'row1_column1')
+                // Generate zone element ID for the given row type and sequence number based on index (ex: row_type_id: 'row1_column1')
                 String zoneId = "row" + rowTypeId.split("_")[rowTypeId.split("_").length - 1] + "_column" + (columnIndex + 1);
                 rowMedia.add(getZoneMedia(rowType, rowTypeId, exceptEmptyRow, c2Flag, zoneId));
             }
@@ -108,7 +108,7 @@ public class WebsiteMcomFlexTemplatePage extends StepUtils {
         if (mediaType == null)
             mediaType = getMediaTypeByRow(rowElement, exceptEmptyRow);
         if(mediaType == null)
-            Assert.fail("ERROR - APP: Invalid media eventType (null)!!");
+            Assert.fail("ERROR - APP: Invalid media type (null)!!");
         switch (mediaType) {
             case "video":
                 mediaData = getVideoMediaData(rowElement);
@@ -245,7 +245,7 @@ public class WebsiteMcomFlexTemplatePage extends StepUtils {
                     mediaData.put("copyElement", copyElement.findElement(By.id("copyBlockContainer")).isEnabled() ? copyElement.findElement(By.id("copyBlockContainer")) : (copyElement.findElement(By.xpath("..")).findElement(By.id("copyBlockContainer")).isEnabled() ? copyElement.findElement(By.xpath("..")).findElement(By.id("copyBlockContainer")) : rowElement.findElement(By.id("copyBlockArea"))));
                 break;
             default:
-                Assert.fail("ERROR - APP: Invalid media eventType");
+                Assert.fail("ERROR - APP: Invalid media type");
         }
         return mediaData;
     }
@@ -736,9 +736,9 @@ public class WebsiteMcomFlexTemplatePage extends StepUtils {
         } else if (productPanelPoolExists(rowElement)) {
             mediaType = "product_panel_pool";
         } else if (exceptEmptyRow) {
-            System.out.println("ERROR - DATA: Invalid media eventType found in row " + rowElement.getAttribute("id") + " on page");
+            System.out.println("ERROR - DATA: Invalid media type found in row " + rowElement.getAttribute("id") + " on page");
         } else {
-            Assert.fail("ERROR - DATA: Invalid media eventType found in row " + rowElement.getAttribute("id") + " on page");
+            Assert.fail("ERROR - DATA: Invalid media type found in row " + rowElement.getAttribute("id") + " on page");
         }
         return mediaType;
     }

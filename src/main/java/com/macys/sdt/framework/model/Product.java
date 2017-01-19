@@ -61,7 +61,7 @@ public class Product {
             case "with_brand":
                 return "brand";
             case "product_type":
-                return "eventType";
+                return "type";
             case "order_limit":
                 return "orderLimit";
             case "category_id":
