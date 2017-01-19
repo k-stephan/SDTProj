@@ -21,6 +21,12 @@ public class GlobalNav extends StepUtils {
                 Assert.assertTrue("ERROR-ENV: Global Nav bar is not visible",
                         Wait.untilElementPresent("home.registry_global_nav_visible"));
             }
+        } else if (StepUtils.bloomingdales() && onPage("my_account")) {
+            if (Elements.findElement("home.global_nav_visible_myaccount").getCssValue("opacity").equals("0")) {
+                Clicks.click("home.global_nav_button");
+                Assert.assertTrue("ERROR-ENV: Global Nav bar is not visible",
+                        !Elements.findElement("home.global_nav_visible_myaccount").getCssValue("opacity").equals("0"));
+            }
         } else {
             if (!Elements.elementPresent("home.global_nav_visible")) {
                 Clicks.click("home.global_nav_button");
@@ -40,6 +46,12 @@ public class GlobalNav extends StepUtils {
                 Assert.assertTrue("ERROR-ENV: Global Nav bar is still visible",
                         Wait.untilElementNotPresent("home.registry_global_nav_visible"));
             }
+        } else if (StepUtils.bloomingdales() && onPage("my_account")) {
+            if (!Elements.findElement("home.global_nav_visible_myaccount").getCssValue("opacity").equals("0")) {
+                Clicks.click("home.global_nav_button");
+                Assert.assertTrue("ERROR-ENV: Global Nav bar is still visible",
+                        Elements.findElement("home.global_nav_visible_myaccount").getCssValue("opacity").equals("0"));
+            }
         } else {
             if (Elements.elementPresent("home.global_nav_visible")) {
                 Clicks.click("home.global_nav_button");
@@ -53,14 +65,23 @@ public class GlobalNav extends StepUtils {
         Wait.untilElementPresent("home.nav_menu_list");
         for (String aGnName : gn_name.split(" or ")) {
             System.out.println("Navigating to " + aGnName + " element in nav menu...");
-            Wait.untilElementPresent("home.current_nav");
-            List<WebElement> elements = Elements.findElements("home.current_nav");
+            String selector = null;
+            boolean is_bcom_mew_myaccount_page = StepUtils.bloomingdales() && onPage("my_account");
+            if (is_bcom_mew_myaccount_page)  {
+                selector = "home.current_nav_myaccount";
+            } else {
+                selector = "home.current_nav";
+            }
+            Wait.untilElementPresent(selector);
+            List<WebElement> elements = Elements.findElements(selector);
             for (WebElement el : elements) {
                 if (el.getText().equalsIgnoreCase(aGnName)) {
                 Clicks.click(el);
                     
                     try {
-                        Wait.attributeChanged(el, "aria-expanded", "true");
+                        if (!is_bcom_mew_myaccount_page)    {
+                            Wait.attributeChanged(el, "aria-expanded", "true");
+                        }
                     } catch (StaleElementReferenceException e) {
                         // GN can be closed by click & cause this exception, nothing to worry about
                     }

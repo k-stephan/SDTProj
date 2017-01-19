@@ -880,6 +880,7 @@ public class TestUsers {
                     continue;
                 found = ((found && orderable) ? (ProductService.checkoutAvailability(product.get("id").toString()) && ProductService.checkProductAvailabilityAtMST(upcIds.get(0))) : found);
                 if (found) {
+                    System.out.println("found product id : " + new Product(product).id);
                     return new Product(product);
                 }
             }
