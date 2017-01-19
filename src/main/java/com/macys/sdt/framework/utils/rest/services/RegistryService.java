@@ -23,16 +23,16 @@ public class RegistryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileService.class);
 
-    public static Registry createRegistry(Registry registry) {
+    public static Registry createRegistry(Registry registry, String token) {
         try {
             String registryXml = new XmlMapper().writeValueAsString(registry);
             registryXml = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>"
                     + registryXml.replace("<Registry>", "<registry>").replace("</Registry>", "</registry>");
-            String token = Cookies.getSecureUserToken();
-            //String token = "13_MYW7loj5u3c2Zg7XSOhgBYLq5BEqSB0RYzz5kER0zDFyj/AxKZX202NWN7kP9RCa5olVC+503Ax6w/1JD8BSLw==";
             Map<String, String> headers = new HashMap<>();
             headers.put("X-Macys-SecurityToken", token);
+
             Response response = RESTOperations.doPOST(getServiceURL(), MediaType.APPLICATION_XML, registryXml, headers);
+
             System.out.println("response : " + response);
             Assert.assertEquals(response.getStatus(), 201);
             LOGGER.info("User profile created successfully");

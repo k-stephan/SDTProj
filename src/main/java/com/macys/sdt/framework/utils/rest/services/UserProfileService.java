@@ -64,8 +64,8 @@ public class UserProfileService {
         //ObjectMapper mapper = new ObjectMapper();
         String createUserProfileDetail = null;
         try {
-            createUserProfileDetail = mapper.writeValueAsString(userProfile)
-                    .replace("<UserProfile>", "").replace("</UserProfile>", "").replace("<registry/>", "");
+            createUserProfileDetail = mapper.writeValueAsString(userProfile.getUser())
+                    .replace("<User>", "<user>").replace("</User>", "</user>");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

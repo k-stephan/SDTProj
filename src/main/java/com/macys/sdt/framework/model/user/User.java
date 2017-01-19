@@ -23,6 +23,9 @@ public class User {
     private LoginCredentials loginCredentials;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private TokenCredentials tokenCredentials;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String id;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -43,6 +46,13 @@ public class User {
         this.loginCredentials = loginCredentials;
     }
 
+    public TokenCredentials getTokenCredentials() {
+        return tokenCredentials;
+    }
+
+    public void setTokenCredentials(TokenCredentials tokenCredentials) {
+        this.tokenCredentials = tokenCredentials;
+    }
 
     public String getId() {
         return id;
