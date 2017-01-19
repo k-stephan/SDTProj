@@ -748,7 +748,7 @@ public class TestUsers {
         JSONObject addressJson = null;
         try {
             ArrayList<JSONObject> addresses;
-            String jsonText = Utils.readTextFile(new File("C:/Repos/SDT/shared/resources/data/website/mcom/valid_addresses.json"));
+            String jsonText = Utils.readTextFile(getResourceFile("valid_addresses.json"));
             JSONArray addressesJSON = new JSONObject(jsonText).getJSONArray("addresses");
             if (addressesJSON == null) {
                 System.err.println("Unable to get a valid address");
