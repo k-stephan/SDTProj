@@ -214,12 +214,22 @@ public class ShopAndBrowse extends StepUtils {
 
     @When("^I change country to \"([^\"]*)\"$")
     public void I_change_country_to(String country) throws Throwable {
-        Assert.assertTrue("Not on international context page.", Wait.secondsUntilElementPresent("international_shipping.country", (safari() ? 20 : 5)));
-        if (country.equals("a random country")) {
-            DropDowns.selectRandomValue("international_shipping.country");
+        boolean newDropDownEnabled = false;
+        if (Wait.secondsUntilElementPresent("international_shipping.country", (safari() ? 20 : 5))) {
+            Assert.assertTrue("Not on international context page.", Wait.secondsUntilElementPresent("international_shipping.country", (safari() ? 20 : 5)));
+            newDropDownEnabled = false;
         } else {
-            DropDowns.selectByText("international_shipping.country", country);
+            Assert.assertTrue("Not on international context page.", Wait.secondsUntilElementPresent("international_shipping.country_options", (safari() ? 20 : 5)));
+            newDropDownEnabled = true;
         }
+        List<String> values = new ArrayList<>();
+        Random random = new Random();
+        values = (newDropDownEnabled ? DropDowns.getAllCustomValues("international_shipping.country_options", "international_shipping.country_list") : DropDowns.getAllValues("international_shipping.country"));
+        String selectCountry = (country.equals("a random country") ? values.get(random.nextInt(values.size())) : country);
+        if (newDropDownEnabled)
+            DropDowns.selectCustomText("international_shipping.country_options", "international_shipping.country_list", selectCountry);
+        else
+            DropDowns.selectByText("international_shipping.country", selectCountry);
         Clicks.click("international_shipping.save_continue");
         Wait.forPageReady();
         Clicks.clickIfPresent("home.close_overlay_country");

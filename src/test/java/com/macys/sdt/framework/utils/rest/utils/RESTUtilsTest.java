@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
+/**
+ * Tests for RESTUtils
+ */
 public class RESTUtilsTest {
 
     @Test

@@ -287,10 +287,10 @@ public class Wait {
      *
      * @param selector     String selector in format "page_name.element_name"
      * @param attr         attribute to use
-     * @param initialValue value that should change
+     * @param expectedValue value to wait for attribute to become
      */
-    public static void attributeChanged(String selector, String attr, String initialValue) {
-        attributeChanged(Elements.element(selector), attr, initialValue);
+    public static void attributeChanged(String selector, String attr, String expectedValue) {
+        attributeChanged(Elements.element(selector), attr, expectedValue);
     }
 
     /**
@@ -298,10 +298,10 @@ public class Wait {
      *
      * @param selector     By selector to use
      * @param attr         attribute to use
-     * @param initialValue value that should change
+     * @param expectedValue value to wait for attribute to become
      */
-    public static void attributeChanged(By selector, String attr, String initialValue) {
-        attributeChanged(Elements.findElement(selector), attr, initialValue);
+    public static void attributeChanged(By selector, String attr, String expectedValue) {
+        attributeChanged(Elements.findElement(selector), attr, expectedValue);
     }
 
     /**
@@ -447,7 +447,7 @@ public class Wait {
             // TEMPORARY - currently a bug in BCOM sign in, checkout, MEW search and MCOM VGC PDP page that leaves AJAX calls hanging
             MainRunner.getCurrentUrl();
             if ((StepUtils.bloomingdales() || StepUtils.MEW()) || (StepUtils.macys() && MainRunner.currentURL.contains("product"))) {
-                if (MainRunner.currentURL.matches(".*?(signin|chkout|profile|product|myaccount).*?")
+                if (MainRunner.currentURL.matches(".*?(signin|chkout|profile|product|myaccount|addressbook).*?")
                         || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop"))) {
                     return queries <= 1;
                 }

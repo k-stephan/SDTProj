@@ -6,6 +6,9 @@ import com.macys.sdt.framework.model.user.UserProfile;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for UserProfile Model
+ */
 public class UserProfileTest {
 
     private UserProfile userProfile;

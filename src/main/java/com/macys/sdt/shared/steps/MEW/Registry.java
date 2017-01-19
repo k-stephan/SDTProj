@@ -36,7 +36,7 @@ public class Registry extends StepUtils {
     public void I_add_the_product_to_a_registry_using_mobile_website() throws Throwable {
         // There are two element with same id. One for tablet and another for mobile.
         // so had to filter out the displayed element and click in below step
-        Clicks.clickRandomElement("product_display.add_to_registry", WebElement::isDisplayed);
+        Clicks.click("product_display.add_to_registry");
         Assert.assertTrue("ERROR-DATA: Unable to add product in registry", Wait.untilElementPresent
                 ("add_to_registry_overlay.add_to_registry_overlay"));
     }
@@ -173,7 +173,7 @@ public class Registry extends StepUtils {
 
     @Then("^I should be navigated to the mobile registry manager page$")
     public void I_should_be_navigated_to_the_mobile_registry_manager_page() throws Throwable {
-        Wait.secondsUntilElementPresent(Elements.element("registry_manager.registry_header"), 5);
+        Wait.secondsUntilElementPresent(Elements.element("registry_manager.registry_header"), MainRunner.timeout);
         if (Elements.elementPresent("registry_manager.registry_header")) {
                 System.out.print("User successfully navigated to Registry Manager Page");
         } else {
@@ -217,7 +217,7 @@ public class Registry extends StepUtils {
         GlobalNav.navigateOnGnByName("Registry or Wedding Registry");
         GlobalNav.closeGlobalNav();
         Wait.secondsUntilElementPresent(Elements.element("registry_home.create_registry"), MainRunner.timeout);
-        Assert.assertTrue("ERROR-ENV: Unable to navigate wedding registry page", Elements.elementPresent(Elements.element("registry_home.create_registry")));
+        Assert.assertTrue("ERROR-ENV: Unable to navigate wedding registry page", Elements.elementPresent(Elements.element("registry_home.goto_create_registry")));
     }
 
     @And("^I create a new wedding registry with event date as past date which is (less than|more than) 185 days and event type as \"(WEDDING|COMMITMENT||ANNIVERSARY)\" option on mobile site$")

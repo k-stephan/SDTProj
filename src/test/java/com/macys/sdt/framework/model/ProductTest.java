@@ -4,6 +4,9 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for Product Model
+ */
 public class ProductTest {
 
     @Test

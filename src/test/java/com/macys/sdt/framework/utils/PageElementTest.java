@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Tests for PageElement
+ */
 public class PageElementTest {
 
     @BeforeClass
@@ -35,6 +38,7 @@ public class PageElementTest {
     @Test
     public void testMcomPageElement() throws Exception {
         MainRunner.url = "http://www.qa0codemacys.fds.com";
+        MainRunner.browser = "";
         PageElement testElement = new PageElement("test_page.test_element");
         Assert.assertEquals("test_page", testElement.getPageName());
         Assert.assertEquals("test_element", testElement.getElementName());

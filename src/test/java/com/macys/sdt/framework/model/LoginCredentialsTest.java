@@ -4,6 +4,9 @@ import com.macys.sdt.framework.model.user.LoginCredentials;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for LoginCredentials Model
+ */
 public class LoginCredentialsTest {
 
     @Test

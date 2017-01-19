@@ -8,6 +8,9 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.util.HashMap;
 
+/**
+ * Tests for DBConnection
+ */
 public class DBConnectionTest {
 
     @BeforeClass

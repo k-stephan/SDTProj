@@ -131,6 +131,9 @@ public class PageElement {
 
                 // add only valid locator and corresponding value
                 if (isValidLocatorStrategy(locator)) {
+                    // Link text has some extra space in edge browser. So changing linkText locator to partialLinkText
+                    if (locator.equals("linkText") && MainRunner.browser.contains("edge"))
+                        locator = "partialLinkText";
                     elementLocators.add(locator);
                     value = value.replace(locator + ",", "").trim();
                     elementValues.add(value);

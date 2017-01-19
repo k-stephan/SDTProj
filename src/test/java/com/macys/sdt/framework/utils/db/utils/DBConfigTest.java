@@ -3,6 +3,9 @@ package com.macys.sdt.framework.utils.db.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for DBConfig
+ */
 public class DBConfigTest {
 
     private DBConfig dbConfig;

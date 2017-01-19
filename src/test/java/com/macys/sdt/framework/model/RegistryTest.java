@@ -4,6 +4,9 @@ import com.macys.sdt.framework.model.registry.Registry;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for Registry Model
+ */
 public class RegistryTest {
 
     private Registry registry;

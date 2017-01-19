@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.util.List;
 
 /**
+ * Tests for DropDowns Interactions
  * These test can be executed from InteractionsSuiteTest only, hence the class name is ending with 'Tests' instead of 'Test'
  */
 public class DropDownsTests {

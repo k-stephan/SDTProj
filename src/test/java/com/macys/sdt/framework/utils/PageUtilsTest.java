@@ -6,6 +6,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Tests for PageUtils
+ */
 public class PageUtilsTest {
 
     @BeforeClass

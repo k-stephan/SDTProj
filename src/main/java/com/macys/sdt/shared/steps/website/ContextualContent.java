@@ -296,8 +296,8 @@ public class ContextualContent extends StepUtils {
                         } else {
                             List<String> uiInfo = new ArrayList<>();
                             List<String> dbInfo = new ArrayList<>();
-                            uiData.forEach(data -> uiInfo.addAll((((List<String>) ((Map) data.get("mediaInfo")).get("slideshowImages"))).stream().map(image -> image).collect(Collectors.toList())));
-                            dbData.forEach(data -> dbInfo.addAll(((List<Map>) data.get("mediaInfo")).stream().map(image -> image.get("mediaName").toString()).collect(Collectors.toList())));
+                            uiData.forEach(data -> uiInfo.addAll((List)((Map)data.get("mediaInfo")).get("slideshowImages")));
+                            dbData.forEach(data -> dbInfo.addAll(((List<Map>)data.get("mediaInfo")).stream().map(p -> p.get("mediaName").toString()).collect(Collectors.toList())));
                             Assert.assertTrue(errorMessage, ListUtils.subtract(uiInfo, dbInfo).isEmpty());
                         }
                         break;

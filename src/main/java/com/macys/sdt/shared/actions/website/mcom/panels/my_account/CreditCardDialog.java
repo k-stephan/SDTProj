@@ -15,11 +15,20 @@ import java.util.HashMap;
 
 public class CreditCardDialog extends StepUtils{
 
+    /**
+     * Method to add a Visa credit card
+     * @throws Exception thrown if any exception found
+     */
     public static void addCreditCard() throws Exception{
         CreditCard visaCreditCard = TestUsers.getValidVisaCreditCard();
         addCreditCard(visaCreditCard);
     }
 
+    /**
+     * Method to add a credit card
+     *
+     * @param creditCard credit card information(CreditCard class instance)
+     */
     public static void addCreditCard(CreditCard creditCard) {
         if (bloomingdales()) {
             DropDowns.selectCustomText("credit_card_dialog.card_type_list", "credit_card_dialog.card_type_options", creditCard.getCardType().name);

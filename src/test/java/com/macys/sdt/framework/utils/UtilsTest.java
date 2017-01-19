@@ -16,6 +16,9 @@ import java.util.List;
 
 import static java.lang.Runtime.getRuntime;
 
+/**
+ * Tests for Utils
+ */
 public class UtilsTest {
 
     @Test

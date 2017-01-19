@@ -59,6 +59,13 @@ public class Checkout extends StepUtils {
         return bMoneyEstimatedEarnInfo;
     }
 
+    /**
+     * Method to fill shipping information during checkout
+     *
+     * @param responsive true if responsive checkout flow, else false
+     * @param opts Shipping options
+     * @param bops true if bops order, else false
+     */
     public void fillShippingData(boolean responsive, boolean bops, HashMap<String, String> opts) {
         boolean iship = opts != null && opts.get("country") != null && !opts.get("country").equalsIgnoreCase("United States");
         String page = (signedIn() ? (onPage("shipping_payment_signed_in") ? "shipping_payment_signed_in" : "responsive_checkout_signed_in") : (iship ? "iship_checkout" : "responsive_checkout"));
@@ -145,6 +152,12 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method to fill credit card information in checkout page
+     *
+     * @param responsive true if responsive checkout flow, else false
+     * @param iship true if international(iship) mode, else false
+     */
     public void fillCreditCardData(boolean responsive, boolean iship) {
         String page = responsive ? (signedIn() ? "responsive_checkout_signed_in" : "responsive_checkout") : (iship ? "iship_checkout" : "shipping_payment_signed_in");
         if(creditCard == null)
@@ -179,6 +192,13 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method to fill contact information during checkout
+     *
+     * @param responsive true if responsive checkout flow, else false
+     * @param page current page name
+     * @param address address to fill in contact information
+     */
     public void fillContactDetails(boolean responsive, String page, ProfileAddress address) {
         if (address == null) {
             address = new ProfileAddress();
@@ -198,6 +218,13 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method to fill payment information during checkout
+     *
+     * @param responsive true if responsive checkout flow, else false
+     * @param iship true if international(iship) mode, else false
+     * @param opts payment options
+     */
     public void fillPaymentData(boolean responsive, boolean iship, HashMap<String, String> opts) {
         String page = responsive ? (signedIn() ? "responsive_checkout_signed_in" : "responsive_checkout") : (iship ? "iship_checkout" : "shipping_payment_signed_in");
         if (responsive || iship) {
@@ -229,6 +256,13 @@ public class Checkout extends StepUtils {
         Clicks.clickIfPresent(page + ".save_credit_card_button");
     }
 
+    /**
+     * Method to checkout in iship flow
+     *
+     * @param pageName name of the page to checkout until
+     * @param opts checkout options
+     * @throws Exception thrown if no frame is found
+     */
     public void ishipCheckout(String pageName, HashMap<String, String> opts) throws Exception {
         String page = "iship_checkout";
         switch (pageName.toLowerCase()) {
@@ -291,6 +325,14 @@ public class Checkout extends StepUtils {
         switchToFrame("default");
     }
 
+    /**
+     * Method to checkout in responsive signed-in flow
+     *
+     * @param page name of the page to checkout until
+     * @param opts checkout options
+     * @param bops true if bops order, else false
+     * @throws Exception thrown if any exception found
+     */
     public void rcSignedIn(RCPage page, HashMap<String, String> opts, boolean bops) throws Exception {
         pausePageHangWatchDog();
         switch (page) {
@@ -361,6 +403,14 @@ public class Checkout extends StepUtils {
         resumePageHangWatchDog();
     }
 
+    /**
+     * Method to checkout in responsive guest flow
+     *
+     * @param page name of the page to checkout until
+     * @param opts checkout options
+     * @param bops true if bops order, else false
+     * @throws Exception thrown if any exception found
+     */
     public void rcGuest(RCPage page, HashMap<String, String> opts, boolean bops) throws Throwable {
         if (page == null) {
             Assert.fail("page cannot be null");
@@ -442,6 +492,14 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method to checkout in legacy signed-in flow
+     *
+     * @param pageName name of the page to checkout until
+     * @param opts checkout options
+     * @param bops true if bops order, else false
+     * @throws Exception thrown if any exception found
+     */
     public void signInCheckout(String pageName, HashMap<String, String> opts, boolean bops) throws Exception {
         // check if we ended up in rc
         if (onPage("responsive_checkout_signed_in")) {
@@ -507,6 +565,12 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method to fill billing information during checkout
+     *
+     * @param opts billing options
+     * @throws Throwable thrown if any exception found
+     */
     public void fillBillingAddress(HashMap<String, String> opts) throws Throwable {
 
         boolean responsive = onPage("responsive_checkout, responsive_checkout_signed_in".split(", "));
@@ -545,6 +609,14 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method to add 3d-secure card during checkout
+     *
+     * @param card_type 3dsecure card type
+     * @param responsive true if responsive checkout flow, else false
+     * @param iship true if iship checkout flow, else false
+     * @throws Throwable thrown if any exception found
+     */
     public void add3DSecureCard(String card_type, boolean responsive, boolean iship) throws Throwable {
         String page = responsive ? (signedIn() ? "responsive_checkout_signed_in" : "responsive_checkout") : (!signedIn() ? "payment_guest" : "shipping_payment_signed_in");
         creditCard = TestUsers.getValid3DSecureCard(card_type);
@@ -612,6 +684,14 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method to check whether the credit card is already added or not in checkout page
+     *
+     * @param creditCard CreditCard class instance
+     * @param page name of the current page
+     * @return true if credit card is already added, else false
+     * @throws Throwable thrown if any exception found
+     */
     public boolean isCreditCardAlreadyAdded(CreditCard creditCard, String page) throws Throwable {
         boolean isCardAdded = false;
         if (Elements.elementPresent(page + ".payment_info") && (Elements.findElement(Elements.element(page + ".payment_info")).findElements(By.tagName("p")).size() > 0) && (Elements.findElement(Elements.element(page + ".payment_info")).findElement(By.tagName("p")).getText().toLowerCase().contains(creditCard.getCardType().name.toLowerCase()))) {
@@ -620,6 +700,10 @@ public class Checkout extends StepUtils {
         return isCardAdded;
     }
 
+    /**
+     * Method to click place order button in checkout page
+     *
+     */
     public void selectPlaceOrderButton() {
         if (prodEnv()) {
             System.err.println("Cannot place orders on prod!!!");
@@ -635,6 +719,12 @@ public class Checkout extends StepUtils {
             Assert.fail("Unable to place order");
         }
     }
+
+    /**
+     * Method to return the current checkout page name
+     * @param pageName name of the page
+     * @return page name
+     **/
 
     public String getPageName(String pageName) {
         String page;
@@ -655,6 +745,14 @@ public class Checkout extends StepUtils {
         return page;
     }
 
+    /**
+     * Method to fill billing and contact information during checkout
+     *
+     * @param opts billing options
+     * @param section name of the section
+     * @param page current page name
+     * @param responsive true if responsive checkout flow, else false
+     */
     public void fillResponsiveBCAddressInfo(HashMap<String, String> opts, String section, RCPage page, boolean responsive) {
         ProfileAddress address = new ProfileAddress();
         TestUsers.getRandomValidAddress(opts, address);

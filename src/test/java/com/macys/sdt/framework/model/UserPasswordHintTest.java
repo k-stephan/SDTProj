@@ -4,6 +4,9 @@ import com.macys.sdt.framework.model.user.UserPasswordHint;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for UserPasswordHint Model
+ */
 public class UserPasswordHintTest {
 
     private UserPasswordHint passwordHint;

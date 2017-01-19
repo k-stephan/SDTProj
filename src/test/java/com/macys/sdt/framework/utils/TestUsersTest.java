@@ -15,6 +15,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+/**
+ * Tests for TestUsers
+ */
 public class TestUsersTest {
 
     @BeforeClass

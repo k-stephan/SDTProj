@@ -6,6 +6,9 @@ import com.macys.sdt.framework.utils.rest.services.GiftCardService;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for RESTEndPoints
+ */
 public class RESTEndPointsTest {
 
     @Test

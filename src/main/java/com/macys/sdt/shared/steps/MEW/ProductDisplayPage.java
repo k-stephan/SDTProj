@@ -15,6 +15,8 @@ import org.openqa.selenium.WebElement;
 
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProductDisplayPage extends StepUtils {
 
@@ -203,6 +205,7 @@ public class ProductDisplayPage extends StepUtils {
     @And("^I add member product from PDP and select \"([^\"]*)\" using mobile website$")
     public void I_add_member_product_from_PDP_and_select_using_mobile_website(String option) throws Throwable {
         new ProductDisplay().addRandomMemberProductOnMasterPDP();
+        Wait.secondsUntilElementPresent("add_to_bag.checkout", 25);
         if (option.equalsIgnoreCase("checkout")) {
             Clicks.click("add_to_bag.checkout");
             shouldBeOnPage("shopping_bag");
@@ -221,7 +224,7 @@ public class ProductDisplayPage extends StepUtils {
     @And("^I click Add to Wish List button on PDP using mobile website$")
     public void I_click_add_to_Wish_List_button_on_PDP_using_mobile_website() throws Throwable {
         Clicks.click("product_display.add_to_wishlist");
-        Assert.assertTrue("ERROR-ENV: Unable to navigate wish list overlay", Wait.untilElementPresent("product_display.wish_list_overlay"));
+        Assert.assertTrue("ERROR-ENV: Unable to navigate wish list overlay", Wait.secondsUntilElementPresent("product_display.wish_list_overlay", 10));
     }
 
     @When("^I click on view list in ATW overlay from PDP using mobile website$")
@@ -301,8 +304,26 @@ public class ProductDisplayPage extends StepUtils {
     @When("^I click on the continue shopping button from ATB page using mobile website$")
     public void iClickOnTheContinueShoppingButtonFromATBPageUsingMobileWebsite() throws Throwable {
         shouldBeOnPage("add_to_bag");
-        Wait.untilElementPresent("add_to_bag.continue_shopping");
+        Wait.secondsUntilElementPresent("add_to_bag.continue_shopping", 25);
         Clicks.click("add_to_bag.continue_shopping");
+    }
+
+    @When("^I replace product ID with available \"([^\"]*)\" product ID$")
+    public void iReplaceProductIDWithAvailableProductID(int productID) throws Throwable {
+        shouldBeOnPage("product_display");
+        String url = MainRunner.getCurrentUrl();
+        String pattern = "(ID=(.*))(&)";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(url);
+        if (m.find()) {
+            m.find();
+            String id = m.group();
+            String new_ID = "ID=" + productID + "&";
+            String new_url = url.replace(id, new_ID);
+            Navigate.visit(new_url);
+        } else {
+            System.out.println("No match found");
+        }
     }
 
 }

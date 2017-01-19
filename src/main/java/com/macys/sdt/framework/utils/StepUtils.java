@@ -239,6 +239,10 @@ public abstract class StepUtils {
         if (bloomingdales()) {
             Navigate.switchWindow(1);
             Navigate.switchWindowClose();
+            //close feedback dialog
+            if (MEW()) {
+                Clicks.clickIfPresent("category_browse.close_feedback_dialog");
+            }
         }
     }
 
@@ -264,6 +268,16 @@ public abstract class StepUtils {
             closeMcomPopup();
         } else {
             closeBcomPopup();
+        }
+    }
+
+    /**
+     * Closes BCOM Loyalty Promotion Video popup present
+     */
+    public static void closeBcomLoyaltyPromotionVideoOverlay() {
+        if (bloomingdales()){
+            Wait.untilElementPresent(By.id("close-loyallist-video"));
+            Clicks.clickIfPresent(By.id("close-loyallist-video"));
         }
     }
 

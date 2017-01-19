@@ -2,6 +2,9 @@ package com.macys.sdt.framework.utils;
 
 import org.junit.Test;
 
+/**
+ * Tests for Exceptions
+ */
 public class ExceptionsTest {
 
     @Test(expected = Exceptions.OopsException.class)

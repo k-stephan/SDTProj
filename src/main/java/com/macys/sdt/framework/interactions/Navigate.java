@@ -115,9 +115,10 @@ public class Navigate {
 
     /**
      * Navigates the browser back a page
+     * else block redirected to home from pdp, bcom_mew
      */
     public static void browserBack() {
-        if (StepUtils.safari() || StepUtils.ie()) {
+        if (StepUtils.safari() || StepUtils.ie() || (StepUtils.bloomingdales() && StepUtils.MEW())) {
             try {
                 int urlStackSize = MainRunner.URLStack.size();
                 if (urlStackSize <= 1) {

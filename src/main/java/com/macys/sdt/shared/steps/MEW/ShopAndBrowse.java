@@ -247,7 +247,7 @@ public class ShopAndBrowse extends StepUtils {
             if (!Clicks.clickWhenPresent(element))
                 Assert.fail("Unable to find facets on current page");
         }else{
-            Wait.untilElementPresent("left_facet.show_more_facets");
+            Wait.secondsUntilElementPresent("left_facet.show_more_facets", 50);
             boolean isCollapsed = Elements.findElement(By.cssSelector("#b-j-show-facets-btn")).getText().equalsIgnoreCase("show more");
             if (isCollapsed) {
                 //Temporary solution for expand show-more button bcom_mew

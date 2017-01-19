@@ -4,6 +4,9 @@ import com.macys.sdt.framework.model.user.LoyalistDetails;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for LoyalistDetails Model
+ */
 public class LoyalistDetailsTest {
 
     private LoyalistDetails loyalistDetails;

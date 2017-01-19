@@ -8,6 +8,9 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Month;
 
+/**
+ * Tests for User Model
+ */
 public class UserTest {
 
     private User user;

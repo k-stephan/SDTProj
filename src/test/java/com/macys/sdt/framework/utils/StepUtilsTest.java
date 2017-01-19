@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import java.io.File;
 
+/**
+ * Tests for StepUtils
+ */
 public class StepUtilsTest {
 
     @Test

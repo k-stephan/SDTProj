@@ -4,6 +4,9 @@ import com.macys.sdt.framework.model.user.UslInfo;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests for UslInfo Model
+ */
 public class UslInfoTest {
 
     private UslInfo uslInfo;
