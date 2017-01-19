@@ -217,7 +217,7 @@ public class Registry extends StepUtils {
         GlobalNav.navigateOnGnByName("Registry or Wedding Registry");
         GlobalNav.closeGlobalNav();
         Wait.secondsUntilElementPresent(Elements.element("registry_home.create_registry"), MainRunner.timeout);
-        Assert.assertTrue("ERROR-ENV: Unable to navigate wedding registry page", Elements.elementPresent(Elements.element("registry_home.create_registry")));
+        Assert.assertTrue("ERROR-ENV: Unable to navigate wedding registry page", Elements.elementPresent(Elements.element("registry_home.goto_create_registry")));
     }
 
     @And("^I create a new wedding registry with event date as past date which is (less than|more than) 185 days and event type as \"(WEDDING|COMMITMENT||ANNIVERSARY)\" option on mobile site$")
