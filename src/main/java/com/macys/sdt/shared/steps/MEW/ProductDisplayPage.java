@@ -15,6 +15,8 @@ import org.openqa.selenium.WebElement;
 
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProductDisplayPage extends StepUtils {
 
@@ -304,6 +306,24 @@ public class ProductDisplayPage extends StepUtils {
         shouldBeOnPage("add_to_bag");
         Wait.secondsUntilElementPresent("add_to_bag.continue_shopping", 25);
         Clicks.click("add_to_bag.continue_shopping");
+    }
+
+    @When("^I replace product ID with available \"([^\"]*)\" product ID$")
+    public void iReplaceProductIDWithAvailableProductID(int productID) throws Throwable {
+        shouldBeOnPage("product_display");
+        String url = MainRunner.getCurrentUrl();
+        String pattern = "(ID=(.*))(&)";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(url);
+        if (m.find()) {
+            m.find();
+            String id = m.group();
+            String new_ID = "ID=" + productID + "&";
+            String new_url = url.replace(id, new_ID);
+            Navigate.visit(new_url);
+        } else {
+            System.out.println("No match found");
+        }
     }
 
 }

@@ -36,6 +36,7 @@ public abstract class CommonUtils extends StepUtils {
     public static void navigateDirectlyToProduct(String productID) {
         String product_url = MainRunner.url + "/shop/product/?ID=" + productID;
         Navigate.visit(product_url);
+        closePopup();
     }
 
     public static void navigateDirectlyToProduct(int id) {
