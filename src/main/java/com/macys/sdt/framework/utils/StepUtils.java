@@ -272,6 +272,16 @@ public abstract class StepUtils {
     }
 
     /**
+     * Closes BCOM Loyalty Promotion Video popup present
+     */
+    public static void closeBcomLoyaltyPromotionVideoOverlay() {
+        if (bloomingdales()){
+            Wait.untilElementPresent(By.id("close-loyallist-video"));
+            Clicks.clickIfPresent(By.id("close-loyallist-video"));
+        }
+    }
+
+    /**
      * Closes an alert if present - if no alert, nothing happens
      */
     public static void closeAlert() {

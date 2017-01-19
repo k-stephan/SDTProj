@@ -32,6 +32,7 @@ public class PageNavigation extends StepUtils {
         MyAccountSteps.iClearAllTheCookies();
         Clicks.clickIfPresent("home.popup_close");
         Wait.forPageReady();
+        closeBcomLoyaltyPromotionVideoOverlay();
         closeBcomPopup();
         Cookies.disableForeseeSurvey();
     }
