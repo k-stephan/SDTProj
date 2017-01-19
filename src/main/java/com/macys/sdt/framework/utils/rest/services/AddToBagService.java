@@ -2,6 +2,7 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.model.ProfileAddress;
 import com.macys.sdt.framework.utils.TestUsers;
+import com.macys.sdt.framework.utils.db.models.TuxService;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
@@ -15,10 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Collection of MSPOrder bags service related methods
+ *
+ */
 public class AddToBagService {
 
     /**
-     * Add TUX Item to bag using MSPOrder IP and get the response
+     * Add TUX Item to bag using MSPOrder bags service and get the response
      *
      * @param uid user id
      * @param payload request payload in JSON format, to use default payload pass null
@@ -30,9 +35,18 @@ public class AddToBagService {
         if (payload == null) {
             payload = getAddTUXItemPayload();
         }
+        String mkpReservationId = payload.optJSONObject("item").getJSONArray("mkpReservations").getJSONObject(0).getString("mkpReservationId");
+        if (TuxService.isMkpReservationExists(mkpReservationId)) {
+            TuxService.deleteMkpReservationRecord(mkpReservationId);
+        }
         return RESTOperations.doPOST(getServiceURL() + "?userId=" + uid, MediaType.APPLICATION_JSON, payload.toString(), headers).readEntity(String.class);
     }
 
+    /**
+     * Generates random payload for adding TUX item to bag
+     *
+     * @return Payload for adding TUX item to bag
+     */
     public static JSONObject getAddTUXItemPayload() {
         ProfileAddress address = ProfileAddress.getDefaultProfileAddress();
 
@@ -91,7 +105,6 @@ public class AddToBagService {
         data.put("mkpToken", Integer.toString(new Random().nextInt(9999) + 1111));
         data.put("description", descriptions[new Random().nextInt(descriptions.length)]);
         data.put("mkpReservationId", Long.toString((long) (Math.random() * 999999999999L + 111111111111L)));
-        // TODO: Remove mkpReservationId from DB if already present
         data.put("eventType", eventTypes[new Random().nextInt(eventTypes.length)]);
         data.put("renterToFirstName", TestUsers.generateRandomFirstName());
         data.put("renterToLastName", TestUsers.generateRandomLastName());
