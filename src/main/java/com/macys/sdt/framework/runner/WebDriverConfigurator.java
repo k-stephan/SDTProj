@@ -399,7 +399,7 @@ class WebDriverConfigurator {
                     }
             } else if (StepUtils.firefox()) {
                 try {
-                    if (browserVersion != null && Double.parseDouble(browserVersion) >= 48)
+                    if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta")))
                         capabilities.setCapability("seleniumVersion", "3.0.1");
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
