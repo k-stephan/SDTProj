@@ -691,8 +691,7 @@ public class TestUsers {
             Random rand = new Random();
             //JSON from file to Object
             List<LoyalistDetails> loyalistDetailsList = new ObjectMapper().readValue(jsonTxt,
-                    TypeFactory.defaultInstance().constructCollectionType(List.class,
-                            LoyalistDetails.class));
+                    TypeFactory.defaultInstance().constructCollectionType(List.class, LoyalistDetails.class));
 
             List<LoyalistDetails> loyalists = loyalistDetailsList.stream().filter(loyalistDetails -> loyalistDetails.getLoyallistType().equalsIgnoreCase(loyallistType)).collect(Collectors.toList());
             return loyalists.get(rand.nextInt(loyalists.size()));

@@ -19,6 +19,12 @@ import static com.macys.sdt.shared.steps.website.ShopAndBrowse.brandSearch;
 public class Facets extends StepUtils {
 
 
+    /**
+     * Searches for the given zip code in the bops facet
+     *
+     * @param zipCode zip code to search for
+     * @throws Throwable if any exception occurs
+     */
     @When("^I search for zipcode \"([^\"]*)\" in bops change store dialog")
     public static void I_search_for_zipcode_in_bops_facet(String zipCode) throws Throwable {
         Wait.forPageReady();
@@ -51,6 +57,12 @@ public class Facets extends StepUtils {
             Wait.secondsUntilElementNotPresent(By.className("loading"), 50);
     }
 
+    /**
+     * Checks if the given facet is visible on the page
+     *
+     * @param facet facet to check for
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see \"([^\"]*)\" facet listed on left nav$")
     public void I_should_see_facet_listed_on_left_nav(String facet) throws Throwable {
         if (!Elements.elementPresent("left_facet.facet_div"))
@@ -60,6 +72,12 @@ public class Facets extends StepUtils {
             Assert.fail("Failed to find facet: " + facet);
     }
 
+    /**
+     * Verifies the browser is on the category sub splash page
+     *
+     * @param arg1 unused
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be on \"([^\"]*)\" subsplash page$")
     public void i_should_be_on_subsplash_page(String arg1) throws Throwable {
         if(safari())
@@ -67,6 +85,12 @@ public class Facets extends StepUtils {
         shouldBeOnPage("category_sub_splash");
     }
 
+    /**
+     * Selects a link in the sub splash page
+     *
+     * @param arg1 unused
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select \"([^\"]*)\" in the subsplash page$")
     public void i_select_in_the_subsplash_page(String arg1) throws Throwable {
         Clicks.click(Elements.element("category_sub_splash.shop_makeup"));
@@ -86,17 +110,32 @@ public class Facets extends StepUtils {
         Wait.forPageReady();
     }
 
+    /**
+     * Verifies the display of store values in the bops change store dialog
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see store values in bops change store dialog")
     public void I_should_see_store_values_under_bops_facet() throws Throwable {
         Elements.elementShouldBePresent("change_pickup_store_dialog.bops_stores");
     }
 
+    /**
+     * Verifies the display fo the radius dropdown in the bops change store dialog
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I should see radius dropdown in bops change store dialog")
     public void I_should_see_radius_dropdown_under_bops_facet() throws Throwable {
         if (!Elements.elementPresent("left_facet.bops_store_search_radius"))
             Assert.fail("bops radius not visible");
     }
 
+    /**
+     * Selects a random bops store from the list in the facts
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select any bops store$")
     public void I_select_any_bops_store() throws Throwable {
         if (!Elements.elementPresent("left_facet.facet_div"))   {
@@ -116,6 +155,13 @@ public class Facets extends StepUtils {
         }
     }
 
+    /**
+     * Selects a value from the given facet
+     *
+     * @param selected_item value to select
+     * @param facet facet to select from
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select \"([^\"]*)\" item from \"([^\"]*)\" facet on left nav$")
     public void I_select_item_from_facet_on_left_nav(String selected_item, String facet) throws Throwable {
         pausePageHangWatchDog();
@@ -126,6 +172,12 @@ public class Facets extends StepUtils {
         }
     }
 
+    /**
+     * Types the given string in to the brand facet search bar
+     *
+     * @param search_text text to search
+     * @throws Throwable if any exception occurs
+     */
     @When("^I type a character \"([^\"]*)\" in brand search box$")
     public void I_type_a_character_in_brand_search_box(String search_text) throws Throwable {
         LeftFacet.expandFacet("Brand");
@@ -133,7 +185,13 @@ public class Facets extends StepUtils {
         brandSearch = search_text;
     }
 
-    @Then("^subfacet header \"([^\"]*)\" should be expanded under Brand facet$")
+    /**
+     * Verifies the display of the all brands sub facet header under the brand facet
+     *
+     * @param header sub facet header to check
+     * @throws Throwable if any exception occurs
+     */
+    @Then("^subfacet header \"All Brands\" should be expanded under Brand facet$")
     public void subfacet_header_should_be_expanded_under_Brand_facet(String header) throws Throwable {
         if (header.equalsIgnoreCase("All Brands")) {
             String attr = Elements.getElementAttribute(Elements.element("search_result.allbrand_header"), "class");
@@ -142,6 +200,13 @@ public class Facets extends StepUtils {
         }
     }
 
+    /**
+     * Checks if the given facet is expanded or collapsed
+     *
+     * @param facet facet to check
+     * @param state expanded/collapsed
+     * @throws Throwable if any exception occurs
+     */
     @Then("^the \"([^\"]*)\" facet should be \"(collapsed|expanded)\" on left nav$")
     public void the_facet_should_be_on_left_nav(String facet, String state) throws Throwable {
         switch (state) {
@@ -157,6 +222,11 @@ public class Facets extends StepUtils {
         }
     }
 
+    /**
+     * Selects a random bops facet value
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select any bops facet value$")
     public void I_select_any_bops_facet_value() throws Throwable {
         if (macys()) {
@@ -168,6 +238,12 @@ public class Facets extends StepUtils {
 
     }
 
+    /**
+     * Opens the bops change store dialog through the facet
+     *
+     * @param facet should be "pick up in-store"
+     * @throws Throwable if any exception occurs
+     */
     @When("^I open bops change store dialog through \"([^\"]*)\"$")
     public void I_open_bops_change_store_dialog_through(String facet) throws Throwable {
         LeftFacet.expandFacet(facet);
@@ -178,6 +254,12 @@ public class Facets extends StepUtils {
         Wait.untilElementPresent("left_facet.change_pickup_store_overlay");
     }
 
+    /**
+     * Selects the given distance from the bops facet
+     *
+     * @param distance distance to select (should match exact text on facet)
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" from Pick Up In-Store facet section$")
     public void I_select_from_Pick_Up_In_Store_facet_section(String distance) throws Throwable {
         DropDowns.selectByText(Elements.element("left_facet.bops_store_search_radius"), distance);
