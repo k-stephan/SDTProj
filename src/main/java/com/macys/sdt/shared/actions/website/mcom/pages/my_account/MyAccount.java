@@ -57,7 +57,7 @@ public class MyAccount extends StepUtils {
             default:
                 navigated_page_name = pageName.replaceAll(" ", "_");
         }
-        if (safari()) {
+        if (safari() || ie()) {
             String verifyElementKey = navigated_page_name + ".verify_page";
             if (!Elements.getValues(verifyElementKey).isEmpty())
                 Wait.secondsUntilElementPresent(navigated_page_name + ".verify_page", 20);
