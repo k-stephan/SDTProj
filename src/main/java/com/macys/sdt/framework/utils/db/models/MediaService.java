@@ -501,7 +501,7 @@ public class MediaService {
             mediaParameterData.add(type);
         }
         if (widgetFlag == 1) {
-            String mode = (Arrays.asList(attrValues).contains("WEDDING_REGISTRY")) ? "CREATE_REGISTRY" : "SITE";
+            String mode = (Arrays.asList(attrValues).contains("WEDDING_REGISTRY")) ? "REGISTRY" : "SITE";
             List<String> paramIds = mediaParameterData.stream()
                     .map(param -> param.get("parameterId").toString())
                     .collect(Collectors.toList());
