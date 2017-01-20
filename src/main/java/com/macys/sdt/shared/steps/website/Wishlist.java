@@ -66,7 +66,7 @@ public class Wishlist extends StepUtils {
 
     @And("^I create a list \"([^\"]*)\" from wishlist page$")
     public void I_create_a_list_from_wishlist_page(String list_name) throws Throwable {
-        Wait.secondsUntilElementPresentAndClick("wish_list.goto_create_list_link", 2);
+        Wait.secondsUntilElementPresentAndClick("wish_list.goto_create_list_link", 5);
         Wait.untilElementPresent("wish_list.list_name_text");
         if (!Elements.elementPresent("wish_list.list_name_text")){
             Clicks.clickIfPresent("wish_list.goto_create_list_link");
