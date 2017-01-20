@@ -1,10 +1,12 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * This class represents a UserPasswordHint and contains all the information about that UserPasswordHint
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserPasswordHint {
     /**
      * This is to set security_question

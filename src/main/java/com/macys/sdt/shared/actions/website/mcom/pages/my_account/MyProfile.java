@@ -1,8 +1,7 @@
 package com.macys.sdt.shared.actions.website.mcom.pages.my_account;
 
-import com.macys.sdt.framework.interactions.DropDowns;
 import com.macys.sdt.framework.interactions.Elements;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.utils.TestUsers;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;

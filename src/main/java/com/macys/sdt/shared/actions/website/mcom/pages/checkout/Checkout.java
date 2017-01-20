@@ -2,8 +2,8 @@ package com.macys.sdt.shared.actions.website.mcom.pages.checkout;
 
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.CreditCard;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.utils.StatesUtils;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.shared.actions.website.bcom.pages.CheckoutPageBcom;
@@ -71,7 +71,8 @@ public class Checkout extends StepUtils {
         String page = (signedIn() ? (onPage("shipping_payment_signed_in") ? "shipping_payment_signed_in" : "responsive_checkout_signed_in") : (iship ? "iship_checkout" : "responsive_checkout"));
         String type = bops ? ".pickup" : ".shipping";
 
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         String phoneNum = TestUsers.generateRandomPhoneNumber();
 
         Wait.forPageReady();
@@ -99,7 +100,7 @@ public class Checkout extends StepUtils {
                             }
                             TextBoxes.typeTextbox(page + ".shipping_email_address", TestUsers.generateRandomEmail(5));
                         } else {
-                            String state = responsive ? address.getState() : StatesUtils.translateAbbreviation(address.getState());
+                            String state = responsive ? address.getState() : AbbreviationHelper.translateStateAbbreviation(address.getState());
                             DropDowns.selectByText(page + ".shipping_address_state", state);
                         }
                         TextBoxes.typeTextbox(page + ".shipping_address_" + (iship ? "postal_code" : "zip_code"), address.getZipCode().toString());
@@ -200,7 +201,8 @@ public class Checkout extends StepUtils {
      */
     public void fillContactDetails(boolean responsive, String page, ProfileAddress address) {
         if (address == null) {
-            address = TestUsers.getRandomValidAddress(null);
+            address = new ProfileAddress();
+            TestUsers.getRandomValidAddress(null, address);
         }
         if (responsive) {
             Wait.untilElementPresent(page + ".phone_number");
@@ -229,7 +231,8 @@ public class Checkout extends StepUtils {
             Wait.untilElementPresent(page + ".card_number");
         }
 
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
 
         fillCreditCardData(responsive, iship);
 
@@ -374,7 +377,9 @@ public class Checkout extends StepUtils {
                     TextBoxes.typeTextbox(RCPage.SHIPPING_AND_PAYMENT + ".security_code", "204");
                 }
                 if (Wait.untilElementPresent(RCPage.SHIPPING_AND_PAYMENT + ".phone_number")) {
-                    fillContactDetails(true, RCPage.SHIPPING_AND_PAYMENT.toString(), TestUsers.getRandomValidAddress(opts));
+                    ProfileAddress address = new ProfileAddress();
+                    TestUsers.getRandomValidAddress(opts, address);
+                    fillContactDetails(true, RCPage.SHIPPING_AND_PAYMENT.toString(), address);
                     Clicks.click(RCPage.SHIPPING_AND_PAYMENT + ".save_contact_button");
                     Wait.untilElementNotPresent(RCPage.SHIPPING_AND_PAYMENT + ".save_contact_button");
                 }
@@ -571,7 +576,8 @@ public class Checkout extends StepUtils {
         boolean responsive = onPage("responsive_checkout, responsive_checkout_signed_in".split(", "));
         boolean iship = onPage("iship_checkout");
         String page = (iship ? "iship_checkout" : (signedIn() ? (responsive ? "responsive_checkout_signed_in" : "shipping_payment_signed_in") : "responsive_checkout"));
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         if (!iship && responsive) {
             Clicks.unSelectCheckbox(page + ".use_shipping_address");
             Wait.untilElementPresent(page + ".first_name");
@@ -584,7 +590,7 @@ public class Checkout extends StepUtils {
                 TextBoxes.typeTextbox(page + ".address_line_1", address.getAddressLine1());
                 TextBoxes.typeTextbox(page + ".address_line_2", address.getAddressLine2());
                 TextBoxes.typeTextbox(page + ".address_city", address.getCity());
-                String state = StatesUtils.getAbbreviation(address.getState());
+                String state = AbbreviationHelper.getStateAbbreviation(address.getState());
                 DropDowns.selectByText(page + ".address_state", state);
                 TextBoxes.typeTextbox(page + ".address_zip_code", address.getZipCode().toString());
             }
@@ -656,7 +662,7 @@ public class Checkout extends StepUtils {
             typeTextbox(page + ".address_line_1", address.getString("address_line_1"));
             typeTextbox(page + ".address_city", address.getString("address_city"));
             String state = address.getString("address_state");
-            state = StatesUtils.translateAbbreviation(state);
+            state = AbbreviationHelper.translateStateAbbreviation(state);
             selectByText(page + ".address_state", state);
             typeTextbox(page + ".address_zip_code", address.getString("address_zip_code"));
             String number = TestUsers.generateRandomPhoneNumber();
@@ -748,7 +754,8 @@ public class Checkout extends StepUtils {
      * @param responsive true if responsive checkout flow, else false
      */
     public void fillResponsiveBCAddressInfo(HashMap<String, String> opts, String section, RCPage page, boolean responsive) {
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         Wait.untilElementPresent(page + ".use_shipping_address");
         Clicks.unSelectCheckbox(page + ".use_shipping_address");
         Wait.untilElementPresent(page + ".first_name");
@@ -762,7 +769,7 @@ public class Checkout extends StepUtils {
         TextBoxes.typeTextbox(page + ".address_city", address.getCity());
         String state = address.getState();
         if (responsive) {
-            state = macys() ? StatesUtils.getAbbreviation(state) : state;
+            state = macys() ? AbbreviationHelper.getStateAbbreviation(state) : state;
         }
         if (!responsive || macys() || Elements.elementPresent(page + ".address_state")) {
             DropDowns.selectByText(page + ".address_state", state);

@@ -311,18 +311,16 @@ public class ProductDisplayPage extends StepUtils {
     @When("^I replace product ID with available \"([^\"]*)\" product ID$")
     public void iReplaceProductIDWithAvailableProductID(int productID) throws Throwable {
         shouldBeOnPage("product_display");
-        String url = MainRunner.getCurrentUrl();
-        String pattern = "(ID=(.*))(&)";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(url);
-        if (m.find()) {
+        try {
+            String url = MainRunner.getCurrentUrl();
+            String pattern = "ID=(.*)&";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(url);
             m.find();
-            String id = m.group();
-            String new_ID = "ID=" + productID + "&";
-            String new_url = url.replace(id, new_ID);
+            String new_url = url.replace(m.group(), "ID=" + productID + "&");
             Navigate.visit(new_url);
-        } else {
-            System.out.println("No match found");
+        } catch (Exception e) {
+            Assert.fail("ERROR - DATA: Unable to append predefined prodID to URL" + e);
         }
     }
 

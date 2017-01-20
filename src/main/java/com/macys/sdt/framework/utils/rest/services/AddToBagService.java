@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.rest.services;
 
-import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.models.TuxService;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;

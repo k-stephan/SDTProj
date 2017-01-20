@@ -5,8 +5,8 @@ import com.macys.sdt.framework.interactions.DropDowns;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.TextBoxes;
 import com.macys.sdt.framework.model.CreditCard;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.utils.StatesUtils;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import org.openqa.selenium.WebElement;
@@ -45,7 +45,8 @@ public class CreditCardDialog extends StepUtils{
         }
         HashMap<String, String> opts = new HashMap<>();
         opts.put("checkout_eligible", "true");
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         TextBoxes.typeTextbox("credit_card_dialog.first_name", address.getFirstName());
         TextBoxes.typeTextbox("credit_card_dialog.last_name", address.getLastName());
         TextBoxes.typeTextbox("credit_card_dialog.address_line_1", address.getAddressLine1());
@@ -54,7 +55,7 @@ public class CreditCardDialog extends StepUtils{
         if (bloomingdales())  {
             DropDowns.selectCustomText("credit_card_dialog.address_state_list", "credit_card_dialog.address_state_options", address.getState());
         }  else  {
-            DropDowns.selectByText("credit_card_dialog.address_state", StatesUtils.translateAbbreviation(address.getState()));
+            DropDowns.selectByText("credit_card_dialog.address_state", AbbreviationHelper.translateStateAbbreviation(address.getState()));
         }
         TextBoxes.typeTextbox("credit_card_dialog.address_zip_code", address.getZipCode().toString());
         String phoneNumber = TestUsers.generateRandomPhoneNumber();

@@ -18,18 +18,21 @@ public class GlobalNav extends StepUtils {
         if (onPage("registry_home", "registry_manager")) {
             if (!Elements.elementPresent("home.registry_global_nav_visible")) {
                 Clicks.click("home.global_nav_button");
+                Clicks.clickIfPresent("home.global_nav_not_visible");
                 Assert.assertTrue("ERROR-ENV: Global Nav bar is not visible",
                         Wait.untilElementPresent("home.registry_global_nav_visible"));
             }
         } else if (StepUtils.bloomingdales() && onPage("my_account")) {
             if (Elements.findElement("home.global_nav_visible_myaccount").getCssValue("opacity").equals("0")) {
                 Clicks.click("home.global_nav_button");
+                Clicks.clickIfPresent("home.global_nav_not_visible");
                 Assert.assertTrue("ERROR-ENV: Global Nav bar is not visible",
                         !Elements.findElement("home.global_nav_visible_myaccount").getCssValue("opacity").equals("0"));
             }
         } else {
             if (!Elements.elementPresent("home.global_nav_visible")) {
                 Clicks.click("home.global_nav_button");
+                Clicks.clickIfPresent("home.global_nav_not_visible");
                 Assert.assertTrue("ERROR-ENV: Global Nav bar is not visible",
                         Wait.untilElementPresent("home.global_nav_visible"));
             }

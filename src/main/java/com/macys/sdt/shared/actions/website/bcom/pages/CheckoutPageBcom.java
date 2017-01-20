@@ -2,9 +2,9 @@ package com.macys.sdt.shared.actions.website.bcom.pages;
 
 import com.macys.sdt.framework.interactions.*;
 import com.macys.sdt.framework.model.CreditCard;
-import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.utils.Exceptions;
-import com.macys.sdt.framework.utils.StatesUtils;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.shared.actions.website.mcom.pages.checkout.Checkout;
@@ -27,7 +27,8 @@ public class CheckoutPageBcom extends StepUtils {
         if (!Wait.untilElementPresent(page + type + "_first_name"))
             throw new NoSuchElementException("Element not present:" + Elements.element(page + type + "_first_name"));
 
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
 
         Wait.forPageReady();
         TextBoxes.typeTextbox(page + type + "_first_name", TestUsers.generateRandomFirstName());
@@ -45,7 +46,7 @@ public class CheckoutPageBcom extends StepUtils {
                     }
                     TextBoxes.typeTextbox(page + ".shipping_email_address", TestUsers.generateRandomEmail(5));
                 } else
-                    DropDowns.selectCustomText(page + ".shipping_address_state_list", page + ".shipping_address_state_options", (address.getState().length() == 2) ? StatesUtils.translateAbbreviation(address.getState()) : address.getState());
+                    DropDowns.selectCustomText(page + ".shipping_address_state_list", page + ".shipping_address_state_options", (address.getState().length() == 2) ? AbbreviationHelper.translateStateAbbreviation(address.getState()) : address.getState());
                 TextBoxes.typeTextbox(page + ".shipping_address_" + (iship ? "postal_code" : "zip_code"), address.getZipCode().toString());
             } catch (Exception e) {
                 Assert.fail("Failed to get new address: " + e);
@@ -98,7 +99,8 @@ public class CheckoutPageBcom extends StepUtils {
 
         iship = opts != null && opts.get("country") != null && !opts.get("country").equalsIgnoreCase("United States");
 
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address =  new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
 
         fillGuestCardDetails(true, iship);
 
@@ -237,7 +239,8 @@ public class CheckoutPageBcom extends StepUtils {
         boolean responsive = onPage("responsive_checkout, responsive_checkout_signed_in".split(", "));
         boolean iship = false;
         CheckoutUtils.RCPage page = signedIn() ? CheckoutUtils.RCPage.SHIPPING_AND_PAYMENT : CheckoutUtils.RCPage.PAYMENT;
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address =  new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         if ((!iship && responsive) || (!responsive && !signedIn())) {
             TextBoxes.typeTextbox(page + ".first_name", address.getFirstName());
             TextBoxes.typeTextbox(page + ".last_name", address.getLastName());
@@ -245,9 +248,9 @@ public class CheckoutPageBcom extends StepUtils {
             TextBoxes.typeTextbox(page + ".address_line_2", address.getAddressLine2());
             TextBoxes.typeTextbox(page + ".address_city", address.getCity());
             if(!responsive || macys())
-                DropDowns.selectByText(page + ".address_state", (address.getState().length() == 2) ? StatesUtils.translateAbbreviation(address.getState()) : address.getState());
+                DropDowns.selectByText(page + ".address_state", (address.getState().length() == 2) ? AbbreviationHelper.translateStateAbbreviation(address.getState()) : address.getState());
             else
-                DropDowns.selectCustomText(page + ".address_state_list", page + ".address_state_options", (address.getState().length() == 2) ? StatesUtils.translateAbbreviation(address.getState()) : address.getState());
+                DropDowns.selectCustomText(page + ".address_state_list", page + ".address_state_options", (address.getState().length() == 2) ? AbbreviationHelper.translateStateAbbreviation(address.getState()) : address.getState());
             TextBoxes.typeTextbox(page + ".address_zip_code", address.getZipCode().toString());
         } else {
             TextBoxes.typeTextbox(page + ".billing" + "_first_name", address.getFirstName());

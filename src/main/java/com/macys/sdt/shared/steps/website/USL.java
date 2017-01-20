@@ -3,7 +3,7 @@ package com.macys.sdt.shared.steps.website;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.TextBoxes;
 import com.macys.sdt.framework.interactions.Wait;
-import com.macys.sdt.framework.model.UslInfo;
+import com.macys.sdt.framework.model.user.UslInfo;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.shared.actions.website.mcom.pages.checkout.Checkout;

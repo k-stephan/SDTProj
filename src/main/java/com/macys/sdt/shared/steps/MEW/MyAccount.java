@@ -64,10 +64,7 @@ public class MyAccount extends StepUtils {
     @And("^I navigate to my profile page using mobile website$")
     public void I_navigate_to_my_profile_page_using_mobile_website() throws Throwable {
         Clicks.click("my_account.my_profile");
-        pausePageHangWatchDog();
-        if (!onPage("my_profile")) {
-            Assert.fail("Not navigated to the my profile page");
-        }
+        shouldBeOnPage("my_profile");
         resumePageHangWatchDog();
     }
 

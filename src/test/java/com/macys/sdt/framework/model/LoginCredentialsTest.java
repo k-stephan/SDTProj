@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.model;
 
+import com.macys.sdt.framework.model.user.LoginCredentials;
 import org.junit.Assert;
 import org.junit.Test;
 

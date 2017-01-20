@@ -1,4 +1,4 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.user;
 
 /**
  * This class represents a UslInfo and contains all the information about that UslInfo

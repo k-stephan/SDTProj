@@ -1,6 +1,8 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.user;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.macys.sdt.framework.model.registry.Registry;
 
 /**
  * This class represents a UserProfile and contains all the information about that UserProfile
@@ -54,6 +56,20 @@ public class UserProfile {
      */
     public Registry getRegistry() {
         return registry;
+    }
+
+    /**
+     * A custom getter to prevent the writing of incorrect data when attempting to create a user using the user service.
+     * The user service uses a different representation than the registry service, so we need the correct data
+     *
+     * @return registry with only data for user service filled in
+     */
+    @JsonGetter("registry")
+    public Registry serializeRegistry() {
+        if (this.registry == null) {
+            return null;
+        }
+        return Registry.getUserServiceRegistry(this.registry);
     }
 
     /**

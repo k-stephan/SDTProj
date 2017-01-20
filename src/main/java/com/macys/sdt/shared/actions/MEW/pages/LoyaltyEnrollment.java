@@ -5,12 +5,11 @@ import com.macys.sdt.framework.interactions.DropDowns;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.TextBoxes;
 import com.macys.sdt.framework.interactions.Wait;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserProfile;
-import com.macys.sdt.framework.utils.StatesUtils;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
-import org.apache.commons.lang3.text.WordUtils;
 import org.junit.Assert;
 
 public class LoyaltyEnrollment extends StepUtils {
@@ -20,7 +19,7 @@ public class LoyaltyEnrollment extends StepUtils {
         TextBoxes.typeTextbox("loyalty_enrollment.address_line_1", profileAddress.getAddressLine1());
         TextBoxes.typeTextbox("loyalty_enrollment.address_line_2", profileAddress.getAddressLine2());
         TextBoxes.typeTextbox("loyalty_enrollment.address_city", profileAddress.getCity());
-        DropDowns.selectByValue("loyalty_enrollment.address_state", StatesUtils.getAbbreviation(profileAddress.getState()));
+        DropDowns.selectByValue("loyalty_enrollment.address_state", AbbreviationHelper.getStateAbbreviation(profileAddress.getState()));
         TextBoxes.typeTextbox("loyalty_enrollment.address_zip_code", profileAddress.getZipCode().toString());
         TextBoxes.typeTextbox("loyalty_enrollment.phone_number", profileAddress.getBestPhone());
         Clicks.click("loyalty_enrollment.goto_terms_and_conditions");

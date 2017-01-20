@@ -1,5 +1,8 @@
 package com.macys.sdt.framework.model;
 
+import com.macys.sdt.framework.model.registry.Registry;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
 import org.junit.Assert;
 import org.junit.Test;
 

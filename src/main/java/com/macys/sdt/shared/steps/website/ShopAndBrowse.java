@@ -234,6 +234,8 @@ public class ShopAndBrowse extends StepUtils {
         Wait.forPageReady();
         Clicks.clickIfPresent("home.close_overlay_country");
         Navigate.visit("home");
+        Wait.forPageReady();
+        closeBcomLoyaltyPromotionVideoOverlay();
     }
 
     @And("^I close the welcome mat if it's visible$")

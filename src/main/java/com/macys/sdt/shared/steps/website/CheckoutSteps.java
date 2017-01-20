@@ -2,8 +2,9 @@ package com.macys.sdt.shared.steps.website;
 
 
 import com.macys.sdt.framework.interactions.*;
+import com.macys.sdt.framework.model.CreditCard;
 import com.macys.sdt.framework.model.Product;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.model.GiftCard;
 import com.macys.sdt.framework.utils.rest.services.GiftCardService;
 import com.macys.sdt.framework.runner.MainRunner;
@@ -599,7 +600,11 @@ public class CheckoutSteps extends StepUtils {
             switchToFrame(page + ".3d_secure_authIframe");
             if (safari())
                 Wait.secondsUntilElementPresent(page + ".3d_secure_password", 10);
-            TextBoxes.typeTextbox(page + ".3d_secure_password", getValid3DSecureCard(cardType).getSecurePassword());
+            CreditCard card = getValid3DSecureCard(cardType);
+            if (card == null) {
+                Assert.fail("Unable to get valid 3DSecure card");
+            }
+            TextBoxes.typeTextbox(page + ".3d_secure_password", card.getSecurePassword());
             Clicks.click(page + ".3d_secure_submit");
             switchToFrame("default");
             switchToFrame("default");
@@ -866,6 +871,9 @@ public class CheckoutSteps extends StepUtils {
     @And("^I add valid (EGC|VGC|VRC) gift card as payment option on payment page$")
     public void iAddValidGiftCardAsPaymentOptionOnPaymentPage(String cardType) throws Throwable{
         GiftCard giftCard = GiftCardService.getValidGiftCardDetails(GiftCard.CardType.fromString(cardType));
+        if (giftCard == null) {
+            Assert.fail("Unable to get valid gift card to add as payment");
+        }
         CheckoutUtils.RCPage page = CheckoutUtils.RCPage.PAYMENT;
         Wait.untilElementPresent(page + ".add_gift_card_button");
         Clicks.click(page + ".add_gift_card_button");

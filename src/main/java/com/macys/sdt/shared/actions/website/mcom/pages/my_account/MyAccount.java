@@ -1,7 +1,7 @@
 package com.macys.sdt.shared.actions.website.mcom.pages.my_account;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.Utils;
@@ -57,7 +57,7 @@ public class MyAccount extends StepUtils {
             default:
                 navigated_page_name = pageName.replaceAll(" ", "_");
         }
-        if (safari()) {
+        if (safari() || ie()) {
             String verifyElementKey = navigated_page_name + ".verify_page";
             if (!Elements.getValues(verifyElementKey).isEmpty())
                 Wait.secondsUntilElementPresent(navigated_page_name + ".verify_page", 20);

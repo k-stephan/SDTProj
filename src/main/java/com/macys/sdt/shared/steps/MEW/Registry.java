@@ -1,9 +1,9 @@
 package com.macys.sdt.shared.steps.MEW;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.LoginCredentials;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.LoginCredentials;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
@@ -36,9 +36,10 @@ public class Registry extends StepUtils {
     public void I_add_the_product_to_a_registry_using_mobile_website() throws Throwable {
         // There are two element with same id. One for tablet and another for mobile.
         // so had to filter out the displayed element and click in below step
+        scrollToLazyLoadElement("product_display.add_to_registry");
         Clicks.click("product_display.add_to_registry");
-        Assert.assertTrue("ERROR-DATA: Unable to add product in registry", Wait.untilElementPresent
-                ("add_to_registry_overlay.add_to_registry_overlay"));
+        Assert.assertTrue("ERROR-DATA: Unable to add product in registry", Wait.secondsUntilElementPresent
+                ("add_to_registry_overlay.add_to_registry_overlay", 50));
     }
 
     @Given("^I visit the mobile web site as a registry user$")
@@ -236,7 +237,7 @@ public class Registry extends StepUtils {
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
         String month_name = WordUtils.capitalizeFully(Month.of(month + 1).name());
         regUser = TestUsers.getNewRegistryUser();
-        com.macys.sdt.framework.model.Registry registry = regUser.getRegistry();
+        com.macys.sdt.framework.model.registry.Registry registry = regUser.getRegistry();
         registry.setEventType(event_type);
         registry.setEventMonth(month_name);
         registry.setEventDay(day);

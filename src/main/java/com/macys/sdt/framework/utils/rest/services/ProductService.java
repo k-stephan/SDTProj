@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.rest.services;
 
-import com.macys.sdt.framework.model.ProfileAddress;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
@@ -129,7 +129,8 @@ public class ProductService {
     private static String getProcessCheckoutBody(String orderNumber, String guid) {
         HashMap<String, String> opts = new HashMap<>();
         opts.put("checkout_eligible", "true");
-        ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        ProfileAddress address =  new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
         return "<order>\n" +
                 "<number>" + orderNumber + "</number>\n" +
                 "<guid>" + guid +"</guid>\n" +
