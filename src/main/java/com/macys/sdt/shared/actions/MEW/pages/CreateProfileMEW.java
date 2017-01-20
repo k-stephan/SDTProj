@@ -1,9 +1,9 @@
 package com.macys.sdt.shared.actions.MEW.pages;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
@@ -83,7 +83,8 @@ public class CreateProfileMEW extends StepUtils {
         } else {
             opts.put("site", "bcom");
         }
-        final ProfileAddress address = TestUsers.getRandomValidAddress(opts);
+        final ProfileAddress address = new ProfileAddress();
+        TestUsers.getRandomValidAddress(opts, address);
 
         Wait.forPageReady();
         TextBoxes.typeTextbox(page + ".first_name", TestUsers.generateRandomFirstName());

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
 import com.macys.sdt.framework.model.*;
+import com.macys.sdt.framework.model.addresses.Address;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.registry.Registry;
+import com.macys.sdt.framework.model.user.*;
 import com.macys.sdt.framework.utils.rest.services.ProductService;
 import com.macys.sdt.framework.utils.rest.services.UserProfileService;
 import org.apache.commons.io.IOUtils;
@@ -141,7 +145,8 @@ public class TestUsers {
             opts.put("country", country);
             customer = new UserProfile();
             user = new User();
-            ProfileAddress profileAddress = getRandomValidAddress(opts);
+            ProfileAddress profileAddress = new ProfileAddress();
+            getRandomValidAddress(opts, profileAddress);
 
             UserPasswordHint userPasswordHint = new UserPasswordHint();
             userPasswordHint.setId(1L);
@@ -201,16 +206,7 @@ public class TestUsers {
         UserProfile userProfile = getCustomer(null);
 
         Registry registry = new Registry();
-        registry.setCoRegistrantFirstName(generateRandomFirstName());
-        registry.setCoRegistrantLastName(generateRandomLastName());
-        registry.setEventType("WEDDING");
-        registry.setEventMonth("April");
-        registry.setEventDay("18");
-        registry.setEventYear("2016");
-        registry.setEventLocation("Alaska");
-        registry.setNumberOfGuest("110");
-        registry.setPreferredStoreState("New York");
-        registry.setPreferredStore("New York - Herald Square");
+        registry.addRandomData();
 
         if (userProfile != null) {
             userProfile.setRegistry(registry);
@@ -226,17 +222,12 @@ public class TestUsers {
      * @return UserProfile with customer data
      */
     public static UserProfile getExistingRegistryUser() {
+        if (customer.getRegistry() != null) {
+            return customer;
+        }
+
         Registry registry = new Registry();
-        registry.setCoRegistrantFirstName(generateRandomFirstName());
-        registry.setCoRegistrantLastName(generateRandomLastName());
-        registry.setEventType("WEDDING");
-        registry.setEventMonth("April");
-        registry.setEventDay("18");
-        registry.setEventYear("2016");
-        registry.setEventLocation("Alaska");
-        registry.setNumberOfGuest("110");
-        registry.setPreferredStoreState("New York");
-        registry.setPreferredStore("New York - Herald Square");
+        registry.addRandomData();
 
         if (customer == null) {
             getCustomer(null);
@@ -261,7 +252,9 @@ public class TestUsers {
         if (customer == null) {
             customer = new UserProfile();
             user = new User();
-            ProfileAddress profileAddress = getRandomValidAddress(opts);
+            ProfileAddress profileAddress = new ProfileAddress();
+            getRandomValidAddress(opts, profileAddress);
+
             UserPasswordHint userPasswordHint = new UserPasswordHint();
             LoginCredentials loginCredentials = new LoginCredentials();
             try {
@@ -736,23 +729,29 @@ public class TestUsers {
 
     /**
      * Gets a random valid address with given options and type from "valid_addresses.json"
+     * <p>
+     * Fills the given Address object with the found details
+     * </p>
      *
      * @param options Address options
-     * @return JSONObject with address info
+     * @param address Address object to fill with address data
      */
-    public static ProfileAddress getRandomValidAddress(HashMap<String, String> options) {
+    public static void getRandomValidAddress(HashMap<String, String> options, Address address) {
         if (options == null) {
             options = new HashMap<>();
         }
+        if (address == null) {
+            System.err.println("--> getRandomValidAddress: Address cannot be null");
+            return;
+        }
         options.putIfAbsent("country", "United States");
-        JSONObject address = null;
+        JSONObject addressJson = null;
         try {
             ArrayList<JSONObject> addresses;
             String jsonText = Utils.readTextFile(getResourceFile("valid_addresses.json"));
             JSONArray addressesJSON = new JSONObject(jsonText).getJSONArray("addresses");
             if (addressesJSON == null) {
                 System.err.println("Unable to get a valid address");
-                return null;
             }
 
             addresses = Utils.jsonArrayToList(addressesJSON);
@@ -773,33 +772,21 @@ public class TestUsers {
                     }
                 }
                 if (found) {
-                    address = obj;
+                    addressJson = obj;
                     break;
                 }
             }
-            if (address == null) {
+            if (addressJson == null) {
                 throw new Exception("Unable to find address matching given options");
             }
         } catch (Exception e) {
             Assert.fail("Failed to retrieve address info: " + e);
-            return null;
         }
-        ProfileAddress profileAddress = new ProfileAddress();
         try {
-            profileAddress.setFirstName(generateRandomFirstName());
-            profileAddress.setLastName(generateRandomLastName());
-            profileAddress.setAddressLine1(address.getString("address_line_1"));
-            profileAddress.setAddressLine2(address.getString("address_line_2"));
-            profileAddress.setCity(address.getString("address_city"));
-            profileAddress.setState(address.getString("address_state"));
-            profileAddress.setZipCode(Integer.valueOf(address.getString("address_zip_code").trim()));
-            profileAddress.setEmail(generateRandomEmail(16));
-            profileAddress.setBestPhone(generateRandomPhoneNumber());
+            address.fillFromJson(addressJson);
         } catch (JSONException e) {
             System.err.println("Unable to get random address: " + e);
         }
-
-        return profileAddress;
     }
 
     /**
@@ -873,11 +860,13 @@ public class TestUsers {
                     }
                 }
                 List<String> upcIds = new ArrayList<>();
-                if (found && orderable)
+                if (found && orderable) {
                     upcIds = ProductService.getAllUpcIds(product.get("id").toString());
+                }
                 // Skip product if the product have more than one upcId
-                if (found && orderable && (upcIds.size() > 1))
+                if (found && orderable && (upcIds.size() > 1)) {
                     continue;
+                }
                 found = ((found && orderable) ? (ProductService.checkoutAvailability(product.get("id").toString()) && ProductService.checkProductAvailabilityAtMST(upcIds.get(0))) : found);
                 if (found) {
                     System.out.println("found product id : " + new Product(product).id);

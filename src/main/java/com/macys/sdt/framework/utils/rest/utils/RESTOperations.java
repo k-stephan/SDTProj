@@ -14,7 +14,7 @@ public class RESTOperations {
      * POST operation
      *
      * @param resource       : REST uri
-     * @param mediaType      : media type (eg: application/json)
+     * @param mediaType      : media eventType (eg: application/json)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response
      */
@@ -42,21 +42,17 @@ public class RESTOperations {
      * @return REST response
      */
     public static Response doPOST(String resource, String mediaType, String requestPayload, Map<String, String> headers) {
-        Response response = null;
+        Response response;
         Client client = RESTUtils.createClient();
-        try {
-            WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            System.out.println("requestpayload : " + requestPayload);
-            Invocation.Builder requestBuilder = webTarget.request(mediaType);
-            if (headers != null && !headers.isEmpty()) {
-                for (String headerKey : headers.keySet()) {
-                    requestBuilder.header(headerKey, headers.get(headerKey));
-                }
+        WebTarget webTarget = RESTUtils.createTarget(client, resource);
+        System.out.println("request payload : " + requestPayload);
+        Invocation.Builder requestBuilder = webTarget.request(mediaType);
+        if (headers != null && !headers.isEmpty()) {
+            for (String headerKey : headers.keySet()) {
+                requestBuilder.header(headerKey, headers.get(headerKey));
             }
-            response = requestBuilder.post(Entity.entity(requestPayload, mediaType));
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        response = requestBuilder.post(Entity.entity(requestPayload, mediaType));
         return response;
     }
 
@@ -174,7 +170,7 @@ public class RESTOperations {
      * PUT operation
      *
      * @param resource       : REST uri
-     * @param mediaType      : media type (eg: application/json)
+     * @param mediaType      : media eventType (eg: application/json)
      * @param headers        : headers (put null if no data)
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response

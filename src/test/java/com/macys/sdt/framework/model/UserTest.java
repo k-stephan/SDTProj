@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.model;
 
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.*;
 import org.junit.Assert;
 import org.junit.Test;
 

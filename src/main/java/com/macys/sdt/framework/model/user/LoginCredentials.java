@@ -1,10 +1,23 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.user;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * This class represents a LoginCredentials and contains all the information about that LoginCredentials
  */
 public class LoginCredentials {
     private String password;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String userName;
 
     public LoginCredentials() {
     }

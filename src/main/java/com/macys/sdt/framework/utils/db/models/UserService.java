@@ -10,9 +10,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by mpamujula on 19-12-2016.
- */
 public class UserService {
 
     public static Statement statement;

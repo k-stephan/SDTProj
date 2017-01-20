@@ -1,4 +1,4 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.user;
 
 /**
  * This class represents a LoyalistDetails and contains all the information about that LoyalistDetails

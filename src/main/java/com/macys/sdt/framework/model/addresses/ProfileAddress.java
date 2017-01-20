@@ -1,11 +1,16 @@
-package com.macys.sdt.framework.model;
+package com.macys.sdt.framework.model.addresses;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.json.JSONObject;
+
+import static com.macys.sdt.framework.utils.TestUsers.*;
 
 /**
  * This class represents a ProfileAddress and contains all the information about that ProfileAddress
  */
-public class ProfileAddress {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ProfileAddress extends Address {
     private Long id;
     private String attention;
     private Long sequenceNumber;
@@ -20,14 +25,12 @@ public class ProfileAddress {
     private String countryCode;
     private String email;
     private String bestPhone;
-    private Boolean primaryFlag;
+    private Boolean primaryFlag = true;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String province;
 
-    public ProfileAddress() {
-
-    }
+    public ProfileAddress() {}
 
     public ProfileAddress(Long id, String attention, Long sequenceNumber, String firstName, String lastName,
                           String middleName, String addressLine1, String addressLine2, String city, String state,
@@ -57,6 +60,19 @@ public class ProfileAddress {
     public static ProfileAddress getDefaultProfileAddress() {
         return new ProfileAddress(1234L, "testattention", 11L, "first", "last", "middle", "postbox", "AP", "Hyderabad",
                 "AL", 32701, "USA", "test1010@blackhole.macys.com", "123-444-5577", true);
+    }
+
+    public void fillFromJson(JSONObject address) {
+        this.setFirstName(generateRandomFirstName());
+        this.setLastName(generateRandomLastName());
+        this.setAddressLine1(address.getString("address_line_1"));
+        this.setAddressLine2(address.getString("address_line_2"));
+        this.setCity(address.getString("address_city"));
+        this.setState(address.getString("address_state"));
+        this.setZipCode(Integer.valueOf(address.getString("address_zip_code").trim()));
+        this.setEmail(generateRandomEmail(16));
+        this.setBestPhone(generateRandomPhoneNumber());
+
     }
 
     /**

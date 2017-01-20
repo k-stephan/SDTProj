@@ -1,9 +1,9 @@
 package com.macys.sdt.shared.steps.MEW;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.LoginCredentials;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.LoginCredentials;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
@@ -237,7 +237,7 @@ public class Registry extends StepUtils {
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
         String month_name = WordUtils.capitalizeFully(Month.of(month + 1).name());
         regUser = TestUsers.getNewRegistryUser();
-        com.macys.sdt.framework.model.Registry registry = regUser.getRegistry();
+        com.macys.sdt.framework.model.registry.Registry registry = regUser.getRegistry();
         registry.setEventType(event_type);
         registry.setEventMonth(month_name);
         registry.setEventDay(day);

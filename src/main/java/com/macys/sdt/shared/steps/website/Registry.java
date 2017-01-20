@@ -2,9 +2,9 @@ package com.macys.sdt.shared.steps.website;
 
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.LoginCredentials;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.UserProfile;
+import com.macys.sdt.framework.model.user.LoginCredentials;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.utils.Cookies;
 import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
@@ -55,7 +55,7 @@ public class Registry extends StepUtils {
     public void sign_in_or_create_registry(UserProfile user_details) throws Throwable {
         ProfileAddress userAddress = regUser.getUser().getProfileAddress();
         LoginCredentials credentials = regUser.getUser().getLoginCredentials();
-        com.macys.sdt.framework.model.Registry userRegistry = regUser.getRegistry();
+        com.macys.sdt.framework.model.registry.Registry userRegistry = regUser.getRegistry();
 
         new PageNavigation().I_visit_the_web_site_as_a_guest_user();
         Clicks.click("home.goto_wedding_registry");

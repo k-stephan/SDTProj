@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.*;
 
-public class WebsiteMcomFlexTemplatePage extends StepUtils {
+public class FlexTemplate extends StepUtils {
 
     public List getSequenceByRowTypes(String rowType) {
         List<String> seqNumbers = new ArrayList<>();

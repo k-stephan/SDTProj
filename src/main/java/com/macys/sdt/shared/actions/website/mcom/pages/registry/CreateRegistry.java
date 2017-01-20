@@ -2,11 +2,11 @@ package com.macys.sdt.shared.actions.website.mcom.pages.registry;
 
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.model.ProfileAddress;
-import com.macys.sdt.framework.model.Registry;
-import com.macys.sdt.framework.model.User;
-import com.macys.sdt.framework.model.UserProfile;
-import com.macys.sdt.framework.utils.StatesUtils;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.registry.Registry;
+import com.macys.sdt.framework.model.user.User;
+import com.macys.sdt.framework.model.user.UserProfile;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.models.RegistryService;
@@ -40,8 +40,8 @@ public class CreateRegistry extends StepUtils {
             selectDropDownText("create_registry.event_year", registry.getEventYear());
 
             if (macys()) {
-                DropDowns.selectByText("create_registry.event_location", registry.getEventLocation());
-                DropDowns.selectByText("create_registry.preferred_store_state", registry.getPreferredStoreState());
+                DropDowns.selectRandomValue("create_registry.event_location");
+                DropDowns.selectRandomValue("create_registry.preferred_store_state");
             }
             TextBoxes.typeTextbox("create_registry.number_of_guests", registry.getNumberOfGuest());
             TextBoxes.typeTextbox("create_registry.first_name", profileAddress.getFirstName());
@@ -89,8 +89,8 @@ public class CreateRegistry extends StepUtils {
         selectDropDownText("create_registry.event_year", registry.getEventYear());
 
         if (macys()) {
-            DropDowns.selectByText(Elements.element("create_registry.event_location"), registry.getEventLocation());
-            DropDowns.selectByText(Elements.element("create_registry.preferred_store_state"), registry.getPreferredStoreState());
+            DropDowns.selectRandomValue("create_registry.event_location");
+            DropDowns.selectRandomValue("create_registry.preferred_store_state");
         }
         TextBoxes.typeTextbox("create_registry.number_of_guests", registry.getNumberOfGuest());
         TextBoxes.typeTextbox("create_registry.co_registrant_first_name", registry.getCoRegistrantFirstName());
@@ -197,7 +197,7 @@ public class CreateRegistry extends StepUtils {
         TextBoxes.typeTextbox("new_create_registry.address_line_1", profileAddress.getAddressLine1());
         TextBoxes.typeTextbox("new_create_registry.address_line_2", profileAddress.getAddressLine2());
         TextBoxes.typeTextbox("new_create_registry.address_city", profileAddress.getCity());
-        DropDowns.selectByValue("new_create_registry.address_state", (profileAddress.getState().length() == 2 ? profileAddress.getState() : StatesUtils.getAbbreviation(profileAddress.getState())));
+        DropDowns.selectByValue("new_create_registry.address_state", (profileAddress.getState().length() == 2 ? profileAddress.getState() : AbbreviationHelper.getStateAbbreviation(profileAddress.getState())));
         TextBoxes.typeTextbox("new_create_registry.address_zip_code", String.valueOf(profileAddress.getZipCode()));
         TextBoxes.typeTextbox("new_create_registry.phone", profileAddress.getBestPhone());
         if (edge())
