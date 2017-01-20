@@ -1,5 +1,8 @@
 package com.macys.sdt.framework.model.registry;
 
+/**
+ * Represents a macy's store
+ */
 public class Store {
 
     private int storeId = 139;

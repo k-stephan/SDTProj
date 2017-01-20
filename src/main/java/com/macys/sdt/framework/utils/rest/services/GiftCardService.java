@@ -2,6 +2,8 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.model.GiftCard;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.Exceptions;
+import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
@@ -21,8 +23,12 @@ public class GiftCardService {
      *
      * @param cardType Type of gift card to get info for
      * @return GiftCard object.
+     * @throws Exceptions.ProductionException if called while executing against production
      */
-    public static GiftCard getValidGiftCardDetails(GiftCard.CardType cardType) {
+    public static GiftCard getValidGiftCardDetails(GiftCard.CardType cardType) throws Exceptions.ProductionException {
+        if (StepUtils.prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot use services on prod!");
+        }
         try {
             JSONArray json = new JSONArray(getGiftCardsResponse(cardType));
             for (Object o : json) {
@@ -56,8 +62,12 @@ public class GiftCardService {
      * @param cardType type of gift card to retrieve
      * @return getGiftCardsResponse
      * @throws IOException if response is unreadable
+     * @throws Exceptions.ProductionException if called while executing against production
      */
-    public static String getGiftCardsResponse(GiftCard.CardType cardType) throws IOException {
+    public static String getGiftCardsResponse(GiftCard.CardType cardType) throws IOException, Exceptions.ProductionException {
+        if (StepUtils.prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot use services on prod!");
+        }
         String serviceUrl = getGiftCardServiceUrl(cardType);
         Response response = RESTOperations.doGET(serviceUrl, null);
         return response.readEntity(String.class);

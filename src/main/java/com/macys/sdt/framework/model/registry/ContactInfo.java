@@ -2,6 +2,9 @@ package com.macys.sdt.framework.model.registry;
 
 import com.macys.sdt.framework.model.addresses.CurrentAddress;
 
+/**
+ * Represents the contact info for a registrant in a registry
+ */
 public class ContactInfo {
 
     private String firstName;

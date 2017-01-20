@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.macys.sdt.framework.utils.AbbreviationHelper;
-
+/**
+ * The Event data associated with a Registry
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Event {
     @JsonIgnore

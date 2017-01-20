@@ -4,6 +4,9 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+/**
+ * The future address of a registry
+ */
 public class FutureAddress extends CurrentAddress {
 
     private String effectiveDate;

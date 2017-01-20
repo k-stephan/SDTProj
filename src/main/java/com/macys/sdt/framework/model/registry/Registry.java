@@ -322,8 +322,6 @@ public class Registry {
         this.id = id;
     }
 
-
-
     public String getUserId() {
         return userId;
     }
@@ -420,6 +418,12 @@ public class Registry {
         this.futureAddress = futureAddress;
     }
 
+    /**
+     * Fills the registry with randomly generated data.
+     * <p>
+     *     Address data is based on addresses in the "valid_addresses.json" data file
+     * </p>
+     */
     public void addRandomData() {
         // ContactInfo data
         String firstName = generateRandomFirstName();

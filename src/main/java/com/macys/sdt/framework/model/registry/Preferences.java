@@ -1,5 +1,8 @@
 package com.macys.sdt.framework.model.registry;
 
+/**
+ * The preferences associated with a Registry
+ */
 public class Preferences {
 
     private String datePrintFormat = "MM_DD_YY";

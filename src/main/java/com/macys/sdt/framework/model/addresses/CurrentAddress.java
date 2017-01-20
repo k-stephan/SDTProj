@@ -1,8 +1,10 @@
 package com.macys.sdt.framework.model.addresses;
 
-import com.macys.sdt.framework.model.addresses.Address;
 import org.json.JSONObject;
 
+/**
+ * The current address of a Registry
+ */
 public class CurrentAddress extends Address {
 
     private String addressLine1;

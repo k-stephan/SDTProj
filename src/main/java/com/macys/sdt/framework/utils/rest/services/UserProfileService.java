@@ -1,12 +1,12 @@
 package com.macys.sdt.framework.utils.rest.services;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.Exceptions;
+import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
@@ -29,15 +29,19 @@ public class UserProfileService {
     /**
      * This method will create user profile
      *
-     * @param userProfileDetailInJson : user profile details in JSON
+     * @param userProfileDetailInXml : user profile details in JSON
      * @return UserProfile that was created
+     * @throws Exceptions.ProductionException if called while executing against production
      */
-    public static UserProfile createUserProfile(String userProfileDetailInJson) {
+    public static UserProfile createUserProfile(String userProfileDetailInXml) throws Exceptions.ProductionException {
+        if (StepUtils.prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot use services on prod!");
+        }
         try {
             HashMap<String, String> headers = new HashMap<>();
             headers.put("x-macys-webservice-client-id", macys() ? RESTEndPoints.MCOM_API_KEY : RESTEndPoints.BCOM_API_KEY);
             Response response = RESTOperations.doPOST(getServiceURL(), MediaType.APPLICATION_XML,
-                    userProfileDetailInJson, headers);
+                    userProfileDetailInXml, headers);
             System.out.println("response : " + response);
             String entity = response.readEntity(String.class);
             Assert.assertEquals(response.getStatus(), 200);
@@ -57,11 +61,14 @@ public class UserProfileService {
      * This method will create random user profile
      *
      * @return UserProfile that was created
+     * @throws Exceptions.ProductionException if called while executing against production
      */
-    public static UserProfile createRandomUserProfile() {
+    public static UserProfile createRandomUserProfile() throws Exceptions.ProductionException {
+        if (StepUtils.prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot use services on prod!");
+        }
         UserProfile userProfile = TestUsers.getCustomer(null);
         XmlMapper mapper = new XmlMapper();
-        //ObjectMapper mapper = new ObjectMapper();
         String createUserProfileDetail = null;
         try {
             createUserProfileDetail = mapper.writeValueAsString(userProfile.getUser())
@@ -80,11 +87,15 @@ public class UserProfileService {
      *
      * @param profile UserProfile to create
      * @return true if profile was created successfully
+     * @throws Exceptions.ProductionException if called while executing against production
      */
-    public static boolean createUserProfile(UserProfile profile) {
+    public static boolean createUserProfile(UserProfile profile) throws Exceptions.ProductionException {
+        if (StepUtils.prodEnv()) {
+            throw new Exceptions.ProductionException("Cannot use services on prod!");
+        }
         try {
-            String profileJSON = new ObjectMapper().writeValueAsString(profile);
-            UserProfile createdProfile = createUserProfile(profileJSON);
+            String createUserProfileDetail = new XmlMapper().writeValueAsString(profile);
+            UserProfile createdProfile = createUserProfile(createUserProfileDetail);
             if (createdProfile == null) {
                 System.err.println("Error creating profile.");
                 return false;
