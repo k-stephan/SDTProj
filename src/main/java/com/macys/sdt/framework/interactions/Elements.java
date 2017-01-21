@@ -161,6 +161,36 @@ public class Elements {
     }
 
     /**
+     * Gets an CSS attribute value from element
+     *
+     * @param selector String selector in format "page_name.element_name"
+     * @param css_attr CSS attribute value to retrieve
+     * @return requested CSS attribute value if it exists, otherwise empty string
+     */
+    public static String getElementCSSAttribute(String selector, String css_attr) {
+        return getElementCSSAttribute(element(selector), css_attr);
+    }
+
+    /**
+     * Gets an CSS attribute value from element
+     *
+     * @param selector By selector to use
+     * @param css_attr CSS attribute to retrieve
+     * @return requested CSS attribute value if it exists, otherwise empty string
+     */
+    public static String getElementCSSAttribute(By selector, String css_attr) {
+        try {
+            String attribute = findElement(selector).getCssValue(css_attr);
+            if (attribute == null) {
+                throw new NullPointerException();
+            }
+            return attribute;
+        } catch (NullPointerException e) {
+            return "";
+        }
+    }
+
+    /**
      * Gets a random element from a group of elements
      *
      * @param selector String selector in format "page_name.element_name"
