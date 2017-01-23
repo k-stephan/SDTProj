@@ -308,7 +308,7 @@ public class ProductDisplayPage extends StepUtils {
         Clicks.click("add_to_bag.continue_shopping");
     }
 
-    @When("^I replace product ID with available \"([^\"]*)\" product ID$")
+    @When("^I replace product ID with available \"([^\"]*)\" product ID using mobile website$")
     public void iReplaceProductIDWithAvailableProductID(int productID) throws Throwable {
         shouldBeOnPage("product_display");
         try {

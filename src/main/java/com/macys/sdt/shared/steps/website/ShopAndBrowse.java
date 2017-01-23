@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.utils.TestUsers.getRandomProduct;
 import static com.macys.sdt.shared.utils.CommonUtils.retryAction;
@@ -325,7 +327,8 @@ public class ShopAndBrowse extends StepUtils {
             DropDowns.selectByText("change_pickup_store_dialog.search_distance", "100 Miles");
         }
         Wait.forLoading("home.loading");
-        TextBoxes.typeTextbox("change_pickup_store_dialog.address_zip_code", "94102");
+        String zip_code = (macys() ? "22102" : "10022");
+        TextBoxes.typeTextbox("change_pickup_store_dialog.address_zip_code", zip_code);
         Clicks.click("change_pickup_store_dialog.search_button");
     }
 
@@ -1111,6 +1114,22 @@ public class ShopAndBrowse extends StepUtils {
                 Clicks.click(el);
                 break;
             }
+        }
+    }
+
+    @When("^I replace product ID with available \"([^\"]*)\" product ID$")
+    public void iReplaceProductIDWithAvailableProductID(int productID) throws Throwable {
+        shouldBeOnPage("product_display", "registry_pdp");
+        try {
+            String url = MainRunner.getCurrentUrl();
+            String pattern = "ID=(.*)&";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(url);
+            m.find();
+            String new_url = url.replace(m.group(), "ID=" + productID + "&");
+            Navigate.visit(new_url);
+        } catch (Exception e) {
+            Assert.fail("ERROR - DATA: Unable to append predefined prodID to URL" + e);
         }
     }
 }
