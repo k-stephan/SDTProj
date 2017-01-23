@@ -151,7 +151,7 @@ public class MyAccountSteps extends StepUtils {
      *
      * @throws Throwable if any exception occurs
      */
-    @And("^I navigate to my profile (page)?$")
+    @And("^I navigate to my profile (?: page?)?$")
     public void iNavigateToMyProfilePage() throws Throwable {
         Clicks.click("my_account.goto_my_profile");
         if (safari()) {

@@ -132,6 +132,7 @@ public class Registry extends StepUtils {
             Navigate.visit("registry_home");
             Wait.forPageReady();
         }
+        Assert.assertFalse("ERROR - ENV : Registry Services are in Batch Mode!!", (macys() ? Elements.getText(By.id("generalErrorMsg")).contains("Your registry is not available online") : Elements.elementPresent(By.className("registry-batch-mode"))));
         Assert.assertFalse("ERROR - ENV : Registry Flex Template services are down!!", title().contains(macys() ? "Site Unavailable" : "oops"));
         shouldBeOnPage("registry_manager");
         resumePageHangWatchDog();
