@@ -64,6 +64,10 @@ public class PageNavigation extends StepUtils {
         if (tablet())
             new Home().selectMainCategory(menu);
         CreateProfile.closeSecurityAlertPopUp();
+        Navigate.visit(MainRunner.url);
+        Wait.forPageReady();
+        closeBcomLoyaltyPromotionVideoOverlay();
+        closeBcomPopup();
         By menuEl = Elements.paramElement("home.flyout_category", menu.toUpperCase());
         Clicks.hoverForSelection(menuEl);
     }
