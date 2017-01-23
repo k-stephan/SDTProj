@@ -1269,5 +1269,21 @@ public class CheckoutSteps extends StepUtils {
         Wait.untilElementNotPresent(page + ".gift_card_apply_button");
     }
 
-
+    /**
+     * Verifies that the order has been placed
+     *
+     * @throws Throwable if any exception occurs
+     */
+    @Then("^Order should be placed successfully$")
+    public void I_should_be_on_order_confirmation_page() throws Throwable {
+        pausePageHangWatchDog();
+        String page = onPage("responsive_order_confirmation") ? "responsive_order_confirmation" : "order_confirmation";
+        if (safari() || ie()) {
+            Wait.secondsUntilElementPresent(page + ".order_confirmation_message", 20);
+        }
+        if (!Elements.elementPresent(page + ".order_confirmation_message")) {
+            Assert.fail("Order not placed successfully");
+        }
+        resumePageHangWatchDog();
+    }
 }

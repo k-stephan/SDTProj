@@ -29,14 +29,15 @@ public class Facets extends StepUtils {
     public static void I_search_for_zipcode_in_bops_facet(String zipCode) throws Throwable {
         Wait.forPageReady();
         String panel = "change_pickup_store_dialog";
-        if(MEW()){
+        if (MEW()) {
             Wait.untilElementPresent(panel + ".address_zip_code");
             TextBoxes.typeTextNEnter(panel + ".address_zip_code", zipCode);
-        }else {
+        } else {
             try {
                 Wait.untilElementPresent(panel + ".address_zip_code");
-                if (bloomingdales())
+                if (bloomingdales()) {
                     Wait.secondsUntilElementNotPresent(By.className("loading"), 50);
+                }
             } catch (ElementNotVisibleException | NoSuchElementException e) {
                 Clicks.click(Elements.paramElement("category_browse.facet", "Pick Up In Store"));
             }
@@ -51,10 +52,11 @@ public class Facets extends StepUtils {
             }
             Clicks.click(panel + ".search_button");
         }
-        if (macys())
+        if (macys()) {
             Wait.forLoading(By.id("loading_mask"));
-        else
+        } else {
             Wait.secondsUntilElementNotPresent(By.className("loading"), 50);
+        }
     }
 
     /**
@@ -65,11 +67,13 @@ public class Facets extends StepUtils {
      */
     @Then("^I should see \"([^\"]*)\" facet listed on left nav$")
     public void I_should_see_facet_listed_on_left_nav(String facet) throws Throwable {
-        if (!Elements.elementPresent("left_facet.facet_div"))
+        if (!Elements.elementPresent("left_facet.facet_div")) {
             Navigate.browserRefresh();
+        }
 
-        if (!LeftFacet.facetPresent(facet))
+        if (!LeftFacet.facetPresent(facet)) {
             Assert.fail("Failed to find facet: " + facet);
+        }
     }
 
     /**
@@ -80,8 +84,9 @@ public class Facets extends StepUtils {
      */
     @Then("^I should be on \"([^\"]*)\" subsplash page$")
     public void i_should_be_on_subsplash_page(String arg1) throws Throwable {
-        if(safari())
+        if (safari()) {
             Wait.secondsUntilElementPresent("category_sub_splash.verify_page", 20);
+        }
         shouldBeOnPage("category_sub_splash");
     }
 
@@ -98,8 +103,9 @@ public class Facets extends StepUtils {
 
     @When("^I select \"([^\"]*)\" facet listed on left nav$")
     public void i_select_facet_listed_on_left_nav(String facet) throws Throwable {
-        if(safari())
+        if (safari()) {
             Wait.secondsUntilElementPresent("category_browse.chanel_facet_links", 10);
+        }
         List<WebElement> linkCategories = Elements.findElements(Elements.element("category_browse.chanel_facet_links"));
         for (WebElement linkCat : linkCategories) {
             if (linkCat.getText().equalsIgnoreCase(facet)) {
@@ -127,8 +133,9 @@ public class Facets extends StepUtils {
      */
     @And("^I should see radius dropdown in bops change store dialog")
     public void I_should_see_radius_dropdown_under_bops_facet() throws Throwable {
-        if (!Elements.elementPresent("left_facet.bops_store_search_radius"))
+        if (!Elements.elementPresent("left_facet.bops_store_search_radius")) {
             Assert.fail("bops radius not visible");
+        }
     }
 
     /**
@@ -138,8 +145,8 @@ public class Facets extends StepUtils {
      */
     @And("^I select any bops store$")
     public void I_select_any_bops_store() throws Throwable {
-        if (!Elements.elementPresent("left_facet.facet_div"))   {
-            if (macys())  {
+        if (!Elements.elementPresent("left_facet.facet_div")) {
+            if (macys()) {
                 Clicks.clickRandomElement(LeftFacet.getFacetItems("Pick Up In-Store"));
             } else {
                 //This element clickable action for bcom
@@ -150,7 +157,7 @@ public class Facets extends StepUtils {
             Clicks.javascriptClick(LeftFacet.getFacetApply("Pick Up In Store"));
             Wait.forLoading("left_facet.loading");
             Wait.forPageReady();
-        }  else {
+        } else {
             Clicks.clickRandomElement(Elements.element("left_facet.bops_stores"));
         }
     }
@@ -159,7 +166,7 @@ public class Facets extends StepUtils {
      * Selects a value from the given facet
      *
      * @param selected_item value to select
-     * @param facet facet to select from
+     * @param facet         facet to select from
      * @throws Throwable if any exception occurs
      */
     @When("^I select \"([^\"]*)\" item from \"([^\"]*)\" facet on left nav$")
@@ -195,8 +202,9 @@ public class Facets extends StepUtils {
     public void subfacet_header_should_be_expanded_under_Brand_facet(String header) throws Throwable {
         if (header.equalsIgnoreCase("All Brands")) {
             String attr = Elements.getElementAttribute(Elements.element("search_result.allbrand_header"), "class");
-            if (attr.contains("collapsed"))
+            if (attr.contains("collapsed")) {
                 Wait.attributeChanged(Elements.element("search_result.allbrand_header"), "class", attr);
+            }
         }
     }
 
@@ -263,5 +271,27 @@ public class Facets extends StepUtils {
     @And("^I select \"([^\"]*)\" from Pick Up In-Store facet section$")
     public void I_select_from_Pick_Up_In_Store_facet_section(String distance) throws Throwable {
         DropDowns.selectByText(Elements.element("left_facet.bops_store_search_radius"), distance);
+    }
+
+    /**
+     * Expands or collapses the given facet
+     *
+     * @param action "expand" or "collapse"
+     * @param facet  name of facet
+     * @throws Throwable if any exception occurs
+     */
+    @When("^I \"(expand|collapse)\" the \"([^\"]*)\" facet on left nav$")
+    public void I_the_facet_on_left_nav(String action, String facet) throws Throwable {
+        if (action.equals("expand")) {
+            LeftFacet.expandFacet(facet);
+            if (!LeftFacet.isExpanded(facet)) {
+                Assert.fail("Failed to expand facet: " + facet);
+            }
+        } else {
+            LeftFacet.collapseFacet(facet);
+            if (LeftFacet.isExpanded(facet)) {
+                Assert.fail("Failed to collapse facet: " + facet);
+            }
+        }
     }
 }

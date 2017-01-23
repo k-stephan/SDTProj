@@ -18,6 +18,9 @@ public class OrderConfirmation extends StepUtils {
 
     public static String orderNumber = null;
 
+    /**
+     * Verifies the display of USL data on order confirmation page
+     */
     @Then("^I should see USL information on order confirmation page$")
     public void I_should_see_usl_information_on_order_confirmation_page() {
 
@@ -37,6 +40,11 @@ public class OrderConfirmation extends StepUtils {
         }
     }
 
+    /**
+     * Verifies paypal elements on order confirmation page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see paypal icon and email on order confirmation page$")
     public void I_should_see_paypal_icon_and_email_on_order_confirmation_page() throws Throwable {
         pausePageHangWatchDog();
@@ -44,14 +52,20 @@ public class OrderConfirmation extends StepUtils {
         String type = responsive ? "responsive_" : "";
         if (Wait.untilElementPresent((type + "order_confirmation.paypal_section").trim())) {
             String paypalUserEmail = Elements.getText(((type + "order_confirmation.paypal_email_text")).trim());
-            if (!paypalUserEmail.equals(TestUsers.getPayPalInformation().get("email")))
+            if (!paypalUserEmail.equals(TestUsers.getPayPalInformation().get("email"))) {
                 Assert.fail("Paypal Email is not correct on order confirmation page");
+            }
         } else {
             Assert.fail("Paypal section is not visible on order confirmation page");
         }
         resumePageHangWatchDog();
     }
 
+    /**
+     * Saves order number from order confirmation page to variable
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I capture order number from order_confirmation page$")
     public void I_capture_order_number_from_order_confirmation_page() throws Throwable {
         boolean responsive = onPage("responsive_order_confirmation");
@@ -60,22 +74,38 @@ public class OrderConfirmation extends StepUtils {
         orderNumber = Elements.getText(page + ".order_number");
     }
 
+    /**
+     * Verifies the display of the order confirmation page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see order confirmation section displayed with order details$")
     public void I_should_see_order_confirmation_section_displayed_with_order_details() throws Throwable {
         String page = "responsive_order_confirmation";
-        Assert.assertTrue("Order number is not displayed,", Elements.getText(page + ".order_number").length()>0);
-        Assert.assertTrue("Order total is not displayed,", Elements.getText(page + ".order_total").length()>0);
+        Assert.assertTrue("Order number is not displayed,", Elements.getText(page + ".order_number").length() > 0);
+        Assert.assertTrue("Order total is not displayed,", Elements.getText(page + ".order_total").length() > 0);
         Assert.assertFalse("Order confirm email is not displayed,", Elements.getText(page + ".order_confirmation_email_address").isEmpty());
     }
 
+    /**
+     * Verifies that the correct shipping method shows on the order confirmation page
+     *
+     * @param expectedText shipping type
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify (No Hurry|standard) shipping method details on confirmation page$")
     public void I_Verify_NoHurry_In_Shipping_Method_Section(String expectedText) throws Throwable {
         String actualText;
-        expectedText=expectedText.toLowerCase();
+        expectedText = expectedText.toLowerCase();
         actualText = Elements.getText(Elements.element("responsive_order_confirmation.shipping_methods_set")).split("\n")[1].toLowerCase();
         Assert.assertTrue("Expected shipping method is not displayed!!", (actualText.contains(expectedText)));
     }
 
+    /**
+     * Verifies the no-hurry order is present in the database
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I verify the order details in DB for nohurry$")
     public void I_verify_the_order_details_in_DB_for_nohurry() throws Throwable {
         orderNumber = Elements.getText("responsive_order_confirmation.order_number").split(":\n")[1];
@@ -84,7 +114,7 @@ public class OrderConfirmation extends StepUtils {
 
         //Getting Order details from site DB and verifying the order status
         HashMap orderDetails = order.getOrderDetails(orderNumber);
-        Assert.assertTrue("Order placed in batch mode", (orderDetails.get("ORDER_STATUS").toString()).equals((inventoryDownMsg.contains("inventory system is temporarily offline") ? "BPEND" :"RCMPL")));
+        Assert.assertTrue("Order placed in batch mode", (orderDetails.get("ORDER_STATUS").toString()).equals((inventoryDownMsg.contains("inventory system is temporarily offline") ? "BPEND" : "RCMPL")));
 
         //Getting shipment details from site DB and verifying the shipment code for nohurry
         List<String> shipMethodCode = order.getShipMethodCode(orderNumber);
