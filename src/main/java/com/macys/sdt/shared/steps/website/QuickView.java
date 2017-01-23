@@ -20,6 +20,11 @@ import static com.macys.sdt.shared.utils.CommonUtils.quickViewRandomProduct;
 
 public class QuickView extends StepUtils {
 
+    /**
+     * Selects a random quick view dialog on browse page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a random product in a quickview dialog$")
     public void I_select_a_random_product_in_a_quickview_dialog() throws Throwable {
         if (macys()) {
@@ -44,6 +49,13 @@ public class QuickView extends StepUtils {
         }
     }
 
+    /**
+     * Opens a quick view dialog of a product matching the given conditions
+     *
+     * @param prod_type "member" or "master" or "member_alternate_image" or "master_alternate_image"
+     * @param hasRating include for a product with customer ratings
+     * @throws Throwable if any exception occurs
+     */
     @When("^I quick view a random (member|master|member_alternate_image|master_alternate_image) product(?: with (customer ratings))?$")
     public void I_quick_view_a_random_product(String prod_type, String hasRating) throws Throwable {
         boolean found = false;
@@ -76,6 +88,11 @@ public class QuickView extends StepUtils {
         }
     }
 
+    /**
+     * Selects "see full product details" from a quick view dialog
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I select 'see full product details' link from the quickview dialog$")
     public void I_select_see_full_product_details_link_from_the_quickview_dialog() throws Throwable {
         Assert.assertTrue("ERROR-ENV: Unable to find see full product info link", Elements.elementPresent("quick_view.quick_view_see_full_details"));
@@ -83,11 +100,21 @@ public class QuickView extends StepUtils {
         new PageNavigation().I_should_be_redirected_to_PDP_page();
     }
 
+    /**
+     * Closes a visible quick view dialog
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I close the quickview dialog$")
     public void I_close_the_quickview_dialog() throws Throwable {
         Wait.secondsUntilElementPresentAndClick("quick_view.quick_view_close_dialog", 2);
     }
 
+    /**
+     * Adds a currently visible quick view product to bag
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add the item to the bag from quick view$")
     public void I_add_the_item_to_the_bag_from_quick_view() throws Throwable {
         if (bloomingdales()) {
@@ -105,6 +132,11 @@ public class QuickView extends StepUtils {
         Wait.untilElementNotPresent("quick_view.quick_view_product_add_to_bag");
     }
 
+    /**
+     * Adds a currently visible quick view product to wish list
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add the item to wishlist from QV$")
     public void I_add_the_product_to_wishlist_from_QV() throws Throwable {
         if (macys()) {
@@ -129,16 +161,23 @@ public class QuickView extends StepUtils {
 
         if (bloomingdales()) {
             Wait.untilElementPresent("quick_view.quick_view_add_to_wishlist_overlay");
-            if (Elements.findElement("quick_view.quick_view_add_to_wishlist_overlay").getText().contains("Sorry"))
+            if (Elements.findElement("quick_view.quick_view_add_to_wishlist_overlay").getText().contains("Sorry")) {
                 Clicks.click("quick_view.quick_view_product_add_to_wishlist");
+            }
         }
     }
 
+    /**
+     * Navigates to shopping bag page from quick view dialog
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to shopping bag page from quick view dialog$")
     public void I_navigate_to_shopping_bag_page_from_quick_view_dialog() throws Throwable {
         Clicks.click("quick_view.checkout_now");
-        if (onPage("add_to_bag"))
+        if (onPage("add_to_bag")) {
             Clicks.click("add_to_bag.checkout");
+        }
         shouldBeOnPage("shopping_bag");
     }
 }
