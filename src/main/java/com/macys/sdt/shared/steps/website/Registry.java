@@ -245,7 +245,7 @@ public class Registry extends StepUtils {
      *
      * @throws Throwable if any exception occurs
      */
-    @Then("^I should be redirected to registry PDP(?: page)$")
+    @Then("^I should be redirected to registry PDP(?: page)?$")
     public void I_should_be_redirected_to_registry_PDP_page() throws Throwable {
         shouldBeOnPage("registry_pdp");
     }

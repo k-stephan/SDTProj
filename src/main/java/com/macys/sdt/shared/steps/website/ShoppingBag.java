@@ -10,6 +10,11 @@ import cucumber.api.java.en.Then;
 
 public class ShoppingBag extends StepUtils {
 
+    /**
+     * Verifies that payment badge shows on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see payment badge$")
     public void I_should_see_payment_badge() throws Throwable {
 
@@ -19,13 +24,23 @@ public class ShoppingBag extends StepUtils {
         if (!Elements.elementPresent("shopping_bag.payment_badge")) {
             Assert.fail("Payment badge not displayed");
         }
-    } 
-    
+    }
+
+    /**
+     * Verifies that promo code inline error message shows on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see promo inline error message$")
     public void I_should_see_promo_inline_error_message() throws Throwable {
         Wait.untilElementPresent(Elements.element("shopping_bag.promo_inline_error_message"));
     }
 
+    /**
+     * Verifies the top of page promo error code
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see promo error message on the top of bag page$")
     public void I_should_see_promo_error_message_on_the_top_of_bag_page() throws Throwable {
         Wait.untilElementPresent(Elements.element("shopping_bag.error_message"));

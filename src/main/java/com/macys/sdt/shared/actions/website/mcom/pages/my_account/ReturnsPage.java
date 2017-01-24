@@ -460,11 +460,11 @@ public class ReturnsPage extends StepUtils {
         Clicks.click(Elements.element("order_status.view_order_details"));
     }
 
-    public List<Map> getOrderDetails() throws Throwable {
-        List<Map> orderDetails = new ArrayList<>();
-        String headerStatus = null;
+    public List<Map<String, Object>> getOrderDetails() throws Throwable {
+        List<Map<String, Object>> orderDetails = new ArrayList<>();
+        String headerStatus;
         for (WebElement container : Elements.findElements(Elements.element("order_details.order_details_container"))) {
-            Map shipment = new HashMap<>();
+            Map<String, Object> shipment = new HashMap<>();
             if (macys()) {
                 headerStatus = container.findElements(By.tagName("div")).get(0).getText();
                 boolean isShippingAddressExists = container.findElement(By.className("shippingAddress")).findElements(By.tagName("h3")).size() > 0;

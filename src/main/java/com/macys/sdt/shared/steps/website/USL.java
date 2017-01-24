@@ -11,6 +11,11 @@ import cucumber.api.java.en.And;
 
 public class USL extends StepUtils {
 
+    /**
+     * Looks up a plenti ID on given page
+     * @param page payment|shopping bag|my account
+     * @throws Throwable if any exception occurs
+     */
     @And("^I lookup plenti id using valid usl phone number on (payment|shopping bag|my account) page$")
     public void I_lookup_plenti_id_using_valid_usl_phone_number(String page) throws Throwable {
         String pageName = null;
@@ -37,7 +42,7 @@ public class USL extends StepUtils {
 
     @And("^I add usl as payment on (payment|shopping bag|my account) page$")
     public void iAddUslAsPayment(String page) throws Throwable {
-        String pageName = null;
+        String pageName;
         switch (page) {
             case "payment":
                 pageName = "shipping_payment_signed_in";
@@ -45,9 +50,14 @@ public class USL extends StepUtils {
             case "shopping bag":
                 pageName = "shopping_bag";
                 break;
+            case "my account":
+                pageName = "my_account";
+                break;
+            default:
+                pageName = page;
         }
         Checkout.addUslAsPayment();
-        Wait.secondsUntilElementPresent(page + ".plenti_points_text", 5);
+        Wait.secondsUntilElementPresent(pageName + ".plenti_points_text", 5);
     }
 
 

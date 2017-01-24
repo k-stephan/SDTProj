@@ -18,6 +18,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.apache.commons.lang3.ArrayUtils;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 
@@ -28,7 +29,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.macys.sdt.framework.utils.TestUsers.getRandomProduct;
 import static com.macys.sdt.shared.utils.CommonUtils.retryAction;
 import static com.macys.sdt.shared.utils.CommonUtils.selectRandomProduct;
 
@@ -40,42 +40,62 @@ public class ShopAndBrowse extends StepUtils {
     public static Product recentProduct;
     public static String promoCode;
 
+    /**
+     * Selects given distance in bops store dialog
+     *
+     * @param distance exact text of distance to select
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select \"([^\"]*)\" in bops change store dialog$")
     public static void I_select_miles_in_bops_change_store_dialog(String distance) throws Throwable {
         DropDowns.selectByText("change_pickup_store_dialog.search_distance", distance);
     }
 
+    /**
+     * Selects save and closes the bops change store dialog
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I close the bops change store dialog$")
     public static void I_save_close_the_bops_change_store_dialog() throws Throwable {
         //Clicks.click("change_pickup_store_dialog.save");
         if (bloomingdales()) {
-            if (Elements.elementPresent("change_pickup_store_dialog.close"))
+            if (Elements.elementPresent("change_pickup_store_dialog.close")) {
                 Clicks.click("change_pickup_store_dialog.close");
+            }
         } else {
             Clicks.clickIfPresent("change_pickup_store_dialog.overlay_close_button");
         }
 
     }
 
-    @And("^I add registry product to BVR page from standard PDP Page$")
+    /**
+     * Adds product to registry from PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
+    @And("^I add registry product to BVR page from standard PDP(?: Page)?")
     public void I_add_registry_product_to_BVR_page_from_standard_PDP_Page() throws Throwable {
         pausePageHangWatchDog();
-        Assert.assertFalse("ERROR - DATA : Product ( "+ String.valueOf(recentProduct.id) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_registry") && Elements.elementPresent("product_display.availability_error"));
+        Assert.assertFalse("ERROR - DATA : Product ( " + String.valueOf(recentProduct.id) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_registry") && Elements.elementPresent("product_display.availability_error"));
         if (macys()) {
             int retries = 5;
             for (int count = 0; count < retries && !Elements.elementPresent("add_to_registry_dialog.add_to_bag_view_registry"); count++) {
                 ProductDisplay.selectRandomColor();
                 ProductDisplay.selectRandomSize();
-                if (ProductDisplay.isMasterMemberPage())
+                if (ProductDisplay.isMasterMemberPage()) {
                     Clicks.clickRandomElement("product_display.add_to_registry");
-                else
+                } else {
                     Clicks.click("product_display.add_to_registry");
+                }
                 Wait.secondsUntilElementPresent("add_to_registry_dialog.add_to_bag_view_registry", 5);
                 Clicks.clickIfPresent("product_display.technical_error");
-                if (isErrorPaneVisible())
+                if (isErrorPaneVisible()) {
                     Clicks.click("home.popup_close");
-                if (macys() && Elements.anyPresent(By.className("close-grey-tiny")))
+                }
+                if (macys() && Elements.anyPresent(By.className("close-grey-tiny"))) {
                     Assert.assertTrue("ERROR - DATA : Product is not eligible to add to registry !!", Elements.findElement(By.className("close-grey-tiny")).getText().contains("This item is not registrable"));
+                }
             }
             try {
                 Wait.forPageReady();
@@ -92,28 +112,35 @@ public class ShopAndBrowse extends StepUtils {
             Clicks.javascriptClick("product_display.add_to_registry");
             Wait.secondsUntilElementPresent("product_display.add_to_registry_dialog", 10);
             if (Elements.elementPresent("product_display.add_to_registry_dialog")) {
-                if (macys())
+                if (macys()) {
                     Clicks.click("product_display.add_to_bag_view_registry");
-                else {
+                } else {
                     Elements.findElements("product_display.add_to_bag_view_registry").forEach(item -> {
                         try {
-                            if (item.isDisplayed())
+                            if (item.isDisplayed()) {
                                 Clicks.click(item);
+                            }
                         } catch (Exception e) {
                             // exception will be thrown on BCOM non-gift items. No need to take action.
                         }
                     });
                 }
-            } else
+            } else {
                 Assert.fail("Unable to add product to registry");
+            }
         }
         resumePageHangWatchDog();
     }
 
-    @And("^I add product to my bag from standard PDP Page$")
+    /**
+     * Adds product to bag from PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
+    @And("^I add product to my bag from standard PDP(?: Page)?$")
     public void I_add_product_to_my_bag_from_standard_PDP_Page() throws Throwable {
         boolean addedToBag = false;
-        Assert.assertFalse("ERROR - DATA : Product ( "+ (recentProduct == null ? "" : String.valueOf(recentProduct.id)) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_bag_button") && Elements.elementPresent("product_display.availability_error"));
+        Assert.assertFalse("ERROR - DATA : Product ( " + (recentProduct == null ? "" : String.valueOf(recentProduct.id)) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_bag_button") && Elements.elementPresent("product_display.availability_error"));
         try {
             int retries = 5;
             pausePageHangWatchDog();
@@ -122,8 +149,9 @@ public class ShopAndBrowse extends StepUtils {
                     ProductDisplay.selectRandomColor();
                     ProductDisplay.selectRandomSize();
                     Clicks.click("product_display.add_to_bag_button");
-                    if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog"))
+                    if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog")) {
                         Clicks.clickIfPresent("product_display.add_to_bag_button");
+                    }
 
                     addedToBag = ProductDisplay.addedToBag();
                     if (MainRunner.debugMode) {
@@ -134,24 +162,33 @@ public class ShopAndBrowse extends StepUtils {
                 }
             }
             Wait.untilElementPresent("add_to_bag_dialog.add_to_bag_dialog");
-            if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog"))
+            if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog")) {
                 Clicks.clickIfPresent("product_display.technical_error");
-            if (isErrorPaneVisible())
+            }
+            if (isErrorPaneVisible()) {
                 Clicks.click("home.popup_close");
+            }
             resumePageHangWatchDog();
         } catch (IllegalArgumentException | NoSuchElementException e) {
             System.err.println("Error while adding to bag: " + e);
         } finally {
             if (!addedToBag) {
                 Wait.untilElementNotPresent("product_display.add_to_bag_button");
-                if (macys())
+                if (macys()) {
                     Assert.assertFalse("ERROR - DATA : Given item is unavailable!!", Elements.elementPresent(By.className("css-tooltip")) && Elements.getText(By.className("css-tooltip")).contains("this item is unavailable"));
+                }
                 Assert.assertTrue("Unable to add product to bag", ProductDisplay.addedToBag());
             }
 
         }
     }
 
+    /**
+     * Adds given quantity of the current product to bag
+     *
+     * @param quantity how many to add
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add \"([^\"]*)\" quantity to my bag from standard PDP Page$")
     public void I_add_product_to_my_bag_from_standard_PDP_Page(String quantity) throws Throwable {
         boolean addedToBag = false;
@@ -174,10 +211,12 @@ public class ShopAndBrowse extends StepUtils {
                 }
             }
             Wait.untilElementPresent("add_to_bag_dialog.add_to_bag_dialog");
-            if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog"))
+            if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog")) {
                 Clicks.clickIfPresent("product_display.technical_error");
-            if (isErrorPaneVisible())
+            }
+            if (isErrorPaneVisible()) {
                 Clicks.click("home.popup_close");
+            }
             resumePageHangWatchDog();
         } catch (IllegalArgumentException | NoSuchElementException e) {
             System.err.println("Error while adding to bag: " + e);
@@ -189,12 +228,24 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Searches for given text in the top search bar
+     *
+     * @param value text to search for
+     * @throws Throwable if any exception occurs
+     */
     @When("^I search for \"([^\"]*)\"$")
     public void I_search_for(String value) throws Throwable {
         TextBoxes.typeTextNEnter("home.search_field", value);
         Wait.forPageReady();
     }
 
+    /**
+     * Selects the given social icon if present
+     *
+     * @param social_icon icon to check for (eg: pinterest|email|facebook etc)
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" social icon on PDP Page$")
     public void I_select_social_icon_on_PDP_Page(String social_icon) throws Throwable {
         Navigate.browserRefresh();
@@ -203,8 +254,9 @@ public class ShopAndBrowse extends StepUtils {
             System.err.println("Can't click" + social_icon + " on radical pdp, does not exist");
             return;
         }
-        if (!Clicks.clickWhenPresent("product_display.social_icon_" + social_icon.toLowerCase()))
+        if (!Clicks.clickWhenPresent("product_display.social_icon_" + social_icon.toLowerCase())) {
             Assert.fail(social_icon + " is not Available");
+        }
 
         if (ie() && MainRunner.getWebDriver().getTitle().contains("Certificate Error:")) {
             Set<String> windowSet = MainRunner.getWebDriver().getWindowHandles();
@@ -214,9 +266,15 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Changes active country to given country
+     *
+     * @param country full name of country as it is in the country selection drop down
+     * @throws Throwable if any exception occurs
+     */
     @When("^I change country to \"([^\"]*)\"$")
     public void I_change_country_to(String country) throws Throwable {
-        boolean newDropDownEnabled = false;
+        boolean newDropDownEnabled;
         if (Wait.secondsUntilElementPresent("international_shipping.country", (safari() ? 20 : 5))) {
             Assert.assertTrue("Not on international context page.", Wait.secondsUntilElementPresent("international_shipping.country", (safari() ? 20 : 5)));
             newDropDownEnabled = false;
@@ -224,14 +282,15 @@ public class ShopAndBrowse extends StepUtils {
             Assert.assertTrue("Not on international context page.", Wait.secondsUntilElementPresent("international_shipping.country_options", (safari() ? 20 : 5)));
             newDropDownEnabled = true;
         }
-        List<String> values = new ArrayList<>();
+        List<String> values;
         Random random = new Random();
         values = (newDropDownEnabled ? DropDowns.getAllCustomValues("international_shipping.country_options", "international_shipping.country_list") : DropDowns.getAllValues("international_shipping.country"));
         String selectCountry = (country.equals("a random country") ? values.get(random.nextInt(values.size())) : country);
-        if (newDropDownEnabled)
+        if (newDropDownEnabled) {
             DropDowns.selectCustomText("international_shipping.country_options", "international_shipping.country_list", selectCountry);
-        else
+        } else {
             DropDowns.selectByText("international_shipping.country", selectCountry);
+        }
         Clicks.click("international_shipping.save_continue");
         Wait.forPageReady();
         Clicks.clickIfPresent("home.close_overlay_country");
@@ -240,6 +299,11 @@ public class ShopAndBrowse extends StepUtils {
         closeBcomLoyaltyPromotionVideoOverlay();
     }
 
+    /**
+     * Closes the iship welcome mat
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I close the welcome mat if it's visible$")
     public void I_close_the_welcome_mat_if_it_s_visible() throws Throwable {
         try {
@@ -251,22 +315,42 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Selects a customer top rated product from category page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select a customer top rated product$")
     public void I_select_a_customer_top_rated_product() throws Throwable {
         if (!Elements.elementPresent("category_splash.top_rated")) {
             CategorySplash.selectCustomerTopRatedProduct();
-        } else
+        } else {
             Assert.fail("ERROR - ENV: shop customers' top rated panel is not visible..... ");
+        }
     }
 
+    /**
+     * Selects a product with the given image title
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a \"([^\"]*)\" product$")
     public void I_select_a_product(String product) throws Throwable {
-        if (MainRunner.useSauceLabs)
+        if (MainRunner.useSauceLabs) {
             Clicks.hover(By.xpath("//img[@title='" + product + "']"));
+        }
         Clicks.click(By.xpath("//img[@title='" + product + "']"));
     }
 
-    @When("^I search using \"([^\"]*)\" as \"([^\"]*)\" in \"([^\"]*)\" page$")
+    /**
+     * Searches using the given data on the given page
+     *
+     * @param search_input    search text
+     * @param search_criteria zipcode|city
+     * @param page            page you're searching on - store locations|events search
+     * @throws Throwable if any exception occurs
+     */
+    @When("^I search using \"([^\"]*)\" as \"(zipcode|city)\" in \"(store locations|events search)\" page$")
     public void I_search_using_as_in_page(String search_input, String search_criteria, String page) throws Throwable {
         switch (page.toLowerCase()) {
             case "store locations":
@@ -379,8 +463,9 @@ public class ShopAndBrowse extends StepUtils {
 
     @When("^I open the coupon window$")
     public void I_open_the_coupon_window() throws Throwable {
-        if (!Clicks.clickIfPresent("my_offers.get_savings_pass"))
+        if (!Clicks.clickIfPresent("my_offers.get_savings_pass")) {
             System.out.println("No coupons present.");
+        }
     }
 
     @When("^I click on SHOP NOW button$")
@@ -452,8 +537,9 @@ public class ShopAndBrowse extends StepUtils {
                         //There are two element with same id. One for tablet and another for mobile. so had to filter out the displayed element and click in below step
                         Clicks.clickRandomElement("product_display.add_to_bag_button", WebElement::isDisplayed);
                         Wait.untilElementNotPresent("product_display.add_to_bag_button");
-                        if (ProductDisplay.addedToBag())
+                        if (ProductDisplay.addedToBag()) {
                             return;
+                        }
                     }
                     // we get stale references if we don't update every time
                     sizes = Elements.findElements("product_display.select_default_size");
@@ -465,8 +551,9 @@ public class ShopAndBrowse extends StepUtils {
                 if (ProductDisplay.bopsEligible()) {
                     Clicks.click("product_display.add_to_bag_button");
                     Wait.untilElementNotPresent("product_display.add_to_bag_button");
-                    if (ProductDisplay.addedToBag())
+                    if (ProductDisplay.addedToBag()) {
                         return;
+                    }
                 }
                 // we get stale references if we don't update every time
                 sizes = Elements.findElements("product_display.select_default_size");
@@ -502,7 +589,6 @@ public class ShopAndBrowse extends StepUtils {
             Assert.fail("Element not present " + e);
         }
     }
-
 
 
     @Then("^I should see \"([^\"]*)\" in autocomplete suggestions$")
@@ -571,8 +657,9 @@ public class ShopAndBrowse extends StepUtils {
             I_add_registry_product_to_BVR_page_from_standard_PDP_Page();
         }
         Wait.forPageReady();
-        if (safari())
+        if (safari()) {
             Wait.secondsUntilElementPresent("registry_bvr.bvr_prod_list", 10);
+        }
         int rad_qut;
         ArrayList<Object> products = RegistryBVR.getProducts();
         pausePageHangWatchDog();
@@ -580,22 +667,24 @@ public class ShopAndBrowse extends StepUtils {
             rad_qut = new Random().nextInt(products.size());
             RegistryBVR.selectProdQuantity(rad_qut, "1");
             RegistryBVR.registryAddToBag();
-        } else
+        } else {
             Assert.fail("The products list is empty");
+        }
         resumePageHangWatchDog();
     }
 
     @When("^I directly add an available and orderable product \"([^\"]*)\" to my bag$")
-    public void I_directly_add_an_available_and_orderable_product_to_my_bag(String avilable_prodcut_id) throws Throwable {
-        CommonUtils.navigateDirectlyToProduct(avilable_prodcut_id);
+    public void I_directly_add_an_available_and_orderable_product_to_my_bag(String availableProductId) throws Throwable {
+        CommonUtils.navigateDirectlyToProduct(availableProductId);
         I_add_product_to_my_bag_from_standard_PDP_Page();
 
-        if (onPage("add_to_bag"))
+        if (onPage("add_to_bag")) {
             Clicks.click("add_to_bag.checkout");
-        else if (Elements.elementPresent("add_to_bag_dialog.add_to_bag_checkout"))
+        } else if (Elements.elementPresent("add_to_bag_dialog.add_to_bag_checkout")) {
             Clicks.click("add_to_bag_dialog.add_to_bag_checkout");
-        else
+        } else {
             Clicks.click("product_display.member_atb_checkout");
+        }
     }
 
     @When("^I select a random \"([^\"]*)\" recommendation$")
@@ -620,7 +709,7 @@ public class ShopAndBrowse extends StepUtils {
     @When("^I select (first|second|third|fourth|fifth) asset from home page$")
     public void I_select_specific_asset_from_home_page(String assetNumber) throws Throwable {
         StringBuilder elementTag = new StringBuilder("home.row_one_point_");
-        switch (assetNumber)    {
+        switch (assetNumber) {
             case "first":
                 elementTag.append("one");
                 break;
@@ -669,8 +758,9 @@ public class ShopAndBrowse extends StepUtils {
                         break;
                     }
                 }
-                if (is_name_link)
+                if (is_name_link) {
                     break;
+                }
             }
         } else {
             System.out.println("Unable to find left navigation link names");
@@ -709,12 +799,15 @@ public class ShopAndBrowse extends StepUtils {
             case "a valid":
                 try {
                     if (prodEnv()) {
-                        String valid_promocode = TestUsers.getValidPromotion().getString("promo_code");
-                        TextBoxes.typeTextbox("add_offer_dialog.offer_text", valid_promocode);
-                        Clicks.click("add_offer_dialog.save_btn");
-                        if (Elements.elementPresent("add_offer_dialog.save_btn")) {
-                            System.out.println("Unable to add promo code to wallet");
-                            Clicks.click("add_offer_dialog.close_btn");
+                        JSONObject promoObject = TestUsers.getValidPromotion();
+                        if (promoObject != null) {
+                            String validPromo = promoObject.getString("promo_code");
+                            TextBoxes.typeTextbox("add_offer_dialog.offer_text", validPromo);
+                            Clicks.click("add_offer_dialog.save_btn");
+                            if (Elements.elementPresent("add_offer_dialog.save_btn")) {
+                                System.out.println("Unable to add promo code to wallet");
+                                Clicks.click("add_offer_dialog.close_btn");
+                            }
                         }
                     } else {
                         new MyWalletSteps().I_saved_omnichannel_offer_having_more_than_one_promo_code_in_wallet();
@@ -793,8 +886,9 @@ public class ShopAndBrowse extends StepUtils {
     @When("^I click on \"(left|right)\" arrow key inside Recently Viewed panel$")
     public void I_click_on_arrow_key_inside_Recently_Viewed_panel(String arrow) throws Throwable {
         RecentlyViewed.updateProducts();
-        if (!Clicks.clickIfPresent("recently_viewed_items.scroll_" + arrow))
+        if (!Clicks.clickIfPresent("recently_viewed_items.scroll_" + arrow)) {
             Assert.fail("ERROR - APP: Cannot scroll to the " + arrow);
+        }
         // wait for the scroll animation - can't find it programmatically but it always takes the same amount of time
         Utils.threadSleep(2000, null);
     }
@@ -803,8 +897,9 @@ public class ShopAndBrowse extends StepUtils {
     public void I_select_a_recently_viewed_product() throws Throwable {
         scrollToLazyLoadElement("recently_viewed_items.item");
         // IE does not support recently viewed products
-        if (ie())
+        if (ie()) {
             throw new Exceptions.SkipException("I_select_a_recently_viewed_product(): IE doesn't support RVI");
+        }
 
         Clicks.clickRandomElement("recently_viewed_items.item");
     }
@@ -925,8 +1020,9 @@ public class ShopAndBrowse extends StepUtils {
                 windowIndex = Navigate.findIndexOfWindow("catalog of ideas");
                 // normally would use clickIfPresent, but this one takes a second to pop up
                 // & the page doesn't change to a loading state
-                if (Wait.untilElementPresent("product_display.close_popup_panel"))
+                if (Wait.untilElementPresent("product_display.close_popup_panel")) {
                     Clicks.click("product_display.close_popup_panel");
+                }
                 break;
             case "email":
                 // cheat a little here because email doesn't pop up in another window
@@ -937,8 +1033,9 @@ public class ShopAndBrowse extends StepUtils {
                 windowIndex = Navigate.findIndexOfWindow("Google+");
                 break;
         }
-        if (windowIndex <= 0)
+        if (windowIndex <= 0) {
             Assert.fail(socialIconPopUp + " is not displayed");
+        }
 
         // don't have a window to close in email case
         if (!socialIconPopUp.equalsIgnoreCase("email")) {
@@ -968,15 +1065,17 @@ public class ShopAndBrowse extends StepUtils {
 
     @Then("^I verify recommendation panel is not displayed$")
     public void I_verify_recommendation_panel_is_not_displayed() throws Throwable {
-        if (Elements.elementPresent("shopping_bag.vertical_recommendations_panel"))
+        if (Elements.elementPresent("shopping_bag.vertical_recommendations_panel")) {
             Assert.fail("Recommendation Panel is Displaying for Empty Shopping Bag");
+        }
     }
 
 
     @And("^I click ADD a NEW CARD button$")
     public void I_click_ADD_a_NEW_CARD_button() throws Throwable {
-        if (!Clicks.clickIfPresent("oc_my_wallet.add_credit_card"))
+        if (!Clicks.clickIfPresent("oc_my_wallet.add_credit_card")) {
             Assert.fail("Add a New CARD button is not displaying");
+        }
     }
 
     @And("^I add a credit card to My Wallet as default card on My Wallet page$")
@@ -996,17 +1095,20 @@ public class ShopAndBrowse extends StepUtils {
 
     @And("^I add a valid offer$")
     public void I_add_a_valid_offer() throws Throwable {
-        if(Elements.elementPresent("oc_my_wallet.special_redemption_codes"))
+        if (Elements.elementPresent("oc_my_wallet.special_redemption_codes")) {
             promoCode = Elements.findElement("oc_my_wallet.special_redemption_codes").getText();
-        else{
+        } else {
             promoCode = "X1A001IEZB17";
             TextBoxes.typeTextbox("add_offer_dialog.promo_code", promoCode);
-            Clicks.click("add_offer_dialog.save_offer");}
+            Clicks.click("add_offer_dialog.save_offer");
+        }
     }
+
     @And("^I confirm offer remove$")
     public void I_confirm_offer_remove() throws Throwable {
-        if (!Clicks.clickIfPresent("oc_my_wallet.yes_delete_offer"))
+        if (!Clicks.clickIfPresent("oc_my_wallet.yes_delete_offer")) {
             Assert.fail("Confirm deletion of offer dialog is not displaying");
+        }
     }
 
     @And("^I add a random product to bag$")
@@ -1042,11 +1144,13 @@ public class ShopAndBrowse extends StepUtils {
     @And("^I should see scrolling for recommendation panel$")
     public void iShouldSeeScrollingForRecommendationPanel() throws Throwable {
         try {
-            if (Elements.findElements("recommendations.vertical_recommendations").size() > 2)
+            if (Elements.findElements("recommendations.vertical_recommendations").size() > 2) {
                 Elements.elementShouldBePresent("recommendations.scroll_forward");
+            }
         } catch (Exception e) {
-            if (Elements.findElements("recommendations.horizontal_recommendations").size() > 2)
+            if (Elements.findElements("recommendations.horizontal_recommendations").size() > 2) {
                 Elements.elementShouldBePresent("recommendations.scroll_forward");
+            }
         }
     }
 

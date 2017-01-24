@@ -1,7 +1,6 @@
 package com.macys.sdt.shared.steps.website;
 
 import com.macys.sdt.framework.interactions.*;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.rest.services.ProductService;
 import com.macys.sdt.shared.actions.website.mcom.pages.my_account.CreateProfile;
@@ -15,12 +14,24 @@ import java.util.List;
 
 public class Wishlist extends StepUtils {
 
+
+    /**
+     * Selects the wish list link in the header
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select wishlist link in header$")
     public void I_select_wishlist_link_in_header() throws Throwable {
         Wait.untilElementPresent("home.goto_wishlist");
         Clicks.click("home.goto_wishlist");
     }
 
+    /**
+     * Verifies browser is on wish list landing page as given user type
+     *
+     * @param user registered|guest
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see wishlist landing page as a (registered|guest) user$")
     public void I_should_see_wishlist_landing_page_as_a_user(String user) throws Throwable {
         if(safari())
@@ -30,17 +41,32 @@ public class Wishlist extends StepUtils {
             Clicks.click("wish_list.default_wishlist");
     }
 
+    /**
+     * Navigates to a random product from the wish list
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I navigate to a random product PDP from wish list page$")
     public void I_navigate_to_a_random_product_PDP_from_wish_list_page() throws Throwable {
         Clicks.clickRandomElement("wish_list.item_links");
     }
 
-    @When("^I select wishlist link on the wishlist overlay in PDP page$")
+    /**
+     * Clicks the wishlist link from add to wishlist overlay on pdp
+     *
+     * @throws Throwable if any exception occurs
+     */
+    @When("^I select wishlist link on the wishlist overlay in PDP(?: page)?$")
     public void I_select_wishlist_link_on_the_wishlist_overlay_in_PDP_page() throws Throwable {
         Wait.secondsUntilElementPresentAndClick("product_display.wishlist_link", 5);
        // Assert.fail("Add to List overlay not visible");
     }
 
+    /**
+     * Deletes all wish lists the current user has from wish list page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I delete all lists in wishlist page$")
     public void I_delete_all_lists_in_wishlist_page() throws Throwable {
         Wait.secondsUntilElementPresentAndClick("home.goto_wishlist", 2);
@@ -64,6 +90,12 @@ public class Wishlist extends StepUtils {
         }
     }
 
+    /**
+     * Creates a wish list with the given name on wish list page
+     *
+     * @param list_name name to give new list
+     * @throws Throwable if any exception occurs
+     */
     @And("^I create a list \"([^\"]*)\" from wishlist page$")
     public void I_create_a_list_from_wishlist_page(String list_name) throws Throwable {
         Wait.secondsUntilElementPresentAndClick("wish_list.goto_create_list_link", 5);
@@ -78,6 +110,11 @@ public class Wishlist extends StepUtils {
         Wait.untilElementPresent("wish_list.wishlist_title");
     }
 
+    /**
+     * Adds the current product to wish list
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add the product to wishlist")
     public void I_add_product_to_wishlist() throws Throwable {
         Wait.secondsUntilElementPresentAndClick("product_display.add_to_wishlist_image", 2);
@@ -87,6 +124,12 @@ public class Wishlist extends StepUtils {
             Wait.untilElementPresent("product_display.wishlist_overlay");
     }
 
+    /**
+     * Verifies that given product is present on the with list
+     *
+     * @param product name of product
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see \"([^\"]*)\" in product line items in wishlist page$")
     public void i_should_see_in_product_line_items_in_wishlist_page(String product) throws Throwable {
         pausePageHangWatchDog();
@@ -98,6 +141,12 @@ public class Wishlist extends StepUtils {
         resumePageHangWatchDog();
     }
 
+    /**
+     * Clicks the first product with a name matching the give one
+     *
+     * @param product name of product
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a \"([^\"]*)\" product on wishlist page$")
     public void i_select_a_product_on_wishlist_page(String product) throws Throwable {
         List<WebElement> plist = Elements.findElements("wish_list.item_links");
@@ -105,6 +154,12 @@ public class Wishlist extends StepUtils {
             Clicks.click(plist.stream().filter(link -> link.getText().equalsIgnoreCase(product)).findFirst().get());
     }
 
+    /**
+     * Adds a product to bag from wishlist and does the given action
+     *
+     * @param action continue shopping|checkout|close
+     * @throws Throwable if any exception occurs
+     */
     @When("^I add product to my bag from wishlist page and (continue shopping|checkout|close)$")
     public void I_add_product_to_my_bag_from_wishlist_page_and(String action) throws Throwable {
         Assert.assertTrue("ERROR-DATA: Unable to find available products in the wishlist", Elements.elementPresent("wish_list.add_to_bag_btn"));
@@ -116,8 +171,13 @@ public class Wishlist extends StepUtils {
         Clicks.clickIfPresent("wish_list." + action);
     }
 
+    /**
+     * Verifies that a product is unaailable
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify product unavailability check at MST$")
-    public void iVeriftProductUnavailabilityCheckAtMST() throws Throwable {
+    public void iVerifyProductUnavailabilityCheckAtMST() throws Throwable {
         ProductService.addUpcIdToBag("10855");
     }
 }

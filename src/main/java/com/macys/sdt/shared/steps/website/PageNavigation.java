@@ -283,7 +283,7 @@ public class PageNavigation extends StepUtils {
      *
      * @throws Throwable if any exception occurs
      */
-    @Then("^I should be redirected to PDP(?: page)$")
+    @Then("^I should be redirected to PDP(?: page)?$")
     public void I_should_be_redirected_to_PDP_page() throws Throwable {
         if (safari()) {
             Wait.secondsUntilElementPresent("product_display.verify_page", 20);
