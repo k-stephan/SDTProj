@@ -71,7 +71,7 @@ public class SuperSteps {
 
     /**
      * Adds a product with the given attributes to bag and selects checkout if elected
-     * <p>
+     *
      * <p>
      * example: I add an "orderable and available and bops_available" product to my bag that is not "click_to_call" and checkout<br>
      * this would add a bops product that does not have the "click_to_call" attribute (of course those two wouldn't

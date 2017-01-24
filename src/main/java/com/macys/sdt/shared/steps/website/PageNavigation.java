@@ -71,6 +71,7 @@ public class PageNavigation extends StepUtils {
     /**
      * Checks that the browser is on the given page
      *
+     * @param page name of expected page
      * @throws Throwable if any exception occurs
      */
     @Then("^I should see the \"([^\"]*)\" page$")
@@ -115,6 +116,7 @@ public class PageNavigation extends StepUtils {
      * <p>
      * This step requires a visible flyout BEFORE calling it
      * </p>
+     * @param subCategory subcategory to select
      */
     @When("^I select \"([^\"]*)\" subcategory from flyout menu")
     public void iSelectSubcategoryFromFlyoutMenu(String subCategory) {
@@ -570,6 +572,7 @@ public class PageNavigation extends StepUtils {
     /**
      * Visits the web site then goes to the specified mode
      *
+     * @param mode_name domestic|iship|registry
      * @throws Throwable if any exception occurs
      */
     @Given("^I visit the web site as a guest user in \"(domestic|iship|registry)\" mode$")

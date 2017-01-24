@@ -332,6 +332,7 @@ public class ShopAndBrowse extends StepUtils {
     /**
      * Selects a product with the given image title
      *
+     * @param product name of product to select
      * @throws Throwable if any exception occurs
      */
     @When("^I select a \"([^\"]*)\" product$")
@@ -345,29 +346,35 @@ public class ShopAndBrowse extends StepUtils {
     /**
      * Searches using the given data on the given page
      *
-     * @param search_input    search text
-     * @param search_criteria zipcode|city
-     * @param page            page you're searching on - store locations|events search
+     * @param searchInput    search text
+     * @param searchCriteria zipcode|city
+     * @param page           page you're searching on - store locations|events search
      * @throws Throwable if any exception occurs
      */
     @When("^I search using \"([^\"]*)\" as \"(zipcode|city)\" in \"(store locations|events search)\" page$")
-    public void I_search_using_as_in_page(String search_input, String search_criteria, String page) throws Throwable {
+    public void I_search_using_as_in_page(String searchInput, String searchCriteria, String page) throws Throwable {
         switch (page.toLowerCase()) {
             case "store locations":
-                TextBoxes.typeTextbox("stores.search_box", search_input);
+                TextBoxes.typeTextbox("stores.search_box", searchInput);
                 Clicks.click("stores.search_button");
                 break;
             case "events search":
-                if (search_criteria.equalsIgnoreCase("zipcode")) {
-                    TextBoxes.typeTextbox("events.zip_code", search_input);
+                if (searchCriteria.equalsIgnoreCase("zipcode")) {
+                    TextBoxes.typeTextbox("events.zip_code", searchInput);
                 } else {
-                    TextBoxes.typeTextbox("events.city", search_input);
+                    TextBoxes.typeTextbox("events.city", searchInput);
                 }
                 Clicks.click("events.search_button");
                 break;
         }
     }
 
+    /**
+     * Selects the given text in search result sort by dropdown menu
+     *
+     * @param toSelect text to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" in sort by drop down$")
     public void I_select_in_sort_by_drop_down(String toSelect) throws Throwable {
         Wait.forPageReady();
@@ -381,12 +388,24 @@ public class ShopAndBrowse extends StepUtils {
         Wait.forLoading(By.id("loading_mask"));
     }
 
+    /**
+     * Changes the number of items per page to the given number
+     *
+     * @param numItems number of items to show
+     * @throws Throwable if any exception occurs
+     */
     @And("^I filter the result set to show \"([^\"]*)\" items$")
     public void I_filter_the_result_set_to_show_items(String numItems) throws Throwable {
         Clicks.click(SearchResults.showItemsPerPage(numItems));
         Wait.forLoading(By.id("loading_mask"));
     }
 
+    /**
+     * Changes the number of columns to the given number, either 3 or 4
+     *
+     * @param number number of columns
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" Column Grid icon$")
     public void I_select_Column_Grid_icon(String number) throws Throwable {
         By el = SearchResults.selectGridColumns(number);
@@ -400,6 +419,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Searches nearby stores for stock of the current product
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I search for a product in a nearby store$")
     public void I_search_for_a_product_in_a_nearby_store() throws Throwable {
         Assert.assertTrue("Unable to locate product in store", Elements.elementPresent("product_display.find_store_link"));
@@ -416,6 +440,13 @@ public class ShopAndBrowse extends StepUtils {
         Clicks.click("change_pickup_store_dialog.search_button");
     }
 
+    /**
+     * Enters the given invalid email and password into the current sign in page (registry or normal)
+     *
+     * @param email    email address
+     * @param password invalid password
+     * @throws Throwable if any exception occurs
+     */
     @And("^I enter invalid \"([^\"]*)\" and \"([^\"]*)\"$")
     public void I_enter_invalid_and_in_the_fields(String email, String password) throws Throwable {
         if (onPage("registry_home")) {
@@ -431,17 +462,32 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Closes the in-store Availability pop up
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I close the instore Availability popUp$")
     public void I_close_the_instore_Availability_popUp() throws Throwable {
         Clicks.click("change_pickup_store_dialog.close");
     }
 
+    /**
+     * Selects a color and size for the current product
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select product related attributes from PDP$")
     public void I_select_product_related_attributes_from_PDP() throws Throwable {
         ProductDisplay.selectRandomColor();
         ProductDisplay.selectRandomSize();
     }
 
+    /**
+     * Adds a random offer to my wallet from promotions page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on 'add to wallet' button for any offer in deals and promotions page$")
     public void I_click_on_add_to_wallet_button_for_any_offer_in_deals_and_promotions_page() throws Throwable {
         if (Elements.elementPresent("my_offers.add_to_wallet")) {
@@ -451,6 +497,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Closes the details and exclusions overlay on my offers page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select 'X' on details and exclusions overlay$")
     public void I_select_X_on_details_and_exclusions_overlay() throws Throwable {
         if (Elements.elementPresent("my_offers.details_and_exclusions_close")) {
@@ -461,6 +512,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Opens a coupon on the my offers page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I open the coupon window$")
     public void I_open_the_coupon_window() throws Throwable {
         if (!Clicks.clickIfPresent("my_offers.get_savings_pass")) {
@@ -468,11 +524,23 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Clicks the "Shop now" button
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on SHOP NOW button$")
     public void I_click_on_SHOP_NOW_button() throws Throwable {
         Clicks.click("my_offers.shop_now");
     }
 
+    /**
+     * Selects a random product with the given attributes
+     *
+     * @param prod_type member|master|member_alternate_image|master_alternate_image
+     * @param hasRating present if you want a product with customer ratings
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a random (member|master|member_alternate_image|master_alternate_image) product(?: with (customer ratings))?$")
     public void I_select_a_random_product(String prod_type, String hasRating) throws Throwable {
         Wait.untilElementPresent("product_display.loader_completed");
@@ -516,12 +584,22 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Selects a random alternate image on pdp
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a random alternative image$")
     public void I_select_a_random_alternative_image() throws Throwable {
         Assert.assertTrue("Unable to locate any alternative images", Elements.elementPresent("product_display.alt_images"));
         Clicks.clickRandomElement("product_display.alt_images");
     }
 
+    /**
+     * Selects all attributes for bops on pdp and adds product to bag
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I add bops available product to my bag from standard PDP Page$")
     public void I_add_bops_available_product_to_my_bag_from_standard_PDP_Page() throws Throwable {
         List<WebElement> colors = Elements.findElements("product_display.select_default_color");
@@ -563,11 +641,23 @@ public class ShopAndBrowse extends StepUtils {
         Assert.fail("Could not add bops available product to bag");
     }
 
+    /**
+     * Types the given text in the top search bar
+     *
+     * @param searchTerm text to type in search bar
+     * @throws Throwable if any exception occurs
+     */
     @When("^I type \"([^\"]*)\" in search box$")
     public void I_type_in_search_box(String searchTerm) throws Throwable {
         TextBoxes.typeTextbox("home.search_field", searchTerm);
     }
 
+    /**
+     * Selects the given text in autocomplete suggestions
+     *
+     * @param select text to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" from autocomplete suggestions$")
     public void I_select_from_autocomplete_suggestions(String select) throws Throwable {
         try {
@@ -579,6 +669,13 @@ public class ShopAndBrowse extends StepUtils {
     }
 
 
+    /**
+     * Types in the search bar and selects from the suggestions as given
+     *
+     * @param searchTerm what to search for
+     * @param select     what to select
+     * @throws Throwable if any exception occurs
+     */
     @When("^I type \"([^\"]*)\" in search box and select \"([^\"]*)\" from autocomplete suggestions$")
     public void I_type_in_search_box_and_select_from_autocomplete_suggestions(String searchTerm, String select) throws Throwable {
         try {
@@ -590,7 +687,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
-
+    /**
+     * Verifies that the given option is visible in autocomplete suggestions
+     *
+     * @param select expected option
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see \"([^\"]*)\" in autocomplete suggestions$")
     public void I_should_see_autocomplete_suggestions(String select) throws Throwable {
         Wait.untilElementPresent("header.suggestions");
@@ -604,6 +706,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Verifies that autocomplete suggestions are not currently visible
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should not see autocomplete suggestions$")
     public void I_should_see_autocomplete_suggestions() throws Throwable {
         if (Elements.elementPresent("header.suggestions")) {
@@ -612,6 +719,13 @@ public class ShopAndBrowse extends StepUtils {
     }
 
 
+    /**
+     * Searches for the given text and expects the given recommendation panel to be present on search results page
+     *
+     * @param keyword        what to search for
+     * @param panel_position vertical|horizontal|no_panel
+     * @throws Throwable if any exception occurs
+     */
     @When("^I search for \"([^\"]*)\" on home page for \"(vertical|horizontal|no_panel)\" panel$")
     public void I_search_for_on_home_page_for_panel(String keyword, String panel_position) throws Throwable {
         switch (panel_position) {
@@ -629,6 +743,12 @@ public class ShopAndBrowse extends StepUtils {
         Wait.untilElementPresent("search_result.verify_page");
     }
 
+    /**
+     * Selects a random product from given recommendation panel type
+     *
+     * @param panel vertical|horizontal
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a random product from \"(vertical|horizontal)\" recommendation panel$")
     public void I_select_a_random_product_from_recommendation_panel(String panel) throws Throwable {
         if (onPage("product_display")) {
@@ -647,6 +767,13 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Adds a product with the given attributes to bag from BVR page
+     *
+     * @param productTrue  Properties expected to be true separated by either a space or the word "and"
+     * @param productFalse Properties expected to be false separated by either a space or the word "and"
+     * @throws Throwable if any exception occurs
+     */
     @When("^I add \"([^\"]*)\" product to my bag(?: that is not(?: an?)? \"(.*?)\")? from BVR page$")
     public void i_add_product_to_my_bag_from_BVR_page(String productTrue, String productFalse) throws Throwable {
         iNavigateToPdp(productTrue, productFalse);
@@ -673,6 +800,12 @@ public class ShopAndBrowse extends StepUtils {
         resumePageHangWatchDog();
     }
 
+    /**
+     * Adds the given product ID to bag
+     *
+     * @param availableProductId product id to add to bag
+     * @throws Throwable if any exception occurs
+     */
     @When("^I directly add an available and orderable product \"([^\"]*)\" to my bag$")
     public void I_directly_add_an_available_and_orderable_product_to_my_bag(String availableProductId) throws Throwable {
         CommonUtils.navigateDirectlyToProduct(availableProductId);
@@ -687,18 +820,22 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
-    @When("^I select a random \"([^\"]*)\" recommendation$")
-    public void I_select_a_random_recommendation(String panel_position) throws Throwable {
-        Clicks.click("product_display.vertical_recommendation");
-        shouldBeOnPage("product_display");
-    }
-
+    /**
+     * Goes back to the previous breadcrumb
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select previous page category from breadcrumb$")
     public void I_select_previous_page_category_from_breadcrumb() throws Throwable {
         List<WebElement> breadcrumbs = Elements.findElements("category_splash.breadcrumbs");
         Clicks.click(breadcrumbs.get(breadcrumbs.size() - 2));
     }
 
+    /**
+     * Clicks a random ad on the home page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select random asset from home page$")
     public void I_select_random_asset_from_home_page() throws Throwable {
         if (Elements.elementPresent("home.row_one_point_one")) {
@@ -706,6 +843,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Clicks the given asset on home page
+     *
+     * @param assetNumber first|second|third|fourth|fifth
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select (first|second|third|fourth|fifth) asset from home page$")
     public void I_select_specific_asset_from_home_page(String assetNumber) throws Throwable {
         StringBuilder elementTag = new StringBuilder("home.row_one_point_");
@@ -732,6 +875,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Clicks the info and exclusions link
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on INFO and EXCLUSIONS link$")
     public void I_click_on_INFO_and_EXCLUSIONS_link() throws Throwable {
         Clicks.click("home.nav_banner");
@@ -739,6 +887,11 @@ public class ShopAndBrowse extends StepUtils {
         Navigate.switchWindowClose();
     }
 
+    /**
+     * Selects the footer ad banner
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select footer Ad banner$")
     public void I_select_footer_Ad_banner() throws Throwable {
         Clicks.click("footer.goto_footer_banner");
@@ -746,6 +899,12 @@ public class ShopAndBrowse extends StepUtils {
         Navigate.switchWindowClose();
     }
 
+    /**
+     * Selects the given brand on the category splash page
+     *
+     * @param brand brand to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I move to \"([^\"]*)\" from the available brands$")
     public void I_move_to_from_the_available_brands(String brand) throws Throwable {
         if (Elements.elementPresent("category_splash.brand_lists")) {
@@ -767,25 +926,46 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Scrolls to the footer panel
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I scroll 'down' the page until reach bottom of footer panel$")
     public void I_scroll_down_the_page_until_reach_bottom_of_footer_panel() throws Throwable {
         Clicks.hoverForSelection("search_result.footer_bottom");
     }
 
+    /**
+     * Clicks the "back to top" button on search result page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select 'back to top' button$")
     public void I_select_back_to_top_button() throws Throwable {
         Clicks.click("search_result.back_to_top_button");
     }
 
+    /**
+     * Selects a random color for current product
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select random color swatch for the given product$")
     public void I_select_random_color_swatch_for_the_given_product() throws Throwable {
         ProductDisplay.selectRandomColor();
     }
 
-    @And("^I add (an invalid|a valid) offer to wallet$")
+    /**
+     * Adds a valid or invalid offer to wallet
+     *
+     * @param validity invalid|valid
+     * @throws Throwable if any exception occurs
+     */
+    @And("^I add an? (invalid|valid) offer to wallet$")
     public void I_add_an_invalid_offer_to_wallet(String validity) throws Throwable {
         switch (validity) {
-            case "an invalid":
+            case "invalid":
                 String invalid_offer = "ABC25";
                 TextBoxes.typeTextbox("add_offer_dialog.offer_text", invalid_offer);
                 Clicks.click("add_offer_dialog.save_btn");
@@ -796,7 +976,7 @@ public class ShopAndBrowse extends StepUtils {
                     Assert.fail("Invalid offer error message did not display");
                 }
                 break;
-            case "a valid":
+            case "valid":
                 try {
                     if (prodEnv()) {
                         JSONObject promoObject = TestUsers.getValidPromotion();
@@ -821,6 +1001,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Clicks the given button on my bwallet page
+     *
+     * @param button element name (should match element ID in page JSON file
+     * @throws Throwable if any exception occurs
+     */
     @And("^I click \"([^\"]*)\" button on my bwallet page$")
     public void I_click_link_on_my_account_page(String button) throws Throwable {
         switch (button) {
@@ -830,19 +1016,39 @@ public class ShopAndBrowse extends StepUtils {
             case "view more details":
                 Clicks.click("my_bwallet.view_more_details_btn");
                 break;
+            default:
+                Clicks.click("my_bwallet." + button.replace(" ", "_"));
         }
     }
 
+    /**
+     * Clicks save card without filling in any details
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I submit credit card without filling the details$")
     public void I_submit_credit_card_without_filling_the_details() throws Throwable {
         Clicks.click("credit_card_dialog.save_card");
     }
 
+    /**
+     * Adds a random saved credit card to bwallet
+     * <p>
+     * Data from "valid_cards.json" or credit card service if available
+     * </p>
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add a credit card from my bwallet page$")
     public void I_add_a_credit_card_from_my_account_page() throws Throwable {
         CommonUtils.addCreditCardFromBWallet(null, null);
     }
 
+    /**
+     * Verifies the display of at least one offer on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select the bwallet offer in shopping bag$")
     public void I_select_the_bwallet_offer_in_shopping_bag() throws Throwable {
         Wait.forPageReady();
@@ -860,6 +1066,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Views the given number of random products
+     *
+     * @param count number of products to view
+     * @throws Throwable if any exception occurs
+     */
     @When("^I view (\\d+) random products$")
     public void I_view_random_products(int count) throws Throwable {
         if (!onPage("category_browse", "search_result", "product_display")) {
@@ -883,6 +1095,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * CLicks the given arrow on the recently viewed items panel
+     *
+     * @param arrow left|right
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on \"(left|right)\" arrow key inside Recently Viewed panel$")
     public void I_click_on_arrow_key_inside_Recently_Viewed_panel(String arrow) throws Throwable {
         RecentlyViewed.updateProducts();
@@ -893,6 +1111,11 @@ public class ShopAndBrowse extends StepUtils {
         Utils.threadSleep(2000, null);
     }
 
+    /**
+     * Selects an item from recently viewed items panel
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select a recently viewed product$")
     public void I_select_a_recently_viewed_product() throws Throwable {
         scrollToLazyLoadElement("recently_viewed_items.item");
@@ -904,7 +1127,13 @@ public class ShopAndBrowse extends StepUtils {
         Clicks.clickRandomElement("recently_viewed_items.item");
     }
 
-    @When("^I add member product from PDP and select \"([^\"]*)\"$")
+    /**
+     * Adds a product to bag and selects the given option
+     *
+     * @param option checkout|continue shopping
+     * @throws Throwable if any exception occurs
+     */
+    @When("^I add member product from PDP and select \"(checkout|continue shopping)\"$")
     public void I_add_member_product_from_PDP_and_select(String option) throws Throwable {
         ProductDisplay.addRandomMemberProductOnMasterPDP();
         if (option.equalsIgnoreCase("checkout")) {
@@ -914,11 +1143,21 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Refreshes the page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I refresh current page$")
     public void I_refresh_current_page() throws Throwable {
         Navigate.browserRefresh();
     }
 
+    /**
+     * Switches the website to domestic mode
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I go to US site$")
     public void I_go_to_US_site() throws Throwable {
         if (Elements.findElement("footer.goto_us_site").isDisplayed()) {
@@ -930,22 +1169,42 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Empties the shopping bag
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I remove all items from the shopping bag$")
     public void i_remove_all_items_from_the_shopping_bag() throws Throwable {
         Navigate.visit("shopping_bag");
         ShoppingBag.emptyCurrentShoppingBag();
     }
 
+    /**
+     * Logs out from current user
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I logout$")
     public void i_logout() throws Throwable {
         Clicks.clickIfPresent("home.goto_sign_out_link");
     }
 
+    /**
+     * Verifies that ATB overlay is present
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to ATB overlay$")
     public void I_should_be_redirected_to_ATB_overlay() throws Throwable {
         Elements.elementShouldBePresent("panel.add_to_bag_dialog.add_to_bag_dialog");
     }
 
+    /**
+     * Verifies that there is a popup present with expected coupon code
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I should see a popup window with coupon code$")
     public void I_should_see_a_popup_window_with_coupon_code() throws Throwable {
         try {
@@ -966,11 +1225,23 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Verifies the display of member products on master pdp
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I should see member products listed$")
     public void I_should_see_member_products_listed() throws Throwable {
         Elements.elementShouldBePresent("product_display.member_products");
     }
 
+    /**
+     * Verifies the given recommendation panel type on the given page or overlay
+     *
+     * @param panel_position vertical|horizontal
+     * @param page           pdp|zsr|AddToBag|shopping_bag|my_account|wishlist|order_confirmation
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see \"(vertical|horizontal)\" recommendation panel on (pdp|zsr|AddToBag|shopping_bag|my_account|wishlist|order_confirmation) (?:overlay|page)$")
     public void I_should_see_recommendation_panel_on_zsr_page(String panel_position, String page) throws Throwable {
         switch (page.toLowerCase()) {
@@ -1001,6 +1272,12 @@ public class ShopAndBrowse extends StepUtils {
         Elements.elementShouldBePresent("recommendations." + panel_position + "_recommendations");
     }
 
+    /**
+     * Verifies the expected title of a popup window for social icons
+     *
+     * @param socialIconPopUp expected title
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see \"([^\"]*)\" title in the popup window$")
     public void I_should_see_title_in_the_popup_window(String socialIconPopUp) throws Throwable {
         if (onPage("radical_pdp") && !socialIconPopUp.matches("pinterest|email")) {
@@ -1046,11 +1323,21 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Verifies that the promo code error message appeared on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify the promo code validation error message appeared$")
     public void I_verify_the_promo_code_validation_error_message_appeared() throws Throwable {
         Wait.untilElementPresent("shopping_bag.error_message");
     }
 
+    /**
+     * Navigates to shopping bag page and makes sure it's empty
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to empty shopping bag page$")
     public void I_navigate_to_empty_shopping_bag_page() throws Throwable {
         String productsCount = Elements.getText("home.shopping_bag_item_count");
@@ -1059,10 +1346,16 @@ public class ShopAndBrowse extends StepUtils {
         if (productsCount.equals("0")) {
             Clicks.click("home.goto_shopping_bag");
         } else {
-            Assert.fail("shopping bag is not empty");
+            i_remove_all_items_from_the_shopping_bag();
+            Navigate.browserRefresh();
         }
     }
 
+    /**
+     * Verifies that recommendation panel is not displayed
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify recommendation panel is not displayed$")
     public void I_verify_recommendation_panel_is_not_displayed() throws Throwable {
         if (Elements.elementPresent("shopping_bag.vertical_recommendations_panel")) {
@@ -1070,7 +1363,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
-
+    /**
+     * Selects "add a new card" on my wallet page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I click ADD a NEW CARD button$")
     public void I_click_ADD_a_NEW_CARD_button() throws Throwable {
         if (!Clicks.clickIfPresent("oc_my_wallet.add_credit_card")) {
@@ -1078,11 +1375,23 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Adds a new credit card on my wallet page and makes it the default card
+     *<p>
+     *     Card data comes from "valid_cards.json" or credit card service when available
+     *</p>
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add a credit card to My Wallet as default card on My Wallet page$")
     public void I_add_a_credit_card_to_My_Wallet_as_default_card_on_My_Wallet_page() throws Throwable {
         MyWallet.addCard();
     }
 
+    /**
+     * Selects delete a random offer from my wallet and waits for the confirmation overlay to show up
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I click delete on random offer and wait for confirmation overlay$")
     public void I_click_delete_on_random_offer_and_wait_for_confirmation_overlay() throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.delete_offers")) {
@@ -1104,6 +1413,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Confirms removal of an offer
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I confirm offer remove$")
     public void I_confirm_offer_remove() throws Throwable {
         if (!Clicks.clickIfPresent("oc_my_wallet.yes_delete_offer")) {
@@ -1111,12 +1425,22 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Adds a random product to bag
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add a random product to bag$")
     public void iAddARandomProductToBag() throws Throwable {
         CommonUtils.navigateToRandomProduct();
         I_add_product_to_my_bag_from_standard_PDP_Page();
     }
 
+    /**
+     * Selects a random available bops store in bops dialog and saves
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select available bops store and save details$")
     public void I_select_available_bops_store_and_save_details() throws Throwable {
         Assert.assertTrue("Unable to locate any available stores", Elements.elementPresent("change_pickup_store_dialog.search_results_section"));
@@ -1136,11 +1460,21 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Clicks "write a review" on pdp
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I click write a review on PDP$")
     public void iClickWriteAReview() throws Throwable {
         Clicks.clickLazyElement("product_display.write_a_review");
     }
 
+    /**
+     * Verifies that recommendation panel scroll correctly
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I should see scrolling for recommendation panel$")
     public void iShouldSeeScrollingForRecommendationPanel() throws Throwable {
         try {
@@ -1154,6 +1488,13 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to a product with the given attributes
+     *
+     * @param productTrue  Properties expected to be true separated by either a space or the word "and"
+     * @param productFalse Properties expected to be false separated by either a space or the word "and"
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to \"(.*)\"(?: that is not(?: an?)? \"(.*)\")? product PDP page$")
     public void iNavigateToPdp(String productTrue, String productFalse) throws Throwable {
         if (prodEnv()) {
@@ -1180,12 +1521,21 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Selects a random size for current product
+     */
     @When("^I select available size of the product$")
     public void iSelectAvailableSize() {
         ProductDisplay.selectRandomSize();
     }
 
-    @And("^I select (first|second) alternative image on PDP Page$")
+    /**
+     * Selects the given alternate image on pdp
+     *
+     * @param alt_image first|second
+     * @throws Throwable if any exception occurs
+     */
+    @And("^I select (first|second) alternative image on PDP(?: Page)?$")
     public void I_select_alternative_image(String alt_image) throws Throwable {
         Wait.untilElementPresent("product_display.alt_images");
         switch (alt_image) {
@@ -1206,6 +1556,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Selects a predefined orderable product
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a predefined orderable random product$")
     public void I_select_a_predefined_orderable_random_product() throws Throwable {
         String selector = ("category_browse.product_thumbnails_container");
@@ -1221,6 +1576,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Replaces current product ID in url with given ID
+     *
+     * @param productID ID to navigate to
+     * @throws Throwable if any exception occurs
+     */
     @When("^I replace product ID with available \"([^\"]*)\" product ID$")
     public void iReplaceProductIDWithAvailableProductID(int productID) throws Throwable {
         shouldBeOnPage("product_display", "registry_pdp");
@@ -1229,7 +1590,6 @@ public class ShopAndBrowse extends StepUtils {
             String pattern = "ID=(.*)&";
             Pattern r = Pattern.compile(pattern);
             Matcher m = r.matcher(url);
-            m.find();
             String new_url = url.replace(m.group(), "ID=" + productID + "&");
             Navigate.visit(new_url);
         } catch (Exception e) {

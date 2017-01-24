@@ -60,6 +60,7 @@ public class Registry extends StepUtils {
     /**
      * Creates or logs into a registry
      *
+     * @param user_details profile to create
      * @throws Throwable if any exception occurs
      */
     public void sign_in_or_create_registry(UserProfile user_details) throws Throwable {
