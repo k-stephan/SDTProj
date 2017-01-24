@@ -800,7 +800,7 @@ public class MainRunner {
 
         if (useSauceLabs) {
             if (driver instanceof RemoteWebDriver) {
-                System.out.println("Link to your job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
+                System.out.println("Link to your saucelabs job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
             }
             driverQuit();
         } else if (closeBrowserAtExit) {
