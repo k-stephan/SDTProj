@@ -90,10 +90,11 @@ public class PageNavigation extends StepUtils {
             new Home().selectMainCategory(menu);
         }
         CreateProfile.closeSecurityAlertPopUp();
-        Navigate.visit(MainRunner.url);
-        Wait.forPageReady();
-        closeBcomLoyaltyPromotionVideoOverlay();
-        closeBcomPopup();
+        // We should not visit site home page here, as we are using this step for all pages like registry home, other browser pages.
+//        Navigate.visit(MainRunner.url);
+//        Wait.forPageReady();
+//        closeBcomLoyaltyPromotionVideoOverlay();
+//        closeBcomPopup();
         By menuEl = Elements.paramElement("home.flyout_category", menu.toUpperCase());
         Clicks.hoverForSelection(menuEl);
     }

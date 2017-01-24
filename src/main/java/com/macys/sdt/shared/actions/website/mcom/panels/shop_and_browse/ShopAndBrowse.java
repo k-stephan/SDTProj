@@ -157,7 +157,7 @@ public class ShopAndBrowse extends StepUtils {
      */
     public void sortByValue(String value) {
         if (bloomingdales())
-            DropDowns.selectCustomText("category_browse.sort_by", "category_browse.sort_by_options", value);
+            DropDowns.selectCustomText("pagination.sort_by", "pagination.sort_by_options", value);
         else
             DropDowns.selectByText("category_browse.sort_by", value);
         Wait.untilElementPresent("category_browse.loading_mask");

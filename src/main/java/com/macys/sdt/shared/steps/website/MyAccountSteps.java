@@ -1046,7 +1046,7 @@ public class MyAccountSteps extends StepUtils {
      */
     @And("^I clear all the cookies$")
     public static void iClearAllTheCookies() throws Throwable {
-        Cookies.deleteAllCookiesJavascript();
+        Cookies.deleteAllCookies();
         Navigate.browserRefresh();
     }
 
