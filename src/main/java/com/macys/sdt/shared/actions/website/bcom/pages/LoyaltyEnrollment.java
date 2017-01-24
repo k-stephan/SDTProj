@@ -21,7 +21,7 @@ public class LoyaltyEnrollment extends StepUtils {
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.address_line_2"), profileAddress.getAddressLine2());
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.address_city"), profileAddress.getCity());
       //  DropDowns.selectByText(Elements.element("loyalty_enrollment.address_state"), profileAddress.getState());
-        DropDowns.selectCustomText("loyalty_enrollment.address_state", "loyalty_enrollment.state_options",  profileAddress.getState());
+        DropDowns.selectCustomValue("loyalty_enrollment.address_state", "loyalty_enrollment.state_options",3);
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.address_zip_code"), String.valueOf(profileAddress.getZipCode()));
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.email"), profileAddress.getEmail());
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.verify_email"), profileAddress.getEmail());
@@ -37,7 +37,8 @@ public class LoyaltyEnrollment extends StepUtils {
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.password"), user.getLoginCredentials().getPassword());
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.verify_password"), user.getLoginCredentials().getPassword());
        // DropDowns.selectByText(Elements.element("loyalty_enrollment.security_question"), user.getUserPasswordHint().getQuestion());
-        DropDowns.selectCustomText("loyalty_enrollment.security_question", "loyalty_enrollment.security_question_option",  user.getUserPasswordHint().getQuestion());
+       // DropDowns.selectCustomText("loyalty_enrollment.security_question", "loyalty_enrollment.security_question_option",  user.getUserPasswordHint().getQuestion());
+        DropDowns.selectCustomValue("loyalty_enrollment.security_question", "loyalty_enrollment.security_question_option",2);
         TextBoxes.typeTextbox(Elements.element("loyalty_enrollment.security_answer"), user.getUserPasswordHint().getAnswer());
         Clicks.selectCheckbox(Elements.element("loyalty_enrollment.agree_to_terms_and_conditions"));
         try {
