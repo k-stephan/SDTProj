@@ -6,6 +6,7 @@ import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
+import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.shared.actions.website.bcom.pages.CheckoutPageBcom;
 import com.macys.sdt.shared.actions.website.mcom.pages.my_account.MyWallet;
 import com.macys.sdt.shared.actions.website.mcom.panels.checkout.UslPayment;
@@ -709,6 +710,8 @@ public class Checkout extends StepUtils {
             System.err.println("Cannot place orders on prod!!!");
             return;
         }
+        // Added little delay, looks selenium is too fast here and failing to click
+        Utils.threadSleep(3000, null);
         if (signedIn() && onPage("responsive_checkout_signed_in")) {
             Clicks.click("responsive_checkout_signed_in.place_order");
         } else if (onPage("responsive_checkout")) {
