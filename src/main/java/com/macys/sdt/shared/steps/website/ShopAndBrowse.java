@@ -190,42 +190,10 @@ public class ShopAndBrowse extends StepUtils {
      * @throws Throwable if any exception occurs
      */
     @And("^I add \"([^\"]*)\" quantity to my bag from standard PDP Page$")
-    public void I_add_product_to_my_bag_from_standard_PDP_Page(String quantity) throws Throwable {
-        boolean addedToBag = false;
-        try {
-            int retries = 5;
-            pausePageHangWatchDog();
-            for (int count = 0; count < retries && !addedToBag; count++) {
-                try {
-                    ProductDisplay.selectRandomColor();
-                    ProductDisplay.selectRandomSize();
-                    ProductDisplay.selectQuantity(quantity);
-                    Clicks.click("product_display.add_to_bag_button");
-
-                    addedToBag = ProductDisplay.addedToBag();
-                    if (MainRunner.debugMode) {
-                        System.out.println("IsProductAddedToBag:" + addedToBag + ", Add to bag retry count:" + (count + 1));
-                    }
-                } catch (Exception e) {
-                    System.err.println("Exception while adding product:" + e.getMessage());
-                }
-            }
-            Wait.untilElementPresent("add_to_bag_dialog.add_to_bag_dialog");
-            if (!Elements.elementPresent("add_to_bag_dialog.add_to_bag_dialog")) {
-                Clicks.clickIfPresent("product_display.technical_error");
-            }
-            if (isErrorPaneVisible()) {
-                Clicks.click("home.popup_close");
-            }
-            resumePageHangWatchDog();
-        } catch (IllegalArgumentException | NoSuchElementException e) {
-            System.err.println("Error while adding to bag: " + e);
-        } finally {
-            if (!addedToBag) {
-                Wait.untilElementNotPresent("product_display.add_to_bag_button");
-                Assert.assertTrue("Unable to add product to bag", ProductDisplay.addedToBag());
-            }
-        }
+    public void iAddQuantityToMyBagFromStandardPDP(String quantity) throws Throwable {
+        shouldBeOnPage("product_display");
+        ProductDisplay.selectQuantity(quantity);
+        I_add_product_to_my_bag_from_standard_PDP_Page();
     }
 
     /**
