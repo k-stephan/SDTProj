@@ -163,6 +163,7 @@ class WebDriverConfigurator {
                 capabilities = DesiredCapabilities.edge();
                 return disabledProxyCap(capabilities);
             default:
+                setFirefoxDriverLocation();
                 capabilities = DesiredCapabilities.firefox();
                 FirefoxProfile firefoxProfile = new FirefoxProfile();
                 ArrayList<File> extensions = new ArrayList<>();
@@ -199,28 +200,44 @@ class WebDriverConfigurator {
         }
     }
 
-    /*
+    /**
      * This method set chromeDriver from the repo in the running machine for execution
      */
     private static void setChromeDriverLocation() {
-        if (StepUtils.chrome()) {
-            String fileName = "chromedriver.exe";
-            if (Utils.isOSX()) {
-                fileName = "chromedriver";
+        String fileName = Utils.isOSX() ? "chromedriver" : "chromedriver.exe";
+        String path = "shared/resources/framework/selenium_drivers/" + fileName;
+        File file = new File(MainRunner.workspace + path);
+        if (!file.exists()) {
+            file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+            if (!file.exists() && Utils.isWindows()) {
+                file = new File(System.getenv("HOME") + "/" + fileName);
             }
-            String path = "shared/resources/framework/selenium_drivers/" + fileName;
-            File file = new File(MainRunner.workspace + path);
-            if (!file.exists()) {
-                file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
-                if (!file.exists() && Utils.isWindows()) {
-                    file = new File(System.getenv("HOME") + "/" + fileName);
-                }
+        }
+        if (file.exists()) {
+            System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
+        } else {
+            System.out.println("Unable to use built-in chromedriver, will use machine's chromedriver if it exists");
+        }
+
+    }
+
+    /**
+     * This method set firefox gecko driver from the repo in the running machine for execution
+     */
+    private static void setFirefoxDriverLocation() {
+        String fileName = Utils.isOSX() ? "geckodriver" : "geckodriver.exe";
+        String path = "shared/resources/framework/selenium_drivers/" + fileName;
+        File file = new File(MainRunner.workspace + path);
+        if (!file.exists()) {
+            file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+            if (!file.exists() && Utils.isWindows()) {
+                file = new File(System.getenv("HOME") + "/" + fileName);
             }
-            if (file.exists()) {
-                System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
-            } else {
-                System.out.println("Unable to use built-in chromedriver, will use machine's chromedriver if it exists");
-            }
+        }
+        if (file.exists()) {
+            System.setProperty("webdriver.gecko.driver", file.getAbsolutePath());
+        } else {
+            System.out.println("Unable to use built-in firefox geckodriver, will use machine's geckodriver if it exists");
         }
     }
 
