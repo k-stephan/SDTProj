@@ -15,6 +15,11 @@ import java.util.HashMap;
 
 public class CreateProfileMEW extends StepUtils {
 
+    /**
+     * Creates a new profile
+     *
+     * @param customer instance of UserProfile model
+     */
     public static void createProfile(final UserProfile customer) {
         final User user = customer.getUser();
         final ProfileAddress profileAddress = user.getProfileAddress();
@@ -50,6 +55,9 @@ public class CreateProfileMEW extends StepUtils {
         Wait.secondsUntilElementNotPresent("create_profile.create_profile_button", MainRunner.timeout);
     }
 
+    /**
+     * Remove shipping address from address book page or checkout page
+     */
     public static void removeAddress() {
         String page;
         if (onPage("responsive_checkout_signed_in") || onPage("my_address_book")) {
@@ -64,6 +72,9 @@ public class CreateProfileMEW extends StepUtils {
         }
     }
 
+    /**
+     * Add a new shipping address on address book page or checkout page
+     */
     public static void addNewAddress() {
         String page = null;
         if (onPage("responsive_checkout_signed_in") || onPage("my_address_book")) {
@@ -103,6 +114,9 @@ public class CreateProfileMEW extends StepUtils {
         Wait.untilElementPresent(page + ".message");
     }
 
+    /**
+     * Close Security Alert PopUp if present for IE browser
+     */
     public static void closeSecurityAlertPopUp() {
         if (ie()) {
             try {

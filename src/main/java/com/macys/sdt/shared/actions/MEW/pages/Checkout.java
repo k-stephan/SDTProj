@@ -14,6 +14,13 @@ import java.util.HashMap;
 public class Checkout extends StepUtils {
     private CheckoutUtils m_checkout = new CheckoutUtils();
 
+    /**
+     * Fill shipping details during checkout
+     *
+     * @param responsive true if responsive checkout flow, else false
+     * @param bops true if bops order, else false
+     * @param opts any other custom shipping address requirements
+     */
     public void fillShippingData(boolean responsive, boolean bops, HashMap<String, String> opts) {
         boolean iship = opts != null && opts.get("country") != null && !opts.get("country").equalsIgnoreCase("United States");
         String page = responsive ? "responsive_checkout" : (iship ? "iship_checkout" : "shipping_payment_signed_in");
@@ -61,6 +68,17 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method for going through the checkout flow in iship mode
+     * <p>
+     * Options for page:<br>
+     * <code>shipping and payment, order review, order confirmation</code><br>
+     * </p>
+     *
+     * @param pageName name of the page you want to end up on
+     * @param opts any other custom address requirements
+     * @throws Exception if any exception occurs
+     */
     public void ishipCheckout(String pageName, HashMap<String, String> opts) throws Exception {
         String page = "iship_checkout";
         switch (pageName.toLowerCase()) {
@@ -98,6 +116,13 @@ public class Checkout extends StepUtils {
         switchToFrame("default");
     }
 
+    /**
+     * Fill payment details during checkout
+     *
+     * @param responsive true if responsive checkout flow, else false
+     * @param iship true if bops order, else false
+     * @param opts any other custom billing address requirements
+     */
     public void fillPaymentData(boolean responsive, boolean iship, HashMap<String, String> opts) {
         String page = responsive ? "responsive_checkout" : (iship ? "iship_checkout" : "shipping_payment_signed_in");
         if (responsive || iship) {
@@ -143,6 +168,18 @@ public class Checkout extends StepUtils {
         TextBoxes.typeTextbox(page + ".security_code", visaCard.getSecurityCode());
     }
 
+    /**
+     * Method for going through the rc checkout flow as a signed in user
+     * <p>
+     * Options for page:<br>
+     * <code>shipping and payment, order review, order confirmation</code><br>
+     * </p>
+     *
+     * @param pageName name of the page you want to end up on
+     * @param opts unused
+     * @param bops true if bops order, else false
+     * @throws Exception if any exception occurs
+     */
     public void rcSignedIn(String pageName, HashMap<String, String> opts, boolean bops) throws Exception {
         String page = "responsive_checkout_signed_in";
         switch (pageName.toLowerCase()) {
@@ -188,6 +225,18 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method for going through the checkout flow as a signed in user
+     * <p>
+     * Options for page:<br>
+     * <code>shipping and payment, order review, order confirmation</code><br>
+     * </p>
+     *
+     * @param pageName name of the page you want to end up on
+     * @param opts unused
+     * @param bops true if bops order, else false
+     * @throws Exception if any exception occurs
+     */
     public void signInCheckout(String pageName, HashMap<String, String> opts, boolean bops) throws Exception {
         // check if we ended up in rc
         if (onPage("responsive_checkout_signed_in")) {
@@ -240,6 +289,18 @@ public class Checkout extends StepUtils {
         }
     }
 
+    /**
+     * Method for going through the rc checkout flow as a guest user
+     * <p>
+     * Options for page:<br>
+     * <code>RCPage.SHIPPING, RCPage.PAYMENT, RCPage.REVIEW, RCPage.CONFIRMATION</code><br>
+     * </p>
+     *
+     * @param page RCPage you want to end up on
+     * @param opts any other custom address requirements
+     * @param bops true if bops order, else false
+     * @throws Exception if any exception occurs
+     */
     public void rcGuest(RCPage page, HashMap<String, String> opts, boolean bops) throws Exception {
         switch (page) {
             case SHIPPING:

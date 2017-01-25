@@ -14,6 +14,11 @@ import org.junit.Assert;
 
 public class LoyaltyEnrollment extends StepUtils {
 
+    /**
+     * Enrolls in the loyalty program as a signed in user
+     *
+     * @param customer instance of UserProfile model
+     */
     public void signedInUserLoyaltyEnrollment(UserProfile customer) {
         ProfileAddress profileAddress = customer.getUser().getProfileAddress();
         TextBoxes.typeTextbox("loyalty_enrollment.address_line_1", profileAddress.getAddressLine1());
@@ -30,6 +35,11 @@ public class LoyaltyEnrollment extends StepUtils {
         Wait.untilElementPresent("loyalty_enrollment_confirmation.loyalty_number");
     }
 
+    /**
+     * Enrolls in the loyalty program as a guest user
+     *
+     * @param customer instance of UserProfile model
+     */
     public void guestUserLoyaltyEnrollmentMobileWebsite(UserProfile customer) {
         User user = customer.getUser();
         ProfileAddress profileAddress = user.getProfileAddress();

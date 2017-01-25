@@ -8,6 +8,9 @@ import org.openqa.selenium.By;
 
 public class Deals extends StepUtils {
 
+    /**
+     * Clicks on random offer on deals and promotions page
+     */
     public static void selectRandomOffer() {
         By offerEl = Elements.element("deals_and_promotions.offers_list_container");
         if (Elements.elementPresent(offerEl)) {

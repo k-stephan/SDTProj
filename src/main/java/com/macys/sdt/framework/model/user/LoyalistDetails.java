@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.model.user;
 
 /**
- * This class represents a LoyalistDetails and contains all the information about that LoyalistDetails
+ * This class represents a Loyalist and contains all the details about that Loyalist
  */
 public class LoyalistDetails {
 
@@ -15,144 +15,144 @@ public class LoyalistDetails {
     private String billingZipCode;
 
     /**
-     * Gets the LoyallistType of LoyalistDetails
+     * Gets the loyalty type of Loyalist
      *
-     * @return LoyalistDetails LoyallistType
+     * @return loyalty type
      */
     public String getLoyallistType() {
         return loyallistType;
     }
 
     /**
-     * Sets the LoyallistType of LoyalistDetails
+     * Sets the loyalty type of Loyalist
      *
-     * @param loyallistType LoyalistDetails
+     * @param loyallistType loyalty type of Loyalist
      */
     public void setLoyallistType(String loyallistType) {
         this.loyallistType = loyallistType;
     }
 
     /**
-     * Gets the LoyaltyId of LoyalistDetails
+     * Gets the loyalty id of Loyalist
      *
-     * @return LoyalistDetails LoyaltyId
+     * @return Loyalty id of Loyalist
      */
     public String getLoyaltyId() {
         return loyaltyId;
     }
 
     /**
-     * Sets the LoyaltyId of LoyalistDetails
+     * Sets the loyalty id of Loyalist
      *
-     * @param loyaltyId LoyalistDetails
+     * @param loyaltyId loyalty id of Loyalist
      */
     public void setLoyaltyId(String loyaltyId) {
         this.loyaltyId = loyaltyId;
     }
 
     /**
-     * Gets the LastName of LoyalistDetails
+     * Gets the last name of Loyalist
      *
-     * @return LoyalistDetails LastName
+     * @return last name of Loyalist
      */
     public String getLastName() {
         return lastName;
     }
 
     /**
-     * Sets the LastName of LoyalistDetails
+     * Sets the last name of Loyalist
      *
-     * @param lastName LoyalistDetails
+     * @param lastName Last name of Loyalist
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
     /**
-     * Gets the ZipCode of LoyalistDetails
+     * Gets the Zip code of Loyalist
      *
-     * @return LoyalistDetails ZipCode
+     * @return Zip code of Loyalist
      */
     public String getZipCode() {
         return zipCode;
     }
 
     /**
-     * Sets the ZipCode of LoyalistDetails
+     * Sets the the Zip code of Loyalist
      *
-     * @param zipCode LoyalistDetails
+     * @param zipCode Zip code of Loyalist
      */
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 
     /**
-     * Gets the CardNumber of LoyalistDetails
+     * Gets the Card number of Loyalist
      *
-     * @return LoyalistDetails CardNumber
+     * @return Card number of Loyalist
      */
     public String getCardNumber() {
         return cardNumber;
     }
 
     /**
-     * Sets the CardNumber of LoyalistDetails
+     * Sets the Card number of Loyalist
      *
-     * @param cardNumber LoyalistDetails
+     * @param cardNumber Card number of Loyalist
      */
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
     /**
-     * Gets the SecurityCode of LoyalistDetails
+     * Gets the Security code of Loyalist
      *
-     * @return LoyalistDetails SecurityCode
+     * @return Security code of Loyalist
      */
     public String getSecurityCode() {
         return securityCode;
     }
 
     /**
-     * Sets the SecurityCode of LoyalistDetails
+     * Sets the Security code of Loyalist
      *
-     * @param securityCode LoyalistDetails
+     * @param securityCode Security code of Loyalist
      */
     public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
     }
 
     /**
-     * Gets the BillingLastName of LoyalistDetails
+     * Gets the billing last name of Loyalist
      *
-     * @return LoyalistDetails BillingLastName
+     * @return billing last name of Loyalist
      */
     public String getBillingLastName() {
         return billingLastName;
     }
 
     /**
-     * Sets the BillingLastName of LoyalistDetails
+     * Sets the billing last name of Loyalist
      *
-     * @param billingLastName LoyalistDetails
+     * @param billingLastName last name of Loyalist
      */
     public void setBillingLastName(String billingLastName) {
         this.billingLastName = billingLastName;
     }
 
     /**
-     * Gets the BillingZipCode of LoyalistDetails
+     * Gets the billing zip code of Loyalist
      *
-     * @return LoyalistDetails BillingZipCode
+     * @return billing zip code of Loyalist
      */
     public String getBillingZipCode() {
         return billingZipCode;
     }
 
     /**
-     * Sets the BillingZipCode of LoyalistDetails
+     * Sets the billing zip code of Loyalist
      *
-     * @param billingZipCode LoyalistDetails
+     * @param billingZipCode billing zip code of Loyalist
      */
     public void setBillingZipCode(String billingZipCode) {
         this.billingZipCode = billingZipCode;

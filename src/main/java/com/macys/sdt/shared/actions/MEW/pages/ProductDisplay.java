@@ -13,11 +13,17 @@ import org.openqa.selenium.NoSuchElementException;
 
 public class ProductDisplay extends StepUtils {
 
+    /**
+     * Close Technical error popup if present
+     */
     public static void closeTechnicalErrorDialog() {
         // close technical popup error IF exists
         Clicks.clickIfPresent("product_display.technical_error");
     }
 
+    /**
+     * Select random color on PDP page, if color options are present
+     */
     public static void selectRandomColor() {
         By colorEl = Elements.element("product_display.select_default_color");
         if (Wait.untilElementPresent(colorEl)) {
@@ -28,6 +34,9 @@ public class ProductDisplay extends StepUtils {
         }
     }
 
+    /**
+     * Select random size on PDP page, if size options are present
+     */
     public static void selectRandomSize() {
         By sizeEl = Elements.element("product_display.select_default_size");
         if (Wait.untilElementPresent(sizeEl)) {
@@ -46,10 +55,20 @@ public class ProductDisplay extends StepUtils {
         }
     }
 
+    /**
+     * Checks if on master PDP page
+     *
+     * @return true if member products are present on PDP page, else false
+     */
     public static boolean isMasterMemberPage() {
         return Elements.elementPresent("product_display_master.choose_member_items");
     }
 
+    /**
+     * Checks if product is successfully added to bag
+     *
+     * @return true if on add to bag page or dialog and, no selection and validation error are present, else false
+     */
     public static boolean addedToBag() {
         Wait.forPageReady();
         return (onPage("add_to_bag")
@@ -59,6 +78,9 @@ public class ProductDisplay extends StepUtils {
                 && !Elements.elementPresent("product_display.selection_error");
     }
 
+    /**
+     * Add random member product to bag from master PDP
+     */
     public void addRandomMemberProductOnMasterPDP() {
         try {
             if (bloomingdales()) {
@@ -73,6 +95,11 @@ public class ProductDisplay extends StepUtils {
         }
     }
 
+    /**
+     * Select given quantity of product on PDP
+     *
+     * @param quantity to select
+     */
     public static void selectQuantity(String quantity) {
         if (Elements.elementPresent("product_display.select_size_dropdown")) {
             if (macys()) {

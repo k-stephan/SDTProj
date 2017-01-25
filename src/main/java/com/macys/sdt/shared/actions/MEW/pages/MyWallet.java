@@ -7,6 +7,9 @@ import com.macys.sdt.framework.utils.StepUtils;
 
 public class MyWallet extends StepUtils {
 
+    /**
+     * Delete all credit cards from OC Wallet page
+     */
     public static void deleteCreditCard() {
         if (Wait.untilElementPresent("oc_my_wallet.cc_container")) {
             int cc_size = Elements.findElements("oc_my_wallet.credit_cards").size();

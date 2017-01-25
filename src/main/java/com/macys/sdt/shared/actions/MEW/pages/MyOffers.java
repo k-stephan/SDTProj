@@ -13,6 +13,9 @@ public class MyOffers extends StepUtils {
 
     public static String promoCode = null;
 
+    /**
+     * Delete all offers from OC Wallet page
+     */
     public static void deleteOffers() {
         Navigate.browserRefresh();
         if (Wait.untilElementPresent("oc_my_wallet.available_offers")) {
@@ -33,6 +36,11 @@ public class MyOffers extends StepUtils {
         }
     }
 
+    /**
+     * Add given wallet eligible promo code to OC Wallet page
+     *
+     * @param code Wallet eligible promo code to add
+     */
     public static void addValidOffers(String code) {
       //  Navigate.browserRefresh();
         TextBoxes.typeTextbox("oc_my_wallet.input_offer_code", code);
@@ -52,6 +60,9 @@ public class MyOffers extends StepUtils {
         }
     }
 
+    /**
+     * Get wallet eligible promo code from DB and add to Wallet page
+     */
     public static void addOffers() {
         try {
             if (prodEnv()) {

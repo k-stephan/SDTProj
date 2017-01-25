@@ -10,6 +10,11 @@ import org.junit.Assert;
 
 public class LoyallistAssociation extends StepUtils {
 
+    /**
+     * Associate loyalty account to user profile
+     *
+     * @param loyalty_customer instance of LoyalistDetails model, loyalist details for association
+     */
     public static void loyaltyAssociation(LoyalistDetails loyalty_customer) {
         Wait.forPageReady();
         TextBoxes.typeTextbox("loyalty_association.loyallist_number", loyalty_customer.getLoyaltyId());

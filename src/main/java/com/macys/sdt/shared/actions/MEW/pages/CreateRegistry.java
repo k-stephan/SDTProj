@@ -18,6 +18,11 @@ import java.util.Random;
 
 public class CreateRegistry extends StepUtils {
 
+    /**
+     * Fills in Registry details on old create registry page and clicks on create registry button
+     *
+     * @param customer instance of UserProfile model
+     */
     public static void fillRegistryUserDetails(UserProfile customer) {
         closeFSRDialogIfAppeared();
         int date = TestUsers.generateRandomDateIndex();
@@ -62,6 +67,11 @@ public class CreateRegistry extends StepUtils {
         Clicks.clickIfPresent("create_registry.close_overlay_chat");
     }
 
+    /**
+     * Fills in Registry details on old create registry page for existing user and clicks on create registry button
+     *
+     * @param customer instance of UserProfile model
+     */
     public static void fillRegistryUserDetailsForExistingUser(UserProfile customer) {
         closeFSRDialogIfAppeared();
         if (onPage("registry_manager")) {
@@ -105,10 +115,18 @@ public class CreateRegistry extends StepUtils {
         Clicks.clickIfPresent("create_registry.close_overlay_chat");
     }
 
+    /**
+     * Close FSR dialog if present
+     */
     public static void closeFSRDialogIfAppeared() {
         Clicks.clickIfPresent(By.className("fsrCloseBtn"));
     }
 
+    /**
+     * Creates a new registry user
+     *
+     * @param customer instance of UserProfile model
+     */
     public static void createRegistryUser(UserProfile customer) {
         closeFSRDialogIfAppeared();
         fillProfileInfo(customer);
@@ -119,6 +137,11 @@ public class CreateRegistry extends StepUtils {
         Clicks.javascriptClick("new_create_registry.create_registry_button");
     }
 
+    /**
+     * Creates a new registry for existing user
+     *
+     * @param customer instance of UserProfile model
+     */
     public static void createRegistryUserForExistingUser(UserProfile customer) {
         closeFSRDialogIfAppeared();
         fillRegistryAccountInfo(customer, false);

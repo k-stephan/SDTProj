@@ -10,6 +10,11 @@ import org.openqa.selenium.By;
 
 public class Browse extends StepUtils {
 
+    /**
+     * Apply given sort by option on browse page
+     *
+     * @param value to select from sort by drop down
+     */
     public void sortBy(String value) {
         if (Elements.elementPresent("category_browse.sort_by")) {
             Clicks.click("category_browse.sort_by");
