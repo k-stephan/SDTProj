@@ -457,6 +457,8 @@ public class Checkout extends StepUtils {
                     }
                 }
                 Wait.forPageReady();
+                // Added little delay, looks selenium is too fast here and failing to click
+                Utils.threadSleep(3000, null);
                 Clicks.click(shipping + ".continue_shipping_checkout_button");
                 Wait.secondsUntilElementPresent(RCPage.SHIPPING + ".card_number", 15);
                 break;
