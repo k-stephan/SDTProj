@@ -23,6 +23,23 @@ import java.util.List;
 
 public class CheckoutSteps extends StepUtils {
 
+    /**
+     * This is the master step for going through the checkout flow
+     * <p>
+     * Options for Responsive pages:<br>
+     * <code>shipping, payment, order review, order confirmation</code><br>
+     * Options for international and legacy checkout pages:<br>
+     * <code>shipping and payment, order review, order confirmation</code><br>
+     * Options for user type:<br>
+     * <code>guest, signed in</code><br>
+     * For international or bops users include "iship" and "bops" respectively in the user type<br>
+     * </p>
+     *
+     * @param pageName name of the page you want to end up on
+     * @param userType either signed in or guest user
+     * @param country country the shipping address should be from (default US)
+     * @throws Throwable if any exception occurs
+     */
     @And("^I checkout until I reach the (shipping|payment|shipping\\s*&\\s*payment|order\\s*review|order\\s*confirmation) page using mobile website as an? \"([^\"]*)\" user(?: from \"([^\"]*)\")?$")
     public void I_checkout_until_I_reach_the_page_using_mobile_website_as_a_user(String pageName, String userType, String country) throws Throwable {
         boolean bops = userType.contains("bops");
@@ -55,6 +72,25 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Follow standard checkout flow but only if batch mode is enabled on environment
+     * <p>
+     * If batch mode is enabled, include the environment variable "batch_mode" with value "true"
+     * <p>
+     * Options for Responsive pages:<br>
+     * <code>shipping, payment, order review, order confirmation</code><br>
+     * Options for international and legacy checkout pages:<br>
+     * <code>shipping and payment, order review, order confirmation</code><br>
+     * Options for user type:<br>
+     * <code>guest, signed in</code><br>
+     * For international or bops users include "iship" and "bops" respectively in the user type<br>
+     * </p>
+     *
+     * @param pageName name of the page you want to end up on
+     * @param userType either signed in or guest user
+     * @param country  country the shipping address should be from (default US)
+     * @throws Throwable if any exception occurs
+     */
     @And("^I checkout on batch mode until I reach the (shipping|payment|shipping\\s*&\\s*payment|order\\s*review|order\\s*confirmation) page using mobile website as an? \"([^\"]*)\" user(?: from \"([^\"]*)\")?$")
     public void I_checkout_on_batch_mode_until_I_reach_the_page_using_mobile_website_as_a_user(String pageName, String userType, String country) throws Throwable {
         // run this step only on Batch Mode enabled QA environment
@@ -65,12 +101,22 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Fills in all shipping data on guest shipping page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I enter shipping address on guest shipping page using mobile website$")
     public void I_enter_shipping_address_on_guest_shipping_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("responsive_checkout");
         new Checkout().fillShippingData(true, false, null);
     }
 
+    /**
+     * Clicks "continue" on the responsive guest shipping page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select continue button on guest shipping page using mobile website$")
     public void I_select_continue_button_on_guest_shipping_page_using_mobile_website() throws Throwable {
         Clicks.click("responsive_checkout.continue_shipping_checkout_button");
@@ -81,6 +127,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Fills in all payment data on guest payment page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I fill in payment information on guest payment page using mobile website$")
     public void I_fill_in_payment_information_on_guest_payment_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("responsive_checkout");
@@ -89,6 +140,11 @@ public class CheckoutSteps extends StepUtils {
         new Checkout().fillPaymentData(true, false, opts);
     }
 
+    /**
+     * Click the "continue" button on guest payment page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select continue button on guest payment page using mobile website$")
     public void I_select_continue_button_on_guest_payment_page_using_mobile_website() throws Throwable {
         // run this step only on Batch Mode enabled QA environment
@@ -103,6 +159,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Fills out sign in information on the checkout sign in page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I sign in during checkout using mobile website$")
     public void I_sign_in_during_checkout_using_mobile_website() throws Throwable {
         User user = prodEnv() ? TestUsers.getProdCustomer().getUser() : TestUsers.getCustomer(null).getUser();
@@ -121,6 +182,13 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Adds the specified type of shipping address on the given checkout shipping page
+     *
+     * @param sdd_eligible sdd eligible or sdd ineligible
+     * @param signedIn guest or signedIn user
+     * @throws Throwable if any exception occurs
+     */
     @And("^I enter (sdd_eligible|sdd_ineligible) address on shipping page using mobile website for (guest|signed in) user$")
     public void I_enter_sdd_eligible_address_on_shipping_page_using_mobile_website_for_signed_in_user(String sdd_eligible, String signedIn) throws Throwable {
         boolean sdd = sdd_eligible.equals("sdd_eligible");
@@ -175,6 +243,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Selects SDD shipping option if available
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select sdd_shipping in shipping methods using mobile website$")
     public void I_select_sdd_shipping_in_shipping_methods_using_mobile_website() throws Throwable {
         int i = 0;
@@ -199,6 +272,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Selects an available store for bops item and selects apply button
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select pick up option for bops item using mobile website$")
     public void I_select_pick_up_option_for_bops_item_using_mobile_website() throws Throwable {
         Clicks.click("shopping_bag.bops_available");
@@ -210,10 +288,13 @@ public class CheckoutSteps extends StepUtils {
         } else {
             Assert.fail("ERROR-DATA: BOPS stores not available");
         }
-
-
     }
 
+    /**
+     * Clicks the "place order" button on the order review page and verify successfully navigated to order confirmation page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I place an Order using mobile site$")
     public void I_place_an_order() throws Throwable {
         pausePageHangWatchDog();
@@ -228,6 +309,11 @@ public class CheckoutSteps extends StepUtils {
         System.out.println("sucessfuly placed an order");
     }
 
+    /**
+     * Verify the promo code validation error message on the shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify the promo code validation error message appeared in mobile website$")
     public void I_verify_the_promo_code_validation_error_message_appeared_in_mobile_website() throws Throwable {
         try {
@@ -237,6 +323,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Selects the "checkout with paypal" button on the shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select checkout with paypal in mobile site$")
     public void I_select_checkout_with_paypal() throws Throwable {
         if (prodEnv())
@@ -248,11 +339,21 @@ public class CheckoutSteps extends StepUtils {
         Clicks.click("shopping_bag.checkout_with_paypal");
     }
 
+    /**
+     * Logs in to a stored paypal account
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I login into Paypal account using mobile site$")
     public void I_login_into_paypal_account() throws Throwable {
         new PaypalLogin().login();
     }
 
+    /**
+     * Clicks "continue" on the paypal login page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I checkout from Paypal review page using mobile site$")
     public void I_checkout_from_paypal_review_page() throws Throwable {
         Clicks.click("paypal_login.continue");
@@ -261,7 +362,11 @@ public class CheckoutSteps extends StepUtils {
             Thread.sleep(5000);
     }
 
-
+    /**
+     * Removes the promo code from the shopping bag
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I remove the promo code using mobile website$")
     public void I_remove_the_promo_code_using_mobile_website() throws Throwable {
         try {
@@ -272,6 +377,13 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Adds the given promo code to the shopping bag
+     *
+     * @param validity valid or invalid expected
+     * @param promo_code promo code to add
+     * @throws Throwable if any exception occurs
+     */
     @And("^I apply (valid|invalid) promo code \"([^\"]*)\" using mobile website$")
     public void I_apply_promo_code_using_mobile_website(String validity, String promo_code) throws Throwable {
         try {
@@ -293,6 +405,11 @@ public class CheckoutSteps extends StepUtils {
             Assert.assertTrue("ERROR-DATA: Not an invalid promo code", Wait.untilElementPresent(Elements.element("shopping_bag.promo_error")));
     }
 
+    /**
+     * Adds the fully_enrolled_usl id on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add fully_enrolled_usl id on shopping bag page using mobile website$")
     public void I_add_fully_enrolled_usl_id_on_shopping_bag_page_using_mobile_website() throws Throwable {
         if (Elements.getText("shopping_bag.plenti_id").contains("Add your Plenti # to earn points on qualifying purchases")) {
@@ -305,6 +422,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Verify merged message is displayed on merged_bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify the functionality of merge bag using mobile website$")
     public void I_verify_the_functionality_of_merge_bag_using_mobile_website() throws Throwable {
         shouldBeOnPage("merged_bag");
@@ -314,6 +436,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Adds the shipping address if not present on shipping page for signed in user
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add shipping address if not present on shipping page using mobile website for signed in user$")
     public void I_add_shipping_address_if_not_present_on_shipping_page_using_mobile_website_for_signed_in_user() throws Throwable {
         if (!Elements.elementPresent("responsive_checkout_signed_in.change_shipping_address"))  {
@@ -326,6 +453,12 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Removes one item of the given item type from the shopping bag
+     *
+     * @param itemType registry or normal
+     * @throws Throwable if any exception occurs
+     */
     @When("^I remove (registry|normal) item from mobile shopping bag page$")
     public void I_remove__item_from_mobile_shopping_bag_page(String itemType) throws Throwable {
         shouldBeOnPage("shopping_bag");
@@ -343,6 +476,12 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Checks that shopping bag only contains given type of item
+     *
+     * @param itemType registry or normal
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see only (registry|normal) item is present in mobile shopping bag page$")
     public void I_should_see_only_item_is_present_in_mobile_shopping_bag_page(String itemType) throws Throwable {
         Navigate.browserRefresh();
@@ -358,6 +497,11 @@ public class CheckoutSteps extends StepUtils {
         }
     }
 
+    /**
+     * Verifies the display of loyalty points earned on the order confirmation page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see loyalty points section on mobile order conformation page$")
     public void I_should_see_loyalty_points_section_on_mobile_order_conformation_page() throws Throwable{
         shouldBeOnPage("responsive_order_confirmation");
