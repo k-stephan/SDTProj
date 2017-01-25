@@ -50,7 +50,9 @@ public class Registry extends StepUtils {
             regUser.getRegistry().setCoRegistrantFirstName(TestUsers.generateRandomFirstName());
             regUser.getRegistry().setCoRegistrantLastName(TestUsers.generateRandomLastName());
         }
+        pausePageHangWatchDog();
         sign_in_or_create_registry(regUser);
+        resumePageHangWatchDog();
         new CheckoutSteps().iRemoveAllItemsInShoppingBag();
         new MyAccountSteps().iAddCheckoutEligibleAddressOnMyAddressBookPage();
         Navigate.visit("registry_home");

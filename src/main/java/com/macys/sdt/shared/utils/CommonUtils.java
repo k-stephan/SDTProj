@@ -282,13 +282,13 @@ public abstract class CommonUtils extends StepUtils {
     }
 
     public static void navigateToRandomCategory() throws Exception {
-        Clicks.clickRandomElement("header.category", (el) -> el.isDisplayed() && !el.getText().matches("BRANDS|DESIGNERS|THE REGISTRY|GETTING STARTED"));
+        Clicks.clickRandomElement("header.category", (el) -> el.isDisplayed() && !el.getText().matches("BRANDS|DESIGNERS|THE REGISTRY|GETTING STARTED|WEDDING REGISTRY"));
     }
 
     public static void navigateToRandomSubCategory() throws Exception {
         navigateToRandomCategory();
         while (!onPage("category_browse")) {
-            Clicks.clickRandomElement("category_splash.subcategory", el -> el.isDisplayed() && !el.getText().matches("(.*?)(Brands|Impulse|DESIGNERS)(.*?)"));
+            Clicks.clickRandomElement("category_splash.subcategory", el -> el.isDisplayed() && !el.getText().matches("(.*?)(Brands|Impulse|DESIGNERS|WEDDING REGISTRY)(.*?)"));
 
             // Safari is not waiting for page load after clicking on subcategory
             if (safari()) {

@@ -437,7 +437,7 @@ public class CheckoutSteps extends StepUtils {
         Wait.secondsUntilElementNotPresent((responsive ? "responsive_order_summary" : "order_review") + ".mask", 10);
         Wait.secondsUntilElementPresent((responsive ? "responsive_order_confirmation" : "order_confirmation") + ".verify_page", 20);
         Assert.assertTrue("Order not placed successfully!!", onPage("responsive_order_confirmation"));
-        resumePageHangWatchDog();
+//        resumePageHangWatchDog();
     }
 
     /**
