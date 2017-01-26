@@ -7,41 +7,21 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * This is a base class for translated ruby tests
  */
 public abstract class TranslatedSteps extends StepUtils {
 
-    public static WebElement findElementBy(String by, String value) {
-        WebElement element;
-        switch (by.toLowerCase()) {
-            case "link text":
-                element = Elements.findElement(By.linkText(value));
-                break;
-            case "name":
-                element = Elements.findElement(By.name(value));
-                break;
-            case "tag name":
-                element = Elements.findElement(By.tagName(value));
-                break;
-            case "class name":
-                element = Elements.findElement(By.className(value));
-                break;
-            case "css selector":
-                element = Elements.findElement(By.cssSelector(value));
-                break;
-            case "xpath":
-                element = Elements.findElement(By.xpath(value));
-                break;
-            case "partial link text":
-                element = Elements.findElement(By.partialLinkText(value));
-                break;
-            default:
-                element = Elements.findElement(By.id(value));
+    public static WebElement findElementBy(String method, String value) {
+        By by = Elements.getLocatorMethod(method, value);
+        return Elements.findElement(by);
+    }
 
-        }
-        return element;
+    public static List<WebElement> findElementsBy(String method, String value) {
+        By by = Elements.getLocatorMethod(method, value);
+        return Elements.findElements(by);
     }
 
     public String getWindowSize() {

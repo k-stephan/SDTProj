@@ -8,8 +8,7 @@ import java.util.Map;
  */
 public class Timeouts {
 
-    private Timeouts() {
-    }
+    private Timeouts() {}
 
     private static final int DEFAULT_GENERAL_TIMEOUT = 5;
     private static final int DEFAULT_UNTIL_ELEMENT_PRESENT_TIMEOUT = 5;

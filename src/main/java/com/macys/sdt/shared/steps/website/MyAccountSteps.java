@@ -1046,8 +1046,12 @@ public class MyAccountSteps extends StepUtils {
      */
     @And("^I clear all the cookies$")
     public static void iClearAllTheCookies() throws Throwable {
-        Cookies.deleteAllCookies();
-        Navigate.browserRefresh();
+        try {
+            Cookies.deleteAllCookies();
+            Navigate.browserRefresh();
+        } catch (Exception e) {
+            //ignore, need to continue test
+        }
     }
 
     /**

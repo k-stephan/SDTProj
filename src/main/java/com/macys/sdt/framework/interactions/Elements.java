@@ -401,7 +401,7 @@ public class Elements {
 
         By[] bys = new By[elementData.elementLocators.size()];
         for (int i = 0; i < elementData.elementLocators.size(); i++) {
-            bys[i] = Elements.findLocatorMethod(elementData.elementLocators.get(i), elementData.elementValues.get(i));
+            bys[i] = Elements.getLocatorMethod(elementData.elementLocators.get(i), elementData.elementValues.get(i));
         }
 
         return new ByAll(bys);
@@ -447,30 +447,35 @@ public class Elements {
                 index++;
             }
 
-            bys[i] = Elements.findLocatorMethod(elementData.elementLocators.get(i), paramValue);
+            bys[i] = Elements.getLocatorMethod(elementData.elementLocators.get(i), paramValue);
         }
 
         return new ByAll(bys);
     }
 
-    private static By findLocatorMethod(String locator, String value) {
+    public static By getLocatorMethod(String locator, String value) {
         switch (locator) {
             case "id":
                 return By.id(value);
             case "linkText":
+            case "link text":
                 return By.linkText(value);
             case "name":
                 return By.name(value);
             case "partialLinkText":
+            case "partial link text":
                 return By.partialLinkText(value);
             case "tagName":
+            case "tag name":
                 return By.tagName(value);
             case "xpath":
                 return By.xpath(value);
             case "className":
             case "class":
+            case "class name":
                 return By.className(value);
             case "cssSelector":
+            case "css selector":
             case "css":
                 return By.cssSelector(value);
             case "UIAutomator":
