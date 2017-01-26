@@ -513,8 +513,9 @@ class WebDriverConfigurator {
                 }
                 return version;
             case "chrome":
-            default:
-                return "54.0";
+                return "56.0";
+            default: //firefox
+                return "55.0";
         }
     }
 
