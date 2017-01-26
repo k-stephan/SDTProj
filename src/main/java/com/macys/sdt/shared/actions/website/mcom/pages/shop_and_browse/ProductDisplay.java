@@ -47,7 +47,7 @@ public class ProductDisplay extends StepUtils {
         if (macys()) {
            //implement code
         } else {
-            DropDowns.selectByText("product_display.quantity", quantity);
+            DropDowns.selectCustomText("product_display.quantity", "product_display.quanity_list_otions", quantity);
         }
     }
     public static int numSizeOptions() {
