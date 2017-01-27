@@ -105,7 +105,7 @@ class WebDriverConfigurator {
                 try {
                     return new FirefoxDriver(capabilities);
                 } catch (IllegalStateException|SessionNotCreatedException e) {
-                    capabilities.setCapability("marionette", false);
+                    capabilities.setCapability("marionette", true);
                     return new FirefoxDriver(capabilities);
                 }
         }
@@ -195,6 +195,7 @@ class WebDriverConfigurator {
                     }
                 }
                 capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+                capabilities.setCapability("marionette", false);
 
                 return disabledProxyCap(capabilities);
         }
@@ -420,7 +421,7 @@ class WebDriverConfigurator {
                         capabilities.setCapability("seleniumVersion", "3.0.1");
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
-                    capabilities.setCapability("marionette", false);
+                    capabilities.setCapability("marionette", true);
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 }
             } else if (useAppium) {
@@ -515,7 +516,7 @@ class WebDriverConfigurator {
             case "chrome":
                 return "56.0";
             default: //firefox
-                return "55.0";
+                return "51.0";
         }
     }
 
