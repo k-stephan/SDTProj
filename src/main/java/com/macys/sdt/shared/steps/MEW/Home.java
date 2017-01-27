@@ -16,6 +16,12 @@ import java.util.List;
 public class Home extends StepUtils {
     public String searchTerm = null;
 
+    /**
+     * Searches for given text in the top search box
+     *
+     * @param value text to search for
+     * @throws Throwable if any exception occurs
+     */
     @When("^I search using mobile website for \"([^\"]*)\"$")
     public void I_search_using_mobile_webitefor(String value) throws Throwable {
         Assert.assertTrue("ERROR-ENV: Search text field is not visible", Wait.untilElementPresent("home.search_field"));
@@ -24,6 +30,12 @@ public class Home extends StepUtils {
         shouldBeOnPage("search_result");
     }
 
+    /**
+     * Type given text in the top search box
+     *
+     * @param autokey text to type in search box
+     * @throws Throwable if any exception occurs
+     */
     @When("^I type \"([^\"]*)\" in mew search box$")
     public void I_type_in_mew_search_box(String autokey) throws Throwable {
         searchTerm = autokey;
@@ -31,6 +43,12 @@ public class Home extends StepUtils {
         TextBoxes.typeTextbox("home.search_field", searchTerm);
     }
 
+    /**
+     * Selects the given text from autocomplete suggestions
+     *
+     * @param select_term text to select
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I select \"([^\"]*)\" from mew autocomplete suggestions$")
     public void I_select_from_mew_autocomplete_suggestions(String select_term) throws Throwable {
         Wait.untilElementPresent("header.search_suggestions");
@@ -41,6 +59,12 @@ public class Home extends StepUtils {
         shouldBeOnPage("search_result");
     }
 
+    /**
+     * Verifies that the given option is visible in autocomplete suggestions
+     *
+     * @param text expected option
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see \"([^\"]*)\" in mew autocomplete suggestions$")
     public void I_should_see_in_mew_autocomplete_suggestions(String text) throws Throwable {
         Wait.untilElementPresent("header.search_suggestions");
@@ -54,6 +78,11 @@ public class Home extends StepUtils {
         }
     }
 
+    /**
+     * Verifies that autocomplete suggestions are not currently visible
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should not see mew autocomplete suggestions$")
     public void I_should_see_mew_autocomplete_suggestions() throws Throwable {
         if (Elements.elementPresent("header.search_suggestions")) {

@@ -18,6 +18,12 @@ import java.util.Map;
 
 
 public class MyAccount extends StepUtils {
+
+    /**
+     * Creates a new profile
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I create a new profile in mobile site$")
     public void I_create_a_new_profile_in_mobile_site() throws Throwable {
         if (prodEnv())
@@ -43,6 +49,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Signs out from currently signed in profile
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I sign out from my current mobile site profile$")
     public void I_sign_out_from_my_current_mobile_site_profile() throws Throwable {
         Assert.assertTrue("ERROR-ENV: Not able to navigate to the sign_in page", Elements.elementPresent(Elements.element("my_account.goto_sign_out_link")));
@@ -55,12 +66,22 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Signs in to existing profile or creates a new one
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I sign in to my existing profile using mobile website$")
     public void I_sign_in_to_my_existing_profile_using_mobile_website() throws Throwable {
         CommonUtils.signInOrCreateAccount();
         Navigate.visit("home");
     }
 
+    /**
+     * Navigates to the my profile page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to my profile page using mobile website$")
     public void I_navigate_to_my_profile_page_using_mobile_website() throws Throwable {
         Clicks.click("my_account.my_profile");
@@ -68,6 +89,11 @@ public class MyAccount extends StepUtils {
         resumePageHangWatchDog();
     }
 
+    /**
+     * Adds a credit card to my wallet on my wallet page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add a credit card from my wallet page using mobile website$")
     public void I_add_a_credit_card_from_my_account_page_using_mobile_website() throws Throwable {
         Wait.forPageReady();
@@ -84,11 +110,23 @@ public class MyAccount extends StepUtils {
         CommonUtils.addCreditCardFromBWallet(null, null);
     }
 
+    /**
+     * Verifies that you are on store page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to store page using mobile website$")
     public void I_should_be_redirected_to_store_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("stores");
     }
 
+    /**
+     * Searches for store, by given search input and criteria in stores page
+     *
+     * @param search_input to search for
+     * @param search_criteria to search by
+     * @throws Throwable if any exception occurs
+     */
     @When("^I search for \"([^\"]*)\" as a \"([^\"]*)\" in stores page using mobile website$")
     public void I_search_using_as_a_in_stores_page_using_mobile_website(String search_input, String search_criteria) throws Throwable {
         switch (search_criteria) {
@@ -99,11 +137,21 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Type given text into the search box of the stores pag
+     *
+     * @param search_input text to type in search box
+     */
     @When("^I type \"([^\"]*)\" into the search bar of the stores page using mobile website$")
     public void I_type_into_the_search_bar_of_stores_page_using_mobile_website(String search_input) {
         TextBoxes.typeTextbox(Elements.element("stores.search_box"), search_input);
     }
 
+    /**
+     * Verifies store auto complete suggestions are visible
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see auto-complete suggestion store names$")
     public void I_should_see_auto_complete_suggestion_store_names() throws Throwable {
         if (Elements.elementPresent(Elements.element("stores.autocomplete_container"))) {
@@ -113,6 +161,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Selects random option from store auto complete suggestions
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a auto-complete suggestion store name$")
     public void I_select_a_auto_complete_suggestion_store_name() throws Throwable {
         if (Wait.untilElementPresent(Elements.element("stores.autocomplete_text"))) {
@@ -124,6 +177,12 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Selects given store from stores list
+     *
+     * @param store_name store to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" store name$")
     public void I_select_store_name(String store_name) throws Throwable {
         if (Wait.untilElementPresent(Elements.element("stores.store_list"))) {
@@ -134,6 +193,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Verifies store details panel is visible
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to store details panel using mobile website$")
     public void I_should_be_redirected_to_store_details_panel_using_mobile_website() throws Throwable {
         if (Elements.elementPresent(Elements.element("stores.store_address"))) {
@@ -143,6 +207,12 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Selects given element on stores details page
+     *
+     * @param element element to select
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select \"([^\"]*)\" from store details page using mobile website$")
     public void I_select_from_store_details_page_using_mobile_website(String element) throws Throwable {
         switch (element) {
@@ -154,6 +224,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to the my wallet page from the my account page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to the wallet page using mobile website$")
     public void I_navigate_to_the_wallet_page_using_mobile_website() throws Throwable {
         Clicks.clickIfPresent("my_account.add_card_overlay_no_thanks_button");
@@ -164,6 +239,12 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Selects a random deal of given type from deals and promotion page
+     *
+     * @param deal offer or coupon
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a random \"([^\"]*)\" from deals & promotions page using mobile website$")
     public void I_select_a_random_from_deals_promotions_page_using_mobile_website(String deal) throws Throwable {
         boolean expected = false;
@@ -194,6 +275,12 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Selects given link from offers and details panel
+     *
+     * @param offer_link shop now or Add To Wallet
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" link from offers and details panel using mobile website$")
     public void I_select_link_from_offers_and_details_panel_using_mobile_website(String offer_link) throws Throwable {
         switch (offer_link) {
@@ -215,6 +302,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Adds a fully enrolled usl ID to current profile on my account page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add fully_enrolled_usl id on my account page using mobile website$")
     public void I_add_fully_enrolled_usl_id_on_my_account_page_using_mobile_website() throws Throwable {
         if (prodEnv())
@@ -228,6 +320,11 @@ public class MyAccount extends StepUtils {
         Assert.assertTrue("ERROR-ENV: Unable to add usl id to profile", Elements.elementPresent("my_account.my_plenti_label"));
     }
 
+    /**
+     * Removes USL ID on checkout shipping and payment page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I remove USL ID from shipping and payment page using mobile website$")
     public void I_remove_USL_ID_from_shipping_and_payment_page_using_mobile_website() throws Throwable {
         Wait.untilElementPresent("shipping_payment_signed_in.remove_usl_button");
@@ -238,7 +335,11 @@ public class MyAccount extends StepUtils {
 
     }
 
-
+    /**
+     * Remove all existing offers from wallet and adds a valid offer to wallet
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add a valid offer to my wallet using mobile website$")
     public void I_add_a_valid_offer_to_my_wallet_using_mobile_website() throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.available_offers")) {
@@ -249,6 +350,12 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to loyalty landing page as a given user type
+     *
+     * @param user_type guest or signed_in
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to the loyalty landing page as a \"([^\"]*)\" user using mobile website$")
     public void iNavigateToTheLoyaltyLandingPageAsAUser(String user_type) throws Throwable {
         // Before landing to the Loyalty enrollment page check whether the loyalty account already associated to the signed in account
@@ -267,12 +374,22 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to loyalty enrollment page from loyalty home page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to the loyalty enrollment page using mobile website$")
     public void iNavigateToTheLoyaltyEnrollmentPage() throws Throwable {
         Clicks.click("loyalty_home.create_profile_enroll_button");
         shouldBeOnPage("loyalty_enrollment");
     }
 
+    /**
+     * Navigates to the loyalist account association page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to the loyallist account association page using mobile website$")
     public void iNavigateToTheLoyallistAccountAssociationPage() throws Throwable {
         // Before landing to the Loyalty association page check whether the loyalty account already associated to the signed in account
@@ -289,11 +406,22 @@ public class MyAccount extends StepUtils {
         shouldBeOnPage("loyalty_association");
     }
 
+    /**
+     * Clicks on add offer on wallet page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I click on add offer on wallet page using mobile website$")
     public void iClickOnAddOfferOnWalletPage() throws Throwable {
         Clicks.click((macys() ? "oc_my_wallet" : "my_bwallet")+".add_offer_btn");
     }
 
+    /**
+     * Visits the website as a given user type and DOES NOT add new credit card to profile
+     *
+     * @param registered user type guest or registered
+     * @throws Throwable if any exception occurs
+     */
     @Given("^I visit the mobile web site as a (guest|registered) user without add CC$")
     public void I_visit_the_mobile_web_site_as_a_registered_user(String registered) throws Throwable {
         Navigate.visit("home");
@@ -312,6 +440,12 @@ public class MyAccount extends StepUtils {
         Cookies.disableForeseeSurvey();
     }
 
+    /**
+     * Verifies a loyallist number can be associated with a user account
+     *
+     * @param loyallist_type type of loyallist ID to use from "loyalty.json" data file
+     * @throws Throwable if any exception occurs
+     */
     @And("^I should be able to associate my account by loyallist number using \"([^\"]*)\" details on mobile website$")
     public void iShouldBeAbleToAssociateMyAccountByLoyallistNumberUsingDetails(String loyallist_type) throws Throwable {
         if (prodEnv())
@@ -321,6 +455,13 @@ public class MyAccount extends StepUtils {
         Wait.untilElementPresent("loyallist_account_summary.verify_page");
         shouldBeOnPage("loyallist_account_summary");
     }
+
+    /**
+     * Enrolls in the loyalty program as given user type
+     *
+     * @param user_type guest or signed_in
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be able to enroll in to the loyalty program as a \"([^\"]*)\" user using mobile website$")
     public void iShouldBeAbleToEnrollInToTheLoyaltyProgramAsAUser(String user_type) throws Throwable {
         if (prodEnv())
@@ -349,6 +490,13 @@ public class MyAccount extends StepUtils {
             System.out.println("Loyalty Enrollment Confirmation Page Loaded Successfully!!!");
         }
     }
+
+    /**
+     * Remove all existing offers from wallet and adds the given offer to wallet
+     *
+     * @param code offer code to add
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add a offer \"([^\"]*)\" to my wallet using mobile website$")
     public void I_add_a_offer_to_my_wallet_using_mobile_website(String code) throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.available_offers")) {
@@ -359,6 +507,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Add an offer to wallet if no offer is present and then removes all offers from wallet
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I remove a valid offer to my wallet using mobile website$")
     public void I_remove_a_valid_offer_to_my_wallet_using_mobile_website() throws Throwable {
         if (Elements.elementPresent("oc_my_wallet.available_offers")) {
@@ -369,6 +522,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Looks up a plenti ID using valid usl phone number on payment page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I lookup plenti id using valid usl phone number on payment page using mobile website$")
     public void I_lookup_plenti_id_using_valid_usl_phone_number_on_payment_page_using_mobile_website() throws Throwable {
         String phone_no = TestUsers.getEnrolledUslId().getUslPhone();
@@ -380,6 +538,11 @@ public class MyAccount extends StepUtils {
         Assert.assertTrue("ERROR-ENV: Unable to lookup plenti id usign phone number", Elements.elementPresent("shipping_payment_signed_in.remove_usl_button"));
     }
 
+    /**
+     * Signs in to current existing profile
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I sign in to my same profile using mobile website$")
     public void I_sign_in_to_same_profile_using_mobile_website() throws Throwable {
         if (!prodEnv()) {
@@ -391,6 +554,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Creates a new profile and DOES NOT close the add credit card dialog
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I create a new profile in mobile site without closing the add card overlay$")
     public void I_create_a_new_profile_in_mobile_site_without_closing_the_add_card_overlay() throws Throwable {
         if (prodEnv())
@@ -405,6 +573,12 @@ public class MyAccount extends StepUtils {
         Wait.untilElementPresent("my_account.one_time_add_card_overlay");
     }
 
+    /**
+     * Verifies the display of the my account pages
+     *
+     * @param pageNames list of pages to verify
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify the My Account Pages are rendered properly using mobile website$")
     public void I_verify_the_My_Account_Pages_are_rendered_properly_using_mobile_website(List<String> pageNames) throws Throwable {
         shouldBeOnPage("my_account");
@@ -415,6 +589,17 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to given page from my account page
+     *
+     * <p>
+     * Options for page name:<br>
+     * <code>my profile, my preferences, my address book, oc my wallet, wish list, order status, furniture mattress status, gift card balance</code><br>
+     * </p>
+     *
+     * @param pageName target page name
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to \"([^\"]*)\" page from my account page using mobile website$")
     public void I_navigate_to_page_from_my_account_page_using_mobile_website(String pageName) throws Throwable {
         shouldBeOnPage("my_account");
@@ -461,6 +646,12 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Verifies that the given credit services links displayed on my account page
+     *
+     * @param credit_links list of credit services links
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see below credit services links in my account page:$")
     public void iShouldSeeBelowCreditServicesLinksInMobileMyaccountPage(List<String> credit_links) throws Throwable {
         shouldBeOnPage("my_account");
@@ -469,6 +660,12 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Verifies that the given credit services links navigates to given respective pages
+     *
+     * @param list of link and respective page
+     * @throws Throwable if any exception occurs
+     */
     @And("^I should be navigated to below respective credit services pages using mobile website:$")
     public void iShouldBeNavigatedToBelowRespectiveCreditServicesPagesUsingMobileWebsite(List<HashMap<String, String>> list) throws Throwable {
         for (Map set : list) {
@@ -479,6 +676,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Enrolls in to the loyalty program as a signed in user
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I enroll in to the loyalty program using mobile website as a signed in user$")
     public void I_enroll_in_to_the_loyalty_program_using_mobile_website_as_a_user() throws Throwable {
         if (prodEnv()) {
@@ -488,6 +690,12 @@ public class MyAccount extends StepUtils {
         shouldBeOnPage("loyalty_enrollment_confirmation");
     }
 
+    /**
+     * Verifies that the add credit card overlay and its components are displayed or not
+     *
+     * @param condition should or should not
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I (should|should not) see one time add card overlay and its components using mobile website$")
     public void iShouldSeeOneTimeAddCardOverlayAndItsComponentsUsingMobileWebsite(String condition) throws Throwable {
         String add_card_elements[] = {"one_time_add_card_overlay", "add_card_overlay_add_card_button", "add_card_overlay_close_button"};
@@ -501,6 +709,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to order details page from order status page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to order details page using mobile website$")
     public void I_navigate_to_order_details_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("order_status");
@@ -508,6 +721,11 @@ public class MyAccount extends StepUtils {
         Clicks.click("order_status.order_details");
     }
 
+    /**
+     * Verifies that an order can be cancelled from order details page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify the ability to cancel the order in order details page using mobile website$")
     public void I_verify_the_ability_to_cancel_the_order_in_order_details_page_using_mobile_website() throws Throwable {
         Wait.untilElementPresent("order_details.cancel_order_button");
@@ -522,6 +740,15 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to order return confirmation page using given order data
+     * <p>
+     * Order details come from "return_orders.json" resource file in shared data
+     * </p>
+     *
+     * @param orderType "submitted", "intransit", or "transit"
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to order details page for \"([^\"]*)\" order using mobile website$")
     public void I_navigate_to_order_details_page_for_order_using_mobile_website(String orderType) throws Throwable {
         String orderNum = Utils.getOrderNumber(orderType);
@@ -543,6 +770,12 @@ public class MyAccount extends StepUtils {
         Assert.assertTrue("Order " + orderNum + " not found in data range", orderFound);
     }
 
+    /**
+     * Verifies the details of order with the given status on the order details page
+     *
+     * @param orderType status to check
+     * @throws Throwable if any exception occurs
+     */
     @And("^I verify order details in OD page for \"([^\"]*)\" using mobile website$")
     public void I_verify_order_details_in_OD_page_for_using_mobile_website(String orderType) throws Throwable {
         shouldBeOnPage("order_details");
@@ -564,6 +797,11 @@ public class MyAccount extends StepUtils {
         Elements.elementShouldBePresent("order_details.order_total_details");
     }
 
+    /**
+     * Navigates to loyalty enrollment page as a registered user
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to the loyallist enrollment page as a registered user using mobile website$")
     public void I_navigate_to_the_loyallist_enrollment_page_as_a_registered_user_using_mobil_website() throws Throwable {
         // Before landing to the Loyalty enrollment page check whether the loyalty account already associated to the signed in account
