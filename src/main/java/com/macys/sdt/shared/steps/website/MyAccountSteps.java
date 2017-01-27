@@ -453,7 +453,8 @@ public class MyAccountSteps extends StepUtils {
     @When("^I sign out from my current profile$")
     public void iSignOutFromMyCurrentProfile() throws Throwable {
         Clicks.clickIfPresent(By.className("container-close"));
-        Clicks.hoverForSelection("home.goto_my_account_link");
+        if (bloomingdales())
+            Clicks.hoverForSelection("home.goto_my_account_link");
         Wait.secondsUntilElementPresent("header.goto_sign_out_link", 10);
         Clicks.click("header.goto_sign_out_link");
         if (safari()) {

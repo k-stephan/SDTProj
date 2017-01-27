@@ -306,10 +306,12 @@ public class Registry extends StepUtils {
      */
     @And("^I click on edit profile link on registry manager page$")
     public void I_click_on_edit_profile_link_on_registry_manager_page() throws Throwable {
-        if (safari()) {
+        if (safari())
             Wait.untilElementPresent("registry_manager.edit_profile_button");
-        }
-        Clicks.click("registry_manager.edit_profile_button");
+        if (!chrome() && macys())
+            Clicks.javascriptClick("registry_manager.edit_profile_button");
+        else
+            Clicks.click("registry_manager.edit_profile_button");
     }
 
     /**
