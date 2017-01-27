@@ -400,7 +400,8 @@ public class ShopAndBrowse extends StepUtils {
         if (macys()) {
             DropDowns.selectByText("change_pickup_store_dialog.search_distance", "100 miles");
         } else {
-            DropDowns.selectByText("change_pickup_store_dialog.search_distance", "100 Miles");
+            DropDowns.selectCustomText("change_pickup_store_dialog.search_distance",
+                    "change_pickup_store_dialog.search_distance_values", "100 Miles");
         }
         Wait.forLoading("home.loading");
         String zip_code = (macys() ? "22102" : "10022");
@@ -1425,6 +1426,7 @@ public class ShopAndBrowse extends StepUtils {
             }
         } else {
             ChangePickupStoreDialog.selectFirstStore();
+            Clicks.click("change_pickup_store_dialog.save");
         }
     }
 
@@ -1558,6 +1560,7 @@ public class ShopAndBrowse extends StepUtils {
             String pattern = "ID=(.*)&";
             Pattern r = Pattern.compile(pattern);
             Matcher m = r.matcher(url);
+            m.find();
             String new_url = url.replace(m.group(), "ID=" + productID + "&");
             Navigate.visit(new_url);
         } catch (Exception e) {
