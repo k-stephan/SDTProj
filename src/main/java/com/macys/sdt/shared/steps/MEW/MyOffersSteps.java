@@ -18,6 +18,11 @@ public class MyOffersSteps extends StepUtils {
     List<String> promoCodes = new ArrayList<>();
     List<String> walletPromoCodes = new ArrayList<>();
 
+    /**
+     * Adds all available offers to wallet from deals and promotions page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I add all wallet eligible offers from deals and promotions page using mobile website$")
     public void i_add_all_wallet_eligible_offers_from_deals_and_promotions_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("deals_and_promotions");
@@ -38,6 +43,15 @@ public class MyOffersSteps extends StepUtils {
         }
     }
 
+    /**
+     * Verifies that the offers that were added show up in my wallet
+     * <p>
+     * Uses step "I add all wallet eligible offers from deals and promotions page using mobile website" as basis for verification.
+     * Requires that either this step be run, or another step updates the "promoCodes" variable with correct information
+     * </p>
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see the added offers in my wallet page using mobile website$")
     public void i_should_see_the_added_offers_in_my_wallet_page() throws Throwable {
         shouldBeOnPage("oc_my_wallet");

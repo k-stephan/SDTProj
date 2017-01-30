@@ -22,32 +22,63 @@ import java.util.List;
 
 public class PageNavigation extends StepUtils {
 
+    /**
+     * Verifies the browser is on the search results page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be in Search Landing page using mobile website$")
     public void I_should_be_in_Search_Landing_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("search_result");
     }
 
+    /**
+     * Verifies that the browser is on the given page
+     *
+     * @param page name of expected page
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see the \"([^\"]*)\" Page$")
     public void I_should_see_the_page(String page) throws Throwable {
         shouldBeOnPage(page);
     }
 
+    /**
+     * Verifies the browser is on the PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to PDP page using mobile website$")
     public void I_should_be_redirected_to_PDP_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("product_display");
     }
 
+    /**
+     * Verifies that the current url contains "/shop/product/?ID"
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to wishlist PDP using mobile website$")
     public void I_should_be_redirected_to_wishlist_PDP_using_mobile_website() throws Throwable {
         Assert.assertTrue("Not on MEW wishlist PDP", url().contains("/shop/product/?ID"));
     }
 
+    /**
+     * Verifies the browser is on the add to bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to ATB page using mobile website$")
     public void I_should_be_redirected_to_ATB_page_using_mobile_website() throws Throwable {
         Wait.forPageReady();
         shouldBeOnPage("add_to_bag");
     }
 
+    /**
+     * Selects "continue checkout" on add to bag page and then verifies the browser is on the shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to shopping bag page from add to bag page using mobile website$")
     public void I_navigate_to_shopping_bag_page_from_add_to_bag_page_using_mobile_website() throws Throwable {
         Assert.assertTrue("ERROR-ENV: Checkout button is not visible in add to bag panel", Elements.elementPresent("add_to_bag.checkout"));
@@ -55,6 +86,12 @@ public class PageNavigation extends StepUtils {
         shouldBeOnPage("shopping_bag");
     }
 
+    /**
+     * Selects the given menu items from global navigation menu, in the given sequence
+     *
+     * @param table list of menu items to select
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate the global navigation menu as follows:$")
     public void I_navigate_the_global_navigation_menu_as_follows(List<String> table) throws Throwable {
         if (onPage("registry_home", "registry_manager")) {
@@ -71,6 +108,11 @@ public class PageNavigation extends StepUtils {
         CommonUtils.closeStylistPopup();
     }
 
+    /**
+     * Selects "back" button on change_pickup_store and then verifies the browser is on the PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate back to pdp page from pick up store page$")
     public void I_navigate_back_to_pdp_page_from_pick_up_store_page() throws Throwable {
         Wait.untilElementPresent("change_pickup_store.back_button");
@@ -78,11 +120,21 @@ public class PageNavigation extends StepUtils {
         Assert.assertTrue("ERROR-ENV: Not navigated to the PDP", onPage("product_display"));
     }
 
+    /**
+     * Verifies the browser is on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be in mobile shopping bag$")
     public void I_should_be_in_mobile_shopping_bag() throws Throwable {
         shouldBeOnPage("shopping_bag");
     }
 
+    /**
+     * Navigates to the sign-in page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to the sign-in page$")
     public void I_navigate_to_the_sign_in_page() throws Throwable {
         scrollToLazyLoadElement("home.goto_sign_in_link");
@@ -91,6 +143,11 @@ public class PageNavigation extends StepUtils {
         // shouldBeOnPage("sign_in");
     }
 
+    /**
+     * Navigates to the create profile page from sign-in page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to the create profile page$")
     public void I_navigate_to_the_create_profile_page() throws Throwable {
         GlobalNav.closeGlobalNav();
@@ -99,17 +156,33 @@ public class PageNavigation extends StepUtils {
         shouldBeOnPage("create_profile");
     }
 
+    /**
+     * Selects a recently viewed product
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select a recently viewed product using mobile website$")
     public void I_select_a_recently_viewed_product_using_mobile_website() throws Throwable {
         GlobalNav.navigateToRecentlyViewedProduct();
     }
 
+    /**
+     * Verifies the browser is on master PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to master PDP page in mobile website$")
     public void I_should_be_redirected_to_master_PDP_page_in_mobile_website() throws Throwable {
         shouldBeOnPage("product_display_master");
         Assert.assertTrue("ERROR-ENV: Unable to navigate product display page", ProductDisplay.isMasterMemberPage());
     }
 
+    /**
+     * Navigates to create registry page from registry home page or from global nav
+     *
+     * @param mode "create your registry" or "create"
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" from mobile registry home page$")
     public void I_select_from_mobile_registry_home_page(String mode) throws Throwable {
         GlobalNav.closeGlobalNav();
@@ -137,11 +210,22 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Verifies the browser is on my account page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be navigated to the mobile my account page$")
     public void I_should_be_navigated_to_the_mobile_my_account_page() throws Throwable {
         shouldBeOnPage("my_account");
     }
 
+    /**
+     * Navigates back to the given page
+     *
+     * @param page_type home, my account, category browse or category splash
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate back to \"([^\"]*)\" page using mobile website$")
     public void I_navigate_back_to_page_using_mobile_website(String page_type) throws Throwable {
         switch (page_type.toLowerCase()) {
@@ -167,6 +251,12 @@ public class PageNavigation extends StepUtils {
         GlobalNav.closeGlobalNav();
     }
 
+    /**
+     * Navigates to category browse page from category splash page. Step is only for "women's Heel"
+     *
+     * @param category_type women's Heel
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to \"([^\"]*)\" category browse page using mobile website$")
     public void I_navigate_to_category_browse_page_using_mobile_website(String category_type) throws Throwable {
         switch (category_type) {
@@ -175,6 +265,11 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Navigates back to home page from any page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate back to home page using mobile website$")
     public void I_navigate_back_to_home_page_using_mobile_website() throws Throwable {
         if (Wait.untilElementPresent(Elements.element("home.header_image"))) {
@@ -186,6 +281,12 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Selects the given link from the footer
+     *
+     * @param link_text "customer service", "emails or texts" or "find a store"
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to \"([^\"]*)\" footer links using mobile website$")
     public void I_navigate_to_footer_links_using_mobile_website(String link_text) throws Throwable {
         if (Elements.elementPresent((Elements.element("home.footer")))) {
@@ -207,6 +308,12 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Visits the home page, closes all popups that appear, and sign in or create account if specified type is registered
+     *
+     * @param registered user type "guest" or "registered"
+     * @throws Throwable if any exception occurs
+     */
     @Given("^I visit the mobile web site as a (guest|registered) user$")
     public void I_visit_the_mobile_web_site_as_a_registered_user(String registered) throws Throwable {
         Navigate.visit("home");
@@ -232,11 +339,21 @@ public class PageNavigation extends StepUtils {
         Cookies.disableForeseeSurvey();
     }
 
+    /**
+     * Verifies the browser is on deals and promotions page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to deals page using mobile website$")
     public void I_should_be_redirected_to_deals_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("deals_and_promotions");
     }
 
+    /**
+     * Navigates to the change country page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to change country page using mobile website$")
     public void I_navigate_to_change_country_page_using_mobile_website() throws Throwable {
         if (Elements.elementPresent(Elements.element("home.change_country_link"))) {
@@ -247,6 +364,11 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to the shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to shopping bag page using mobile website$")
     public void I_navigate_to_shopping_bag_page_using_mobile_website() throws Throwable {
         try {
@@ -258,6 +380,12 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Visits the web site then goes to the specified mode
+     *
+     * @param mode domestic or registry or iship
+     * @throws Throwable if any exception occurs
+     */
     @Given("^I visit the mobile web site as a guest user in (domestic|iship|registry) mode$")
     public void I_visit_the_mobile_web_site_as_a_guest_user_in_mode(String mode) throws Throwable {
         I_visit_the_mobile_web_site_as_a_registered_user("guest");
@@ -284,6 +412,11 @@ public class PageNavigation extends StepUtils {
 
     }
 
+    /**
+     * Verifies that the pagination functionality is working if pagination is present
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be able to navigate using pagination functionality using mobile website$")
     public void I_should_be_able_to_navigate_using_pagination_functionality_using_mobile_website() throws Throwable {
         if (Wait.untilElementPresent(Elements.element("pagination.select_page_no"))) {
@@ -299,6 +432,12 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to brand index page in the specified mode
+     *
+     * @param mode registry or iship or domestic
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to brand index page in (registry|iship|domestic) mode using mobile website$")
     public void I_navigate_to_brand_index_page_using_mobile_website(String mode) throws Throwable {
         switch (mode) {
@@ -316,6 +455,12 @@ public class PageNavigation extends StepUtils {
         }
     }
 
+    /**
+     * Navigates to random dynamic landing page in the specified mode
+     *
+     * @param mode registry or iship or domestic
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to dynamic landing page in (registry|iship|domestic) mode using mobile website$")
     public void I_navigate_to_dynamic_landing_page_using_mobile_website(String mode) throws Throwable {
         I_navigate_to_brand_index_page_using_mobile_website(mode);
@@ -332,11 +477,22 @@ public class PageNavigation extends StepUtils {
         shouldBeOnPage("dynamic_landing");
     }
 
+    /**
+     * Verifies the browser is on brand index page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be redirected to designer page using mobile website$")
     public void I_should_be_redirected_to_designer_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("brand_index");
     }
 
+    /**
+     * Selects given category from brand index page
+     *
+     * @param categoryType target category name
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to \"([^\"]*)\" designer category browse page using mobile website$")
     public void I_navigate_to_designer_category_browse_page_using_mobile_website(String categoryType) throws Throwable {
         shouldBeOnPage("brand_index");
