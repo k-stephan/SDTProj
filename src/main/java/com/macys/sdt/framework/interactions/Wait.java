@@ -451,7 +451,7 @@ public class Wait {
                 if (MainRunner.currentURL.matches(".*?(chkout|product).*?")) {
                     return queries <= 2;
                 }
-                if (MainRunner.currentURL.matches(".*?(signin|profile|myaccount|addressbook).*?")
+                if (MainRunner.currentURL.matches(".*?(signin|profile|myaccount|addressbook|shop).*?")
                         || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop"))) {
                     return queries <= 1;
                 }

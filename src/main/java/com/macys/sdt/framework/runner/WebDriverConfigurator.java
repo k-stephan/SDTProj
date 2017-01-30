@@ -104,7 +104,7 @@ class WebDriverConfigurator {
             default:
                 try {
                     return new FirefoxDriver(capabilities);
-                } catch (IllegalStateException|SessionNotCreatedException e) {
+                } catch (Exception | Error e) {
                     capabilities.setCapability("marionette", true);
                     return new FirefoxDriver(capabilities);
                 }
