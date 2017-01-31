@@ -331,7 +331,7 @@ public class MainRunner {
 
         scenarios = scenarios.replace('\\', '/');
 
-        if (!url.startsWith("http://")) {
+        if (!url.startsWith("https://") && !url.startsWith("http://")) {
             url = "http://" + url;
         }
 

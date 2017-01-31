@@ -184,7 +184,7 @@ public class Navigate {
         try {
             String givenURL = MainRunner.url;
             // check if pageURL has product, then directly navigate to the given url
-            if (pageURL.contains("product") && pageURL.contains("ID=") && !pageURL.startsWith("http://")) {
+            if (pageURL.contains("product") && pageURL.contains("ID=") && !pageURL.startsWith("https://") && !pageURL.startsWith("http://")) {
                 pageURL = "http://" + pageURL;
             }
 
@@ -219,7 +219,7 @@ public class Navigate {
                 givenURL = pageURL;
             }
             // selenium doesn't like links that don't start with http://
-            if (!givenURL.startsWith("http://")) {
+            if (!givenURL.startsWith("https://") && !givenURL.startsWith("http://")) {
                 givenURL = "http://" + givenURL;
             }
 
