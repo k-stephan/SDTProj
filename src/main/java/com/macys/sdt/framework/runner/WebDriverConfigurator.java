@@ -396,25 +396,26 @@ class WebDriverConfigurator {
             }
             // need to increase resolution or we get tablet layout
             // not supported on win10 and mac OSX El Capitan (10.11)
-            if (!StepUtils.mobileDevice() && !remoteOS.matches("^Windows 10|(.*?)10.11$")) {
+            if (!StepUtils.mobileDevice() && !remoteOS.matches("^(.*?)10.11|(.*?)10.12$")) {
                 capabilities.setCapability("screenResolution", "1280x1024");
             }
-            if (!StepUtils.mobileDevice() && (remoteOS.matches("^Windows 10|(.*?)10.11|(.*?)10.12$") || StepUtils.edge() || StepUtils.firefox())) {
-                capabilities.setCapability("screenResolution", "1152x864");
+            if (!StepUtils.mobileDevice() && (remoteOS.matches("^(.*?)10.11|(.*?)10.12$") || StepUtils.edge() || StepUtils.firefox())) {
+                capabilities.setCapability("screenResolution", "1376x1032");
             }
 
             if (StepUtils.safari()) {
                 // safari driver is not stable, try up to 3 times
                 int count = 0;
-                while (count++ < 3)
+                while (count++ < 3) {
                     try {
                         return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                     } catch (Error | Exception e) {
                         Utils.threadSleep(1000, null);
                         if (count == 3) {
-                            Assert.fail("Failed to initialize saucelabs connection: " + e);
+                            Assert.fail("Failed to initialize Sauce Labs connection: " + e);
                         }
                     }
+                }
             } else if (StepUtils.firefox()) {
                 try {
                     if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta")))
@@ -431,7 +432,7 @@ class WebDriverConfigurator {
             }
 
         } catch (Exception e) {
-            System.err.println("Could not create remove web driver: " + e);
+            System.err.println("Could not create remote web driver: " + e);
         }
         Assert.fail("Unable to initialize driver");
         return null;
