@@ -449,6 +449,7 @@ public class CheckoutSteps extends StepUtils {
     public void i_select_gift_options_on_shipping_page() throws Throwable {
         pausePageHangWatchDog();
         if (onPage("responsive_checkout")) {
+            Wait.secondsUntilElementPresent("responsive_shipping_options.gift_option", 5);
             Clicks.selectCheckbox("responsive_shipping_options.gift_option");
             Clicks.selectCheckbox("responsive_shipping_options.gift_message");
             TextBoxes.typeTextbox("responsive_shipping_options.gift_message_field1", "test message");

@@ -68,6 +68,7 @@ public class CheckoutPageBcom extends StepUtils {
         CreditCard visaCard = TestUsers.getValidVisaCreditCard();
 
         Wait.forPageReady();
+        Wait.secondsUntilElementPresent(page + ".credit_card_radio_button", 2);
         Clicks.click(page + ".credit_card_radio_button");
         DropDowns.selectCustomText(page + ".card_type_list", page + ".card_type_options", visaCard.getCardType().toString());
         TextBoxes.typeTextbox(page + ".card_number", visaCard.getCardNumber());

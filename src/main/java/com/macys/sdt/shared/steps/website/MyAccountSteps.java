@@ -1016,12 +1016,12 @@ public class MyAccountSteps extends StepUtils {
             }
             Wait.secondsUntilElementNotPresent(By.className("loading"), 20);
             Wait.forPageReady();
-            Wait.secondsUntilElementPresent("credit_service_gateway_signedin.speed_bump_continue_button", (safari() ? 20 : 2));
+            Wait.secondsUntilElementPresent("credit_service_gateway_signedin.speed_bump_continue_button", (safari() ? 20 : 5));
             if (Elements.elementPresent("credit_service_gateway_signedin.speed_bump_continue_button")) {
                 Clicks.click("credit_service_gateway_signedin.speed_bump_continue_button");
             }
             try {
-                Wait.secondsUntilElementPresent((pageName + ".verify_page"), (safari() ? 20 : 15));
+                Wait.secondsUntilElementPresent((pageName + ".verify_page"), (safari() ? 25 : 20));
                 // Added run after navigation as we are redirecting to citi site which takes more time to redirect.
                 Navigate.runAfterNavigation();
                 if (!onPage(pageName)) {
