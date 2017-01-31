@@ -29,6 +29,12 @@ public class ShopAndBrowse extends StepUtils {
 
     public static Product recentProduct;
 
+    /**
+     * Adds the given product to bag and selects checkout
+     *
+     * @param avilable_prodcut_id ID of product to add
+     * @throws Throwable if any exception occurs
+     */
     @When("^I directly add an available and orderable product \"([^\"]*)\" to my bag in mobile site$")
     public void I_directly_add_an_available_and_orderable_product_to_my_bag(String avilable_prodcut_id) throws Throwable {
         CommonUtils.navigateDirectlyToProduct(avilable_prodcut_id);
@@ -44,6 +50,11 @@ public class ShopAndBrowse extends StepUtils {
         System.out.println("Sucessfuly added product");
     }
 
+    /**
+     * Verifies the display of at least one offer on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select the bwallet offer in shopping bag using mobile website$")
     public void I_select_the_bwallet_offer_in_shopping_bag() throws Throwable {
         Wait.forPageReady();
@@ -62,6 +73,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+
+    /**
+     * Adds current product to bag from PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add product to my bag from standard PDP page$")
     public void I_add_product_to_my_bag_from_standard_PDP_page() throws Throwable {
         boolean addedToBag = false;
@@ -103,6 +120,14 @@ public class ShopAndBrowse extends StepUtils {
 
         }
     }
+
+    /**
+     * Selects a random product of given type and with customer ratings if specified
+     *
+     * @param prod_type member, master, member_alternate_image or master_alternate_image
+     * @param hasRating "with customer ratings" optional
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a random (member|master|member_alternate_image|master_alternate_image) product using mobile website(?: with (customer ratings))?$")
     public void I_select_a_random_product_using_mobile_website(String prod_type, String hasRating) throws Throwable {
         boolean found = false;
@@ -138,6 +163,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Clicks on given arrow inside Recently Viewed panel
+     *
+     * @param arrow left or right
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on \"(left|right)\" arrow key inside Recently Viewed panel using mobile website$")
     public void I_click_on_arrow_key_inside_Recently_Viewed_panel(String arrow) throws Throwable {
         RecentlyViewed.updateProducts();
@@ -147,6 +178,13 @@ public class ShopAndBrowse extends StepUtils {
         Utils.threadSleep(2000, null);
     }
 
+    /**
+     * Visit the PDP of given number of random products of given type
+     *
+     * @param count number of products to view
+     * @param prod_type member, master, member_alternate_image or master_alternate_image
+     * @throws Throwable if any exception occurs
+     */
     @When("^I view (\\d+) random (member|master|member_alternate_image|master_alternate_image) products using mobile website$")
     public void I_view_random_member_products(int count,String prod_type) throws Throwable {
         int i = 0;
@@ -163,6 +201,12 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Selects a predefined product from the current search result or browse page
+     * <p>Predefined products: "78600", "22804", "1494", "86800", "1275"</p>
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a predefined orderable random member product using mobile website$")
     public void I_select_a_predefined_orderable_random_member_product_using_mobile_website() throws Throwable {
         /*
@@ -197,6 +241,12 @@ public class ShopAndBrowse extends StepUtils {
         Clicks.click(selected);
     }
 
+    /**
+     * Selects a predefined master product from the current search result or browse page
+     * <p>Predefined products: "78600", "22805", "1494", "86800", "1275"</p>
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a predefined orderable random master product using mobile website$")
     public void I_select_a_predefined_orderable_random_master_product_using_mobile_website() throws Throwable {
         String[] predefined_product_ids = {"78600", "22805", "1494", "86800", "1275"};
@@ -224,6 +274,13 @@ public class ShopAndBrowse extends StepUtils {
         Clicks.click(selected);
     }
 
+    /**
+     * Selects the given sort by option on category browse page
+     *
+     * @param toSelect sort by option to select
+     * @param page_type "category browse"
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" from \"([^\"]*)\" page using mobile website$")
     public void I_select_from_page_using_mobile_website(String toSelect, String page_type) throws Throwable {
         switch (page_type) {
@@ -236,6 +293,13 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+
+    /**
+     * Selects the given facet from browse or search results page
+     *
+     * @param facet_name facet to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" facet on left nav using mobile website$")
     public void I_select_facet_on_left_nav_using_mobile_website(String facet_name) throws Throwable {
         Wait.forPageReady();
@@ -257,16 +321,33 @@ public class ShopAndBrowse extends StepUtils {
         MEWLeftFacet.selectFacetOnLeftNav(facet_name);
     }
 
+    /**
+     * Selects the given sub facet from facet panel
+     *
+     * @param sub_facet_name sub facet to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" sub facet on left nav using mobile website$")
     public void I_select_sub_facet_on_left_nav_using_mobile_website(String sub_facet_name) throws Throwable {
         MEWLeftFacet.selectSubFacetOnLeftNav(sub_facet_name);
     }
 
+    /**
+     * Applies the currently selected facet
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I confirm selected facets using mobile website$")
     public void I_confirm_selected_facets_using_mobile_website() throws Throwable {
         MEWLeftFacet.confirmFacets();
     }
 
+    /**
+     * Searches for the given zip code in the bops facet and selects a random store
+     *
+     * @param zipcode zip code to search for
+     * @throws Throwable if any exception occurs
+     */
     @And("^I input \"([^\"]*)\" as zip code in bops facet and select a store$")
     public void I_input_as_zip_code_in_bops_facet_and_select_a_store(String zipcode) throws Throwable {
         if (bloomingdales()) {
@@ -293,22 +374,45 @@ public class ShopAndBrowse extends StepUtils {
 
     }
 
+    /**
+     * Selects given list of filters on registry category browse page
+     *
+     * @param tbl list of filters to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I registry filter as follows:$")
     public void I_registry_filter_as_follows(List<String> tbl) throws Throwable {
         Clicks.clickIfPresent("header.close_browser_upgrade");
         tbl.forEach(gnName -> Clicks.click(Elements.paramElement("category_browse.registry_filter_by", gnName)));
     }
 
+    /**
+     * Verifies browser is on category browse page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be on mobile browse page$")
     public void I_should_be_on_mobile_browse_page() throws Throwable {
         shouldBeOnPage("category_browse");
     }
 
+    /**
+     * Selects the given distance option from change pickup store dialog
+     *
+     * @param distance distance option to select
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select \"([^\"]*)\" miles in bops facet change store dialog using mobile website$")
     public static void I_select_miles_in_bops_facet_change_store_dialog_using_mobile_website(String distance) throws Throwable {
         DropDowns.selectByValue("change_pickup_store_dialog.search_distance", distance);
     }
 
+    /**
+     * Verifies the sort by functionality on browse and search results page
+     *
+     * @param sortByOptions list of expected sort by options
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see sort by functionality with below options using mobile website:$")
     public void I_should_see_sort_by_functionality_with_below_options_using_mobile_website(List<String> sortByOptions) throws Throwable {
         Wait.forPageReady();
@@ -334,6 +438,12 @@ public class ShopAndBrowse extends StepUtils {
         Assert.assertEquals("Sort by functionality is not working properly!!", productCount, Elements.getText(pageName + ".total_products"));
     }
 
+    /**
+     * Verifies the sort by functionality on browse and search results page in registry mode
+     *
+     * @param sortByOptions list of expected sort by options
+     * @throws Throwable if any exception occurs
+     */
     @And("^I verify sort by functionality in registry mode using mobile website:$")
     public void I_verify_sort_by_functionality_in_registry_mode_using_mobile_website(List<String> sortByOptions) throws Throwable {
         Wait.forPageReady();
@@ -350,6 +460,11 @@ public class ShopAndBrowse extends StepUtils {
         Assert.assertEquals("Sort by functionality is not working properly!!", productCount, Elements.getText(page + ".total_products"));
     }
 
+    /**
+     * Navigates to random browse page using site menu, assuming site menu is present on current page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to random browse page from site menu using mobile website$")
     public void I_navigate_to_random_browse_page_from_site_menu_using_mobile_website() throws Throwable {
         scrollToLazyLoadElement("site_menu.site_menu_title");
@@ -361,12 +476,22 @@ public class ShopAndBrowse extends StepUtils {
         shouldBeOnPage("category_browse");
     }
 
+    /**
+     * Verifies that the recommendation panel is displayed on PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see recommendation panel on pdp page using mobile website$")
     public void I_should_see_recommendation_panel_on_pdp_page_using_mobile_website() throws Throwable {
         shouldBeOnPage("product_display");
         Elements.elementShouldBePresent("recommendations.recommendations_products");
     }
 
+    /**
+     * Selects the first recommended product from PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("I select first recommended product from pdp page using mobile website")
     public void I_select_recommended_product_from_pdp_page_using_mobile_website() throws Throwable {
         if (Elements.anyPresent("product_display.recommended_product")) {
@@ -377,6 +502,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Selects random asset from mew home page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select random asset from mew home page$")
     public void I_select_random_asset_from_mew_home_page() throws Throwable {
         if (Elements.elementPresent("home.home_asset")) {
@@ -386,6 +516,11 @@ public class ShopAndBrowse extends StepUtils {
         }
     }
 
+    /**
+     * Clicks on "show more" and waits for "show less" to display on facet panel
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click show more to expand facet panel using mobile website$")
     public void I_click_show_more_to_expand_facet_panel_using_mobile_website() throws Throwable {
         //expand show more button from browse/search result page
@@ -393,6 +528,12 @@ public class ShopAndBrowse extends StepUtils {
         Wait.until(() -> Elements.getText("left_facet.show_more_facets").equalsIgnoreCase("show less"));
     }
 
+    /**
+     * Selects the given category from the site menu, assuming site menu and given category is present
+     *
+     * @param pageType category name to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to registry \"([^\"]*)\" browse page from site menu using mobile website$")
     public void I_navigate_to_registry_browse_page_from_site_menu_using_mobile_website(String pageType) throws Throwable {
 
@@ -409,18 +550,35 @@ public class ShopAndBrowse extends StepUtils {
         shouldBeOnPage("category_browse");
     }
 
+    /**
+     * Selects the given quantity of the current product on PDP
+     *
+     * @param quantity how many to add
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add \"([^\"]*)\" quantity to my bag from mobile standard PDP Page$")
     public void I_add_quantity_to_my_bag_from_mobile_standard_pdp_page(String quantity) throws Throwable {
         shouldBeOnPage("product_display");
         ProductDisplay.selectQuantity(quantity);
     }
 
+    /**
+     * Selects the given text in sort by dropdown on designer page
+     *
+     * @param toSelect text to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" in sort by drop down on designer page using mobile website$")
     public void I_select_in_sort_by_drop_down_on_designer_page_using_mobile_website(String toSelect) throws Throwable {
         Wait.untilElementPresent("brand_index.sort_by_select");
         DropDowns.selectByText("brand_index.sort_by_select", toSelect);
     }
 
+    /**
+     * Scrolls to bottom of page and clicks on "back to top arrow"
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I scroll to bottom and select back to top arrow using mobile website$")
     public void I_scroll_to_bottom_and_select_back_to_top_arrow_using_mobile_website() throws Throwable {
         scrollToLazyLoadElement("footer.footer_bottom_links");
@@ -428,12 +586,24 @@ public class ShopAndBrowse extends StepUtils {
 
     }
 
+    /**
+     * Selects given size from size facet
+     *
+     * @param sizeFacet size to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" size facet on left nav using mobile website$")
     public void I_select_size_facet_on_left_nav_using_mobile_website(String sizeFacet) throws Throwable {
         MEWLeftFacet.selectSizeFacetOnLeftNav(sizeFacet);
 
     }
 
+    /**
+     * Selects given sub facet
+     *
+     * @param sub_facet_name sub facet to select
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" sub facet from left nav using mobile website$")
     public void I_select_sub_facet_from_left_nav_using_mobile_website(String sub_facet_name) throws Throwable {
         MEWLeftFacet.selectSubFacetsFromLeftNav(sub_facet_name);

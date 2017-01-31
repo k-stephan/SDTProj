@@ -10,6 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 public class Plenti extends StepUtils {
+
+    /**
+     * Navigates to my plenti page from my account pages
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to my plenti page using mobile website$")
     public void I_navigate_to_my_plenti_page_using_mobile_website() throws Throwable {
         Wait.untilElementPresent("my_account.container");
@@ -18,6 +24,12 @@ public class Plenti extends StepUtils {
         Clicks.click("my_account.my_plenti");
     }
 
+    /**
+     * Removes plenti from current profile if on plenti summary page and Clicks on given plenti button
+     *
+     * @param button "join for free", "join now", "enroll cancel" or "yes, cancel"
+     * @throws Throwable if any exception occurs
+     */
     @And("^I click \"([^\"]*)\" button using mobile website$")
     public void I_click_button_using_mobile_website(String button) throws Throwable {
         if (onPage("plenti_summary")) {
@@ -56,16 +68,31 @@ public class Plenti extends StepUtils {
         }
     }
 
+    /**
+     * Enrolls customer to Plenti
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I opt for enrolment from plenti sign in page using mobile website$")
     public void I_opt_for_enrolment_from_plenti_sign_in_page_using_mobile_website() throws Throwable {
         PlentiEnroll.enroll(TestUsers.getuslCustomer(null, "Profile_Creation"));
     }
 
+    /**
+     * Enters plenti phone number on enrollment page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I enter the plenti phone number using mobile website$")
     public void I_enter_the_plenti_phone_number_using_mobile_website() throws Throwable {
         TextBoxes.typeTextbox(Elements.element("plenti_enroll.phone_number"), TestUsers.getuslCustomer(null, "Profile_Creation").getUser().getProfileAddress().getBestPhone());
     }
 
+    /**
+     * Removes plenti from current profile
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I remove the plenti points from profile$")
     public void I_remove_the_plenti_points_from_profile() throws Throwable  {
         Wait.untilElementPresent("plenti_summary.remove_usl_id");
@@ -75,6 +102,11 @@ public class Plenti extends StepUtils {
         shouldBeOnPage("my_account");
     }
 
+    /**
+     * Verifies USL ID, redeem message, and other basic attributes on plenti summary page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see USL basic attributes on plenti summary page$")
     public void I_should_see_USL_basic_attributes_on_plenti_summary_page() throws Throwable {
         String actualUslId = Elements.getText(Elements.element("plenti_summary.added_usl_id"));

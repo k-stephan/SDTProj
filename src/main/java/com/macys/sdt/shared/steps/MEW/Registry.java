@@ -32,6 +32,11 @@ public class Registry extends StepUtils {
     private UserProfile regUser;
     private String promoCode;
 
+    /**
+     * Adds the current product to registry
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add the product to a registry using mobile website$")
     public void I_add_the_product_to_a_registry_using_mobile_website() throws Throwable {
         // There are two element with same id. One for tablet and another for mobile.
@@ -42,12 +47,23 @@ public class Registry extends StepUtils {
                 ("add_to_registry_overlay.add_to_registry_overlay", 50));
     }
 
+    /**
+     * Visits the web site then creates or logs into a registry
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Given("^I visit the mobile web site as a registry user$")
     public void I_visit_the_mobile_web_site_as_a_registry_user() throws Throwable {
         regUser = TestUsers.getNewRegistryUser();
         sign_in_or_create_registry(regUser);
     }
 
+    /**
+     * Creates or logs into a registry
+     *
+     * @param user_details profile to create
+     * @throws Throwable if any exception occurs
+     */
     public void sign_in_or_create_registry(UserProfile user_details) throws Throwable {
         Navigate.visit("home");
         closeMewTutorial();
@@ -127,6 +143,11 @@ public class Registry extends StepUtils {
         Navigate.visit("home");
     }
 
+    /**
+     * Begins the process of creating a registry starting on the registry sign in page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I start to create a new registry from mobile registry capture email page$")
     public void I_start_to_create_a_new_registry_from_mobile_registry_capture_email_page() throws Throwable {
         TestUsers.clearCustomer();
@@ -157,6 +178,11 @@ public class Registry extends StepUtils {
         }
     }
 
+    /**
+     * Creates a registry. Assumes browser is on create registry page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I create a new registry using mobile website$")
     public void I_create_a_new_registry_using_mobile_website() throws Throwable {
         if (prodEnv()) {
@@ -172,6 +198,11 @@ public class Registry extends StepUtils {
         }
     }
 
+    /**
+     * Verifies registry header is displayed on registry manager page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be navigated to the mobile registry manager page$")
     public void I_should_be_navigated_to_the_mobile_registry_manager_page() throws Throwable {
         Wait.secondsUntilElementPresent(Elements.element("registry_manager.registry_header"), MainRunner.timeout);
@@ -182,6 +213,11 @@ public class Registry extends StepUtils {
         }
     }
 
+    /**
+     * Verifies browser is on registry welcome page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should be navigated to the mobile registry welcome page$")
     public void I_should_be_navigated_to_the_mobile_registry_welcome_page() throws Throwable {
         if (onPage("registry_welcome")) {
@@ -191,6 +227,11 @@ public class Registry extends StepUtils {
         }
     }
 
+    /**
+     * Signs in as existing user from registry sign in page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I sign in with existing profile on mobile capture email page$")
     public void I_sign_in_with_existing_profile_on_mobile_capture_email_page() throws Throwable {
         TextBoxes.typeTextbox("registry_sign_in.existing_user_email", TestUsers.currentEmail);
@@ -200,6 +241,11 @@ public class Registry extends StepUtils {
         shouldBeOnPage("new_create_registry", "create_registry");
     }
 
+    /**
+     * Creates a registry. Assumes browser is on create registry page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I continue creating registry from mobile create registry page$")
     public void I_continue_creating_registry_from_mobile_create_registry_page() throws Throwable {
         if (onPage("create_registry")) {
@@ -212,6 +258,11 @@ public class Registry extends StepUtils {
         //There is no welcome page for bcom mew
     }
 
+    /**
+     * Navigates to registry home page using Global Nav
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I navigate to wedding registry page$")
     public void I_navigate_to_wedding_registry_page() throws Throwable {
         GlobalNav.openGlobalNav();
@@ -221,6 +272,13 @@ public class Registry extends StepUtils {
         Assert.assertTrue("ERROR-ENV: Unable to navigate wedding registry page", Elements.elementPresent(Elements.element("registry_home.goto_create_registry")));
     }
 
+    /**
+     * Creates registry with given time to even and event type
+     *
+     * @param event_time "less than" or "more than"
+     * @param event_type "WEDDING" or "COMMITMENT" or "ANNIVERSARY"
+     * @throws Throwable if any exception occurs
+     */
     @And("^I create a new wedding registry with event date as past date which is (less than|more than) 185 days and event type as \"(WEDDING|COMMITMENT||ANNIVERSARY)\" option on mobile site$")
     public void i_create_a_new_wedding_registry_with_event_date_as_past_date_which_is_less_than_185_days_and_event_type_as_wedding_option(String event_time, String event_type) throws Throwable {
         Calendar cal = Calendar.getInstance();
@@ -246,6 +304,11 @@ public class Registry extends StepUtils {
         Wait.forPageReady();
     }
 
+    /**
+     * Selects "Registry" or "Wedding Registry" from Global Nav
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I navigate to the mobile registry manager page$")
     public void I_navigate_to_mobile_registry_manager_page() throws Throwable {
         GlobalNav.openGlobalNav();
@@ -253,6 +316,11 @@ public class Registry extends StepUtils {
         shouldBeOnPage("registry_manager");
     }
 
+    /**
+     * Saves the promo code from the registry manager page to promoCode variable
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I save promocode displayed on mobile registry manager page$")
     public void I_save_promocode_displayed_on_registry_manager_page() throws Throwable {
         Wait.untilElementPresent(Elements.element("registry_manager.registry_promocode"));
@@ -263,6 +331,11 @@ public class Registry extends StepUtils {
         }
     }
 
+    /**
+     * Uses the promo code saved in promoCode variable on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I apply registry promo code on mobile shopping bag page$")
     public void I_apply_registry_promo_code_on_the_shopping_bag_page() throws Throwable {
         Assert.assertTrue("ERROR: promo code field is not present", Wait.untilElementPresent(Elements.element("shopping_bag.promocode_area")));
@@ -271,6 +344,11 @@ public class Registry extends StepUtils {
         Clicks.click(Elements.element("shopping_bag.btn_promocode_apply"));
     }
 
+    /**
+     * Verifies that the registry promo text is displayed on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see registry promocode is applied on mobile shopping bag page$")
     public void I_should_see_registry_promocode_applied_on_mobile_shopping_bag_page() throws Throwable {
         Wait.untilElementPresent("shopping_bag.promo_text");
@@ -280,6 +358,11 @@ public class Registry extends StepUtils {
                 Elements.getText("shopping_bag.promo_text").contentEquals(promoText));
     }
 
+    /**
+     * Verifies that the names of registrant and co registrant are correct on shopping bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I verify the registrant & co registrant name on mobile shopping bag page$")
     public void I_verify_the_registrant_co_registrant_name_on_mobile_shopping_bag_page() throws Throwable {
         String first_name = regUser.getUser().getProfileAddress().getFirstName();
@@ -292,6 +375,11 @@ public class Registry extends StepUtils {
         Assert.assertTrue("Error: Registrant & Co-registrant name incorrect", registrant_details.toUpperCase().contains(registrant_co_registrant_name));
     }
 
+    /**
+     * Searches for an existing registry using currently saved registry data
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I search for the existing couple's registry using mobile site$")
     public void i_search_for_the_existing_couple_s_registry() throws Throwable {
         String capturedFirstName = regUser.getUser().getProfileAddress().getFirstName();
@@ -302,6 +390,11 @@ public class Registry extends StepUtils {
         Clicks.click(page + ".search_registry_button");
     }
 
+    /**
+     * Verifies that the correct registry has been found
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should find the couple's registry using mobile site$")
     public void i_should_find_the_couple_s_registry() throws Throwable {
         String firstName = regUser.getUser().getProfileAddress().getFirstName();
@@ -320,12 +413,22 @@ public class Registry extends StepUtils {
         Assert.assertTrue(registrantName + " registry not found.", found);
     }
 
+    /**
+     * Click on the edit profile button on the registry manager page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on edit profile link on mobile registry manager page$")
     public void I_click_on_edit_profile_link_on_mobile_registry_manager_page() throws Throwable {
         shouldBeOnPage("registry_manager");
         Clicks.click("registry_manager.edit_our_registry");
     }
 
+    /**
+     * Updates the co registrant first name in edit registry page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I update co_registrant_first_name in mobile update registry page$")
     public void I_update_co_registrant_first_name_in_mobile_update_registry_page() throws Throwable {
         shouldBeOnPage("edit_registry");
@@ -342,6 +445,11 @@ public class Registry extends StepUtils {
         Wait.forPageReady();
     }
 
+    /**
+     * Verifies that co registrant first name is updated on registry manager page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see updated co_registrant_first_name in mobile registry manager page$")
     public void I_should_see_updated_co_registrant_first_name_in_mobile_registry_manager_page() throws Throwable {
         Wait.untilElementPresent("registry_manager.registry_header");
@@ -359,6 +467,11 @@ public class Registry extends StepUtils {
         Assert.assertTrue("Registry title is not updated properly!!", actualRegistryHeader.equalsIgnoreCase(expectedRegistryHeader));
     }
 
+    /**
+     * Adds product to bag from GVR page of currently saved registry and selects checkout button
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add product to bag from GVR page using mobile website and select checkout$")
     public void iAddProductToBagFromGVRPageUsingMobileWebsite() throws Throwable {
         if (macys()) {

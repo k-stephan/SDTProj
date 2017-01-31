@@ -23,6 +23,19 @@ public class ProductDisplayPage extends StepUtils {
     public static String mew_promotional_prod_id = null;
     public static String mew_promotion_code = null;
 
+    /**
+     * Adds a product with the given attributes to bag and selects checkout if elected
+     *
+     * <p>
+     * <b>Example: </b> I add an "orderable and available and bops_available" product to my bag using mobile website that is not "click_to_call" and checkout<br>
+     * this would add a bops product that does not have the "click_to_call" attribute (of course those two wouldn't overlap anyway, but that's not the point)
+     * </p>
+     *
+     * @param productTrue  Properties expected to be true separated by either a space or the word "and"
+     * @param productFalse Properties expected to be false separated by either a space or the word "and"
+     * @param checkout     present if you want to end up on shopping bag page
+     * @throws Throwable if any exception occurs or product cannot be found
+     */
     @When("^I add an? \"(.*?)\" product to my bag using mobile website(?: that is not(?: an?)? \"(.*?)\")?(?: and \"?(.*?)\"? ?checkout)?$")
     public void I_add_a_product_to_my_bag_using_mobile_website(String productTrue, String productFalse, String checkout) throws Throwable {
         if (prodEnv()) {
@@ -55,6 +68,11 @@ public class ProductDisplayPage extends StepUtils {
         }
     }
 
+    /**
+     * Adds "Lenox Vintage Jewel 5 Piece Place Setting" (ID 86800) product to bag
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I add a predefined orderable product to my bag using mobile website$")
     public void I_select_a_predefined_orderable_random_member_product_using_mobile_website() throws Throwable {
         /*
@@ -73,6 +91,11 @@ public class ProductDisplayPage extends StepUtils {
         }
     }
 
+    /**
+     * Adds product to bag from current PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add product to my bag from standard PDP Page using mobile site$")
     public void I_add_product_to_my_bag_from_standard_PDP_Page_using_mobile_site() throws Throwable {
         for (int count = 0; count < 5; count++) {
@@ -115,12 +138,23 @@ public class ProductDisplayPage extends StepUtils {
             Assert.fail("Unable to add product to bag");
     }
 
+    /**
+     * Clicks on share button on PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select share button on pdp page using mobile website$")
     public void I_select_share_button_on_pdp_page_using_mobile_website() throws Throwable {
         Assert.assertTrue("ERROR-ENV: Share button is not visible", Wait.untilElementPresent("product_display.share_button"));
         Clicks.click("product_display.share_button");
     }
 
+    /**
+     * Selects the given social icon on PDP
+     *
+     * @param social_icon "facebook", "twitter", "pinterest", "email" or "google_plus"
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select \"([^\"]*)\" social icon on PDP Page using mobile website$")
     public void I_select_social_icon_on_PDP_Page_using_mobile_website(String social_icon) throws Throwable {
         if (Elements.elementPresent("product_display.share_button"))
@@ -156,6 +190,12 @@ public class ProductDisplayPage extends StepUtils {
         Clicks.clickIfPresent("product_display.social_close");
     }
 
+    /**
+     * Verifies the expected title of a popup window for social icons
+     *
+     * @param social_icon_pop_up "Facebook", "twitter", "pinterest", "emailemail" or "google_plus"
+     * @throws Throwable if any exception occurs
+     */
     @Then("^I should see \"([^\"]*)\" title in the popup window using mobile website$")
     public void I_should_see_title_in_the_popup_window_using_mobile_website(String social_icon_pop_up) throws Throwable {
         int window_index = 0;
@@ -185,6 +225,11 @@ public class ProductDisplayPage extends StepUtils {
         }
     }
 
+    /**
+     * Searches nearby stores for stock of the current product
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I search for a product in a nearby store using mobile website$")
     public void I_search_for_a_product_in_a_nearby_store_using_mobile_website() throws Throwable {
         Assert.assertTrue("ERROR-ENV: Unable to locate product in store", Elements.elementPresent("product_display.find_store_link"));
@@ -197,11 +242,22 @@ public class ProductDisplayPage extends StepUtils {
         Clicks.click("change_pickup_store.search_button");
     }
 
+    /**
+     * Verifies the member products are displayed on master PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I should see member products listed in mobile website$")
     public void I_should_see_member_products_listed_in_mobile_website() throws Throwable {
         Assert.assertTrue("Member items not visible", Elements.anyPresent("product_display_master.member_prod_list"));
     }
 
+    /**
+     * Adds random member product to bag from master PDP and selects the opted button
+     *
+     * @param option "checkout" or "continue shopping"
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add member product from PDP and select \"([^\"]*)\" using mobile website$")
     public void I_add_member_product_from_PDP_and_select_using_mobile_website(String option) throws Throwable {
         new ProductDisplay().addRandomMemberProductOnMasterPDP();
@@ -215,30 +271,58 @@ public class ProductDisplayPage extends StepUtils {
         }
     }
 
+    /**
+     * Selects random alternative image on PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I select a random alternative image using mobile website$")
     public void I_select_a_random_alternative_image_using_mobile_website() throws Throwable {
         Assert.assertTrue("ERROR-DATA: Alternative images are not visible under the selected product", Wait.untilElementPresent("product_display.alt_images"));
         Clicks.clickRandomElement("product_display.alt_images"); //Should checkout selected alternate product
     }
 
+    /**
+     * Clicks on "Add to Wish List button" on PDP and waits for wish list overlay
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I click Add to Wish List button on PDP using mobile website$")
     public void I_click_add_to_Wish_List_button_on_PDP_using_mobile_website() throws Throwable {
         Clicks.click("product_display.add_to_wishlist");
         Assert.assertTrue("ERROR-ENV: Unable to navigate wish list overlay", Wait.secondsUntilElementPresent("product_display.wish_list_overlay", 10));
     }
 
+    /**
+     * Clicks on "view list" on Add to Wish List overlay
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on view list in ATW overlay from PDP using mobile website$")
     public void I_click_on_view_list_in_ATW_overlay_from_PDP_using_mobile_website() throws Throwable {
         Clicks.click("product_display.view_list");
         Assert.assertTrue("ERROR-ENV: Unable to navigate wish list page", onPage("wish_list"));
     }
 
+    /**
+     * Selects size and color on current PDP page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I select product related attributes from PDP using mobile website$")
     public void I_select_product_related_attributes_from_PDP_using_mobile_website() throws Throwable {
         ProductDisplay.selectRandomColor();
         ProductDisplay.selectRandomSize();
     }
 
+    /**
+     * Adds a product with the given attributes to bag from BVR page and selects checkout if elected
+     *
+     * @param productTrue  Properties expected to be true separated by either a space or the word "and"
+     * @param productFalse Properties expected to be false separated by either a space or the word "and"
+     * @param checkout     present if you want to end up on shopping bag page
+     * @throws Throwable if any exception occurs
+     */
     @When("^^I add \"([^\"]*)\" product to my bag(?: that is not(?: an?)? \"(.*?)\")? from BVR page using mobile website(?: and \"?(.*?)\"? ?checkout)?$")
     public void I_add_a_product_to_registry_using_mobile_website(String productTrue, String productFalse, String checkout) throws Throwable {
         if (prodEnv()) {
@@ -279,6 +363,11 @@ public class ProductDisplayPage extends StepUtils {
         }
     }
 
+    /**
+     * Adds a product to registry from current PDP
+     *
+     * @throws Throwable if any exception occurs
+     */
     @And("^I add product to my registry from standard PDP Page using mobile site$")
     public void I_add_product_to_my_registry_from_standard_PDP_Page_using_mobile_site() throws Throwable {
         try {
@@ -301,6 +390,11 @@ public class ProductDisplayPage extends StepUtils {
         }
     }
 
+    /**
+     * Clicks on "continue shopping" button on add to bag page
+     *
+     * @throws Throwable if any exception occurs
+     */
     @When("^I click on the continue shopping button from ATB page using mobile website$")
     public void iClickOnTheContinueShoppingButtonFromATBPageUsingMobileWebsite() throws Throwable {
         shouldBeOnPage("add_to_bag");
@@ -308,6 +402,12 @@ public class ProductDisplayPage extends StepUtils {
         Clicks.click("add_to_bag.continue_shopping");
     }
 
+    /**
+     * Navigates directly to given product PDP from current PDP
+     *
+     * @param productID target product ID
+     * @throws Throwable if any exception occurs
+     */
     @When("^I replace product ID with available \"([^\"]*)\" product ID using mobile website$")
     public void iReplaceProductIDWithAvailableProductID(int productID) throws Throwable {
         shouldBeOnPage("product_display");
