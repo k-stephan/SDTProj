@@ -419,7 +419,7 @@ public class MainRunner {
     private static void getProject() {
         String projectPath = scenarios.replace("/", ".");
         ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
-        int index = parts.indexOf("SDT");
+        int index = parts.lastIndexOf("SDT");
         if (index == -1) {
             index = parts.indexOf("features");
             if (index < 2) {

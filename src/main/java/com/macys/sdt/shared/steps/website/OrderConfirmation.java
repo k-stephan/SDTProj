@@ -68,6 +68,10 @@ public class OrderConfirmation extends StepUtils {
      */
     @And("^I capture order number from order_confirmation page$")
     public void I_capture_order_number_from_order_confirmation_page() throws Throwable {
+        Wait.secondsUntilElementNotPresent("responsive_order_summary.place_order", 15);
+        Wait.secondsUntilElementNotPresent("responsive_order_summary.mask", 15);
+        Wait.forPageReady();
+        Wait.secondsUntilElementPresent("responsive_order_confirmation.verify_page", 20);
         boolean responsive = onPage("responsive_order_confirmation");
         String page = responsive ? "responsive_order_confirmation" : "order_confirmation";
         Assert.assertTrue("Order number not displayed.", Wait.untilElementPresent(page + ".order_number"));

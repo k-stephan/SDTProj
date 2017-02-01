@@ -20,6 +20,12 @@ public class CheckoutPageBcom extends StepUtils {
 
     private CheckoutUtils m_checkout = new CheckoutUtils();
 
+    /**
+     * Fills shipping information during checkout for guest user
+     *
+     * @param opts Shipping options
+     * @param bops true if bops order, else false
+     */
     public void fillGuestShippingData(HashMap<String, String> opts, boolean bops) throws NoSuchElementException {
         boolean iship = opts != null && opts.get("country") != null && !opts.get("country").equalsIgnoreCase("United States");
         String page = onPage("responsive_checkout, responsive_checkout_signed_in".split(", ")) ? (signedIn() ? "responsive_checkout_signed_in" : "responsive_checkout") : "shipping_guest";
@@ -63,6 +69,12 @@ public class CheckoutPageBcom extends StepUtils {
         }
     }
 
+    /**
+     * Fills credit card information during checkout for guest user
+     *
+     * @param responsive true if responsive checkout flow, else false
+     * @param iship true if international(iship) mode, else false
+     */
     public void fillGuestCardDetails(boolean responsive, boolean iship) {
         String page = iship ? "iship_checkout" : (responsive ? (signedIn() ? "responsive_checkout_signed_in" : "responsive_checkout") : (signedIn() ? "shipping_payment_signed_in" : "payment_guest"));
         CreditCard visaCard = TestUsers.getValidVisaCreditCard();
@@ -81,6 +93,11 @@ public class CheckoutPageBcom extends StepUtils {
 
     }
 
+    /**
+     * Fills contact details during checkout for guest user
+     *
+     * @param iship true if international(iship) mode, else false
+     */
     public void fillGuestContactDetails(boolean iship) {
         String page = iship ? "iship_checkout" : "payment_guest";
         if (!iship) {
@@ -92,6 +109,12 @@ public class CheckoutPageBcom extends StepUtils {
         }
     }
 
+    /**
+     * Fills payment information during checkout
+     *
+     * @param iship true if international(iship) mode, else false
+     * @param opts payment address options
+     */
     public void fillGuestPaymentData(HashMap<String, String> opts, boolean iship) {
         String page = iship ? "iship_checkout" : "payment_guest";
         if (iship) {

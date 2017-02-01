@@ -10,12 +10,22 @@ import org.openqa.selenium.By;
 
 public class MEWLeftFacet extends StepUtils {
 
+    /**
+     * Selects the given facet from facets panel
+     *
+     * @param facet name of facet to select
+     */
     public static void selectFacetOnLeftNav(String facet) {
         String facetFixed = fixFacetName(facet);
         Clicks.clickWhenPresent(Elements.paramElement("left_facet.select_facet", facetFixed));
         Wait.untilElementPresent("left_facet.sub_facet_container");
     }
 
+    /**
+     * Selects the given sub facet from facets panel
+     *
+     * @param subFacet name of sub facet to select
+     */
     public static void selectSubFacetOnLeftNav(String subFacet) {
         if (subFacet.matches("^\\$[0-9][0-9][0-9]? - \\$[0-9][0-9][0-9]?")) {
             if(bloomingdales())
@@ -38,6 +48,9 @@ public class MEWLeftFacet extends StepUtils {
         Clicks.clickElementByText("left_facet.select_sub_facets", subFacet);
     }
 
+    /**
+     * Applies the currently selected facet
+     */
     public static void confirmFacets() {
         if(macys()) {
             Clicks.clickIfPresent("left_facet.done");

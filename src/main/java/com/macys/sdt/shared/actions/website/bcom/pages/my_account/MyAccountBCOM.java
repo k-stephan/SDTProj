@@ -6,6 +6,14 @@ import com.macys.sdt.framework.utils.StepUtils;
 
 public class MyAccountBCOM extends StepUtils {
 
+    /**
+     * Navigates to given page from my account pages using left navigation
+     * <p>Page Options: <br>
+     * "my account", "my profile", "my address book", "my wallet", "wish list", "order status" or "member benefits"
+     * </p>
+     *
+     * @param pageName target page name
+     */
     public void navigateToLeftNavigationPage(String pageName) {
         String left_navigation_link = "navigation";
         switch (pageName.toLowerCase()) {

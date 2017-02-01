@@ -142,6 +142,7 @@ public class ShopAndBrowse extends StepUtils {
         boolean addedToBag = false;
         Assert.assertFalse("ERROR - DATA : Product ( " + (recentProduct == null ? "" : String.valueOf(recentProduct.id)) + " ) is unavailable on product display page!!", !Elements.elementPresent("product_display.add_to_bag_button") && Elements.elementPresent("product_display.availability_error"));
         try {
+            Wait.forPageReady();
             int retries = 5;
             pausePageHangWatchDog();
             for (int count = 0; count < retries && !addedToBag; count++) {

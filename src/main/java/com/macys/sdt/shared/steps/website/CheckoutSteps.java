@@ -433,8 +433,9 @@ public class CheckoutSteps extends StepUtils {
         Boolean responsive = !onPage("order_review");
         Wait.untilElementPresent((responsive ? "responsive_order_summary" : "order_review") + ".place_order");
         new Checkout().selectPlaceOrderButton();
-        Wait.secondsUntilElementNotPresent((responsive ? "responsive_order_summary" : "order_review") + ".place_order", 10);
-        Wait.secondsUntilElementNotPresent((responsive ? "responsive_order_summary" : "order_review") + ".mask", 10);
+        Wait.secondsUntilElementNotPresent((responsive ? "responsive_order_summary" : "order_review") + ".place_order", 15);
+        Wait.secondsUntilElementNotPresent((responsive ? "responsive_order_summary" : "order_review") + ".mask", 15);
+        Wait.forPageReady();
         Wait.secondsUntilElementPresent((responsive ? "responsive_order_confirmation" : "order_confirmation") + ".verify_page", 20);
         Assert.assertTrue("Order not placed successfully!!", onPage("responsive_order_confirmation"));
 //        resumePageHangWatchDog();

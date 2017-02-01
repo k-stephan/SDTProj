@@ -14,6 +14,9 @@ import java.util.List;
 
 public class GlobalNav extends StepUtils {
 
+    /**
+     * Opens global navigation menu on any page
+     */
     public static void openGlobalNav() {
         if (onPage("registry_home", "registry_manager")) {
             if (!Elements.elementPresent("home.registry_global_nav_visible")) {
@@ -39,6 +42,9 @@ public class GlobalNav extends StepUtils {
         }
     }
 
+    /**
+     * Closes global navigation menu on any page
+     */
     public static void closeGlobalNav() {
         // sometimes the GN is in the process of closing (from a previous navigation)
         // but still mid-animation. Give it a moment.
@@ -64,6 +70,11 @@ public class GlobalNav extends StepUtils {
         }
     }
 
+    /**
+     * Selects given menu item from global navigation menu
+     *
+     * @param gn_name menu item to select
+     */
     public static void navigateOnGnByName(String gn_name) {
         Wait.untilElementPresent("home.nav_menu_list");
         for (String aGnName : gn_name.split(" or ")) {
@@ -95,6 +106,9 @@ public class GlobalNav extends StepUtils {
         Assert.fail("Could not find \"" + gn_name + "\" on global nav");
     }
 
+    /**
+     * Clicks on first product from recently viewed panel
+     */
     public static void navigateToRecentlyViewedProduct() {
         Wait.untilElementPresent(Elements.element("product_display.recently_viewed_product_container"));
         List<WebElement> recently_viewed_prods = Elements.findElements(Elements.element("product_display.recently_viewed_products"));
