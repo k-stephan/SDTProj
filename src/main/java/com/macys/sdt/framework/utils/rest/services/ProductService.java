@@ -6,9 +6,9 @@ import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import com.macys.sdt.shared.utils.db.models.OrderServices;
-import org.w3c.dom.Element;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Element;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class ProductService {
 
 
-    public static Map<String, String > checkoutHeaders = new HashMap<>();
+    public static Map<String, String> checkoutHeaders = new HashMap<>();
 
     /**
      * To find the product id is available for checkout in environment using FCC service
@@ -51,8 +51,8 @@ public class ProductService {
         Response response = RESTOperations.doGET(getServiceURL() + productId, null);
         try {
             JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
-            for(int index=0; index < jsonResponse.getJSONArray("upcs").length(); index ++)
-                upcIds.add(((JSONObject)jsonResponse.getJSONArray("upcs").get(index)).getBigInteger("id").toString());
+            for (int index = 0; index < jsonResponse.getJSONArray("upcs").length(); index++)
+                upcIds.add(((JSONObject) jsonResponse.getJSONArray("upcs").get(index)).getBigInteger("id").toString());
         } catch (JSONException e) {
             System.err.println("Unable to get product information from FCC: " + e);
         }
@@ -68,17 +68,25 @@ public class ProductService {
     public static boolean checkProductAvailabilityAtMST(String upcId) {
         checkoutHeaders.put("Accept", "application/json");
         checkoutHeaders.put("Content-Type", "application/xml");
-        boolean isItemUnavailable = false;
-        Element addToBagResponse = new OrderServices().getXmlElements(addUpcIdToBag(upcId));
-        if (addToBagResponse.getElementsByTagName("message").item(0) != null)
-            return isItemUnavailable;
-        Element initiateCheckoutResponse = new OrderServices().getXmlElements(initiateCheckout(addToBagResponse.getElementsByTagName("userId").item(0).getTextContent()));
-        if (initiateCheckoutResponse.getElementsByTagName("message").item(0) != null)
-            return isItemUnavailable;
-        Element processCheckoutResponse = new OrderServices().getXmlElements(processCheckout(initiateCheckoutResponse.getElementsByTagName("number").item(0).getTextContent(), initiateCheckoutResponse.getElementsByTagName("guid").item(0).getTextContent()));
-        if (Boolean.parseBoolean(processCheckoutResponse.getElementsByTagName("orderHasError").item(0).getTextContent()))
-            isItemUnavailable = processCheckoutResponse.getElementsByTagName("message").item(0).getTextContent().equals("CS_ITEM_UNAVAILABLE");
-        return !isItemUnavailable;
+        try {
+            Element addToBagResponse = new OrderServices().getXmlElements(addUpcIdToBag(upcId));
+            if (addToBagResponse.getElementsByTagName("message").item(0) != null) {
+                return false;
+            }
+            Element initiateCheckoutResponse = new OrderServices().getXmlElements(initiateCheckout(addToBagResponse.getElementsByTagName("userId").item(0).getTextContent()));
+            if (initiateCheckoutResponse.getElementsByTagName("message").item(0) != null) {
+                return false;
+            }
+            Element processCheckoutResponse = new OrderServices().getXmlElements(processCheckout(initiateCheckoutResponse.getElementsByTagName("number").item(0).getTextContent(), initiateCheckoutResponse.getElementsByTagName("guid").item(0).getTextContent()));
+            if (Boolean.parseBoolean(processCheckoutResponse.getElementsByTagName("orderHasError").item(0).getTextContent())) {
+                boolean isItemUnavailable = processCheckoutResponse.getElementsByTagName("message").item(0).getTextContent().equals("CS_ITEM_UNAVAILABLE");
+                return !isItemUnavailable;
+            }
+        } catch (Exception e) {
+            // assume error means product not available
+            System.err.println("Unable to get product availability from MST" + e);
+        }
+        return false;
     }
 
     /**
@@ -105,7 +113,7 @@ public class ProductService {
      * process checkout with user id and get the repsonse
      *
      * @param orderNumber get order number from initiate response
-     * @param guid get guid from initiate response
+     * @param guid        get guid from initiate response
      * @return String initiate checkout service response
      */
     public static String processCheckout(String orderNumber, String guid) {
@@ -116,7 +124,7 @@ public class ProductService {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<item>\n" +
                 "<quantity>1</quantity>\n" +
-                "<upcId>"+upcId+"</upcId>\n" +
+                "<upcId>" + upcId + "</upcId>\n" +
                 "</item>";
     }
 
@@ -126,23 +134,24 @@ public class ProductService {
                 "<userId>" + userId + "</userId>\n" +
                 "</order>\n";
     }
+
     private static String getProcessCheckoutBody(String orderNumber, String guid) {
         HashMap<String, String> opts = new HashMap<>();
         opts.put("checkout_eligible", "true");
-        ProfileAddress address =  new ProfileAddress();
+        ProfileAddress address = new ProfileAddress();
         TestUsers.getRandomValidAddress(opts, address);
         return "<order>\n" +
                 "<number>" + orderNumber + "</number>\n" +
-                "<guid>" + guid +"</guid>\n" +
+                "<guid>" + guid + "</guid>\n" +
                 "<shipments>\n" +
                 "<shipment>\n" +
                 "<shippingContact>\n" +
                 "<address>\n" +
-                "<addressLine1>"+address.getAddressLine1()+"</addressLine1>\n" +
-                "<city>"+address.getCity()+"</city>\n" +
-                "<state>"+address.getState()+"</state>\n" +
+                "<addressLine1>" + address.getAddressLine1() + "</addressLine1>\n" +
+                "<city>" + address.getCity() + "</city>\n" +
+                "<state>" + address.getState() + "</state>\n" +
                 "<country>USA</country>\n" +
-                "<postalCode>"+address.getZipCode()+"</postalCode>\n" +
+                "<postalCode>" + address.getZipCode() + "</postalCode>\n" +
                 "</address>\n" +
                 "<firstName>First</firstName>\n" +
                 "<lastName>Last</lastName>\n" +
