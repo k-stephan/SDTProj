@@ -399,7 +399,7 @@ class WebDriverConfigurator {
             if (!StepUtils.mobileDevice() && !remoteOS.matches("^(.*?)10.11|(.*?)10.12$")) {
                 capabilities.setCapability("screenResolution", "1280x1024");
             }
-            if (!StepUtils.mobileDevice() && (remoteOS.matches("^(.*?)10.11|(.*?)10.12$") || StepUtils.edge() || StepUtils.firefox())) {
+            if (!StepUtils.mobileDevice() && remoteOS.matches("^(.*?)10.11|(.*?)10.12$")) {
                 capabilities.setCapability("screenResolution", "1376x1032");
             }
 
