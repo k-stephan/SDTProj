@@ -427,20 +427,20 @@ public class Registry extends StepUtils {
         String co_registrant_ln = regUser.getRegistry().getCoRegistrantLastName();
 
         Wait.untilElementPresent("shopping_bag.registrant_name_details");
-        String registrant_details = Elements.getText("shopping_bag.registrant_name_details");
+        String registrant_details = Elements.getText("shopping_bag.registrant_name_details").trim();
 
         try {
             if (macys()) {
                 String registrant_co_registrant_name = first_name + " " + last_name + " & " + co_registrant_fn + " " + co_registrant_ln;
-                Assert.assertTrue("Error: Co-registrant name incorrect", registrant_details.toUpperCase().contains(registrant_co_registrant_name));
+                Assert.assertTrue("Error: registrant and co-registrant name incorrect!!", registrant_details.toUpperCase().contains(registrant_co_registrant_name));
             } else {
                 String[] split_name = registrant_details.split(" & ");
 
                 String registrant_name = first_name + " " + last_name;
                 String co_registrant_name = co_registrant_fn + " " + co_registrant_ln;
 
-                Assert.assertTrue("Error: registrant name incorrect", split_name[0].equalsIgnoreCase(registrant_name));
-                Assert.assertTrue("Error: Co-registrant name incorrect", split_name[1].equalsIgnoreCase(co_registrant_name));
+                Assert.assertTrue("Error: registrant name incorrect!!", split_name[0].trim().equalsIgnoreCase(registrant_name));
+                Assert.assertTrue("Error: Co-registrant name incorrect!!", split_name[1].trim().equalsIgnoreCase(co_registrant_name));
             }
         } catch (Exception e) {
             Assert.fail("Registrant and Co Registrant name on shopping bag are not matching with Registrant data" + e);
