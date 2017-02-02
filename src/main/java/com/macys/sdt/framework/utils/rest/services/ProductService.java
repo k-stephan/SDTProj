@@ -5,7 +5,7 @@ import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
-import com.macys.sdt.shared.utils.db.models.OrderServices;
+import com.macys.sdt.framework.utils.db.models.OrderServices;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Element;

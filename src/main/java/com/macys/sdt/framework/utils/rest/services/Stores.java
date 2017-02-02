@@ -1,4 +1,4 @@
-package com.macys.sdt.shared.utils.rest.services;
+package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import org.apache.commons.httpclient.HttpClient;
@@ -8,9 +8,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-/**
- * Created by atepliashin on 9/26/16.
- */
 public class Stores {
 
     private static final String PATH = "/api/store/v2/stores/";

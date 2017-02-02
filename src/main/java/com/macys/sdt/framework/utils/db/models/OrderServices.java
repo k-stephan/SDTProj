@@ -1,4 +1,4 @@
-package com.macys.sdt.shared.utils.db.models;
+package com.macys.sdt.framework.utils.db.models;
 
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
