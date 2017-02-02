@@ -13,6 +13,13 @@ import java.util.List;
 
 public class MyAddressBook extends StepUtils {
 
+    /**
+     * Updates the address which is at the given index
+     *
+     * @param index index of address
+     * @param opts custom address options
+     * @throws Throwable if any exception occurs
+     */
     public void updateAddress(int index, HashMap<String, String> opts) throws Throwable {
         ProfileAddress addressObject = new ProfileAddress();
         TestUsers.getRandomValidAddress(opts, addressObject);
@@ -24,6 +31,12 @@ public class MyAddressBook extends StepUtils {
         System.out.println("->editAddress(): Address updated!!");
     }
 
+    /**
+     * Adds address with the specified condition like "checkout_eligible is true"
+     *
+     * @param opts address options
+     * @throws Throwable if any exception occurs
+     */
     public void addAddress(HashMap<String, String> opts) throws Throwable {
         ProfileAddress addressObject = new ProfileAddress();
         TestUsers.getRandomValidAddress(opts, addressObject);
@@ -36,6 +49,13 @@ public class MyAddressBook extends StepUtils {
         System.out.println("->addAddress(): Address Added!!");
     }
 
+    /**
+     * Fills the given ProfileAddress on the given page
+     *
+     * @param pageName page on which address has to be filled
+     * @param addressObject Address to fill
+     * @throws Throwable if any exception occurs
+     */
     public void addressBookCommonFields(String pageName, ProfileAddress addressObject) throws Throwable {
         TextBoxes.typeTextbox(pageName + ".address_line_1", addressObject.getAddressLine1());
         TextBoxes.typeTextbox(pageName + ".address_line_2", addressObject.getAddressLine2());
@@ -53,6 +73,11 @@ public class MyAddressBook extends StepUtils {
         Clicks.click(pageName + ".add_address_button");
     }
 
+    /**
+     * Verifies whether address is present or not
+     *
+     * @return true if at least one address is present else false
+     */
     public static boolean isAddressAdded() {
         return Elements.findElements("my_address_book.addresses").size() > 0;
     }

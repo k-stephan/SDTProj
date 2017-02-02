@@ -13,6 +13,21 @@ import org.openqa.selenium.NoAlertPresentException;
 
 
 public class CreateProfile extends StepUtils {
+
+    /**
+     * Creates a new profile
+     * <p> Edge Cases: <br>
+     *  1. to use invalid dob. <br>
+     *  2. to input EMPTY phone field. <br>
+     *  3. to input invalid/incomplete phone field. <br>
+     *  4. to input all same digits for phone. <br>
+     *  <br> For Ex: to input all same digits for phone <br>
+     *  createProfile(customer, false, false, false, true)
+     * </p>
+     *
+     * @param customer instance of UserProfile model
+     * @param edgeCase optional boolean values for edge Cases
+     */
     public static void createProfile(UserProfile customer, boolean... edgeCase) {
         if (!onPage("create_profile")) {
             Navigate.visit("create_profile");
@@ -116,21 +131,44 @@ public class CreateProfile extends StepUtils {
         resumePageHangWatchDog();
     }
 
+    /**
+     * Fills the textbox with the specified value if it is present
+     *
+     * @param elementName page.element is the field name which has to fill
+     * @param value is to be filled in the text box
+     */
     public static void typeTextBoxIfPresent(String elementName, String value) {
         if (Elements.elementPresent(elementName))
             TextBoxes.typeTextbox(elementName, value);
     }
 
+    /**
+     * Selects the specified text from the dropdown if dropdown is present
+     *
+     * @param elementName page.element dropdown element
+     * @param value to select in dropdown
+     */
     public static void selectDropDownIfPresent(String elementName, String value) {
         if (Elements.elementPresent(elementName))
             DropDowns.selectByText(elementName, value);
     }
 
+    /**
+     * Select text from a drop down list if drop down is present
+     * Note: Using this for BCOM as in Account pages the select elements are hidden in UI
+     *
+     * @param elementName drop down list element
+     * @param elementOptions list of elements
+     * @param value to select
+     */
     public static void selectCustomDropDownIfPresent(String elementName, String elementOptions, String value) {
         if (Elements.elementPresent(elementName))
             DropDowns.selectCustomText(elementName, elementOptions, value);
     }
 
+    /**
+     * Closes the security alert popup for IE browser if appears
+     */
     public static void closeSecurityAlertPopUp() {
         if (ie()) {
             try {

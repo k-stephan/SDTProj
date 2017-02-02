@@ -9,6 +9,14 @@ import com.macys.sdt.shared.actions.website.mcom.panels.shop_and_browse.ChangePr
 
 public class MyAccount extends StepUtils {
 
+    /**
+     * Navigates to given page from my account pages using left navigation
+     * <p>Page Options: <br>
+     * "my account", "my profile", "my preferences", "my address book", "my wallet", "wish list", "order status", "furniture mattress status", "gift card balance"
+     * </p>
+     *
+     * @param pageName target page name
+     */
     public void navigateToLeftNavigationPage(String pageName) {
         String left_navigation_link = "navigation";
         switch (pageName.toLowerCase()) {
@@ -44,7 +52,13 @@ public class MyAccount extends StepUtils {
         Clicks.click(left_navigation_link);
     }
 
-
+    /**
+     * Verifies browser is on given page
+     * <p> Note: If  verify_page element is not defined for given page waits extra 5 seconds for page load </p>
+     *
+     * @param pageName Expected Page
+     * @return true if on given page else false
+     */
     public boolean navigatedToExpectedPage(String pageName) {
         String navigated_page_name;
         switch (pageName.toLowerCase()) {
@@ -67,6 +81,9 @@ public class MyAccount extends StepUtils {
         return onPage(navigated_page_name.toLowerCase());
     }
 
+    /**
+     * Selects the security question and fills the answer
+     */
     public void setSecurityQuestion(){
         Wait.forPageReady();
         Wait.untilElementPresent("sign_in.security_question");
@@ -80,6 +97,11 @@ public class MyAccount extends StepUtils {
         }
     }
 
+    /**
+     * Sets the prefered store
+     *
+     * @param zipcode zip code location
+     */
     public static void setPreferredStore(String zipcode) {
         Wait.untilElementPresent("my_account.change_locations");
         Clicks.click(Elements.element("my_account.change_locations"));
