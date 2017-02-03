@@ -379,27 +379,35 @@ class WebDriverConfigurator {
             // remove quoted chars
             remoteOS = remoteOS.replace("\"", "");
             remoteOS = remoteOS.replace("'", "");
+
+            // browser specific capability
             if (!StepUtils.mobileDevice()) {
                 capabilities.setCapability("platform", remoteOS);
                 capabilities.setCapability("version", browserVersion);
             }
+
+            // set browser name
             if(MainRunner.browser.equalsIgnoreCase("ie"))
                 capabilities.setCapability("browserName", "iexplore");
             else if (MainRunner.browser.equalsIgnoreCase("edge"))
                 capabilities.setCapability("browserName", "microsoftedge");
             else
                 capabilities.setCapability("browserName", MainRunner.browser);
+
             capabilities.setCapability("idleTimeout", 300);
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
             capabilities.setCapability("name", (StepUtils.macys() ? "Macy's" : "Bloomingdales") +
                     " SDT " + (project != null ? project : "") + " test");
             capabilities.setCapability("maxDuration", 3600);
+
+            // to use sauce connect
             if (MainRunner.tunnelIdentifier != null) {
                 capabilities.setCapability("tunnel-identifier", MainRunner.tunnelIdentifier);
                 System.out.println("Using sauce connect tunnel: " + MainRunner.tunnelIdentifier);
             } else {
-                System.out.println("running without sauce connect");
+                System.out.println("INFO : running without sauce connect");
             }
+
             // need to increase resolution or we get tablet layout
             // not supported on win10 and mac OSX El Capitan (10.11)
             if (!StepUtils.mobileDevice() && !remoteOS.matches("^(.*?)10.11|(.*?)10.12$")) {
@@ -409,9 +417,9 @@ class WebDriverConfigurator {
                 capabilities.setCapability("screenResolution", "1376x1032");
             }
 
-            if (useAppium) {
+            if (useAppium) { // iOS or Android
                 return initAppiumDevice(capabilities);
-            } else if (StepUtils.safari()) {
+            } else if (StepUtils.safari()) {    // Desktop Safari
                 // safari driver is not stable, try up to 3 times
                 int count = 0;
                 while (count++ < 3) {
@@ -424,7 +432,7 @@ class WebDriverConfigurator {
                         }
                     }
                 }
-            } else if (StepUtils.firefox()) {
+            } else if (StepUtils.firefox()) {   // Desktop Firefox
                 try {
                     if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta")))
                         capabilities.setCapability("seleniumVersion", "3.0.1");
@@ -433,7 +441,7 @@ class WebDriverConfigurator {
                     capabilities.setCapability("marionette", true);
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 }
-            } else {
+            } else { // other Desktop Browsers
                 return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
             }
 
