@@ -241,10 +241,6 @@ public class MainRunner {
             featureScenarios.add(tags);
         }
 
-
-        System.out.println("-->Current project: " + project);
-        System.out.println("-->Running with parameters:\n" + featureScenarios);
-
         // attempt to use workspace as relative path to feature file (if needed)
         if (workspace != null) {
             for (int i = 0; i < featureScenarios.size(); i++) {
@@ -303,8 +299,7 @@ public class MainRunner {
             });
             cucumberThread.start();
             if (!appTest) {
-                PageHangWatchDog.init();
-                PageHangWatchDog.setCucumberThread(cucumberThread);
+                PageHangWatchDog.init(cucumberThread);
             }
             cucumberThread.join();
 
@@ -1103,7 +1098,7 @@ public class MainRunner {
         private static PageHangWatchDog hangWatchDog;
         private static int failCount;
         private static boolean pause;
-        private String m_url;
+        private String currentUrl;
         private long ts;
 
         private PageHangWatchDog() {
@@ -1113,13 +1108,10 @@ public class MainRunner {
             this.start();
         }
 
-        static void setCucumberThread(Thread t) {
-            cucumberThread = t;
-        }
-
-        public static void init() {
+        public static void init(Thread t) {
             if (hangWatchDog == null) {
                 hangWatchDog = new PageHangWatchDog();
+                cucumberThread = t;
             }
         }
 
@@ -1137,13 +1129,13 @@ public class MainRunner {
         private void reset(String url) {
             this.ts = System.currentTimeMillis();
             if (url != null) {
-                this.m_url = url;
+                this.currentUrl = url;
                 failCount = 0;
             }
         }
 
         public void run() {
-            while (true) {
+            while (cucumberThread.isAlive()) {
                 try {
                     if (!driverInitialized()) {
                         continue;
@@ -1151,18 +1143,19 @@ public class MainRunner {
                         // if we've been waiting a while, send any browser command to prevent
                         // dropping the sauce labs connection
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
-                            getWebDriver().getTitle();
-                            this.reset(null);
+                            getWebDriver().getCurrentUrl();
+                            this.reset(this.currentUrl);
                         }
+                        continue;
                     }
                     String url = currentURL;
-                    //System.err.println("Watchdog tick:\n>old url: " + this.m_url + "\n>new url: " + url);
+                    //System.err.println("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
                     if (url.contains("about:blank")) {
                         continue;
                     }
-                    if (url.equals(this.m_url)) {
+                    if (url.equals(this.currentUrl)) {
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
-                            System.err.println("--> PageHangWatchDog: timeout at " + this.m_url +
+                            System.err.println("--> PageHangWatchDog: timeout at " + this.currentUrl +
                                     ", " + (MAX_FAILURES - failCount) + " failures until exit");
                             failCount++;
                             new Thread(() -> {

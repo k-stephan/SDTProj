@@ -47,7 +47,6 @@ public class InteractionsSuiteTest {
             MainRunner.timeout = 90;
             MainRunner.url = "http://ui-standards.herokuapp.com";
             MainRunner.getWebDriver();
-            MainRunner.PageHangWatchDog.init();
             preCondition = true;
             File htmlFile = new File("src/test/java/com/macys/sdt/framework/resources/unit_test_page.html");
             if (htmlFile.exists()) {
