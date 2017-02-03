@@ -383,7 +383,12 @@ class WebDriverConfigurator {
                 capabilities.setCapability("platform", remoteOS);
                 capabilities.setCapability("version", browserVersion);
             }
-            capabilities.setCapability("browserName", MainRunner.browser);
+            if(MainRunner.browser.equalsIgnoreCase("ie"))
+                capabilities.setCapability("browserName", "iexplore");
+            else if (MainRunner.browser.equalsIgnoreCase("edge"))
+                capabilities.setCapability("browserName", "microsoftedge");
+            else
+                capabilities.setCapability("browserName", MainRunner.browser);
             capabilities.setCapability("idleTimeout", 300);
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
             capabilities.setCapability("name", (StepUtils.macys() ? "Macy's" : "Bloomingdales") +
