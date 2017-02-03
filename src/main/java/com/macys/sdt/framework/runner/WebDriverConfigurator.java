@@ -379,11 +379,12 @@ class WebDriverConfigurator {
             // remove quoted chars
             remoteOS = remoteOS.replace("\"", "");
             remoteOS = remoteOS.replace("'", "");
-            if (!appTest) {
+            if (!StepUtils.mobileDevice()) {
                 capabilities.setCapability("platform", remoteOS);
                 capabilities.setCapability("version", browserVersion);
-                capabilities.setCapability("idleTimeout", 300);
             }
+            capabilities.setCapability("browserName", MainRunner.browser);
+            capabilities.setCapability("idleTimeout", 300);
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
             capabilities.setCapability("name", (StepUtils.macys() ? "Macy's" : "Bloomingdales") +
                     " SDT " + (project != null ? project : "") + " test");
@@ -403,7 +404,9 @@ class WebDriverConfigurator {
                 capabilities.setCapability("screenResolution", "1376x1032");
             }
 
-            if (StepUtils.safari()) {
+            if (useAppium) {
+                return initAppiumDevice(capabilities);
+            } else if (StepUtils.safari()) {
                 // safari driver is not stable, try up to 3 times
                 int count = 0;
                 while (count++ < 3) {
@@ -425,21 +428,19 @@ class WebDriverConfigurator {
                     capabilities.setCapability("marionette", true);
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 }
-            } else if (useAppium) {
-                return initAppiumDevice(capabilities);
             } else {
                 return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
             }
 
         } catch (Exception e) {
-            System.err.println("Could not create remote web driver: " + e);
+                System.err.println("Could not create remote web driver: " + e);
         }
         Assert.fail("Unable to initialize driver");
         return null;
     }
 
     /*
-     * initiate appium driver (ios or android) with given capabilities
+     * initiate appium driver (ios or android) with given capabilities for local execution or saucelabs
      *
      * @param capabilities preferred configurations for ios or android driver
      * @return instance of appium device ios or android driver
@@ -447,16 +448,27 @@ class WebDriverConfigurator {
     private static WebDriver initAppiumDevice(DesiredCapabilities capabilities) {
         if (appTest) {
             capabilities.setCapability(MobileCapabilityType.APP, MainRunner.appLocation);
-            capabilities.setCapability("BROWSER_NAME", StepUtils.iOS() ? "IOS" : "Android");
-        } else {
-            capabilities.setCapability("BROWSER_NAME", MainRunner.browser);
-        }
-        capabilities.setCapability("appiumVersion", "1.6");
-        if (appTest) {
+            capabilities.setCapability("browserName", StepUtils.iOS() ? "IOS" : "Android");
             capabilities.setCapability(MobileCapabilityType.NO_RESET, true);
+        } else {
+            capabilities.setCapability("browserName", MainRunner.browser);
         }
+
+        // setting appium version
+        if (useSauceLabs) { // for saucelabs execution
+            if (StepUtils.iOS()) {
+                capabilities.setCapability("appiumVersion", "1.6");
+            } else {
+                capabilities.setCapability("appiumVersion", "1.5.3");
+            }
+        } else {    // for non saucelabs execution
+            capabilities.setCapability("appiumVersion", "1.6");
+        }
+
         try {
             URL url;
+
+            // URL creation
             if (useSauceLabs) {
                 url = new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub");
             } else {
