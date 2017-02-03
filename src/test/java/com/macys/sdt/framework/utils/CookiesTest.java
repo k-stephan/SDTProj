@@ -26,8 +26,6 @@ public class CookiesTest {
         boolean preCondition = false;
         try {
             MainRunner.getWebDriver();
-            MainRunner.PageHangWatchDog.init();
-            MainRunner.PageHangWatchDog.resetWatchDog();
             Navigate.visit(MainRunner.url);
             MainRunner.debugMode = true;
             preCondition = true;
