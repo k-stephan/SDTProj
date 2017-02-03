@@ -50,8 +50,14 @@ public class PageElement {
         parseValue(PageUtils.getElementJSONValue(this));
     }
 
-    // make 'home' or 'panel.home' to 'website.mcom.page.home' or 'website.mcom.panel.home' based on
-    // current execution status & setup
+    //
+
+    /**
+     * make 'home' or 'panel.home' to 'website.mcom.page.home' or 'website.mcom.panel.home' based on current execution status & setup
+     *
+     * @param pageName name of page or panel
+     * @return full path of page or panel
+     */
     private static String getPageFullPath(String pageName) {
         String pagePath;
         if (MainRunner.appTest) {
@@ -147,6 +153,12 @@ public class PageElement {
         return elementValues;
     }
 
+    /**
+     * check for valid locator strategy
+     *
+     * @param strategy locator strategy eg. id, name
+     * @return true on valid locator strategy
+     */
     private boolean isValidLocatorStrategy(String strategy) {
         switch (strategy) {
             case "id":
@@ -165,7 +177,9 @@ public class PageElement {
         }
     }
 
-    // separate page name and element name from the element key
+    /**
+     *  separate page name and element name from the element key
+     */
     private void parseKey() {
         // page process
         if (!elementKey.matches("(.*?).(.*?)")) {

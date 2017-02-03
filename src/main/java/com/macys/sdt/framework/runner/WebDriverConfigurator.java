@@ -74,7 +74,7 @@ class WebDriverConfigurator {
         return driver;
     }
 
-    /*
+    /**
      * initiate browser driver with given capabilities based on browser asked
      *
      * @param capabilities preferred configurations for browser driver
@@ -112,7 +112,7 @@ class WebDriverConfigurator {
 
     }
 
-    /*
+    /**
      * This method set up capabilities based on browser asked mainly for desktop execution
      *
      * @return desiredCapabilities customized configurations as per browser
@@ -242,7 +242,7 @@ class WebDriverConfigurator {
         }
     }
 
-    /*
+    /**
      * This method set proxy as disables in capability
      *
      * @param capabilities configurations which are already set where disable proxy configurations is to be added
@@ -260,7 +260,7 @@ class WebDriverConfigurator {
         return capabilities;
     }
 
-    /*
+    /**
      * This method setup chrome emulator or device based capabilities
      * based on if useChromeEmulation is set to true or not
      *
@@ -278,7 +278,7 @@ class WebDriverConfigurator {
         }
     }
 
-    /*
+    /**
      * This method set up device (appium) based capabilities for ios or android
      *
      * @return desiredCapabilities ios or android device (appium) based configurations
@@ -309,7 +309,7 @@ class WebDriverConfigurator {
         return caps;
     }
 
-    /*
+    /**
      * This method set up chrome emulator based capabilities for a number of devices given by MainRunner.device
      *
      * @return desiredCapabilities chrome emulator based configurations for devices asked
@@ -350,7 +350,7 @@ class WebDriverConfigurator {
         }
     }
 
-    /*
+    /**
      * This method set up capabilities for Chrome Emulator based on device asked
      *
      * @param emulationOptions device name
@@ -368,7 +368,7 @@ class WebDriverConfigurator {
         return capabilities;
     }
 
-    /*
+    /**
      * This method initiate SauceLabs customized driver with preferred capabilities
      *
      * @param capabilities preferred configurations for driver
@@ -452,7 +452,7 @@ class WebDriverConfigurator {
         return null;
     }
 
-    /*
+    /**
      * initiate appium driver (ios or android) with given capabilities for local execution or saucelabs
      *
      * @param capabilities preferred configurations for ios or android driver

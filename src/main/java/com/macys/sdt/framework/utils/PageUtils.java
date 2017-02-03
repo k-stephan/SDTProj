@@ -147,7 +147,9 @@ public class PageUtils {
         return false;
     }
 
-    // recursively checks all subdirectories for a file matching pageName
+    /**
+     * recursively checks all subdirectories for a file matching pageName
+     */
     private static File findFile(File dir, String pageName) {
         File[] subDirs = dir.listFiles(File::isDirectory);
         File[] resources = dir.listFiles(File::isFile);
@@ -171,7 +173,12 @@ public class PageUtils {
         return resource;
     }
 
-    // recursively checks all subdirectories for a file matching pageName
+    /**
+     * recursively checks all subdirectories for a file matching pageName
+     * @param dir directory
+     * @param pageName file name or page name
+     * @return number of same file name found
+     */
     private static int countFoundPage(File dir, String pageName) {
         int count = 0;
         File[] subDirs = dir.listFiles(File::isDirectory);
@@ -193,6 +200,7 @@ public class PageUtils {
         }
         return count;
     }
+
 
     private static void loadPageJsonFiles(String pagePath, File file, String cache) {
         String responsivePath = getResponsivePath(pagePath);

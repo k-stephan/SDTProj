@@ -36,6 +36,11 @@ public class Timeouts {
         return getTimeout(GENERAL_TIMEOUT_KEY, DEFAULT_GENERAL_TIMEOUT);
     }
 
+    /**
+     * initiate Timeouts instance if not initiated already or reuse the existing one
+     *
+     * @return Timeouts instance
+     */
     public static Timeouts instance() {
         if (instance == null) {
             instance = new Timeouts();
@@ -43,6 +48,14 @@ public class Timeouts {
         return instance;
     }
 
+    /**
+     * fetch the timeout in seconds using key from execution environment
+     *
+     * @param key key passed in execution for timeout
+     * @param defaultSeconds default timeout seconds
+     *
+     * @return timeout value in seconds for the key asked
+     */
     private int getTimeout(String key, int defaultSeconds) {
         if (!timeouts.containsKey(key)) {
             String customValue = MainRunner.getEnvOrExParam(key);

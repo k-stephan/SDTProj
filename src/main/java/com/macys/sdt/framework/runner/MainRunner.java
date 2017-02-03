@@ -790,6 +790,9 @@ public class MainRunner {
         return false;
     }
 
+    /**
+     * It will initiate the close process for execution and quit the driver
+     */
     private static void close() {
         if (browser.equals("none")) {
             return;
@@ -798,19 +801,17 @@ public class MainRunner {
             DATagCollector.close();
         }
 
-        if (useSauceLabs) {
-            if (driver instanceof RemoteWebDriver) {
-                System.out.println("Link to your saucelabs job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
-            }
-            driverQuit();
-        } else if (closeBrowserAtExit) {
+        if (driver != null) {
             System.out.println("Closing driver...");
-            if (driver != null) {
+            if (useSauceLabs || closeBrowserAtExit) {
                 driverQuit();
             }
         }
     }
 
+    /**
+     * quit the webdriver
+     */
     private static void driverQuit() {
         try {
             driver.quit();

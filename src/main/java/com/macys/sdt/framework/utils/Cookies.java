@@ -483,6 +483,7 @@ public class Cookies {
 
     /**
      * Retrieves the secure user token from the cookie to use for service calls
+     *
      * @return value of secure user token cookie
      */
     public static String getSecureUserToken() {
