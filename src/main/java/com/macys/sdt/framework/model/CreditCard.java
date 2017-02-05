@@ -206,7 +206,13 @@ public class CreditCard {
         VISA("Visa"),
         MASTER_CARD("MasterCard"),
         AMERICAN_EXPRESS("American Express"),
-        DISCOVER("Discover");
+        DISCOVER("Discover"),
+        MACYS("Macy's"),
+        MACYS_AMERICAN_EXPRESS("Macy's American Express"),
+        EMPLOYEE_CARD("Employee Card"),
+        BLOOMINGDALES("Bloomingdale's"),
+        BLOOMINGDALES_AMERICAN_EXPRESS("Bloomingdale's American Express"),
+        BLOOMINGDALES_EMPLOYEE_CARD("Bloomingdale's Employee Card");
 
         public final String name;
 
