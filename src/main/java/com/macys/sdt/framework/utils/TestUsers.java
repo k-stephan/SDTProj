@@ -585,36 +585,9 @@ public class TestUsers {
      * @return JSONObject containing credit card information
      */
     public static CreditCard getValidVisaCreditCard() {
-        try {
-            JSONArray creditCards;
-            File cardFile = getResourceFile("valid_cards.json");
-            String jsonTxt = Utils.readTextFile(cardFile);
-            JSONObject json = new JSONObject(jsonTxt);
-            if (macys()) {
-                creditCards = (JSONArray) json.get("macys");
-            } else {
-                creditCards = (JSONArray) json.get("bloomingdales");
-            }
-
-            for (int i = 0; i < creditCards.length(); i++) {
-                JSONObject card = creditCards.getJSONObject(i);
-                if (card.get("card_type").equals("Visa")) {
-                    return new CreditCard(
-                            CreditCard.CardType.VISA,
-                            card.getString("card_number"),
-                            card.getString("security_code"),
-                            card.getDouble("balance"),
-                            card.getString("expiry_month"),
-                            card.getString("expiry_month_index"),
-                            card.getString("expiry_year")
-                    );
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            Assert.fail("Unable to parse JSON: " + e);
-            return null;
-        }
+        return CreditCards.getValidCards().stream().
+                filter(card -> card.getCardType().name.equals("Visa") && !card.has3DSecure()).findFirst().
+                orElseThrow(() -> new AssertionError("no valid cards of type Visa without 3Dsecure found"));
     }
 
     /**
@@ -624,38 +597,10 @@ public class TestUsers {
      * @return JSONObject containing 3DSecure card information
      */
     public static CreditCard getValid3DSecureCard(String cardType) {
-        try {
-            JSONArray creditCards;
-            File cardFile = getResourceFile("valid_cards.json");
-            String jsonTxt = Utils.readTextFile(cardFile);
-            JSONObject json = new JSONObject(jsonTxt);
-            if (macys()) {
-                creditCards = (JSONArray) json.get("macys");
-            } else {
-                creditCards = (JSONArray) json.get("bloomingdales");
-            }
-
-            for (int i = 0; i < creditCards.length(); i++) {
-                JSONObject card = creditCards.getJSONObject(i);
-                if (card.has("3d_secure") && card.get("card_type").equals(cardType)) {
-                    return new CreditCard(
-                            CreditCard.CardType.fromString(cardType),
-                            card.getString("card_number"),
-                            card.getString("security_code"),
-                            card.getDouble("balance"),
-                            card.getString("expiry_month"),
-                            card.getString("expiry_month_index"),
-                            card.getString("expiry_year"),
-                            true,
-                            card.getString("3d_secure_password")
-                    );
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            Assert.fail("Unable to parse JSON: " + e);
-            return null;
-        }
+        return CreditCards.getValidCards().stream().
+                filter(card -> card.getCardType().name.equals(cardType) && card.has3DSecure()).findFirst().
+                orElseThrow(() -> new AssertionError(
+                        String.format("no valid cards of type %s with 3Dsecure found", cardType)));
     }
 
     /**
