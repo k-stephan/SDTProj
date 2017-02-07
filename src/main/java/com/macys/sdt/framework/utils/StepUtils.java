@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.utils;
 
+import com.google.gson.Gson;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.Navigate;
@@ -51,6 +52,11 @@ public abstract class StepUtils {
      * to track ajax check
      */
     public static boolean ajaxCheck = false;
+
+    /**
+     * to track Coremetrics HAR info
+     */
+    public static ArrayList<HarEntry> harBuffer = null;
 
     /**
      * Checks if using chrome
@@ -593,6 +599,7 @@ public abstract class StepUtils {
                     entries.add(harEntry);
                 }
             }
+            harBuffer = entries;
             MainRunner.analytics.analyze(ScenarioHelper.getScenarioInfo(), step, entries, ScenarioHelper.getLastStepResult());
         } catch (Throwable ex) {
             ex.printStackTrace();
@@ -600,6 +607,17 @@ public abstract class StepUtils {
         }
     }
 
+    /**
+     * If analytics is enabled, collect http archive data for the last step and get it
+     */
+    public ArrayList getHarBuffer() {
+        if (MainRunner.analytics == null) {
+            return null;
+        }
+
+        ArrayList list = new Gson().fromJson(new Gson().toJson(harBuffer), ArrayList.class);
+        return list;
+    }
     /**
      * Flushes all analytics data
      */
