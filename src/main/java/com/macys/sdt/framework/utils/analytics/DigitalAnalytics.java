@@ -24,7 +24,7 @@ public class DigitalAnalytics extends Analytics {
                 return test();
             } catch (Exception ex) {
                 ex.printStackTrace();
-                System.out.println("DigitalAnalytics.analyze():Error loading gold:" + fgold.getAbsolutePath());
+                System.out.println("DigitalAnalytics.analyze(): Error loading gold: " + fgold.getAbsolutePath());
                 return record();
             }
         } else {
@@ -97,7 +97,7 @@ public class DigitalAnalytics extends Analytics {
             }
 
             if (!hdiff.isEmpty()) {
-                //				throw new AnalyticsExeception("\nResults: " + Utils.jsonPretty(hdiff));
+                //				throw new AnalyticsException("\nResults: " + Utils.jsonPretty(hdiff));
                 System.out.println("-->" + this.getClass().getSimpleName() + " Results: " + Utils.jsonPretty(hdiff) + "\n");
             }
             return hdiff;

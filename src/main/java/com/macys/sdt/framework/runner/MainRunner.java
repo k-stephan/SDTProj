@@ -103,7 +103,7 @@ public class MainRunner {
     public static String scenarios = getEnvVar("scenarios");
 
     /**
-     * Browser to use as given in "browser" env variable. Default firefox.
+     * Browser to use as given in "browser" env variable. Default chrome.
      */
     public static String browser = getEnvVar("browser");
 
@@ -204,9 +204,18 @@ public class MainRunner {
 
     public static String browsermobServerHarTs = System.currentTimeMillis() + "";
 
+    /**
+     * Location of app for app testing (appium)
+     */
     protected static String appLocation = getEnvOrExParam("app_location");
+
     private static String repoJar = getEnvOrExParam("repo_jar");
+
+    /**
+     * webdriver instance
+     */
     private static WebDriver driver = null;
+
     private static long ieAuthenticationTs = System.currentTimeMillis() - 10000; // set authentication checking interval out of range
     //satish-macys:4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
 
@@ -292,7 +301,7 @@ public class MainRunner {
                     status = Main.run(featureScenarios.toArray(new String[featureScenarios.size()]),
                             Thread.currentThread().getContextClassLoader());
                 } catch (IOException e) {
-                    System.err.println("IOException in cucumber run");
+                    System.err.println("ERROR : IOException in cucumber run");
                 } finally {
                     runStatus = status;
                 }
@@ -326,7 +335,7 @@ public class MainRunner {
 
         scenarios = scenarios.replace('\\', '/');
 
-        if (!url.startsWith("https://") && !url.startsWith("http://")) {
+        if (!url.matches("^https?://.*"))   {
             url = "http://" + url;
         }
 
@@ -344,7 +353,7 @@ public class MainRunner {
         Utils.createDirectory(temp = workspace + "temp/", true);
 
         if (remoteOS == null) {
-            System.out.println("Remote OS not specified. Using default (Windows 7)");
+            System.out.println("INFO : Remote OS not specified. Using default (Windows 7)");
             remoteOS = "Windows 7";
         }
 
@@ -355,7 +364,7 @@ public class MainRunner {
                 analytics = new DigitalAnalytics();
             }
             if (analytics != null) {
-                System.out.print(" including Analytics:" + analytics.getClass().getSimpleName());
+                System.out.print("INFO : including Analytics: " + analytics.getClass().getSimpleName());
             }
         }
 
@@ -364,12 +373,12 @@ public class MainRunner {
         // tag_collection
         tagCollection = booleanParam("tag_collection");
         if (tagCollection) {
-            System.out.println("tag_collection is enabled");
+            System.out.println("INFO : tag_collection is enabled");
         }
 
         // batch mode run on QA environment. Batch mode causes all products to be available
         if (batchMode) {
-            System.out.println("batch_mode is enabled");
+            System.out.println("INFO : batch_mode is enabled");
         }
 
         // use saucelabs when valid "sauce_user" and "sauce_key" is provided
@@ -388,7 +397,7 @@ public class MainRunner {
             Assert.fail("\"website\" variable required to test a website");
         }
         if (browser == null && !appTest) {
-            System.out.println("No browser given, using default (chrome)");
+            System.out.println("INFO : No browser given, using default (chrome)");
             browser = "chrome";
         }
         if (browserVersion == null) {
@@ -452,11 +461,10 @@ public class MainRunner {
                 }
             }
             driver = null;
-            System.out.println("driver set to null");
+            System.out.println("INFO : webdriver set to null");
         } catch (Exception e) {
-            System.err.println("error in resetDriver : " + e.getMessage());
+            System.err.println("ERROR : error in resetDriver : " + e.getMessage());
             driver = null;
-            System.out.println("driver set to null in catch");
         }
     }
 
@@ -1102,7 +1110,7 @@ public class MainRunner {
         private long ts;
 
         private PageHangWatchDog() {
-            System.err.println("--> Start:PageHangWatchDog:" + new Date());
+            System.err.println("--> Start: PageHangWatchDog: " + new Date());
             this.reset(getWebDriver().getCurrentUrl());
             this.setDaemon(true);
             this.start();

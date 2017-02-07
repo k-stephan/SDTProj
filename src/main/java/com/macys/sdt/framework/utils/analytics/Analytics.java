@@ -8,6 +8,8 @@ import com.macys.sdt.framework.utils.Utils;
 import gherkin.formatter.model.Result;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +18,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Analytics {
+
+    Logger logger = LoggerFactory.getLogger(Analytics.class);
+
     protected ArrayList<LinkedTreeMap> entries;
     protected LinkedTreeMap gold;
     protected LinkedTreeMap scenario_info;
@@ -62,7 +67,7 @@ public abstract class Analytics {
                 }
             }
         } catch (Exception ex) {
-            System.out.print("Cannot load global data:" + ex.getMessage());
+            System.out.println("Cannot load global data: " + ex.getMessage());
         }
     }
 
@@ -70,16 +75,22 @@ public abstract class Analytics {
         step_click_elements.add(elHtml);
     }
 
+    /**
+     * This method records analytics data fired
+     *
+     * @return Map of analytics data
+     */
     protected Map record() {
         if (gold == null) {
             gold = new LinkedTreeMap();
             gold.put("0", this.scenario_info);
         }
-        System.out.println("recording step " + this.step);
+        System.out.println("INFO : recording analytics for step " + (this.step - 1));
         HashMap<String, Object> hrecord = new HashMap<>();
         hrecord.put("har_entries", this.entries);
         hrecord.put("tag_check", new HashMap());
         gold.put(this.step + "", hrecord);
+        logger.debug("recorded analytics data : \n" + hrecord);
         return hrecord;
     }
 
@@ -87,6 +98,14 @@ public abstract class Analytics {
         return Utils.createDirectory(MainRunner.workspace + "/golds").getCanonicalPath() + "/";
     }
 
+    /**
+     * Flush the analytics data in a file.
+     * If gold file does not exist, it will create gold file with generated analytics data.
+     * If gold file exist, it will create analytics result file of comparison between gold and current run data for coremetrics report.
+     *
+     * @param isScenarioPassed whether the current scenario run is passed or failed
+     * @throws IOException when issue with flushing data
+     */
     public void flush(boolean isScenarioPassed) throws IOException {
         File fgold = new File(getGoldPath() + getGoldName(this.scenario_info));
         if (!fgold.exists() || fgold.length() == 0) {
@@ -94,15 +113,15 @@ public abstract class Analytics {
                 File flogGold = Utils.createDirectory(MainRunner.logs + "/golds");
                 fgold = new File(flogGold.getCanonicalPath() + "/" + fgold.getName());
                 Utils.writeSmallBinaryFile(new Gson().toJson(this.gold).getBytes(), fgold);
-                System.out.println("flushing recording as gold: " + fgold.getCanonicalPath());
+                System.out.println("INFO : Flushing recorded analytics as gold: " + fgold.getCanonicalPath());
             } else {
-                System.out.println("Scenario did not pass.  Skip gold recording.");
+                System.out.println("INFO : Scenario did not pass.  Skip gold recording.");
             }
             this.gold = null;
         } else {
             File fresult = new File(MainRunner.logs + fgold.getName() + ".analytics.result.json");
             Utils.writeSmallBinaryFile(new Gson().toJson(this.results).getBytes(), fresult);
-            System.out.println("flushing analytics results: " + fresult.getCanonicalPath());
+            System.out.println("INFO : Flushing analytics results: " + fresult.getCanonicalPath());
             this.results = new HashMap();
         }
         Utils.writeSmallBinaryFile(new Gson().toJson(this.tag_histogram).getBytes(), new File(MainRunner.logs + fgold.getName() + ".tag_histogram.json"));
@@ -127,7 +146,7 @@ public abstract class Analytics {
     protected ArrayList getGoldStepHarEntries() throws Exception {
         Map record = (Map) this.gold.get(this.step + "");
         if (record == null) {
-            throw new Exception("cannot find gold step:" + this.step);
+            throw new Exception("ERROR : cannot find gold step: " + (this.step - 1));
         }
         return (ArrayList) record.get("har_entries");
     }
@@ -214,10 +233,9 @@ public abstract class Analytics {
 
     private Object findInPageSrc(String cval, Map pageSrcs) {
         String ccomp = stripNonChars(cval);
-        Iterator it = pageSrcs.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next().toString();
-            String html = (String) this.step_page_sources.get(key);
+        for (Object o : pageSrcs.keySet()) {
+            String key = o.toString();
+            String html = this.step_page_sources.get(key);
             if (html == null) {
                 continue;
             }
@@ -271,7 +289,7 @@ public abstract class Analytics {
                     return;
                 }
 
-                Object res = null;
+                Object res;
                 if (gval.startsWith("_ignore_") ||
                         this.global_ignores.contains("all." + tagAttr) ||
                         this.global_ignores.contains(tagid + "." + tagAttr)) {
@@ -292,7 +310,7 @@ public abstract class Analytics {
                         hresult.put("status", "fail");
                     }
                     hresult.put("action", "has_value");
-                } else if ((Boolean) (res = compareEqual(cval, gval))) {
+                } else if (compareEqual(cval, gval)) {
                     hresult.put("status", "pass");
                 } else if (cval.contains(gval)) {
                     hresult.put("action", "val_contains_gold");
@@ -343,10 +361,10 @@ public abstract class Analytics {
         return matcher.matches();
     }
 
-    public static class AnalyticsExeception extends Exception {
+    public static class AnalyticsException extends Exception {
         private static final long serialVersionUID = -5394782789087798477L;
 
-        public AnalyticsExeception(String msg) {
+        public AnalyticsException(String msg) {
             super(msg);
         }
     }

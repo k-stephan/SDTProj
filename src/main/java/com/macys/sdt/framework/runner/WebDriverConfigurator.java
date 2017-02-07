@@ -396,8 +396,10 @@ class WebDriverConfigurator {
 
             capabilities.setCapability("idleTimeout", 300);
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
-            capabilities.setCapability("name", (StepUtils.macys() ? "Macy's" : "Bloomingdales") +
-                    " SDT " + (project != null ? project : "") + " test");
+
+            // set test name for sauceLabs
+            capabilities.setCapability("name", (StepUtils.macys() ? "MCOM" : "BCOM") +
+                    " SDT " + (project != null ? project : "") + " : " + "test");
             capabilities.setCapability("maxDuration", 3600);
 
             // to use sauce connect
