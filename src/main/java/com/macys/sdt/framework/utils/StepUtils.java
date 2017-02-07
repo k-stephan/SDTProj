@@ -610,7 +610,7 @@ public abstract class StepUtils {
     /**
      * If analytics is enabled, collect http archive data for the last step and get it
      */
-    public ArrayList getHarBuffer() {
+    public static ArrayList getHarBuffer() {
         if (MainRunner.analytics == null) {
             return null;
         }
