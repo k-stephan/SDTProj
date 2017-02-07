@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.*;
 
 public class DigitalAnalytics extends Analytics {
+
     public Map analyze(LinkedTreeMap scenarioInfo, int step, ArrayList entries, Result result) throws Exception {
         this.step_result = result;
         this.entries = this.convertHarEntries(entries);

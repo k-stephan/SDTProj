@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.runner;
 
 import com.macys.sdt.framework.utils.ProxyFilters;
+import com.macys.sdt.framework.utils.ScenarioHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import io.appium.java_client.android.AndroidDriver;
@@ -399,13 +400,13 @@ class WebDriverConfigurator {
 
             // set test name for sauceLabs
             capabilities.setCapability("name", (StepUtils.macys() ? "MCOM" : "BCOM") +
-                    " SDT " + (project != null ? project : "") + " : " + "test");
+                    " SDT " + (project != null ? project : "") + " : " + ScenarioHelper.scenario.getName());
             capabilities.setCapability("maxDuration", 3600);
 
             // to use sauce connect
             if (MainRunner.tunnelIdentifier != null) {
                 capabilities.setCapability("tunnel-identifier", MainRunner.tunnelIdentifier);
-                System.out.println("Using sauce connect tunnel: " + MainRunner.tunnelIdentifier);
+                System.out.println("INFO : Using sauce connect tunnel: " + MainRunner.tunnelIdentifier);
             } else {
                 System.out.println("INFO : running without sauce connect");
             }

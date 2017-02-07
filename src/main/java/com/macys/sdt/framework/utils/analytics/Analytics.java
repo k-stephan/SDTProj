@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public abstract class Analytics {
 
-    Logger logger = LoggerFactory.getLogger(Analytics.class);
+    private Logger logger = LoggerFactory.getLogger(Analytics.class);
 
     protected ArrayList<LinkedTreeMap> entries;
     protected LinkedTreeMap gold;
@@ -31,7 +31,7 @@ public abstract class Analytics {
     protected HashMap<String, Object> results = new HashMap<>();
     protected List<String> global_ignores = new ArrayList<>();
     protected List<String> global_has_values = new ArrayList<>();
-    protected Map<String, String> global_values = new HashMap<String, String>();
+    protected Map<String, String> global_values = new HashMap<>();
     protected HashMap<String, Integer> tag_histogram = new HashMap<>();
 
     public Analytics() {

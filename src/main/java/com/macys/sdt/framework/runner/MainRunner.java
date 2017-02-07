@@ -290,8 +290,6 @@ public class MainRunner {
                 (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
                 + (useSauceLabs ? " on Sauce Labs" : ""));
 
-        driver = getWebDriver();
-
         new AuthenticationDialog();
 
         try {
@@ -1111,7 +1109,7 @@ public class MainRunner {
 
         private PageHangWatchDog() {
             System.err.println("--> Start: PageHangWatchDog: " + new Date());
-            this.reset(getWebDriver().getCurrentUrl());
+            this.reset(url);
             this.setDaemon(true);
             this.start();
         }

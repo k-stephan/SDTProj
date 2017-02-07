@@ -545,7 +545,7 @@ public abstract class StepUtils {
                 Utils.desktopCapture(new FileOutputStream(imgFile));
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Cannot desktop capture.");
+                System.err.println("Cannot capture desktop.");
             }
         }
     }
@@ -615,8 +615,7 @@ public abstract class StepUtils {
             return null;
         }
 
-        ArrayList list = new Gson().fromJson(new Gson().toJson(harBuffer), ArrayList.class);
-        return list;
+        return new Gson().fromJson(new Gson().toJson(harBuffer), ArrayList.class);
     }
     /**
      * Flushes all analytics data
