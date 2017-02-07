@@ -399,8 +399,9 @@ class WebDriverConfigurator {
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
 
             // set test name for sauceLabs
+            String scenario = ScenarioHelper.scenario != null ? ScenarioHelper.scenario.getName() : "";
             capabilities.setCapability("name", (StepUtils.macys() ? "MCOM" : "BCOM") +
-                    " SDT " + (project != null ? project : "") + " : " + ScenarioHelper.scenario.getName());
+                    " SDT " + (project != null ? project : "") + " : " + scenario);
             capabilities.setCapability("maxDuration", 3600);
 
             // to use sauce connect
