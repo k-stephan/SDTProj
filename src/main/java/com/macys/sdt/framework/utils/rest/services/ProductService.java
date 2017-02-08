@@ -82,6 +82,7 @@ public class ProductService {
                 boolean isItemUnavailable = processCheckoutResponse.getElementsByTagName("message").item(0).getTextContent().equals("CS_ITEM_UNAVAILABLE");
                 return !isItemUnavailable;
             }
+            return true; // since there's no errors in response
         } catch (Exception e) {
             // assume error means product not available
             System.err.println("Unable to get product availability from MST" + e);
