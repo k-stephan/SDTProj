@@ -39,7 +39,7 @@ public class MainRunnerTest {
         MainRunner.url = "http://www.qa0codemacys.fds.com";
         MainRunner.scenarios = "sdt/framework/features/website/mcom/test.feature";
 
-        MainRunner.getEnvVars();
+        MainRunner.getEnvVars(null);
 
         Assert.assertEquals("sdt.framework", MainRunner.project);
         Assert.assertEquals("chrome", MainRunner.browser);

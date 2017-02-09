@@ -34,6 +34,25 @@ public class Cookies {
     }
 
     /**
+     * Gets a list of all cookies on the current page
+     * <p>Will have more details on browsers which support web driver cookie management</p>
+     *
+     * @return list of cookies.
+     */
+    public static Set<Cookie> getCookies() {
+        if (ie() || edge()) {
+            Set<Cookie> cookies = new HashSet<>();
+            for (String cookie : ((String) Navigate.execJavascript("return document.cookie")).split("; ")) {
+                String[] cookieValue = cookie.split("=");
+                cookies.add(new Cookie(cookieValue[0], cookieValue[1]));
+            }
+            return cookies;
+        } else {
+            return MainRunner.getWebDriver().manage().getCookies();
+        }
+    }
+
+    /**
      * Resets the domain back to the default domain based on the "website" environment variable
      */
     public static void resetDomain() {
@@ -232,10 +251,11 @@ public class Cookies {
         try {
             if (ie() || safari() || edge()) {
                 String cookieValue = "";
-                for (String cookie : ((String) Navigate.execJavascript("return document.cookie")).split("; "))
+                for (String cookie : ((String) Navigate.execJavascript("return document.cookie")).split("; ")) {
                     if (cookie.split("=")[0].equals(name)) {
                         cookieValue = cookie.split("=")[1];
                     }
+                }
                 return cookieValue;
             }
 

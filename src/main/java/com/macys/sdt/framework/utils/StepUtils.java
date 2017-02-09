@@ -553,15 +553,15 @@ public abstract class StepUtils {
     /**
      * Takes a screenshot and saves to a specified file
      *
-     * @param fout file to save to
+     * @param fileName file to save to
      * @throws Exception thrown if there's an error creating the screenshot
      */
-    public static void desktopScreenCapture(File fout) throws Exception {
+    public static void desktopScreenCapture(File fileName) throws Exception {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Rectangle screenRectangle = new Rectangle(screenSize);
         Robot robot = new Robot();
         BufferedImage image = robot.createScreenCapture(screenRectangle);
-        ImageIO.write(image, "jpg", fout);
+        ImageIO.write(image, "jpg", fileName);
     }
 
     /**
@@ -617,6 +617,7 @@ public abstract class StepUtils {
 
         return new Gson().fromJson(new Gson().toJson(harBuffer), ArrayList.class);
     }
+
     /**
      * Flushes all analytics data
      */

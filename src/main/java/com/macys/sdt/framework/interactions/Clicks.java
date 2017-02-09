@@ -504,4 +504,22 @@ public class Clicks {
             Assert.fail("element with text \"" + find + "\" not found");
         }
     }
+
+    /**
+     * Clicks the mouse at its current location
+     */
+    public void clickMouse() {
+        Actions actions = new Actions(MainRunner.getWebDriver());
+        actions.click().perform();
+    }
+
+    /**
+     * Moves the mouse to the position of the given element
+     *
+     * @param element element to move the mouse over
+     */
+    public void moveMouseTo(WebElement element) {
+        Actions actions = new Actions(MainRunner.getWebDriver());
+        actions.moveToElement(element).perform();
+    }
 }

@@ -100,7 +100,7 @@ public class MainRunner {
     /**
      * Path to feature file to execute from
      */
-    public static String scenarios = getEnvVar("scenarios");
+    public static String scenarios;
 
     /**
      * Browser to use as given in "browser" env variable. Default chrome.
@@ -222,11 +222,11 @@ public class MainRunner {
     /**
      * Main method to run tests
      *
-     * @param argv run args. Ignored, use environment variables for all config
+     * @param args run args. Ignored, use environment variables for all config
      * @throws Throwable if an exception or error gets here, we're done
      */
-    public static void main(String[] argv) throws Throwable {
-        getEnvVars();
+    public static void main(String[] args) throws Throwable {
+        getEnvVars(args);
 
         System.out.println("Using project: " + project + "\nIf this does not match your project, please" +
                 " add an environment variable \"sdt_project\" (previously called \"project\")" +
@@ -286,6 +286,17 @@ public class MainRunner {
         featureScenarios.add("--plugin");
         featureScenarios.add("html:logs");
 
+        // intellij cucumber config gives scenario name to differentiate between scenarios at runtime
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("--name")) {
+                    featureScenarios.add(args[i]);
+                    featureScenarios.add(args[i+1]);
+                    break;
+                }
+            }
+        }
+
         System.out.println("-->Testing " + url + " using " +
                 (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
                 + (useSauceLabs ? " on Sauce Labs" : ""));
@@ -315,7 +326,7 @@ public class MainRunner {
             runStatus = 1;
         } finally {
             close();
-            if (argv != null) {
+            if (args != null) {
                 System.exit(runStatus);
             }
         }
@@ -324,13 +335,25 @@ public class MainRunner {
     /**
      * get and set environment variables
      */
-    public static void getEnvVars() {
+    public static void getEnvVars(String[] args) {
         if (workspace == null) {
             workspace = ".";
         }
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
 
+        scenarios = getEnvVar("scenarios");
+
+        // get cucumber scenarios from args if not in env - cucumber config does this in intellij
+        if ((scenarios == null || scenarios.isEmpty()) && args != null && args.length > 0) {
+            scenarios = "";
+            for (String arg : args) {
+                File f = new File(arg);
+                if (f.exists()) {
+                    scenarios += arg;
+                }
+            }
+        }
         scenarios = scenarios.replace('\\', '/');
 
         if (!url.matches("^https?://.*"))   {
