@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -180,6 +181,23 @@ public class DropDowns {
                 .filter(WebElement::isDisplayed)
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Method to fetch all values from the drop down menu using JavaScript
+     *
+     * @param selector String selector in format "page_name.element_name"
+     * @return list of values as Strings
+     */
+    public static List<String> getAllValuesUsingJavaScript(String selector) {
+        List<Object> allValues = new ArrayList<>();
+        allValues = (List) Navigate.execJavascript("var a = new Array(); " +
+                "var dl=arguments[0]; " +
+                "for(i=0;i<dl.options.length;i++){" +
+                "a[i]=dl.options[i].text;" +
+                "}" +
+                "return a;", Elements.findElement(selector));
+        return allValues.stream().map(e -> e.toString()).collect(Collectors.toList());
     }
 
     /**
