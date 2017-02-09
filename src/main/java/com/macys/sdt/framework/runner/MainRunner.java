@@ -100,7 +100,7 @@ public class MainRunner {
     /**
      * Path to feature file to execute from
      */
-    public static String scenarios;
+    public static String scenarios = getEnvVar("scenarios");
 
     /**
      * Browser to use as given in "browser" env variable. Default chrome.
@@ -342,14 +342,16 @@ public class MainRunner {
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
 
-        scenarios = getEnvVar("scenarios");
+        if (scenarios == null) {
+            scenarios = "";
+        }
 
         // get cucumber scenarios from args if not in env - cucumber config does this in intellij
-        if ((scenarios == null || scenarios.isEmpty()) && args != null && args.length > 0) {
+        if (scenarios.isEmpty() && args != null && args.length > 0) {
             scenarios = "";
             for (String arg : args) {
                 File f = new File(arg);
-                if (f.exists()) {
+                if (f.exists() || f.getAbsoluteFile().exists()) {
                     scenarios += arg;
                 }
             }
