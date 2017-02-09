@@ -103,10 +103,12 @@ class WebDriverConfigurator {
             case "edge":
                 return new EdgeDriver(capabilities);
             default:
+                boolean marionette = browserVersion.compareTo("48") >= 0;
+                capabilities.setCapability("marionette", marionette);
                 try {
                     return new FirefoxDriver(capabilities);
                 } catch (Exception | Error e) {
-                    capabilities.setCapability("marionette", true);
+                    capabilities.setCapability("marionette", !marionette);
                     return new FirefoxDriver(capabilities);
                 }
         }
@@ -545,8 +547,8 @@ class WebDriverConfigurator {
                 return version;
             case "chrome":
                 return "56.0";
-            default: //firefox
-                return "51.0";
+            default: // firefox version we have in Lorraine VM's
+                return "46.0";
         }
     }
 
