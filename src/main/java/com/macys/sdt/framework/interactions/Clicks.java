@@ -115,7 +115,7 @@ public class Clicks {
      * @param el element to hover over
      */
     public static void hoverForSelection(WebElement el) {
-        if (StepUtils.safari()) {
+        if (StepUtils.safari() || StepUtils.firefox()) {
             javascriptHover(el);
         } else {
             Actions action = new Actions(MainRunner.getWebDriver());
@@ -505,21 +505,4 @@ public class Clicks {
         }
     }
 
-    /**
-     * Clicks the mouse at its current location
-     */
-    public void clickMouse() {
-        Actions actions = new Actions(MainRunner.getWebDriver());
-        actions.click().perform();
-    }
-
-    /**
-     * Moves the mouse to the position of the given element
-     *
-     * @param element element to move the mouse over
-     */
-    public void moveMouseTo(WebElement element) {
-        Actions actions = new Actions(MainRunner.getWebDriver());
-        actions.moveToElement(element).perform();
-    }
 }
