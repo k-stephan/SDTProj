@@ -51,6 +51,7 @@ public class TestUsers {
     private static UslInfo uslInfo = null;
     private static HashMap<String, String> paypalInfo = null;
     private static User user = null;
+    private static Registry registry = null;
 
     /**
      * Checks whether you're on macy's or bloomingdales website
@@ -205,10 +206,9 @@ public class TestUsers {
         }
         UserProfile userProfile = getCustomer(null);
 
-        Registry registry = new Registry();
-        registry.addRandomData();
-
-        if (userProfile != null) {
+        if (userProfile != null && registry == null) {
+            Registry registry = new Registry();
+            registry.addRandomData();
             userProfile.setRegistry(registry);
         }
         currentEmail = userProfile != null ? userProfile.getUser().getProfileAddress().getEmail() : currentEmail;
@@ -222,15 +222,18 @@ public class TestUsers {
      * @return UserProfile with customer data
      */
     public static UserProfile getExistingRegistryUser() {
-        if (customer.getRegistry() != null) {
+        if (registry != null) {
             return customer;
         }
 
-        Registry registry = new Registry();
-        registry.addRandomData();
-
         if (customer == null) {
             getCustomer(null);
+        }
+
+        if (registry == null) {
+            registry = new Registry();
+            registry.addRandomData();
+            customer.setRegistry(registry);
         }
         customer.setRegistry(registry);
         return customer;
