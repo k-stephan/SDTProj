@@ -11,18 +11,19 @@ import java.util.Iterator;
  */
 public class Product {
     public String name, currency, description, categoryName, categoryPageType, colorName,
-            sizeName, colorNormalName, orderMethod, brand, type, department;
+            sizeName, colorNormalName, orderMethod, brand, type, department, reserved_for,
+            estimated_delivery_date, tuxedo_description, tuxedo_itemized_list;
     public String[] primaryImageColors, colorOptions, sizeOptions, promoDescriptions, quantities;
     public int id, quantity, orderLimit, categoryId, canvasId, storeLocationNum;
     public int[] upcs, memberProducts;
-    public long upc;
+    public long upc, reservation_id;
     public Product[] productRecommendations;
     public double individualPrice, salePrice, totalPrice;
     public double[] promoPrices;
     public boolean registryItem, normalItem, parentProductId, available, orderable, masterAvailable, bopsAvailable,
             prodAvailable, bopsEligible, bigTicket, fitPredictorEligible, categoryBreadcrumb, beautyItem, giftCard,
             electronicGiftCard, masterProduct, ishipEligible, clickToCall, availableInStore, sddEligible, hasColor,
-            sddAvailable, hasWarranty, giftWrappable, giftMessageable;
+            sddAvailable, hasWarranty, giftWrappable, giftMessageable, tuxItem;
     // attributes with unknown types:
     // product_images, color_swatch_images, promotions, default_image
 
