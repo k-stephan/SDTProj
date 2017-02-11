@@ -199,9 +199,12 @@ class WebDriverConfigurator {
                 }
                 capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
 
-                // since expected latest firefox use marionette, it is set here as true.
-                // will set this capability to false for old firefox on specific code on case to case basis
-                capabilities.setCapability("marionette", true);
+                // latest firefox from 48 use marionette. But in Lorein VM firefox installed (default firefox version) is 46. Hence the conditional branching
+                if (browserVersion != null && browserVersion.compareTo("48.0") >= 0) {
+                    capabilities.setCapability("marionette", true);
+                } else {
+                    capabilities.setCapability("marionette", false);
+                }
 
                 return disabledProxyCap(capabilities);
         }
