@@ -198,7 +198,10 @@ class WebDriverConfigurator {
                     }
                 }
                 capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
-                capabilities.setCapability("marionette", false);
+
+                // since expected latest firefox use marionette, it is set here as true.
+                // will set this capability to false for old firefox on specific code on case to case basis
+                capabilities.setCapability("marionette", true);
 
                 return disabledProxyCap(capabilities);
         }
@@ -440,10 +443,18 @@ class WebDriverConfigurator {
                 }
             } else if (StepUtils.firefox()) {   // Desktop Firefox
                 try {
-                    if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta")))
+                    // depending on firefox version, marionette is set
+                    if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta")))   {
                         capabilities.setCapability("seleniumVersion", "3.0.1");
+                        capabilities.setCapability("marionette", true);
+                    } else if (browserVersion != null && browserVersion.compareTo("48.0") < 0) {
+                        capabilities.setCapability("marionette", false);
+                    }
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
+                    System.err.println("ERROR : error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
+
+                    // retry instantiating driver.
                     capabilities.setCapability("marionette", true);
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 }
@@ -452,7 +463,7 @@ class WebDriverConfigurator {
             }
 
         } catch (Exception e) {
-                System.err.println("Could not create remote web driver: " + e);
+                System.err.println("ERROR : Could not create remote web driver: " + e);
         }
         Assert.fail("Unable to initialize driver");
         return null;

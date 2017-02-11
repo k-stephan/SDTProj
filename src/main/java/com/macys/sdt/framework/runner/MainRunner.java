@@ -800,7 +800,7 @@ public class MainRunner {
                 hScenario.put(l, element);
             }
         }
-        System.out.println("Cannot find scenario with line:" + line);
+        System.out.println("Cannot find scenario with line: " + line);
         int closest = 0;
         for (Integer l : hScenario.keySet()) {
             int dist = Math.abs(line - l);
@@ -810,7 +810,7 @@ public class MainRunner {
         }
         if (closest > 0) {
             features.put(scenarioPath + ":" + line, hScenario.get(closest));
-            System.out.println("Load closest scenario with line:" + closest);
+            System.out.println("Load closest scenario with line: " + closest);
         }
 
         return false;
