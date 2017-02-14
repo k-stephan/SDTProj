@@ -207,7 +207,7 @@ public class TestUsers {
         UserProfile userProfile = getCustomer(null);
 
         if (userProfile != null && registry == null) {
-            Registry registry = new Registry();
+            registry = new Registry();
             registry.addRandomData();
             userProfile.setRegistry(registry);
         }

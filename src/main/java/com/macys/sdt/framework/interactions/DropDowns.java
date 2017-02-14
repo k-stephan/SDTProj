@@ -217,6 +217,27 @@ public class DropDowns {
     }
 
     /**
+     * Method to select text from a drop down list using javascript
+     * Note: Use this to select BCOM custom drop downs in Edge browser if it is unable to identify the text present in last
+     *
+     * @param ele    drop down list element
+     * @param listId list of elements
+     * @param text   to select
+     */
+    public static void selectCustomTextUsingJavaScript(String ele, String listId, String text) {
+        if (StepUtils.bloomingdales()){
+            Navigate.execJavascript("arguments[0].innerHTML = '"+text+"';" +
+                    "var e=arguments[1];" +
+                    "for (var i=0; i<e.length; i++){" +
+                    "if(e[i].getAttribute('class') == 'selected'){" +
+                    "e[i].setAttribute('class', '');" +
+                    "}if(e[i].innerHTML == '"+text+"'){" +
+                    "e[i].setAttribute('class', 'selected');" +
+                    "}}", Elements.findElement(ele), Elements.findElement(listId));
+        }
+    }
+
+    /**
      * Method to select value from a drop down list based on index
      * Note: Using this for BCOM as in Account pages the select elements are hidden in UI
      *
