@@ -3,6 +3,7 @@ package com.macys.sdt.framework.runner;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.macys.sdt.framework.interactions.Navigate;
+import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
@@ -302,6 +303,8 @@ public class MainRunner {
                 + (useSauceLabs ? " on Sauce Labs" : ""));
 
         new AuthenticationDialog();
+        setAfterNavigationHooks();
+        setBeforeNavigationHooks();
 
         try {
             Thread cucumberThread = new Thread(() -> {
@@ -330,6 +333,22 @@ public class MainRunner {
                 System.exit(runStatus);
             }
         }
+    }
+
+    /**
+     * Adds the default after navigation hooks
+     */
+    public static void setAfterNavigationHooks() {
+        Navigate.addAfterNavigation(MainRunner::getCurrentUrl);
+        Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
+        Navigate.addAfterNavigation(Wait::setWaitDone);
+    }
+
+    /**
+     * Adds the default before navigation hooks
+     */
+    public static void setBeforeNavigationHooks() {
+        Navigate.addBeforeNavigation(Wait::setWaitRequired);
     }
 
     /**

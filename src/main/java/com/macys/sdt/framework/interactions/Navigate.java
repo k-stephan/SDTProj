@@ -10,6 +10,9 @@ import org.openqa.selenium.WebDriver;
 import java.util.ArrayList;
 import java.util.MissingFormatArgumentException;
 
+import static com.macys.sdt.framework.runner.MainRunner.setAfterNavigationHooks;
+import static com.macys.sdt.framework.runner.MainRunner.setBeforeNavigationHooks;
+
 /**
  * A collection of ways to navigate between pages and handle navigation
  */
@@ -87,8 +90,6 @@ public class Navigate {
      */
     public static void runAfterNavigation() {
         afterNavigate.forEach(Runnable::run);
-        MainRunner.getCurrentUrl();
-        MainRunner.PageHangWatchDog.resetWatchDog();
     }
 
     /**
@@ -96,6 +97,7 @@ public class Navigate {
      */
     public static void removeAllBeforeNavigation() {
         beforeNavigate.clear();
+        setBeforeNavigationHooks();
     }
 
     /**
@@ -103,6 +105,7 @@ public class Navigate {
      */
     public static void removeAllAfterNavigation() {
         afterNavigate.clear();
+        setAfterNavigationHooks();
     }
 
     /**

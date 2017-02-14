@@ -40,4 +40,8 @@ public class ConvertedSteps extends StepUtils {
         return MainRunner.getWebDriver().switchTo().alert().getText();
     }
 
+    public static String getWindowHandle() {
+        return MainRunner.getWebDriver().getWindowHandle();
+    }
+
 }

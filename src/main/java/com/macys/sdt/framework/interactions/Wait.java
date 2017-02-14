@@ -343,6 +343,16 @@ public class Wait {
         forPageReady(null);
     }
 
+    private static boolean waitDone = false;
+
+    public static void setWaitDone() {
+        waitDone = true;
+    }
+
+    public static void setWaitRequired() {
+        waitDone = false;
+    }
+
     /**
      * Wait for any loading activities and waits for page verify_page element to load (if provided)
      *
@@ -352,20 +362,14 @@ public class Wait {
     public static boolean forPageReady(final String pageName) {
         // app loading is handled much better, there are already built-in waits in appium interactions
         // that work perfectly well. Sadly, not the same for the website.
-        if (appTest) {
+        if (appTest || waitDone) {
             return true;
         }
 
         int waitTime = MainRunner.timeout;
         //final long ts = System.currentTimeMillis();
-        //List<String> stacks = Utils.getCallFromFunction(".forPageReady(");
-        //if (stacks.toString().contains(".StepUtils.click("))
-        //    Utils.threadSleep(safari() ? 3000 : 500, null);
-        //String stack = Utils.listToString(stacks, "\n\t ", new String[]{});
-        //System.out.print("..." + new Date() + "-forPageReady():\n\t");
 
         new WebDriverWait(MainRunner.getWebDriver(), waitTime).until((WebDriver wDriver) -> {
-            //System.out.print("\t: " + (System.currentTimeMillis() - ts));
             // Safari takes a bit to update to "loading" status after an action
             try {
                 if (StepUtils.safari()) {
@@ -389,9 +393,7 @@ public class Wait {
                 untilElementPresent(verifyElement);
             }
         }
-
         StepUtils.closeJQueryPopup();
-        //System.out.println(".exit");
         return true;
     }
 
