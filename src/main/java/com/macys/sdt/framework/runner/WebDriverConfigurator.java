@@ -414,8 +414,14 @@ class WebDriverConfigurator {
 
             // to use sauce connect
             if (MainRunner.tunnelIdentifier != null) {
-                capabilities.setCapability("tunnel-identifier", MainRunner.tunnelIdentifier);
-                System.out.println("INFO : Using sauce connect tunnel: " + MainRunner.tunnelIdentifier);
+                if (MainRunner.tunnelIdentifier.equalsIgnoreCase("parent")) {
+                    capabilities.setCapability("tunnel-identifier", "macysParentTunnel");
+                    capabilities.setCapability("parentTunnel", "satish-macys");
+                    System.out.println("INFO : Using sauce connect tunnel: macysParentTunnel");
+                } else {
+                    capabilities.setCapability("tunnel-identifier", MainRunner.tunnelIdentifier);
+                    System.out.println("INFO : Using sauce connect tunnel: " + MainRunner.tunnelIdentifier);
+                }
             } else {
                 System.out.println("INFO : running without sauce connect");
             }
