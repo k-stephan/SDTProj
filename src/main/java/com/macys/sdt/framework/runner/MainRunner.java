@@ -463,20 +463,32 @@ public class MainRunner {
      * Retrieves project info either from "sdt_project" or "scenarios" env val if possible
      */
     private static void getProject() {
-        String projectPath = scenarios.replace("/", ".");
-        ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
-        int index = parts.lastIndexOf("SDT");
-        if (index == -1) {
-            index = parts.indexOf("features");
-            if (index < 2) {
-                Assert.fail("Unable to determine project by given environment variables. Please" +
-                        "add an environment variable \"sdt_project\" " +
-                        "with project name in format \"<domain>.<project>\"");
+        String projectPath;
+        if (workspace != null && !workspace.isEmpty()) {
+            projectPath = scenarios.replace(workspace, "").replace("/", ".");
+            ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
+            if (parts.size() >= 2) {
+                project = parts.get(0) + "." + parts.get(1);
+            } else {
+                project = "";
             }
-            project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
         } else {
-            project = parts.get(index + 1) + "." + parts.get(index + 2);  // domain.project
+            projectPath = scenarios.replace("/", ".");
+            ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
+            int index = parts.lastIndexOf("SDT");
+            if (index == -1) {
+                index = parts.indexOf("features");
+                if (index < 2) {
+                    Assert.fail("Unable to determine project by given environment variables. Please" +
+                            "add an environment variable \"sdt_project\" " +
+                            "with project name in format \"<domain>.<project>\"");
+                }
+                project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
+            } else {
+                project = parts.get(index + 1) + "." + parts.get(index + 2);  // domain.project
+            }
         }
+
         String[] check = project.split("\\.");
         if (!(check.length == 2)) {
             Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
