@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.utils.db.models;
 
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
 import com.macys.sdt.framework.utils.rest.services.Canvas;
@@ -8,6 +9,8 @@ import org.apache.commons.collections4.ListUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -30,6 +33,7 @@ public class MediaService {
     public static List<HashMap> allMediaComponentIds = new ArrayList<>();
     public static Date customDate;
     public static JSONObject contextData;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MediaService.class);
 
 
     public static List<Map> getFinalContextualizeCanvasData(String[] mediaNamesArray, String rowType, String[] contextAttrNames, String[] contextAttrValues) throws Throwable {
@@ -73,16 +77,12 @@ public class MediaService {
                 List<String[]> values = new ArrayList<>();
                 values.add(canvasRowIds.toArray(new String[canvasRowIds.size()]));
                 values.add(mediaNamesArray);
-                preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("media_group_data").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                preparedStatement.setString(1, rowType);
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("media_group_data").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{rowType}));
             } else {
                 List<String[]> values = new ArrayList<>();
                 values.add(canvasRowIds.toArray(new String[canvasRowIds.size()]));
                 values.add(mediaNamesArray);
-                preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("media_component_data").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                preparedStatement.setString(1, rowType);
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("media_component_data").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{rowType}));
             }
             while (resultSet.next()) {
                 Map row = new HashMap<>();
@@ -127,9 +127,7 @@ public class MediaService {
             canvasRowIds = getCanvasRowIds(queries.getJSONObject("media_service").getString("canvas_layout_attribute_data"), contextAttrNames, contextAttrValues, count);
             List<String[]> values = new ArrayList<>();
             values.add(canvasRowIds.toArray(new String[canvasRowIds.size()]));
-            PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("with_canvas_row_type_id").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-            preparedStatement.setString(1, rowType);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("with_canvas_row_type_id").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{rowType}));
             List<Map> rowLevelContextData = new ArrayList<>();
             while (resultSet.next()) {
                 Map contextMapData = new HashMap<>();
@@ -281,13 +279,11 @@ public class MediaService {
                 List<String[]> values = new ArrayList<>();
                 List<String> finalMediaKeys = ListUtils.sum(mediaGroupIds, catIconMediaKeys);
                 values.add(finalMediaKeys.toArray(new String[finalMediaKeys.size()]));
-                PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("with_group_media_context_by_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("with_group_media_context_by_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{}));
                 mediaGroupDataOne = getMediaGroupDataFromResult(resultSet, "group");
                 values.clear();
                 values.add(catIconMediaKeys.toArray(new String[catIconMediaKeys.size()]));
-                preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("without_group_media_context_by_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("without_group_media_context_by_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{}));
                 mediaGroupDataTwo = getMediaGroupDataFromResult(resultSet, "group");
                 if (!mediaGroupDataTwo.isEmpty()) {
                     mediaGroupDataOne.addAll(mediaGroupDataTwo);
@@ -296,13 +292,11 @@ public class MediaService {
             if (bannerFlag == 1) {
                 List<String[]> values = new ArrayList<>();
                 values.add(groupContextualizeMedia.toArray(new String[groupContextualizeMedia.size()]));
-                PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("with_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("with_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{}));
                 mediaGroupData = getMediaGroupDataFromResult(resultSet, "group");
                 values.clear();
                 values.add(groupContextualizeMedia.toArray(new String[groupContextualizeMedia.size()]));
-                preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("without_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("without_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{}));
                 mediaGroupDataTwo = getMediaGroupDataFromResult(resultSet, "group");
                 if (!mediaGroupDataTwo.isEmpty()) {
                     mediaGroupData.addAll(mediaGroupDataTwo);
@@ -326,8 +320,7 @@ public class MediaService {
 
                 List<String[]> values = new ArrayList<>();
                 values.add(adComponentIds.toArray(new String[adComponentIds.size()]));
-                PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_component_id_in_media_parameter").toString(), values, "string"));
-                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_component_id_in_media_parameter").toString(), values, "string"), (new String[]{}));
 
                 List<Map> mediaParameterData = getMediaParameterDataFromResult(resultSet);
                 List<String> refIds = mediaParameterData.stream()
@@ -335,8 +328,7 @@ public class MediaService {
                         .collect(Collectors.toList());
                 values.clear();
                 values.add(refIds.toArray(new String[refIds.size()]));
-                preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_static_link_url").toString(), values, "string"));
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_static_link_url").toString(), values, "string"), (new String[]{}));
 
                 List<Map> popData = getMediaParameterDataFromResult(resultSet);
                 List popupComponentIds = popData.stream()
@@ -378,13 +370,11 @@ public class MediaService {
             if (bannerFlag == 1) {
                 List<String[]> values = new ArrayList<>();
                 values.add(componentContextualizeMedia.toArray(new String[componentContextualizeMedia.size()]));
-                PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("with_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("with_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{}));
                 componentMediaLevelContextData = getMediaGroupDataFromResult(resultSet, "group");
                 values.clear();
                 values.add(componentContextualizeMedia.toArray(new String[componentContextualizeMedia.size()]));
-                preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("without_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("without_media_parameter").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{}));
                 List mediaComponentDataTwo = getMediaGroupDataFromResult(resultSet, "group");
                 if (!mediaComponentDataTwo.isEmpty()) {
                     componentMediaLevelContextData.addAll(mediaComponentDataTwo);
@@ -416,8 +406,7 @@ public class MediaService {
         if (queryName.equals("without_group_media_context")) {
             sqlQuery = sqlQuery.replace("media_parameter.text, ", "");
         }
-        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = executeQuery(sqlQuery, (new String[]{}));
         return getMediaGroupDataFromResult(resultSet, (queryName.contains("group") ? "group" : "component"));
     }
 
@@ -450,8 +439,7 @@ public class MediaService {
             } else {
                 List<String[]> values = new ArrayList<>();
                 values.add(mediaKeys.toArray(new String[mediaKeys.size()]));
-                PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("with_media_group_component").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"));
-                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("with_media_group_component").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string"), (new String[]{}));
                 while (resultSet.next()) {
                     Map type = new HashMap<>();
                     type.put("mediaGroupId", resultSet.getString("media_group_id"));
@@ -467,15 +455,13 @@ public class MediaService {
             List<String> finalMediaKeys = ListUtils.sum(mediaKeys, componentIds);
             List<String[]> values = new ArrayList<>();
             values.add(finalMediaKeys.toArray(new String[finalMediaKeys.size()]));
-            PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_media_component_id").toString(), values, "string"));
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_media_component_id").toString(), values, "string"), (new String[]{}));
             List<String> mediaComponentData = new ArrayList<>();
             while (resultSet.next())
                 mediaComponentData.add(resultSet.getString("component_id"));
             values.clear();
             values.add(mediaKeys.toArray(new String[mediaKeys.size()]));
-            preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("without_component_media_context").toString(), values, "string"));
-            resultSet = preparedStatement.executeQuery();
+            resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("without_component_media_context").toString(), values, "string"), (new String[]{}));
             List<String> mediaComponentDataSecond = new ArrayList<>();
             while (resultSet.next())
                 mediaComponentDataSecond.add(resultSet.getString("component_id"));
@@ -487,8 +473,7 @@ public class MediaService {
         List<Map> mediaParameterData = new ArrayList<>();
         List<String[]> values = new ArrayList<>();
         values.add(mediaKeys.toArray(new String[mediaKeys.size()]));
-        PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_link_type").toString(), values, "string"));
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_link_type").toString(), values, "string"), (new String[]{}));
         while (resultSet.next()) {
             Map type = new HashMap<>();
             type.put("mediaKey", resultSet.getString("component_id"));
@@ -508,8 +493,7 @@ public class MediaService {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
             values.clear();
             values.add(paramIds.toArray(new String[paramIds.size()]));
-            preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString("with_widget_data").replaceAll("<= \\?", "<= '" + dateFormat.format(customDate) + "'").replaceAll(">= \\?", ">= '" + dateFormat.format(customDate) + "'")), values, "int").replaceAll("\\?", mode));
-            resultSet = preparedStatement.executeQuery();
+            resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString("with_widget_data").replaceAll("<= \\?", "<= '" + dateFormat.format(customDate) + "'").replaceAll(">= \\?", ">= '" + dateFormat.format(customDate) + "'")), values, "int").replaceAll("\\?", mode), (new String[]{}));
             List mediaParameterAttrData = new ArrayList<>();
             while (resultSet.next())
                 mediaParameterAttrData.add(resultSet.getString("parameter_id"));
@@ -536,8 +520,7 @@ public class MediaService {
             List<Map> mediaParamAttrData = new ArrayList<>();
             values.clear();
             values.add(paramIds.toArray(new String[paramIds.size()]));
-            preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_media_param_attr_name").toString(), values, "int"));
-            resultSet = preparedStatement.executeQuery();
+            resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_media_param_attr_name").toString(), values, "int"), (new String[]{}));
             while (resultSet.next()) {
                 Map type = new HashMap<>();
                 type.put("attrValue", resultSet.getString("attr_value"));
@@ -600,8 +583,7 @@ public class MediaService {
                         .collect(Collectors.toList());
                 values.clear();
                 values.add(linkTypeRefIds.toArray(new String[linkTypeRefIds.size()]));
-                preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_static_link_url_ref_ids").toString(), values, "string"));
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_static_link_url_ref_ids").toString(), values, "string"), (new String[]{}));
                 List<Map> staticData = new ArrayList<>();
                 while (resultSet.next()) {
                     Map type = new HashMap<>();
@@ -725,8 +707,7 @@ public class MediaService {
         List<String[]> values = new ArrayList<>();
         values.add(mediaKeys.toArray(new String[mediaKeys.size()]));
         String query = (mediaType.equals("group") ? (updatedQuery((queries.getJSONObject("media_service").getString("with_media_group_ids").replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "string")) : (updatedQuery(queries.getJSONObject("media_service").get("with_media_component_id").toString(), values, "string")));
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        resultSet = preparedStatement.executeQuery();
+        resultSet = executeQuery(query, (new String[]{}));
         while (resultSet.next()) {
             Map type = new HashMap<>();
             type.put("mediaKey", resultSet.getString(mediaKeyName));
@@ -782,9 +763,7 @@ public class MediaService {
                 List<String> mediaIds = mediaTypes.stream().map(type -> type.get("mediaKey").toString()).collect(Collectors.toList());
                 values.clear();
                 values.add(mediaIds.toArray(new String[mediaIds.size()]));
-                preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_header_link_sort_criteria").toString(), values, "string"));
-                preparedStatement.setString(1, attributeValue);
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_header_link_sort_criteria").toString(), values, "string"), (new String[]{attributeValue}));
                 List<String> finalMediaKeys = new ArrayList<>();
                 while (resultSet.next())
                     finalMediaKeys.add(resultSet.getString("component_id"));
@@ -889,9 +868,7 @@ public class MediaService {
         List<String[]> values = new ArrayList<>();
         values.add(contextAttrNames);
         values.add(contextAttrValues);
-        PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery(query, values, "string"));
-        preparedStatement.setInt(1, count);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = executeQuery(updatedQuery(query, values, "string"), (new int[]{count}));
         while (resultSet.next())
             canvasRowIds.add(resultSet.getString("canvas_row_id"));
         HashMap canvas = new HashMap<>();
@@ -921,8 +898,7 @@ public class MediaService {
         List<String[]> values = new ArrayList<>();
         values.add(contextAttrNames);
         values.add(contextAttrValues);
-        PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get(queryName).toString(), values, "string"));
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get(queryName).toString(), values, "string"), (new String[]{}));
         List<String> mediaGroupIds = new ArrayList<>();
         while (resultSet.next())
             mediaGroupIds.add(resultSet.getString(queryName.equals("media_group_attribute_data") ? "media_group_id" : "component_id"));
@@ -947,25 +923,21 @@ public class MediaService {
             }
             List<String[]> values = new ArrayList<>();
             values.add(canvasIds.toArray(new String[canvasIds.size()]));
-            PreparedStatement preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_canvas_id_false").toString(), values, "string"));
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_canvas_id_false").toString(), values, "string"), (new String[]{}));
             List<Map> data = getCanvasCategoryData(resultSet);
             values.clear();
             values.add(canvasIds.toArray(new String[canvasIds.size()]));
-            preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_canvas_id_true").toString(), values, "string"));
-            resultSet = preparedStatement.executeQuery();
+            resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_canvas_id_true").toString(), values, "string"), (new String[]{}));
             List<Map> data1 = getCanvasCategoryData(resultSet);
             data.addAll(data1);
             List<String> categoryIds = data.stream().map(cat -> cat.get("categoryId").toString()).collect(Collectors.toList());
             values.clear();
             values.add(categoryIds.toArray(new String[categoryIds.size()]));
-            preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_category_id_false").toString(), values, "string"));
-            resultSet = preparedStatement.executeQuery();
+            resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_category_id_false").toString(), values, "string"), (new String[]{}));
             List<Map> canvasCatIdData = getCanvasCategoryData(resultSet);
             values.clear();
             values.add(categoryIds.toArray(new String[categoryIds.size()]));
-            preparedStatement = connection.prepareStatement(updatedQuery(queries.getJSONObject("media_service").get("with_category_id_true").toString(), values, "string"));
-            resultSet = preparedStatement.executeQuery();
+            resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get("with_category_id_true").toString(), values, "string"), (new String[]{}));
             List<Map> canvasCatIdData1 = getCanvasCategoryData(resultSet);
             canvasCatIdData.addAll(canvasCatIdData1);
             categoryIds.clear();
@@ -994,9 +966,7 @@ public class MediaService {
                 values.clear();
                 Assert.assertFalse("ERROR - DATA: Category_ids are not available in site database with expected media:'" + String.join(", ", tempMediaNames) + "'", categoryIds.isEmpty());
                 values.add(categoryIds.toArray(new String[categoryIds.size()]));
-                preparedStatement = connection.prepareStatement(updatedQuery((queries.getJSONObject("media_service").getString(queryName).replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "int"));
-                preparedStatement.setString(1, pageType);
-                resultSet = preparedStatement.executeQuery();
+                resultSet = executeQuery(updatedQuery((queries.getJSONObject("media_service").getString(queryName).replaceAll("<= \\?", "<= '" + customDate.toString() + "'").replaceAll(">= \\?", ">= '" + customDate.toString() + "'")), values, "int"), (new String[]{pageType}));
                 while (resultSet.next())
                     catIds.add(resultSet.getString("cat_id"));
                 Collections.shuffle(catIds);
@@ -1200,5 +1170,31 @@ public class MediaService {
         } else {
             return Arrays.asList(array).toString().replace("[", "'").replace(", ", "', '").replace("]", "'");
         }
+    }
+
+    private static ResultSet executeQuery(String sqlQuery, String... values) throws Throwable{
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        String dummySqlQuery = sqlQuery;
+        for (int index = 1; index <= values.length; index++){
+            preparedStatement.setString(index, values[index-1]);
+            dummySqlQuery = dummySqlQuery.replaceFirst("\\?", "'"+values[index-1]+"'");
+        }
+        if (MainRunner.debugMode)
+            LOGGER.info("--> executeQuery :: ->"+dummySqlQuery);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet;
+    }
+
+    private static ResultSet executeQuery(String sqlQuery, int... values) throws Throwable{
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        String dummySqlQuery = sqlQuery;
+        for (int index = 1; index <= values.length; index++){
+            preparedStatement.setInt(index, values[index-1]);
+            dummySqlQuery = dummySqlQuery.replaceFirst("\\?", String.valueOf(values[index-1]));
+        }
+        if (MainRunner.debugMode)
+            LOGGER.info("--> executeQuery :: ->"+dummySqlQuery);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet;
     }
 }

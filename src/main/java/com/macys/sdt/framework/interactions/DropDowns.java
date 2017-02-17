@@ -209,13 +209,15 @@ public class DropDowns {
      * @param text   to select
      */
     public static void selectCustomText(String ele, String listId, String text) {
-        Clicks.click(ele);
-        if (StepUtils.chrome()) {
-            Utils.threadSleep(500, null);
+        if (!Elements.getText(ele).equalsIgnoreCase(text)) {
+            Clicks.click(ele);
+            if (StepUtils.chrome()) {
+                Utils.threadSleep(500, null);
+            }
+            if (StepUtils.edge())
+                Elements.elementInView(Elements.findElements(listId).stream().filter(e -> e.getText().equalsIgnoreCase(text)).findFirst().get());
+            Clicks.clickElementByText(listId, text);
         }
-        if (StepUtils.edge())
-            Elements.elementInView(Elements.findElements(listId).stream().filter(e -> e.getText().equalsIgnoreCase(text)).findFirst().get());
-        Clicks.clickElementByText(listId, text);
     }
 
     /**

@@ -1,85 +1,65 @@
 package com.macys.sdt.framework.utils.rest.services;
 
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Categories {
     private static final String SERVICE_ENDPOINT = "catalog/v2/categories/";
     private static final int MAX_ACTIVE_CATEGORY_LIMIT = 1000;
-    private static boolean useParasoftHost = true;
+    private static boolean useParasoftHost = false;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Categories.class);
 
     public static JSONObject category(String cat) {
-        JSONObject jsonResponse;
-        String serviceUrl = null;
+        JSONObject jsonResponse = null;
+        String serviceUrl = "";
         if (useParasoftHost) {
             serviceUrl = getServiceURL() + cat + "?_fields=id,name,parentCategoryId,externalHostUrl,attributes,leaf,canvasIds&_expand=id,live,countryEligible,subCategories(name,leaf).depth%3D2,parentCategory(live).depth%3D2147483647&sdpGrid=primary&ip=" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080";
         } else {
             serviceUrl = getServiceURL() + cat + "?_fields=id,name,parentCategoryId,externalHostUrl,attributes,leaf,canvasIds&_expand=id,live,countryEligible,subCategories(name,leaf).depth%3D2,parentCategory(live).depth%3D2147483647&sdpGrid=primary";
         }
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(serviceUrl);
-        httpGet.addHeader("X-Macys-ClientId", "NavApp");
-        httpGet.addHeader("X-Macys-Customer-Id", "1234");
-        httpGet.addHeader("X-Macys-RequestId", "123456");
-        try (
-                CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        httpResponse.getEntity().getContent()))) {
-
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = reader.readLine()) != null) {
-                response.append(inputLine);
-            }
-            jsonResponse = new JSONObject(response.toString());
-            return jsonResponse.getJSONObject("category");
-        } catch (IOException | JSONException e) {
-            System.err.println("Unable to retrieve data for category: " + cat);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Macys-ClientId", "NavApp");
+        headers.put("X-Macys-Customer-Id", "1234");
+        headers.put("X-Macys-RequestId", "123456");
+        if (MainRunner.debugMode){
+            LOGGER.info("--> Service Request URL: -> "+serviceUrl);
+            LOGGER.info("--> Headers: -> "+headers.toString());
         }
-        return null;
+        try {
+            jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class)).getJSONObject("category");
+        }catch (JSONException e){System.out.println("Unable to get information for cat id : "+cat);}
+        return jsonResponse;
     }
 
     public static boolean activeCategory(String cat) {
         JSONObject jsonResponse;
         String serviceUrl = null;
+        boolean status = false;
         if (useParasoftHost) {
             serviceUrl = getServiceURL() + cat + "?_fields=live&ip=" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080";
         } else {
             serviceUrl = getServiceURL() + cat + "?_fields=live";
         }
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(serviceUrl);
-        httpGet.addHeader("X-Macys-ClientId", "NavApp");
-        httpGet.addHeader("X-Macys-Customer-Id", "1234");
-        httpGet.addHeader("X-Macys-RequestId", "123456");
-        try (
-                CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        httpResponse.getEntity().getContent()))) {
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = reader.readLine()) != null) {
-                response.append(inputLine);
-            }
-            jsonResponse = new JSONObject(response.toString());
-            reader.close();
-            httpClient.close();
-            return jsonResponse.getJSONObject("category").getBoolean("live");
-        } catch (IOException | JSONException e) {
-            System.err.println("Unable to find status of category: " + cat);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Macys-ClientId", "NavApp");
+        headers.put("X-Macys-Customer-Id", "1234");
+        headers.put("X-Macys-RequestId", "123456");
+        if (MainRunner.debugMode){
+            LOGGER.info("--> Service Request URL: -> "+serviceUrl);
+            LOGGER.info("--> Headers: -> "+headers.toString());
         }
-        return false;
+        try {
+            jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class));
+            status = jsonResponse.getJSONObject("category").getBoolean("live");
+        }catch (JSONException e){System.out.println("Unable to find the status for cat id: "+cat);}
+        return status;
     }
 
     private static String getServiceURL() {
