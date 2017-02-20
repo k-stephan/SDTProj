@@ -81,7 +81,7 @@ public class MainRunner {
     /**
      * Workspace path as given in "WORKSPACE" env variable
      */
-    public static String workspace = getEnvVar("WORKSPACE");
+    public static String workspace = getEnvVar("workspace");
 
     /**
      * Path to logging folder
@@ -356,8 +356,11 @@ public class MainRunner {
      */
     public static void getEnvVars(String[] args) {
         if (workspace == null) {
-            workspace = getEnvOrExParam("workspace");
-            workspace = workspace == null ? "." : workspace;
+            workspace = getEnvOrExParam("WORKSPACE");
+            if (workspace == null) {
+                workspace = ".";
+                System.err.println("WARNING: No workspace was specified in environment variables, this may cause unexpected behavior");
+            }
         }
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
@@ -465,7 +468,7 @@ public class MainRunner {
      */
     private static void getProject() {
         String projectPath;
-        if (workspace != null && !workspace.isEmpty()) {
+        if (!workspace.equals(".")) {
             projectPath = scenarios.replace(workspace, "").replace("/", ".").replace("\\", ".");
             ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
             if (parts.size() >= 2) {
