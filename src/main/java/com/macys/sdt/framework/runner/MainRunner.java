@@ -356,7 +356,8 @@ public class MainRunner {
      */
     public static void getEnvVars(String[] args) {
         if (workspace == null) {
-            workspace = ".";
+            workspace = getEnvOrExParam("workspace");
+            workspace = workspace == null ? "." : workspace;
         }
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
@@ -465,7 +466,7 @@ public class MainRunner {
     private static void getProject() {
         String projectPath;
         if (workspace != null && !workspace.isEmpty()) {
-            projectPath = scenarios.replace(workspace, "").replace("/", ".");
+            projectPath = scenarios.replace(workspace, "").replace("/", ".").replace("\\", ".");
             ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
             if (parts.size() >= 2) {
                 project = parts.get(0) + "." + parts.get(1);
