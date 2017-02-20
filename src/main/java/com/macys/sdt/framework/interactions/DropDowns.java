@@ -214,7 +214,7 @@ public class DropDowns {
             if (StepUtils.chrome()) {
                 Utils.threadSleep(500, null);
             }
-            if (StepUtils.edge())
+            if (StepUtils.edge() || StepUtils.firefox())
                 Elements.elementInView(Elements.findElements(listId).stream().filter(e -> e.getText().equalsIgnoreCase(text)).findFirst().get());
             Clicks.clickElementByText(listId, text);
         }
