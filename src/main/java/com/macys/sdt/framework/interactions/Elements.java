@@ -28,11 +28,11 @@ public class Elements {
     /**
      * Retrieves the first element
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return first element selected by el
      */
-    public static WebElement findElement(String selector) {
-        return findElement(element(selector));
+    public static WebElement findElement(String elementPath) {
+        return findElement(element(elementPath));
     }
 
     /**
@@ -68,22 +68,22 @@ public class Elements {
     /**
      * Retrieves all elements
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return list of WebElements selected by el
      */
-    public static List<WebElement> findElements(String selector) {
-        return findElements(element(selector));
+    public static List<WebElement> findElements(String elementPath) {
+        return findElements(element(elementPath));
     }
 
     /**
      * Retrieves all elements using a selector and filters them with the given Predicate if provided
      *
-     * @param selector String selector in format "page_name.element_name"
-     * @param filter   Predicate to filter results with
+     * @param elementPath element path in format "page_name.element_name"
+     * @param filter      Predicate to filter results with
      * @return list of WebElements selected by el after filter is applied
      */
-    public static List<WebElement> findElements(String selector, Predicate<WebElement> filter) {
-        return findElements(element(selector), filter);
+    public static List<WebElement> findElements(String elementPath, Predicate<WebElement> filter) {
+        return findElements(element(elementPath), filter);
     }
 
     /**
@@ -133,12 +133,12 @@ public class Elements {
     /**
      * Gets an attribute value "attr" from element
      *
-     * @param selector String selector in format "page_name.element_name"
-     * @param attr     attribute to retrieve
+     * @param elementPath element path in format "page_name.element_name"
+     * @param attr        attribute to retrieve
      * @return requested attribute value if it exists, otherwise empty string
      */
-    public static String getElementAttribute(String selector, String attr) {
-        return getElementAttribute(element(selector), attr);
+    public static String getElementAttribute(String elementPath, String attr) {
+        return getElementAttribute(element(elementPath), attr);
     }
 
     /**
@@ -163,7 +163,7 @@ public class Elements {
     /**
      * Gets an CSS attribute value from element
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param selector element path in format "page_name.element_name"
      * @param css_attr CSS attribute value to retrieve
      * @return requested CSS attribute value if it exists, otherwise empty string
      */
@@ -193,23 +193,35 @@ public class Elements {
     /**
      * Gets a random element from a group of elements
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return random element from list found using el
      * @throws NoSuchElementException thrown if no element is found
      */
-    public static WebElement getRandomElement(String selector) throws NoSuchElementException {
-        return getRandomElement(element(selector), null);
+    public static WebElement getRandomElement(String elementPath) throws NoSuchElementException {
+        return getRandomElement(element(elementPath), null);
     }
 
     /**
      * Gets a random element from a group of elements
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param selector element path in format "page_name.element_name"
      * @return random element from list found using el
      * @throws NoSuchElementException thrown if no element is found
      */
     public static WebElement getRandomElement(By selector) throws NoSuchElementException {
         return getRandomElement(selector, null);
+    }
+
+    /**
+     * Gets a random element from a group of elements
+     *
+     * @param elementPath element path in format "page_name.element_name"
+     * @param predicate   predicate to use to filter elements
+     * @return random element from list found using el
+     * @throws NoSuchElementException thrown if no element is found
+     */
+    public static WebElement getRandomElement(String elementPath, Predicate<WebElement> predicate) throws NoSuchElementException {
+        return getRandomElement(element(elementPath), predicate);
     }
 
     /**
@@ -244,11 +256,11 @@ public class Elements {
     /**
      * Checks if element is displayed on the page
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return true if element is displayed on the page
      */
-    public static boolean elementPresent(String selector) {
-        return elementPresent(element(selector));
+    public static boolean elementPresent(String elementPath) {
+        return elementPresent(element(elementPath));
     }
 
     /**
@@ -268,11 +280,11 @@ public class Elements {
     /**
      * Checks if any elements are displayed on the page
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return true if any elements selected by "by" are displayed on the page
      */
-    public static boolean anyPresent(String selector) {
-        return anyPresent(element(selector));
+    public static boolean anyPresent(String elementPath) {
+        return anyPresent(element(elementPath));
     }
 
     /**
@@ -289,12 +301,12 @@ public class Elements {
     /**
      * Checks if an element is present. If not, throws env exception
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @throws Exceptions.EnvException if element not displayed
      */
-    public static void elementShouldBePresent(String selector) throws Exceptions.EnvException {
-        if (!Wait.untilElementPresent(selector)) {
-            throw new Exceptions.EnvException("Element " + selector + " is not displayed");
+    public static void elementShouldBePresent(String elementPath) throws Exceptions.EnvException {
+        if (!Wait.untilElementPresent(elementPath)) {
+            throw new Exceptions.EnvException("Element " + elementPath + " is not displayed");
         }
     }
 
@@ -319,17 +331,17 @@ public class Elements {
     /**
      * Checks if an element is currently on the screen
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return true if element is on the screen
      */
-    public static boolean elementInView(String selector) {
-        return elementInView(findElement(selector));
+    public static boolean elementInView(String elementPath) {
+        return elementInView(findElement(elementPath));
     }
 
     /**
      * Checks if an element is currently on the screen
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param selector element path in format "page_name.element_name"
      * @return true if element is on the screen
      */
     public static boolean elementInView(By selector) {
@@ -357,7 +369,7 @@ public class Elements {
 
     /**
      * Checks if an element is currently visible on the screen using javascript
-     *
+     * <p>
      * <p>
      * NOTE: This method will not scroll to the element. It will just return true or false.
      * </p>
@@ -374,17 +386,17 @@ public class Elements {
     /**
      * Retrieves values from page json file and strips any selector type information
      *
-     * @param key String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return element value from json file
      */
-    public static ArrayList<String> getValues(String key) {
-        return new PageElement(key).elementValues;
+    public static ArrayList<String> getValues(String elementPath) {
+        return new PageElement(elementPath).elementValues;
     }
 
     /**
      * Creates a By selector based on data in a json file
      *
-     * @param elementKey String selector in format "page_name.element_name"
+     * @param elementKey element path in format "page_name.element_name"
      * @return By selector retrieved from json file
      */
     public static By element(String elementKey) {
@@ -420,7 +432,7 @@ public class Elements {
      * the end result will be: <br><br>"id, row_2_3"
      * </p>
      *
-     * @param elementKey String selector in format "page_name.element_name"
+     * @param elementKey element path in format "page_name.element_name"
      * @param params     values to fill embedded parameters
      * @return By selector built using json file and parameters
      */
@@ -453,8 +465,15 @@ public class Elements {
         return new ByAll(bys);
     }
 
-    public static By getLocatorMethod(String locator, String value) {
-        switch (locator) {
+    /**
+     * Returns a By selector based on the given locator method and value
+     *
+     * @param method locator method
+     * @param value  locator string
+     * @return
+     */
+    public static By getLocatorMethod(String method, String value) {
+        switch (method) {
             case "id":
                 return By.id(value);
             case "linkText":
@@ -495,11 +514,11 @@ public class Elements {
      * 99.99% of realistic match expectations and without forcing callers to deal with null returns
      * </p>
      *
-     * @param selector String selector in format "page_name.element_name"
+     * @param elementPath element path in format "page_name.element_name"
      * @return text of the element or "null" if element does not exist
      */
-    public static String getText(String selector) {
-        return getText(element(selector));
+    public static String getText(String elementPath) {
+        return getText(element(elementPath));
     }
 
     /**

@@ -163,6 +163,9 @@ public abstract class StepUtils {
      */
     public static boolean MEW() {
         String url = url();
+        if (url.isEmpty()) {
+            url = MainRunner.url;
+        }
         return url.matches(".*?m(2qa1)?\\.(qa[0-9][0-9]?code)?(macys|mcom|bcom|bloomingdales).*?");
     }
 

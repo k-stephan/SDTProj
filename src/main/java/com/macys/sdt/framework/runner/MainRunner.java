@@ -19,7 +19,6 @@ import org.junit.Assert;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 import java.io.IOException;
@@ -523,6 +522,8 @@ public class MainRunner {
         } catch (Exception e) {
             System.err.println("ERROR : error in resetDriver : " + e.getMessage());
             driver = null;
+        } finally {
+            currentURL = "";
         }
     }
 
@@ -672,6 +673,13 @@ public class MainRunner {
      */
     public static String getEnvOrExParam(String name) {
         String val = getEnvVar(name);
+        if (val == null) {
+            val = getExParam(name);
+        }
+        if (val == null) {
+            name = name.toLowerCase();
+            val = getEnvVar(name);
+        }
         return val != null ? val : getExParam(name);
     }
 
