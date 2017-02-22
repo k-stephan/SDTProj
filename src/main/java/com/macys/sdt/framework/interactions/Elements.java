@@ -370,7 +370,6 @@ public class Elements {
     /**
      * Checks if an element is currently visible on the screen using javascript
      * <p>
-     * <p>
      * NOTE: This method will not scroll to the element. It will just return true or false.
      * </p>
      *
@@ -470,7 +469,7 @@ public class Elements {
      *
      * @param method locator method
      * @param value  locator string
-     * @return
+     * @return By selector object usable in interactions
      */
     public static By getLocatorMethod(String method, String value) {
         switch (method) {
