@@ -163,13 +163,19 @@ public class PageElement {
         switch (strategy) {
             case "id":
             case "linkText":
+            case "link text":
             case "name":
             case "partialLinkText":
+            case "partial link text":
             case "tagName":
+            case "tag name":
             case "xpath":
             case "className":
             case "class":
+            case "class name":
             case "cssSelector":
+            case "css selector":
+            case "css":
             case "UIAutomator":
                 return true;
             default:

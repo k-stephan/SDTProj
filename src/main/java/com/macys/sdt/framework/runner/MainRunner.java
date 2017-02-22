@@ -436,7 +436,7 @@ public class MainRunner {
         appTest = useAppium && (appLocation != null);
 
         // close browser at exist unless debugMode is on or test is appTest
-        closeBrowserAtExit = !debugMode && !appTest;
+        closeBrowserAtExit = !(debugMode || appTest);
 
         if (url == null && !appTest) {
             Assert.fail("\"website\" variable required to test a website");
@@ -495,35 +495,6 @@ public class MainRunner {
         String[] check = project.split("\\.");
         if (!(check.length == 2)) {
             Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
-        }
-    }
-
-    /**
-     * Resets the driver
-     *
-     * @param quit whether to close the driver
-     */
-    public static void resetDriver(boolean quit) {
-        try {
-            if (quit) {
-                if (appTest) {
-                    driver.quit();
-                } else {
-//                    driver.close();
-                    driver.quit();
-                    System.out.println("driver quit");
-                    if (ie()) { // workaround for IE browser closing
-                        driver.quit();
-                    }
-                }
-            }
-            driver = null;
-            System.out.println("INFO : webdriver set to null");
-        } catch (Exception e) {
-            System.err.println("ERROR : error in resetDriver : " + e.getMessage());
-            driver = null;
-        } finally {
-            currentURL = "";
         }
     }
 
@@ -892,12 +863,38 @@ public class MainRunner {
                 }
             }
         } catch (Exception e) {
-            // skip error message on saucelab remote driver
-            if (!useSauceLabs) {
-                System.err.println("Error closing driver. You may need to clean up execution machine. error: " + e);
-            }
+            System.err.println("Error closing driver. You may need to clean up execution machine. error: " + e);
         }
         driver = null;
+    }
+
+    /**
+     * Resets the driver
+     *
+     * @param quit whether to close the driver
+     */
+    public static void resetDriver(boolean quit) {
+        try {
+            if (quit) {
+                if (appTest) {
+                    driver.quit();
+                } else {
+                    //                    driver.close();
+                    driver.quit();
+                    System.out.println("driver quit");
+                    if (ie()) { // workaround for IE browser closing
+                        driver.quit();
+                    }
+                }
+            }
+            driver = null;
+            System.out.println("INFO : webdriver set to null");
+        } catch (Exception e) {
+            System.err.println("ERROR : error in resetDriver : " + e.getMessage());
+            driver = null;
+        } finally {
+            currentURL = "";
+        }
     }
 
     /**
@@ -921,35 +918,6 @@ public class MainRunner {
         currentURL = curUrl;
 
         return curUrl;
-    }
-
-    /**
-     * Get the current URL from browser and/or URL param
-     */
-    private static String getInternalCurrentUrl() {
-        if (StepUtils.ie()) {
-            // IE windows authentication popup disappears when driver.getCurrentUrl() executed
-            // so need to hook the function and wait for 10 seconds to look for the IE window authentication popup
-            // and repeat every 1 hour
-            long cs = System.currentTimeMillis();
-            // check first 10 seconds only
-            if (cs - ieAuthenticationTs < 10000) {
-                if (browser.equals("ie") && booleanParam("require_authentication")) {
-                    // check IE window authentication popup
-                    int exitValue = runIEMethod();
-                    // IE authentication popup login successfully, no more checking for an hour
-                    if (exitValue == 0) {
-                        ieAuthenticationTs -= 10000;
-                    }
-                }
-            } else {
-                // after that check every hour
-                if (cs - ieAuthenticationTs > 3600000) {
-                    ieAuthenticationTs = cs;
-                }
-            }
-        }
-        return getCurrentUrl();
     }
 
     /**
@@ -1222,7 +1190,7 @@ public class MainRunner {
                         }
                         continue;
                     }
-                    String url = currentURL;
+                    String url = getCurrentUrl();
                     //System.err.println("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
                     if (url.contains("about:blank")) {
                         continue;
