@@ -1135,11 +1135,13 @@ public class MainRunner {
      */
     public static class PageHangWatchDog extends Thread {
         private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 130 : 95) * 1000;
+        private final static long PAUSE_TIMEOUT = 280 * 1000;
         private final static int MAX_FAILURES = 5;
         private static Thread cucumberThread;
         private static PageHangWatchDog hangWatchDog;
         private static int failCount;
         private static boolean pause;
+        private static long pauseStartTime;
         private String currentUrl;
         private long ts;
 
@@ -1163,7 +1165,9 @@ public class MainRunner {
 
         public static void pause(boolean pause) {
             PageHangWatchDog.pause = pause;
-            if (!pause) {
+            if (pause) {
+                pauseStartTime = System.currentTimeMillis();
+            } else {
                 failCount = 0;
             }
         }
@@ -1176,6 +1180,13 @@ public class MainRunner {
             }
         }
 
+        private void interruptCucumberThread() {
+            System.err.println("PageHangWatchDog timeout! Pushing things along...");
+            cucumberThread.interrupt();
+            this.reset(null);
+            pause = false;
+        }
+
         public void run() {
             while (cucumberThread.isAlive()) {
                 try {
@@ -1184,8 +1195,11 @@ public class MainRunner {
                     } else if (pause) {
                         // if we've been waiting a while, send any browser command to prevent
                         // dropping the sauce labs connection
+                        if (System.currentTimeMillis() - pauseStartTime > PAUSE_TIMEOUT) {
+                            interruptCucumberThread();
+                        }
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
-                            getWebDriver().getCurrentUrl();
+                            getCurrentUrl();
                             this.reset(this.currentUrl);
                         }
                         continue;
@@ -1212,9 +1226,7 @@ public class MainRunner {
 
                             this.reset(null);
                             if (failCount > MAX_FAILURES) {
-                                System.err.println("PageHangWatchDog timeout! Pushing things along...");
-                                cucumberThread.interrupt();
-                                this.reset(null);
+                                interruptCucumberThread();
                             }
                         }
                     } else {
