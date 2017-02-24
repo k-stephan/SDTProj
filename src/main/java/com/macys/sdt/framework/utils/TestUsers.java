@@ -766,7 +766,7 @@ public class TestUsers {
     }
 
     /**
-     * Get a random product with attributes listed in options
+     * Get a random product with attributes listed in options from "orderable_products.json" file
      *
      * @param options attributes the product should have
      * @return Product object with all attributes

@@ -80,6 +80,10 @@ public class DATagCollector {
     private static JSONArray json_steps = null;
     private static Boolean tag_collection_started = false;
 
+    /**
+     * starts the tag collection
+     * @param scenario current scenario
+     */
     public static void start(Scenario scenario) {
         // init outfile per scenario
         json_top = new JSONObject();

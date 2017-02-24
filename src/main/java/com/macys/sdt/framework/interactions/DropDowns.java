@@ -190,7 +190,7 @@ public class DropDowns {
      * @return list of values as Strings
      */
     public static List<String> getAllValuesUsingJavaScript(String selector) {
-        List<Object> allValues = new ArrayList<>();
+        List<Object> allValues;
         allValues = (List) Navigate.execJavascript("var a = new Array(); " +
                 "var dl=arguments[0]; " +
                 "for(i=0;i<dl.options.length;i++){" +

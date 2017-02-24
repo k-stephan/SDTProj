@@ -389,7 +389,7 @@ class WebDriverConfigurator {
             remoteOS = remoteOS.replace("\"", "");
             remoteOS = remoteOS.replace("'", "");
 
-            // browser specific capability
+            // only browser specific capability
             if (!StepUtils.mobileDevice()) {
                 capabilities.setCapability("platform", remoteOS);
                 capabilities.setCapability("version", browserVersion);
@@ -461,7 +461,7 @@ class WebDriverConfigurator {
                     }
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
-                    System.err.println("ERROR : error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
+                    System.err.println("ERROR - SCRIPT : error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
 
                     // retry instantiating driver.
                     capabilities.setCapability("marionette", true);
@@ -472,9 +472,9 @@ class WebDriverConfigurator {
             }
 
         } catch (Exception e) {
-                System.err.println("ERROR : Could not create remote web driver: " + e);
+            System.err.println("ERROR - SCRIPT : Could not create remote web driver: " + e);
         }
-        Assert.fail("Unable to initialize driver");
+        Assert.fail("ERROR - SCRIPT : Unable to initialize driver");
         return null;
     }
 
