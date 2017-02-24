@@ -1185,7 +1185,7 @@ public class Utils {
      * @return String url pointing to EE
      */
     public static String getEEUrl() {
-        String ee = "11.142.14.56:9097";
+        String ee = "sdt.ee.fds.com";
         if (System.getenv("EE") != null) {
             ee = System.getenv("EE");
         } else if (System.getenv("meta_data") != null) {
