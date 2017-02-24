@@ -23,7 +23,7 @@ public class RESTUtils {
      * @return absolute REST uri
      */
     public static String fullURI(String relativePath) {
-        return getBaseAddress() + relativePath;
+        return getBaseAddress().toString().replace("m.", "") + relativePath;
     }
 
     /**
@@ -43,7 +43,7 @@ public class RESTUtils {
      * @return WebTarget
      */
     public static WebTarget createTarget(Client client, String resource) {
-        String baseAddress = null;
+        String baseAddress = getBaseAddress();
         WebTarget webTarget;
         String pattern = "^https?://.+";        //works for both http and https
 
@@ -54,11 +54,6 @@ public class RESTUtils {
         }
 
         //return webTarget when relative uri is passed
-        try {
-            baseAddress = getBaseAddress().orElseThrow(Exception::new);
-        } catch (Exception e) {
-            Assert.fail("Website detail not present");
-        }
         webTarget = client.target(baseAddress);
 
         if (resource != null && !resource.isEmpty()) {
@@ -72,7 +67,14 @@ public class RESTUtils {
      *
      * @return base address
      */
-    public static Optional<String> getBaseAddress() {
-        return Optional.ofNullable(MainRunner.url);
+    public static String getBaseAddress() {
+        try {
+            String baseAddress = Optional.ofNullable(MainRunner.url).orElseThrow(Exception::new);
+            baseAddress = baseAddress.replace("m.", "");
+            return baseAddress;
+        } catch (Exception e) {
+            Assert.fail("Website detail not present");
+        }
+        return null;
     }
 }
