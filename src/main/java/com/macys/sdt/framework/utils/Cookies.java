@@ -80,7 +80,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookie(String name, String value, String path, Date expiry) {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return false;
         }
 
@@ -110,7 +110,7 @@ public class Cookies {
      * @return true if cookie is deleted
      */
     public static boolean deleteCookie(String name) {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return false;
         }
 
@@ -128,7 +128,7 @@ public class Cookies {
      * Deletes all cookies. Uses JS on browsers that aren't supported by Selenium cookies
      */
     public static void deleteAllCookies() {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return;
         }
 
@@ -148,7 +148,7 @@ public class Cookies {
      * @return true if cookie is edited
      */
     public static boolean editCookie(String name, String replace, String with) {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return false;
         }
 
@@ -164,7 +164,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookieJavascript(String name, String value) {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return false;
         }
 
@@ -187,7 +187,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookieJavascript(String name, String value, String path, Date expiry) {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return false;
         }
         String encodedValue = encodeURL(value);
@@ -210,7 +210,7 @@ public class Cookies {
      * @param name name of cookie to delete
      */
     public static void deleteCookieJavascript(String name) {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return;
         }
 
@@ -221,7 +221,7 @@ public class Cookies {
      * Delete all cookies using javascript
      */
     public static void deleteAllCookiesJavascript() {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return;
         }
 
@@ -244,7 +244,7 @@ public class Cookies {
      * @return String representation of cookie value. Empty string if cookie not found.
      */
     public static String getCookieValue(String name) {
-        if (MainRunner.useAppium) {
+        if (MainRunner.appTest) {
             return "";
         }
 
