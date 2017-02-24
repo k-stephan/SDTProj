@@ -302,6 +302,12 @@ public abstract class StepUtils {
         MainRunner.closeAlert();
     }
 
+    public static void checkSafariPage() {
+        if (safari() && Elements.elementPresent("home.safari_error")) {
+            Navigate.browserRefresh();
+        }
+    }
+
     /**
      * Closes the tutorial overlay on MEW experience if present
      */
