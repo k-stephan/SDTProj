@@ -75,7 +75,7 @@ public class GiftCardService {
 
     public static String getGiftCardServiceUrl(GiftCard.CardType cardType) {
         final String AUTH_TOKEN = "N_GUrqG6Eq8oeCrvE0aZLA";
-        String environmentUrl = MainRunner.url.split("\\.")[1], cardPath = "Min Balance (<$50)";
+        String environmentUrl = MainRunner.url.replace("m.", "").split("\\.")[1], cardPath = "Min Balance (<$50)";
         String cardFullPath = null;
         switch (cardPath) {
             case "Min Balance (<$50)":

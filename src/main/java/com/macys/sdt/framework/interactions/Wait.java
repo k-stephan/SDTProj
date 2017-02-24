@@ -440,6 +440,10 @@ public class Wait {
 
             if (jsResponse instanceof Long) {
                 queries = (Long) jsResponse;
+            } else if (jsResponse instanceof String) {
+                // this means either jquery is not on the current page or not working correctly
+                String response = (String) jsResponse;
+                return (response.startsWith("{\"hCode\"") || response.isEmpty());
             } else {
                 System.err.println("Unable to get num ajax calls!");
                 return true;
