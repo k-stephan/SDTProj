@@ -64,7 +64,7 @@ class WebDriverConfigurator {
             driver = initBrowser(capabilities);
         }
 
-        Assert.assertNotNull("Driver should have been initialized by now", driver);
+        Assert.assertNotNull("ERROR - SCRIPT : Driver should have been initialized by now", driver);
 
         if (!remoteOS.equals("Linux") && !appTest) {
             WebDriver.Timeouts to = driver.manage().timeouts();
@@ -389,8 +389,8 @@ class WebDriverConfigurator {
             remoteOS = remoteOS.replace("\"", "");
             remoteOS = remoteOS.replace("'", "");
 
-            // only browser specific capability
-            if (!StepUtils.mobileDevice()) {
+            // only browser specific capability (including mew website in chrome emulation)
+            if (!useAppium) {
                 capabilities.setCapability("platform", remoteOS);
                 capabilities.setCapability("version", browserVersion);
             }
@@ -595,17 +595,17 @@ class WebDriverConfigurator {
             try {
                 browsermobServer = new BrowserMobProxyServer();
                 browsermobServer.start(port);
-                System.out.println("using port " + port);
+                System.out.println("using port : " + port);
                 found = true;
                 break;
             } catch (Exception ex) {
-                System.out.println("port " + port + " is in use:" + ex.getMessage());
+                System.out.println("port " + port + " is in use" + ex.getMessage());
                 port++;
             }
         }
         if (!found) {
-            System.out.println("Cannot find open port for proxy server");
-            System.out.println("Abort run.");
+            System.err.println("--> Cannot find open port for proxy server");
+            System.err.println("--> Abort run.");
             System.exit(-1);
         }
 
