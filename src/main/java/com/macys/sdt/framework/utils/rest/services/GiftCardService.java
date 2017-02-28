@@ -1,7 +1,6 @@
 package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.model.GiftCard;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
@@ -74,8 +73,7 @@ public class GiftCardService {
     }
 
     public static String getGiftCardServiceUrl(GiftCard.CardType cardType) {
-        final String AUTH_TOKEN = "N_GUrqG6Eq8oeCrvE0aZLA";
-        String environmentUrl = MainRunner.url.replace("m.", "").split("\\.")[1], cardPath = "Min Balance (<$50)";
+        String cardPath = "Min Balance (<$50)";
         String cardFullPath = null;
         switch (cardPath) {
             case "Min Balance (<$50)":
@@ -87,6 +85,6 @@ public class GiftCardService {
             default:
                 Assert.fail("Incorrect cardPath (" + cardPath + ") found!!");
         }
-        return RESTEndPoints.SIM_URL + environmentUrl + cardFullPath + AUTH_TOKEN;
+        return RESTEndPoints.SIM_URL + RESTEndPoints.getEnvironment() + cardFullPath + RESTEndPoints.SIM_AUTH_TOKEN;
     }
 }

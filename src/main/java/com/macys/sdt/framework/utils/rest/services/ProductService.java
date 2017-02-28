@@ -1,21 +1,22 @@
 package com.macys.sdt.framework.utils.rest.services;
 
+import com.macys.sdt.framework.model.Product;
+import com.macys.sdt.framework.model.Promotion;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.utils.ObjectMapperProvidor;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import com.macys.sdt.framework.utils.db.models.OrderServices;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProductService {
 
@@ -173,6 +174,29 @@ public class ProductService {
                 "</shipments>\n" +
                 "</order>\n";
     }
+
+    public static Product getPromoProduct(Promotion.PromoType type) {
+        String fullUrl =  RESTEndPoints.SIM_URL + RESTEndPoints.getEnvironment() + "buckets/Products/" + type.url +
+                "?auth_token=" + RESTEndPoints.SIM_AUTH_TOKEN;
+        try {
+            Response response = RESTOperations.doGET(fullUrl, null);
+            String resp = response.readEntity(String.class);
+            JSONArray promos = new JSONArray(resp);
+            String promo = promos.getJSONObject(new Random().nextInt(promos.length())).toString();
+            Promotion promotion = ObjectMapperProvidor.getMapper().readValue(promo, Promotion.class);
+            Product p = new Product(promotion.productIds.get(0));
+            p.promo = promotion;
+            return p;
+        } catch (Exception e) {
+            System.err.println("Unable to get or read data from SIM product service: " + e);
+        }
+        // fall back to DML product
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("promo_code_eligible", true);
+        map.put("orderable", true);
+        return TestUsers.getRandomProduct(map);
+    }
+
 
     private static String getAddToBagURL() {
         return "http://" + EnvironmentDetails.otherApp("MSPOrder").ipAddress + ":8080/api/" + RESTEndPoints.ADD_TO_BAG;

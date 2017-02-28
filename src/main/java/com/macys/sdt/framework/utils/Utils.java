@@ -1331,6 +1331,13 @@ public class Utils {
 
     }
 
+    public static String removeFromString(String s, String... args) {
+        for (String arg : args) {
+            s = s.replace(arg, "");
+        }
+        return s;
+    }
+
     /**
      * Watchdog for Threads, to monitor it for timeouts
      *

@@ -10,20 +10,20 @@ import java.util.Iterator;
  * This class represents a product and contains all the information about that product
  */
 public class Product {
-    public String name, currency, description, categoryName, categoryPageType, colorName,
-            sizeName, colorNormalName, orderMethod, brand, type, department, reserved_for,
-            estimated_delivery_date, tuxedo_description, tuxedo_itemized_list;
-    public String[] primaryImageColors, colorOptions, sizeOptions, promoDescriptions, quantities;
+    public String name, currency, description, categoryName, categoryPageType, colorName, sizeName, colorNormalName,
+            orderMethod, brand, type, department, reserved_for, estimated_delivery_date, tuxedo_description,
+            tuxedo_itemized_list;
+    public String[] primaryImageColors, colorOptions, sizeOptions, quantities;
     public int id, quantity, orderLimit, categoryId, canvasId, storeLocationNum;
     public int[] upcs, memberProducts;
     public long upc, reservation_id;
     public Product[] productRecommendations;
     public double individualPrice, salePrice, totalPrice;
-    public double[] promoPrices;
     public boolean registryItem, normalItem, parentProductId, available, orderable, masterAvailable, bopsAvailable,
             prodAvailable, bopsEligible, bigTicket, fitPredictorEligible, categoryBreadcrumb, beautyItem, giftCard,
             electronicGiftCard, masterProduct, ishipEligible, clickToCall, availableInStore, sddEligible, hasColor,
             sddAvailable, hasWarranty, giftWrappable, giftMessageable, tuxItem;
+    public Promotion promo;
     // attributes with unknown types:
     // product_images, color_swatch_images, promotions, default_image
 
@@ -38,7 +38,28 @@ public class Product {
             String varName = translate(key);
             try {
                 Field f = Product.class.getField(varName);
-                f.set(this, product.get(key));
+                Object o = product.get(key);
+                Class type = f.getType();
+                if (type.isPrimitive()) {
+                    f.set(this, o);
+                } else {
+                    if (o instanceof String) {
+                        // Sometimes booleans come in as... interestingly... coded strings
+                        String s = (String) o;
+                        if (s.matches("(?i)y|true")) {
+                            f.set(this, true);
+                        } else if (s.matches("(?i)n|false")) {
+                            f.set(this, false);
+                        } else {
+                            f.set(this, s);
+                        }
+                    } else if (o instanceof String[] || o instanceof Product[]) {
+                        // allow for any other non-primitives that we have
+                        f.set(this, o);
+                    } else {
+                        throw new NoSuchFieldException();
+                    }
+                }
             } catch (NoSuchFieldException e) {
                 System.out.println("No field for " + key + " in Product class");
             } catch (JSONException | IllegalAccessException e) {
@@ -48,13 +69,13 @@ public class Product {
     }
 
     private String translate(String attr) {
-        switch (attr) {
+        switch (attr.toLowerCase()) {
+            case "prod_id":
+                return "id";
             case "category_name":
                 return "categoryName";
             case "category_page_type":
                 return "categoryPageType";
-            case "promo_description":
-                return "promoDescription";
             case "color_normal_name":
                 return "colorNormalName";
             case "order_method":
@@ -75,8 +96,6 @@ public class Product {
                 return "individualPrice";
             case "sale_price":
                 return "salePrice";
-            case "promo_price":
-                return "promoPrice";
             case "total_price":
             case "price":
                 return "totalPrice";
