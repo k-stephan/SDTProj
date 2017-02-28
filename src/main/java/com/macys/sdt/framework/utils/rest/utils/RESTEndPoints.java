@@ -22,5 +22,9 @@ public class RESTEndPoints {
                 .split("\\.")[0] + "/";
     }
 
+    public static String getSimUrl(String params) {
+        return SIM_URL + getEnvironment() + params + "?auth_token=" + RESTEndPoints.SIM_AUTH_TOKEN;
+    }
+
 
 }
