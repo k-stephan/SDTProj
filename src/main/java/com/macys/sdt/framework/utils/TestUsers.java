@@ -616,7 +616,7 @@ public class TestUsers {
             File uslFile = getResourceFile("enrolled_usl_id.json");
             String jsonTxt = Utils.readTextFile(uslFile);
             //JSON from file to Object
-            List<UslInfo> uslInfoList = new ObjectMapper().readValue(jsonTxt,
+            List<UslInfo> uslInfoList = ObjectMapperProvidor.getMapper().readValue(jsonTxt,
                     TypeFactory.defaultInstance().constructCollectionType(List.class,
                             UslInfo.class));
             return uslInfoList.get(0);
@@ -638,7 +638,7 @@ public class TestUsers {
             String jsonTxt = Utils.readTextFile(addressFile);
             Random rand = new Random();
             //JSON from file to Object
-            List<LoyalistDetails> loyalistDetailsList = new ObjectMapper().readValue(jsonTxt,
+            List<LoyalistDetails> loyalistDetailsList = ObjectMapperProvidor.getMapper().readValue(jsonTxt,
                     TypeFactory.defaultInstance().constructCollectionType(List.class, LoyalistDetails.class));
 
             List<LoyalistDetails> loyalists = loyalistDetailsList.stream().filter(loyalistDetails -> loyalistDetails.getLoyallistType().equalsIgnoreCase(loyallistType)).collect(Collectors.toList());

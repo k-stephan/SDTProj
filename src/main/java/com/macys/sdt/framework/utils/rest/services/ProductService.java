@@ -175,15 +175,19 @@ public class ProductService {
                 "</order>\n";
     }
 
+    /**
+     * Gets a product with a given promo type using the SIM data delivery framework
+     *
+     * @param type Type of promotion to get product for
+     * @return a product with the given promo
+     */
     public static Product getPromoProduct(Promotion.PromoType type) {
-        String fullUrl =  RESTEndPoints.SIM_URL + RESTEndPoints.getEnvironment() + "buckets/Products/" + type.url +
-                "?auth_token=" + RESTEndPoints.SIM_AUTH_TOKEN;
+        String fullUrl = RESTEndPoints.getSimUrl("buckets/Products/" + type.simUrl);
         try {
             Response response = RESTOperations.doGET(fullUrl, null);
-            String resp = response.readEntity(String.class);
-            JSONArray promos = new JSONArray(resp);
-            String promo = promos.getJSONObject(new Random().nextInt(promos.length())).toString();
-            Promotion promotion = ObjectMapperProvidor.getMapper().readValue(promo, Promotion.class);
+            JSONArray promoProducts = new JSONArray(response.readEntity(String.class));
+            String promoJSON = promoProducts.getJSONObject(new Random().nextInt(promoProducts.length())).toString();
+            Promotion promotion = ObjectMapperProvidor.getMapper().readValue(promoJSON, Promotion.class);
             Product p = new Product(promotion.productIds.get(0));
             p.promo = promotion;
             return p;

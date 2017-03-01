@@ -1173,6 +1173,10 @@ public class MainRunner {
             }
         }
 
+        public static void exit() {
+            hangWatchDog.interrupt();
+        }
+
         private void reset(String url) {
             this.ts = System.currentTimeMillis();
             if (url != null) {
@@ -1233,8 +1237,12 @@ public class MainRunner {
                     } else {
                         this.reset(url);
                     }
-                } catch (Throwable ex) {
-                    System.err.println("--> Error:PageHangWatchDog:" + ex.getMessage());
+                } catch (Exception ex) {
+                    if (ex instanceof org.openqa.selenium.NoSuchSessionException) {
+                        System.err.println("--> Error: PageHangWatchDog: driver session is dead, exiting");
+                        break;
+                    }
+                    System.err.println("--> Error: PageHangWatchDog: " + ex.getMessage());
                     ex.printStackTrace();
                 } finally {
                     //System.err.print(pause ? "|" : "~");
