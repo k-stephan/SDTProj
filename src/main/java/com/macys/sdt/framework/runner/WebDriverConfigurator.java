@@ -495,7 +495,7 @@ class WebDriverConfigurator {
 
         // setting appium version
         if (useSauceLabs) { // for saucelabs execution
-            if (StepUtils.iOS() && remoteOS.compareTo("10.0") <= 0) {
+            if (StepUtils.iOS() && remoteOS.compareTo("10.0") >= 0) {
                 capabilities.setCapability("appiumVersion", "1.6");
             } else {
                 capabilities.setCapability("appiumVersion", "1.5.3");
