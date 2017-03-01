@@ -2,6 +2,8 @@ package com.macys.sdt.framework.utils.rest.utils;
 
 
 import com.macys.sdt.framework.runner.MainRunner;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,10 @@ public class RESTUtils {
      * @return REST client
      */
     public static Client createClient() {
-        return ClientBuilder.newClient();
+        ClientConfig config = new ClientConfig();
+        config.property(ClientProperties.CONNECT_TIMEOUT, 30 * 1000);
+        config.property(ClientProperties.READ_TIMEOUT, 60 * 1000);
+        return ClientBuilder.newClient(config);
     }
 
     /**

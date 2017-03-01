@@ -17,7 +17,6 @@ public class ScenarioHelper {
     private static int stepOffset = 1;
     private static int backgroundStepCount = 0;
 
-
     /**
      * Initializes a scenario
      *
@@ -124,11 +123,16 @@ public class ScenarioHelper {
     public static String getScenarioStepName(int stepIndex) {
         if (scenarioInfo == null) {
             System.err.println("Can't get scenario step name - scenario not initialized");
-            return null;
+            return "";
         }
-        ArrayList list = (ArrayList) scenarioInfo.get("steps");
-        LinkedTreeMap currentStep = (LinkedTreeMap) list.get(stepIndex);
-        return stepIndex + ": " + Utils.parseInt(currentStep.get("line"), -1) + " - " + currentStep.get("name");
+        try {
+            ArrayList list = (ArrayList) scenarioInfo.get("steps");
+            LinkedTreeMap currentStep = (LinkedTreeMap) list.get(stepIndex);
+            return stepIndex + ": " + Utils.parseInt(currentStep.get("line"), -1) + " - " + currentStep.get("name");
+        } catch (NullPointerException e) {
+            System.err.println("Failed to get scenario name from current scenario");
+            return "";
+        }
     }
 
     /**
