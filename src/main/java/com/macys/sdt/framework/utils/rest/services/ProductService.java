@@ -5,10 +5,10 @@ import com.macys.sdt.framework.model.Promotion;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.utils.ObjectMapperProvidor;
 import com.macys.sdt.framework.utils.TestUsers;
+import com.macys.sdt.framework.utils.db.models.OrderServices;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
-import com.macys.sdt.framework.utils.db.models.OrderServices;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -182,7 +182,7 @@ public class ProductService {
      * @return a product with the given promo
      */
     public static Product getPromoProduct(Promotion.PromoType type) {
-        String fullUrl = RESTEndPoints.getSimUrl("buckets/Products/" + type.simUrl);
+        String fullUrl = RESTEndPoints.getSimUrl(RESTEndPoints.SimBucket.PRODUCT, type.simUrl);
         try {
             Response response = RESTOperations.doGET(fullUrl, null);
             JSONArray promoProducts = new JSONArray(response.readEntity(String.class));

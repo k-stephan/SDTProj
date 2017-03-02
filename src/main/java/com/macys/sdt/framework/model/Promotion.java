@@ -16,16 +16,16 @@ public class Promotion {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     public enum PromoType {
-        PWP             ("Promotions::Product%20with%20PWP"),
-        SITE_WIDE_PWP   ("Promotions::Product%20with%20Site-wide%20PWP"),
-        GWP             ("Promotions::Product%20with%20Bundled%20GWP"),
-        PRICING         ("Promotions::Product%20with%20Promotional%20Pricing"),
-        THRESHOLD_GWP   ("Promotions::Product%20with%20Threshold%20GWP"),
-        SITE_WIDE_PROMO ("Product%20with%20Site-wide%20Promo%20(Omnichannel)"),
-        DOLLAR_OFF      ("Product%20with%20Dollar%20Off%20Order"),
-        PERCENT_OFF     ("Promotions::Product%20with%20Percentage%20Off%20Order");
+        PWP             ("Promotions::Product with PWP"),
+        SITE_WIDE_PWP   ("Promotions::Product with Site-wide PWP"),
+        GWP             ("Promotions::Product with Bundled GWP"),
+        PRICING         ("Promotions::Product with Promotional Pricing"),
+        THRESHOLD_GWP   ("Promotions::Product with Threshold GWP"),
+        SITE_WIDE_PROMO ("Product with Site-wide Promo (Omnichannel)"),
+        DOLLAR_OFF      ("Product with Dollar Off Order"),
+        PERCENT_OFF     ("Promotions::Product with Percentage Off Order");
 
-        public final String simUrl;
+        public String simUrl;
 
         PromoType(String simUrl) {
             this.simUrl = simUrl;

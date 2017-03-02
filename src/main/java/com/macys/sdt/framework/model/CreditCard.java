@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.model;
 
+import org.json.JSONObject;
+
 /**
  * This class represents a CreditCard and contains all the information about that CreditCard
  */
@@ -13,6 +15,10 @@ public class CreditCard {
     private String expiryYear;
     private boolean has3DSecure;
     private String securePassword;
+
+    private CreditCard() {
+    }
+
     public CreditCard(CardType cardType, String cardNumber, String securityCode, double balance, String expiryMonth, String expiryMonthIndex, String expiryYear) {
         this.cardType = cardType;
         this.cardNumber = cardNumber;
@@ -35,6 +41,19 @@ public class CreditCard {
         this.expiryYear = expiryYear;
         this.has3DSecure = has3DSecure;
         this.securePassword = securePassword;
+    }
+
+    public static CreditCard createCardFromSimService(JSONObject cardData, CardType type) {
+        CreditCard card = new CreditCard();
+        card.cardType = type;
+        card.cardNumber = cardData.getString("Account N");
+        card.securityCode = cardData.getString("CVV / CID");
+        String expiryData = cardData.getString("Exp");
+        card.expiryMonth = expiryData.substring(0, 2);
+        card.expiryYear = expiryData.substring(2);
+        card.has3DSecure = false;
+        card.securePassword = null;
+        return card;
     }
 
     /**
@@ -203,26 +222,30 @@ public class CreditCard {
      * Different Card Types
      */
     public enum CardType {
-        VISA("Visa"),
-        MASTER_CARD("MasterCard"),
-        AMERICAN_EXPRESS("American Express"),
-        DISCOVER("Discover"),
-        MACYS("Macy's"),
-        MACYS_AMERICAN_EXPRESS("Macy's American Express"),
-        EMPLOYEE_CARD("Employee Card"),
-        BLOOMINGDALES("Bloomingdale's"),
-        BLOOMINGDALES_AMERICAN_EXPRESS("Bloomingdale's American Express"),
-        BLOOMINGDALES_EMPLOYEE_CARD("Bloomingdale's Employee Card");
+        VISA("Visa", ""),
+        MASTER_CARD("MasterCard", ""),
+        AMERICAN_EXPRESS("American Express", "AMEX"),
+        DISCOVER("Discover", ""),
+        MACYS("Macy's", "PROP"),
+        MACYS_AMERICAN_EXPRESS("Macy's American Express", "PROP"),
+        EMPLOYEE_CARD("Employee Card", ""),
+        BLOOMINGDALES("Bloomingdale's", "PROP"),
+        BLOOMINGDALES_AMERICAN_EXPRESS("Bloomingdale's American Express", "PROP"),
+        BLOOMINGDALES_EMPLOYEE_CARD("Bloomingdale's Employee Card", "");
 
         public final String name;
 
-        CardType(String name) {
+        // used by SIM data service
+        public final String abbreviation;
+
+        CardType(String name, String abbreviation) {
             this.name = name;
+            this.abbreviation = abbreviation;
         }
 
         public static CardType fromString(String value) {
             for (CardType type : CardType.values())
-                if (value.equals(type.name)) {
+                if (value.equals(type.name) || value.equals(type.abbreviation)) {
                     return type;
                 }
             return null;

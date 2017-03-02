@@ -22,8 +22,21 @@ public class RESTEndPoints {
                 .split("\\.")[0] + "/";
     }
 
-    public static String getSimUrl(String params) {
-        return SIM_URL + getEnvironment() + params + "?auth_token=" + RESTEndPoints.SIM_AUTH_TOKEN;
+    public static String getSimUrl(SimBucket bucket, String params) {
+        String url = SIM_URL + getEnvironment() + bucket.url + params + "?auth_token=" + RESTEndPoints.SIM_AUTH_TOKEN;
+        return url.replaceAll(" ", "%20");
+    }
+
+    public enum SimBucket {
+        PRODUCT("buckets/Products/"),
+        GIFT_CARD("buckets/Gift Cards/"),
+        CREDIT_CARD("buckets/Credit Cards/");
+
+        public final String url;
+
+        SimBucket(String url) {
+            this.url = url;
+        }
     }
 
 

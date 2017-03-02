@@ -1,5 +1,8 @@
 package com.macys.sdt.framework.utils.rest.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -9,6 +12,7 @@ import java.util.Map;
 
 public class RESTOperations {
 
+    private static Logger log = LoggerFactory.getLogger(RESTOperations.class);
 
     /**
      * POST operation
@@ -26,8 +30,8 @@ public class RESTOperations {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             System.out.println("requestpayload : " + requestPayload);
             response = webTarget.request(mediaType).post(Entity.entity(requestPayload, mediaType));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (javax.ws.rs.ProcessingException e) {
+            log.error(e.toString());
         }
         return response;
     }
@@ -42,17 +46,21 @@ public class RESTOperations {
      * @return REST response
      */
     public static Response doPOST(String resource, String mediaType, String requestPayload, Map<String, String> headers) {
-        Response response;
+        Response response = null;
         Client client = RESTUtils.createClient();
-        WebTarget webTarget = RESTUtils.createTarget(client, resource);
-        System.out.println("request payload : " + requestPayload);
-        Invocation.Builder requestBuilder = webTarget.request(mediaType);
-        if (headers != null && !headers.isEmpty()) {
-            for (String headerKey : headers.keySet()) {
-                requestBuilder.header(headerKey, headers.get(headerKey));
+        try {
+            WebTarget webTarget = RESTUtils.createTarget(client, resource);
+            System.out.println("request payload : " + requestPayload);
+            Invocation.Builder requestBuilder = webTarget.request(mediaType);
+            if (headers != null && !headers.isEmpty()) {
+                for (String headerKey : headers.keySet()) {
+                    requestBuilder.header(headerKey, headers.get(headerKey));
+                }
             }
+            response = requestBuilder.post(Entity.entity(requestPayload, mediaType));
+        } catch (javax.ws.rs.ProcessingException e) {
+            log.error(e.toString());
         }
-        response = requestBuilder.post(Entity.entity(requestPayload, mediaType));
         return response;
     }
 
@@ -69,8 +77,8 @@ public class RESTOperations {
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             response = webTarget.request().get();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (javax.ws.rs.ProcessingException e) {
+            log.error(e.toString());
         }
         return response;
     }
@@ -94,8 +102,8 @@ public class RESTOperations {
                 }
             }
             response = requestBuilder.get();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (javax.ws.rs.ProcessingException e) {
+            log.error(e.toString());
         }
         return response;
     }
@@ -113,7 +121,7 @@ public class RESTOperations {
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             response = webTarget.request().delete();
-        } catch (Exception e) {
+        } catch (javax.ws.rs.ProcessingException e) {
             e.printStackTrace();
         }
         return response;
@@ -138,8 +146,8 @@ public class RESTOperations {
                 }
             }
             response = requestBuilder.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (javax.ws.rs.ProcessingException e) {
+            log.error(e.toString());
         }
         return response;
     }
@@ -160,8 +168,8 @@ public class RESTOperations {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             System.out.println("requestpayload : " + requestPayload);
             response = webTarget.request(mediaType).put(Entity.entity(requestPayload, mediaType));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (javax.ws.rs.ProcessingException e) {
+            log.error(e.toString());
         }
         return response;
     }
@@ -188,8 +196,8 @@ public class RESTOperations {
                 }
             }
             response = requestBuilder.put(Entity.entity(requestPayload, mediaType));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (javax.ws.rs.ProcessingException e) {
+            log.error(e.toString());
         }
         return response;
     }

@@ -77,14 +77,14 @@ public class GiftCardService {
         String cardFullPath = null;
         switch (cardPath) {
             case "Min Balance (<$50)":
-                cardFullPath = "/buckets/Gift%20Cards/Gift%20Cards::" + cardType + "::Min%20Balance%20(%3C$50)?auth_token=";
+                cardFullPath = "Gift%20Cards::" + cardType + "::Min%20Balance%20(%3C$50)";
                 break;
             case "Regular Balance ($50 - $2000)":
-                cardFullPath = "/buckets/Gift%20Cards/Gift%20Cards::" + cardType + "::Regular%20Balance%20($50%20-%20$2000)?auth_token=";
+                cardFullPath = "Gift%20Cards::" + cardType + "::Regular%20Balance%20($50%20-%20$2000)";
                 break;
             default:
                 Assert.fail("Incorrect cardPath (" + cardPath + ") found!!");
         }
-        return RESTEndPoints.SIM_URL + RESTEndPoints.getEnvironment() + cardFullPath + RESTEndPoints.SIM_AUTH_TOKEN;
+        return RESTEndPoints.getSimUrl(RESTEndPoints.SimBucket.GIFT_CARD, cardFullPath);
     }
 }

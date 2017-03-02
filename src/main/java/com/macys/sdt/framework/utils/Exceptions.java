@@ -56,7 +56,7 @@ public class Exceptions {
         private static final long serialVersionUID = 3719597044976490617L;
 
         public EnvException(String msg) {
-            super(msg);
+            super("Error - ENV: " + msg);
         }
     }
 
@@ -67,7 +67,7 @@ public class Exceptions {
         private static final long serialVersionUID = 3719597044976490618L;
 
         public DataException(String msg) {
-            super(msg);
+            super("ERROR - DATA: " + msg);
         }
     }
 
@@ -78,7 +78,7 @@ public class Exceptions {
         private static final long serialVersionUID = 3719597044976490619L;
 
         public TimeoutException(String msg) {
-            super(msg);
+            super("ERROR - TIMEOUT: " + msg);
         }
     }
 }
