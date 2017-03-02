@@ -45,7 +45,8 @@ public class RESTEndPoints {
     public enum SimBucket {
         PRODUCT("buckets/Products/"),
         GIFT_CARD("buckets/Gift Cards/"),
-        CREDIT_CARD("buckets/Credit Cards/");
+        CREDIT_CARD("buckets/Credit Cards/"),
+        LOYALTY("buckets/Loyalty/");
 
         public final String url;
 

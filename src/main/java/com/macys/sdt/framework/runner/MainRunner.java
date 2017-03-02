@@ -204,6 +204,8 @@ public class MainRunner {
 
     public static String browsermobServerHarTs = System.currentTimeMillis() + "";
 
+    public static boolean dryRun = false;
+
     /**
      * Location of app for app testing (appium)
      */
@@ -286,12 +288,16 @@ public class MainRunner {
         featureScenarios.add("html:logs");
 
         // intellij cucumber config gives scenario name to differentiate between scenarios at runtime
+        // may also specify dry run
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length; i++) {
                 if (args[i].equals("--name")) {
                     featureScenarios.add(args[i]);
                     featureScenarios.add(args[i+1]);
-                    break;
+                }
+                if (args[i].equals("--dry-run")) {
+                    featureScenarios.add(args[i]);
+                    dryRun = true;
                 }
             }
         }
@@ -1192,7 +1198,7 @@ public class MainRunner {
                         this.reset(url);
                     }
                 } catch (Exception ex) {
-                    if (ex instanceof org.openqa.selenium.NoSuchSessionException) {
+                    if (!pause && ex instanceof org.openqa.selenium.NoSuchSessionException) {
                         System.err.println("--> Error: PageHangWatchDog: driver session is dead, exiting");
                         break;
                     }
