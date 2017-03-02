@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.runner.MainRunner.*;
 
@@ -495,7 +496,7 @@ class WebDriverConfigurator {
 
         // setting appium version
         if (useSauceLabs) { // for saucelabs execution
-            if (StepUtils.iOS() && remoteOS.compareTo("10.0") >= 0) {
+            if (StepUtils.iOS() && Integer.parseInt(remoteOS.split(Pattern.quote("."))[0]) >= 10) {
                 capabilities.setCapability("appiumVersion", "1.6");
             } else {
                 capabilities.setCapability("appiumVersion", "1.5.3");
