@@ -17,6 +17,8 @@ public class CreditCardService {
     /**
      * Gets a random credit card from the SIM Data Delivery service based on given attributes
      *
+     * <p>As of 3/2/17, this service only supports AMEX and PROP cards. More should come soon.</p>
+     *
      * @param type       Type of card to get
      * @param newAccount True for new account, false for converted account
      * @param singleLine True for single line, false for Dual line
@@ -24,6 +26,11 @@ public class CreditCardService {
      * @return CreditCard object containing data returned by service
      */
     public static CreditCard getCreditCard(CreditCard.CardType type, boolean newAccount, boolean singleLine, boolean activation) {
+        if (!type.abbreviation.matches("^AMEX$|^PROP$")) {
+            System.err.println("SIM credit card service only supports AMEX and PROP cards");
+            return null;
+        }
+
         boolean employeeCard = type == CreditCard.CardType.EMPLOYEE_CARD || type == CreditCard.CardType.BLOOMINGDALES_EMPLOYEE_CARD;
         String cardType = employeeCard ? "Employee" : "Regular";
         String accountType = newAccount ? "New Account " : "Converted Account ";

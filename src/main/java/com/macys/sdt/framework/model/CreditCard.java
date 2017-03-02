@@ -16,8 +16,7 @@ public class CreditCard {
     private boolean has3DSecure;
     private String securePassword;
 
-    private CreditCard() {
-    }
+    private CreditCard() {}
 
     public CreditCard(CardType cardType, String cardNumber, String securityCode, double balance, String expiryMonth, String expiryMonthIndex, String expiryYear) {
         this.cardType = cardType;
@@ -43,6 +42,13 @@ public class CreditCard {
         this.securePassword = securePassword;
     }
 
+    /**
+     * Uses a JSONObject from the SIM data service to create a new credit card
+     *
+     * @param cardData JSONObject from SIM data service
+     * @param type     type of card to create
+     * @return Credit card object with data from service
+     */
     public static CreditCard createCardFromSimService(JSONObject cardData, CardType type) {
         CreditCard card = new CreditCard();
         card.cardType = type;

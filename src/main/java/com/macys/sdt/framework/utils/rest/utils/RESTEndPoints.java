@@ -17,16 +17,31 @@ public class RESTEndPoints {
     public static final String BCOM_API_KEY = "ruq7dvpjbys2yv2w6czfcptq";
     public static final String SIM_AUTH_TOKEN = "N_GUrqG6Eq8oeCrvE0aZLA";
 
+    /**
+     * Gets the given environment - macys.com, bloomingdales.com, qa15codemacys.fds.com, etc.
+     *
+     * @return environment stripped of all http/www data and parameters
+     */
     public static String getEnvironment() {
         return Utils.removeFromString(MainRunner.url, "www1.", "www.", "http://", "https://", "m.")
                 .split("\\.")[0] + "/";
     }
 
+    /**
+     * Returns the full SIM url given a bucket type and any parameters
+     *
+     * @param bucket Which "bucket" your request falls under
+     * @param params any parameters for the call
+     * @return String containing full URL for REST call
+     */
     public static String getSimUrl(SimBucket bucket, String params) {
         String url = SIM_URL + getEnvironment() + bucket.url + params + "?auth_token=" + RESTEndPoints.SIM_AUTH_TOKEN;
         return url.replaceAll(" ", "%20");
     }
 
+    /**
+     * All "buckets" in SIM that are currently working and supported
+     */
     public enum SimBucket {
         PRODUCT("buckets/Products/"),
         GIFT_CARD("buckets/Gift Cards/"),

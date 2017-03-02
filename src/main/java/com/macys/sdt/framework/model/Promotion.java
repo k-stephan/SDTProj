@@ -15,6 +15,9 @@ public class Promotion {
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
+    /**
+     * Promo types supported by SIM data service
+     */
     public enum PromoType {
         PWP             ("Promotions::Product with PWP"),
         SITE_WIDE_PWP   ("Promotions::Product with Site-wide PWP"),

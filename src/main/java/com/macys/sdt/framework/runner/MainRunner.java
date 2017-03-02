@@ -216,7 +216,6 @@ public class MainRunner {
      */
     private static WebDriver driver = null;
 
-    private static long ieAuthenticationTs = System.currentTimeMillis() - 10000; // set authentication checking interval out of range
     //satish-macys:4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
 
     /**
@@ -876,17 +875,13 @@ public class MainRunner {
      */
     public static void resetDriver(boolean quit) {
         try {
-            if (quit) {
-                if (appTest) {
+            if (quit || useSauceLabs) {
+                driver.quit();
+                System.out.println("driver quit");
+                if (ie()) { // workaround for IE browser closing
                     driver.quit();
-                } else {
-                    //                    driver.close();
-                    driver.quit();
-                    System.out.println("driver quit");
-                    if (ie()) { // workaround for IE browser closing
-                        driver.quit();
-                    }
                 }
+
             }
             driver = null;
             System.out.println("INFO : webdriver set to null");
@@ -919,47 +914,6 @@ public class MainRunner {
         currentURL = curUrl;
 
         return curUrl;
-    }
-
-    /**
-     * Initialize IE authentication
-     */
-    public static void authenticationIeInit() {
-        ieAuthenticationTs = System.currentTimeMillis();
-    }
-
-    public static int runIEMethod() {
-        Process p;
-        String filePath = "src/com/macys/sdt/shared/resources/framework/authentication_popup/windows_authentication_ie.exe";
-        if (!new File("src").exists()) {
-            filePath = "shared/resources/framework/authentication_popup/windows_authentication_ie.exe";
-        }
-
-        try {
-            p = getRuntime().exec(filePath);
-            p.waitFor();  // wait for process to complete
-            return (p.exitValue());
-        } catch (Exception e) {
-            // ignore all errors
-        }
-        return 1;
-    }
-
-    public static int runChromeMethod() {
-        Process p;
-        String filePath = "src/com/macys/sdt/shared/resources/framework/authentication_popup/windows_authentication_chrome.exe";
-        if (!new File("src").exists()) {
-            filePath = "shared/resources/framework/authentication_popup/windows_authentication_chrome.exe";
-        }
-
-        try {
-            p = getRuntime().exec(filePath);
-            p.waitFor();  // wait for process to complete
-            return (p.exitValue());
-        } catch (Exception e) {
-            // ignore all errors
-        }
-        return 1;
     }
 
     public static Timeouts timeouts() {

@@ -227,10 +227,6 @@ public class Navigate {
             }
 
             System.out.println("...Loading " + givenURL);
-            // start checking IE windows authentication popup
-            if (StepUtils.ie() && MainRunner.booleanParam("require_authentication")) {
-                MainRunner.authenticationIeInit();
-            }
             //Utils.ThreadWatchDog twd = new Utils.ThreadWatchDog(null, 60000, "ThreadWatchDog:visit(" + link + ")", () -> stopPageLoad());
             MainRunner.getWebDriver().get(givenURL);
             //twd.interrupt();
