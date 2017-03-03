@@ -227,6 +227,13 @@ public class MainRunner {
      * @throws Throwable if an exception or error gets here, we're done
      */
     public static void main(String[] args) throws Throwable {
+        // When we abort jobs we don't always close the driver, this should help with that
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (closeBrowserAtExit || useSauceLabs) {
+                driver.quit();
+            }
+        }));
+
         getEnvVars(args);
 
         System.out.println("Using project: " + project + "\nIf this does not match your project, please" +
