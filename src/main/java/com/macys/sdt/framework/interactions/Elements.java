@@ -358,7 +358,7 @@ public class Elements {
      * @return true if element is on the screen
      */
     public static boolean elementInView(WebElement el) {
-        return (boolean) Navigate.execJavascript("arguments[0].scrollIntoView(false);" +
+        return el != null && (boolean) Navigate.execJavascript("arguments[0].scrollIntoView(false);" +
                 "       var position = arguments[0].getBoundingClientRect();" +
                 "       var x = position.left + (position.width / 2);" +
                 "       var y = position.top + (position.height / 2);" +
@@ -377,7 +377,7 @@ public class Elements {
      * @return true if element is on the screen and false if element is not in view
      */
     public static boolean isElementInView(WebElement el) {
-        return (boolean) Navigate.execJavascript("var position = arguments[0].getBoundingClientRect();" +
+        return el != null && (boolean) Navigate.execJavascript("var position = arguments[0].getBoundingClientRect();" +
                 "var actual = document.elementFromPoint(position.x, position.y);" +
                 "if(actual === arguments[0]) { return true; } else { return false; }", el);
     }
