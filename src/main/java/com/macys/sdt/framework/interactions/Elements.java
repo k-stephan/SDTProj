@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.PageElement;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
@@ -302,11 +302,11 @@ public class Elements {
      * Checks if an element is present. If not, throws env exception
      *
      * @param elementPath element path in format "page_name.element_name"
-     * @throws Exceptions.EnvException if element not displayed
+     * @throws EnvException if element not displayed
      */
-    public static void elementShouldBePresent(String elementPath) throws Exceptions.EnvException {
+    public static void elementShouldBePresent(String elementPath) throws EnvException {
         if (!Wait.untilElementPresent(elementPath)) {
-            throw new Exceptions.EnvException("Element " + elementPath + " is not displayed");
+            throw new EnvException("Element " + elementPath + " is not displayed");
         }
     }
 

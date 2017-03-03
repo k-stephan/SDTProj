@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.google.gson.Gson;
+import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.Navigate;
@@ -429,9 +430,9 @@ public abstract class StepUtils {
      * </p>
      *
      * @param names names of all allowed pages
-     * @throws Exceptions.EnvException thrown if not on one of the expected pages
+     * @throws EnvException thrown if not on one of the expected pages
      */
-    public static void shouldBeOnPage(String... names) throws Exceptions.EnvException {
+    public static void shouldBeOnPage(String... names) throws EnvException {
         Wait.forPageReady();
         // check each allowed page - short timeout to avoid waiting forever
         for (String name : names) {
@@ -451,7 +452,7 @@ public abstract class StepUtils {
         for (String name : names)
             pages += " " + name.replace("_", " ") + ", ";
         pages = pages.substring(0, pages.length() - 2);
-        throw new Exceptions.EnvException("ERROR - ENV: Not on pages: " + pages);
+        throw new EnvException("ERROR - ENV: Not on pages: " + pages);
     }
 
     /**

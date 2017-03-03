@@ -2,10 +2,10 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.macys.sdt.framework.Exceptions.ProductionException;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
@@ -31,11 +31,11 @@ public class UserProfileService {
      *
      * @param userProfileDetailInXml : user profile details in JSON
      * @return UserProfile that was created
-     * @throws Exceptions.ProductionException if called while executing against production
+     * @throws ProductionException if called while executing against production
      */
-    public static UserProfile createUserProfile(String userProfileDetailInXml) throws Exceptions.ProductionException {
+    public static UserProfile createUserProfile(String userProfileDetailInXml) throws ProductionException {
         if (StepUtils.prodEnv()) {
-            throw new Exceptions.ProductionException("Cannot use services on prod!");
+            throw new ProductionException("Cannot use services on prod!");
         }
         try {
             HashMap<String, String> headers = new HashMap<>();
@@ -61,11 +61,11 @@ public class UserProfileService {
      * This method will create random user profile
      *
      * @return UserProfile that was created
-     * @throws Exceptions.ProductionException if called while executing against production
+     * @throws ProductionException if called while executing against production
      */
-    public static UserProfile createRandomUserProfile() throws Exceptions.ProductionException {
+    public static UserProfile createRandomUserProfile() throws ProductionException {
         if (StepUtils.prodEnv()) {
-            throw new Exceptions.ProductionException("Cannot use services on prod!");
+            throw new ProductionException("Cannot use services on prod!");
         }
         UserProfile userProfile = TestUsers.getCustomer(null);
         XmlMapper mapper = new XmlMapper();
@@ -87,11 +87,11 @@ public class UserProfileService {
      *
      * @param profile UserProfile to create
      * @return true if profile was created successfully
-     * @throws Exceptions.ProductionException if called while executing against production
+     * @throws ProductionException if called while executing against production
      */
-    public static boolean createUserProfile(UserProfile profile) throws Exceptions.ProductionException {
+    public static boolean createUserProfile(UserProfile profile) throws ProductionException {
         if (StepUtils.prodEnv()) {
-            throw new Exceptions.ProductionException("Cannot use services on prod!");
+            throw new ProductionException("Cannot use services on prod!");
         }
         try {
             String createUserProfileDetail = new XmlMapper().writeValueAsString(profile);

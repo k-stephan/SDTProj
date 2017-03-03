@@ -1,8 +1,9 @@
 package com.macys.sdt.framework.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
+import com.macys.sdt.framework.Exceptions.ProductionException;
+import com.macys.sdt.framework.Exceptions.UserException;
 import com.macys.sdt.framework.model.*;
 import com.macys.sdt.framework.model.addresses.Address;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
@@ -80,9 +81,9 @@ public class TestUsers {
      * Gets a production customer from EE
      *
      * @return UserProfile with customer data
-     * @throws Exceptions.UserException thrown if prod customer retrieval failed
+     * @throws UserException thrown if prod customer retrieval failed
      */
-    public static UserProfile getProdCustomer() throws Exceptions.UserException {
+    public static UserProfile getProdCustomer() throws UserException {
         String url = Utils.getEEUrl() + "/sdt/lockProductionCustomer/" + getSiteType();
         try {
             if (prodCustomer == null) {
@@ -118,7 +119,7 @@ public class TestUsers {
             return prodCustomer;
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new Exceptions.UserException("Cannot lock a production customer: " + url);
+            throw new UserException("Cannot lock a production customer: " + url);
         }
     }
 
@@ -176,11 +177,11 @@ public class TestUsers {
      *
      * @param country Country the profile should have (US if null)
      * @return UserProfile with customer data
-     * @throws Exceptions.ProductionException when used on production environment
+     * @throws ProductionException when used on production environment
      */
-    public static UserProfile getRESTUser(String country) throws Exceptions.ProductionException {
+    public static UserProfile getRESTUser(String country) throws ProductionException {
         if (prodEnv()) {
-            throw new Exceptions.ProductionException("Cannot access REST APIs on production");
+            throw new ProductionException("Cannot access REST APIs on production");
         }
 
         UserProfile profile = getCustomer(country);
@@ -198,9 +199,9 @@ public class TestUsers {
      * Gets a new customer with default registry data
      *
      * @return UserProfile object with customer data
-     * @throws Exceptions.UserException thrown if registry user creation fails
+     * @throws UserException thrown if registry user creation fails
      */
-    public static UserProfile getNewRegistryUser() throws Exceptions.UserException {
+    public static UserProfile getNewRegistryUser() throws UserException {
         if (StepUtils.prodEnv()) {
             return getProdCustomer();
         }

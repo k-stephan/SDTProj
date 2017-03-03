@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.Exceptions;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -89,7 +89,7 @@ public class ElementsTests {
         }
     }
 
-    @Test(expected = Exceptions.EnvException.class)
+    @Test(expected = EnvException.class)
     public void testElementShouldBePresentNegative() throws Exception {
         Elements.elementShouldBePresent("unit_test_page.not_present");
     }

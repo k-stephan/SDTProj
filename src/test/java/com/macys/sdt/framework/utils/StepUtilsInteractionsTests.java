@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.utils;
 
+import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.InteractionsSuiteTest;
@@ -77,7 +78,7 @@ public class StepUtilsInteractionsTests {
         }
     }
 
-    @Test(expected = Exceptions.EnvException.class)
+    @Test(expected = EnvException.class)
     public void testShouldBeOnPageNegative() throws Exception {
         StepUtils.shouldBeOnPage("ui_standards");
     }

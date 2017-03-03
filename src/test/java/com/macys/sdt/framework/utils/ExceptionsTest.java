@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.utils;
 
+import com.macys.sdt.framework.Exceptions.*;
 import org.junit.Test;
 
 /**
@@ -7,38 +8,38 @@ import org.junit.Test;
  */
 public class ExceptionsTest {
 
-    @Test(expected = Exceptions.OopsException.class)
+    @Test(expected = OopsException.class)
     public void testOopsException() throws Exception {
-        throw new Exceptions.OopsException("OopsException");
+        throw new OopsException("OopsException");
     }
 
-    @Test(expected = Exceptions.ProductionException.class)
+    @Test(expected = ProductionException.class)
     public void testProductionException() throws Exception {
-        throw new Exceptions.ProductionException("ProductionException");
+        throw new ProductionException("ProductionException");
     }
 
-    @Test(expected = Exceptions.SkipException.class)
+    @Test(expected = SkipException.class)
     public void testSkipException() throws Exception {
-        throw new Exceptions.SkipException("SkipException");
+        throw new SkipException("SkipException");
     }
 
-    @Test(expected = Exceptions.UserException.class)
+    @Test(expected = UserException.class)
     public void testUserException() throws Exception {
-        throw new Exceptions.UserException("UserException");
+        throw new UserException("UserException");
     }
 
-    @Test(expected = Exceptions.EnvException.class)
+    @Test(expected = EnvException.class)
     public void testEnvException() throws Exception {
-        throw new Exceptions.EnvException("EnvException");
+        throw new EnvException("EnvException");
     }
 
-    @Test(expected = Exceptions.DataException.class)
+    @Test(expected = DataException.class)
     public void testDataException() throws Exception {
-        throw new Exceptions.DataException("DataException");
+        throw new DataException("DataException");
     }
 
-    @Test(expected = Exceptions.TimeoutException.class)
+    @Test(expected = TimeoutException.class)
     public void testTimeoutException() throws Exception {
-        throw new Exceptions.TimeoutException("TimeoutException");
+        throw new TimeoutException("TimeoutException");
     }
 }

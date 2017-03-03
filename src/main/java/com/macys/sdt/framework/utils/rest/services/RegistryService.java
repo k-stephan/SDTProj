@@ -2,11 +2,10 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.macys.sdt.framework.Exceptions.ProductionException;
 import com.macys.sdt.framework.model.registry.Registry;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
-import com.macys.sdt.framework.utils.Cookies;
-import com.macys.sdt.framework.utils.Exceptions;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
@@ -34,11 +33,11 @@ public class RegistryService {
      * @param registry Registry to be created
      * @param token Secure user token to use
      * @return Registry that was created or null on failure
-     * @throws Exceptions.ProductionException if called while executing against production
+     * @throws ProductionException if called while executing against production
      */
-    public static Registry createRegistry(Registry registry, String token) throws Exceptions.ProductionException {
+    public static Registry createRegistry(Registry registry, String token) throws ProductionException {
         if (StepUtils.prodEnv()) {
-            throw new Exceptions.ProductionException("Cannot use services on prod!");
+            throw new ProductionException("Cannot use services on prod!");
         }
         try {
             String registryXml = new XmlMapper().writeValueAsString(registry);
@@ -65,11 +64,11 @@ public class RegistryService {
      *
      * @param user User to base off of or null
      * @return Registry that is created or null on failure
-     * @throws Exceptions.ProductionException if called while executing against production
+     * @throws ProductionException if called while executing against production
      */
-    public static Registry createRandomRegistry(User user) throws Exceptions.ProductionException {
+    public static Registry createRandomRegistry(User user) throws ProductionException {
         if (StepUtils.prodEnv()) {
-            throw new Exceptions.ProductionException("Cannot use services on prod!");
+            throw new ProductionException("Cannot use services on prod!");
         }
 
         if (user == null || user.getTokenCredentials() == null) {
