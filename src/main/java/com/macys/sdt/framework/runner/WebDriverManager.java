@@ -6,14 +6,9 @@ import com.saucelabs.saucerest.SauceREST;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import org.json.JSONException;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.macys.sdt.framework.utils.StepUtils.ie;
 
@@ -164,10 +159,12 @@ public class WebDriverManager {
 
     public static void setPassed(boolean passed) {
         SauceREST client = new SauceREST(MainRunner.sauceUser, MainRunner.sauceKey);
-        Map<String, Object> data = new HashMap<>();
-        data.put("passed", passed);
         String sessionId = ((RemoteWebDriver) driver).getSessionId().toString();
-        client.updateJobInfo(sessionId, data);
+        if (passed) {
+            client.jobPassed(sessionId);
+        } else {
+            client.jobFailed(sessionId);
+        }
     }
 
     /**

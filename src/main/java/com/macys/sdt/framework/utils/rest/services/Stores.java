@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.rest.services;
 
-import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
+import com.macys.sdt.framework.utils.EnvironmentDetails;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.json.JSONException;

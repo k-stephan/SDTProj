@@ -1,7 +1,6 @@
-package com.macys.sdt.framework.utils.db.utils;
+package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.TestUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -10,7 +9,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 /**
- * Tests for EnvironmentDetails
+ * Tests for EnvironmentDetails and AppDetails
  */
 public class EnvironmentDetailsTest {
 
@@ -30,7 +29,7 @@ public class EnvironmentDetailsTest {
     public void testGceEnvDetails() {
         String WEBSITE = "http://mcom-1114.c4d.devops.fds.com/";
         MainRunner.url = WEBSITE;
-        EnvironmentDetails.ENV_URL = WEBSITE;
+        EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         String url = EnvironmentDetails.getServiceURL(WEBSITE);
         Assert.assertEquals(url, "http://c4d.devops.fds.com/reinfo/mcom-1114");
@@ -40,7 +39,7 @@ public class EnvironmentDetailsTest {
     public void testStage5EnvDetails() {
         String WEBSITE = "http://qa11codemacys.fds.com/";
         MainRunner.url = WEBSITE;
-        EnvironmentDetails.ENV_URL = WEBSITE;
+        EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         String url = EnvironmentDetails.getServiceURL(WEBSITE);
         Assert.assertEquals(url,
@@ -51,7 +50,7 @@ public class EnvironmentDetailsTest {
     public void testStage5BcomEnvDetails() {
         String WEBSITE = "http://qa7codebloomingdales.fds.com/";
         MainRunner.url = WEBSITE;
-        EnvironmentDetails.ENV_URL = WEBSITE;
+        EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         String url = EnvironmentDetails.getServiceURL(WEBSITE);
         Assert.assertEquals(url,
@@ -62,9 +61,9 @@ public class EnvironmentDetailsTest {
     public void testMyServicesApp() throws Exception {
         String WEBSITE = "http://www.qa0codemacys.fds.com/";
         MainRunner.url = WEBSITE;
-        EnvironmentDetails.ENV_URL = WEBSITE;
+        EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
-        EnvironmentDetails envDetails = EnvironmentDetails.myServicesApp("NavApp");
+        EnvironmentDetails.AppDetails envDetails = EnvironmentDetails.myServicesApp("NavApp");
         Assert.assertEquals("11.168.113.137", envDetails.ipAddress);
         Assert.assertEquals("jcie4312", envDetails.hostName);
         Assert.assertEquals("qa0codemacys", envDetails.envName);
@@ -74,9 +73,9 @@ public class EnvironmentDetailsTest {
     public void testOtherApp() throws Exception {
         String WEBSITE = "http://www.qa0codemacys.fds.com/";
         MainRunner.url = WEBSITE;
-        EnvironmentDetails.ENV_URL = WEBSITE;
+        EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
-        EnvironmentDetails envDetails = EnvironmentDetails.otherApp("BagApp");
+        EnvironmentDetails.AppDetails envDetails = EnvironmentDetails.otherApp("BagApp");
         Assert.assertEquals("11.168.50.195", envDetails.ipAddress);
         Assert.assertEquals("jcia5694", envDetails.hostName);
         Assert.assertEquals("qa0codemacys", envDetails.envName);

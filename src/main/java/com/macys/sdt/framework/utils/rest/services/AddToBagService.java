@@ -2,8 +2,8 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.utils.TestUsers;
+import com.macys.sdt.framework.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.db.models.TuxService;
-import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;

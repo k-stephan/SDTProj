@@ -4,7 +4,6 @@ import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
-import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -377,7 +376,7 @@ public class CampaignService extends StepUtils {
      * Method to clear customer campaign cache
      */
     private static void clearCustomerCampaignCache() {
-        String uri = "http://" + EnvironmentDetails.otherApp("mspcustomer").ipAddress + ":8080/api/customer/v1/customers/cache/clearcampaigns";
+        String uri = "http://" + com.macys.sdt.framework.utils.EnvironmentDetails.otherApp("mspcustomer").ipAddress + ":8080/api/customer/v1/customers/cache/clearcampaigns";
         Response response = RESTOperations.doDELETE(uri, null);
         if (response.getStatus() != 204) {
             throw new RuntimeException("HTTP error code : " + response.getStatus());
@@ -389,7 +388,7 @@ public class CampaignService extends StepUtils {
      * Method to clear order campaign cache
      */
     private static void clearOrderCampaignCache() {
-        String uri = "http://" + EnvironmentDetails.otherApp("msporder").ipAddress + ":8080/sdp/cache/purge-campaigns-cache";
+        String uri = "http://" + com.macys.sdt.framework.utils.EnvironmentDetails.otherApp("msporder").ipAddress + ":8080/sdp/cache/purge-campaigns-cache";
         Response response = RESTOperations.doGET(uri, null);
         if (response.getStatus() != 200) {
             throw new RuntimeException("HTTP error code : " + response.getStatus());

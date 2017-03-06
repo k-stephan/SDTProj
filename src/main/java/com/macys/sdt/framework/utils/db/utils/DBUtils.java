@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.utils.db.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.Utils;
+import com.macys.sdt.framework.utils.*;
 import org.apache.http.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,8 +90,8 @@ public class DBUtils {
         }
 
         try {
-            json = EnvironmentDetails.getJSONString();
-        } catch (IOException e) {
+            json = com.macys.sdt.framework.utils.EnvironmentDetails.getJSONString();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

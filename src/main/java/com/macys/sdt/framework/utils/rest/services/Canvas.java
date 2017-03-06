@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.db.utils.EnvironmentDetails;
+import com.macys.sdt.framework.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONObject;
 import org.slf4j.Logger;
