@@ -216,12 +216,13 @@ public class MainRunner {
      * @throws Throwable if an exception or error gets here, we're done
      */
     public static void main(String[] args) throws Throwable {
-        // When we abort jobs we don't always close the driver, this should help with that
+        // When we abort jobs we didn't always close the driver, this should help with that
+        // This code should help with saucelabs : Test did not see a new command for 300 seconds
+        // When test are aborted by user or EE, saucelabs does not get command to terminate driver and wait for a new command and timeout at 300 second.
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (WebDriverManager.driverInitialized() && (closeBrowserAtExit || useSauceLabs)) {
                 WebDriverManager.driver.quit();
-            }
-        }));
+        }}));
 
         getEnvVars(args);
 
