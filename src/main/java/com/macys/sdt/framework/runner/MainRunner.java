@@ -228,9 +228,16 @@ public class MainRunner {
      */
     public static void main(String[] args) throws Throwable {
         // When we abort jobs we don't always close the driver, this should help with that
+        // This code should help with saucelabs : Test did not see a new command for 300 seconds
+        // When test are aborted by user or EE, saucelabs does not get command to terminate driver and wait for a new command and timeout at 300 second.
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (closeBrowserAtExit || useSauceLabs) {
-                driver.quit();
+            try {
+                if (closeBrowserAtExit || useSauceLabs) {
+                    driver.quit();
+                }
+            } catch (NullPointerException ignored) {
+                // null pointer means driver is already assigned to null making driver quit command redundant
+                // catching null pointer will removed unnecessary null pointer log in successful scenario
             }
         }));
 
