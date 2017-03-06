@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.openqa.selenium.By;
@@ -33,17 +35,21 @@ public class TextBoxes {
     public static void typeTextbox(By selector, String text) {
         Navigate.runBeforeNavigation();
         Wait.forPageReady();
-        new WebDriverWait(MainRunner.getWebDriver(), MainRunner.timeout).until(ExpectedConditions.elementToBeClickable(selector));
-        WebElement element = Elements.findElement(selector);
-        if (element != null) {
-            element.clear();
-            element.sendKeys(text);
-            Wait.forPageReady();
-        } else {
-            System.err.println("Could not type text \"" + text +
-                    "\"\n into text box " + selector + "\nbecause no element was found");
+        try {
+            new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout).until(ExpectedConditions.elementToBeClickable(selector));
+            WebElement element = Elements.findElement(selector);
+            if (element != null) {
+                element.clear();
+                element.sendKeys(text);
+                Wait.forPageReady();
+            } else {
+                System.err.println("Could not type text \"" + text +
+                        "\"\n into text box " + selector + "\nbecause no element was found");
+            }
+            Navigate.runAfterNavigation();
+        } catch (DriverNotInitializedException e) {
+
         }
-        Navigate.runAfterNavigation();
     }
 
     /**

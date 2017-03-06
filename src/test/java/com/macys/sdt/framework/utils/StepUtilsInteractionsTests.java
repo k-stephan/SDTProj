@@ -4,6 +4,7 @@ import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.InteractionsSuiteTest;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.*;
 import org.openqa.selenium.Point;
@@ -27,7 +28,7 @@ public class StepUtilsInteractionsTests {
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
+        WebDriverManager.startWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
     }
 
     @Test
@@ -40,11 +41,11 @@ public class StepUtilsInteractionsTests {
     @Test
     public void testClosePopup() throws Exception {
         Clicks.click("unit_test_page.open_popup_window");
-        Assume.assumeTrue(new ArrayList<>(MainRunner.getWebDriver().getWindowHandles()).size() == 2);
+        Assume.assumeTrue(new ArrayList<>(WebDriverManager.getWebDriver().getWindowHandles()).size() == 2);
         MainRunner.brand = "bcom";
         StepUtils.closePopup();
         MainRunner.brand = null;
-        Assert.assertEquals(1, new ArrayList<>(MainRunner.getWebDriver().getWindowHandles()).size());
+        Assert.assertEquals(1, new ArrayList<>(WebDriverManager.getWebDriver().getWindowHandles()).size());
         Assert.assertEquals("SDT Framework Interactions Unit Testing", StepUtils.title());
     }
 
@@ -98,7 +99,7 @@ public class StepUtilsInteractionsTests {
     @Test
     public void testUrl() throws Exception {
         Assume.assumeFalse("Not working in windows, Need Fix", Utils.isWindows());
-        MainRunner.getCurrentUrl();
+        WebDriverManager.getCurrentUrl();
         Assert.assertEquals(InteractionsSuiteTest.getTestPageUrl(), StepUtils.url());
     }
 
@@ -119,9 +120,9 @@ public class StepUtilsInteractionsTests {
     @Test
     public void testMaximizeWindow() throws Exception {
         try {
-            Point originalPosition = MainRunner.getWebDriver().manage().window().getPosition();
+            Point originalPosition = WebDriverManager.getWebDriver().manage().window().getPosition();
             StepUtils.maximizeWindow();
-            MainRunner.getWebDriver().manage().window().setPosition(originalPosition);
+            WebDriverManager.getWebDriver().manage().window().setPosition(originalPosition);
         } catch (Exception e) {
             Assert.fail("Failed testMaximizeWindow :" + e.getMessage());
         }
@@ -130,9 +131,9 @@ public class StepUtilsInteractionsTests {
     @Test
     public void testMinimizeWindow() throws Exception {
         try {
-            Point originalPosition = MainRunner.getWebDriver().manage().window().getPosition();
+            Point originalPosition = WebDriverManager.getWebDriver().manage().window().getPosition();
             StepUtils.minimizeWindow();
-            MainRunner.getWebDriver().manage().window().setPosition(originalPosition);
+            WebDriverManager.getWebDriver().manage().window().setPosition(originalPosition);
         } catch (Exception e) {
             Assert.fail("Failed testMaximizeWindow :" + e.getMessage());
         }

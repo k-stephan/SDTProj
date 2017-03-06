@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -23,9 +23,8 @@ public class DropDownsTests {
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
+        WebDriverManager.startWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
     }
-
 
     @Test
     public void testSelectByText() throws Exception {

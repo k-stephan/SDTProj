@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.Exceptions.EnvException;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -24,7 +24,7 @@ public class ElementsTests {
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
+        WebDriverManager.startWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
     }
 
     @Test

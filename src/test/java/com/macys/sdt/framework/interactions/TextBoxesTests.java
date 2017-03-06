@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -21,7 +21,7 @@ public class TextBoxesTests {
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
+        WebDriverManager.startWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
     }
 
     @Test
@@ -35,6 +35,6 @@ public class TextBoxesTests {
     public void testTypeTextNEnter() throws Exception {
         String firstName = "FirstName";
         TextBoxes.typeTextNEnter("unit_test_page.text_box", firstName);
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("text=" + firstName));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("text=" + firstName));
     }
 }

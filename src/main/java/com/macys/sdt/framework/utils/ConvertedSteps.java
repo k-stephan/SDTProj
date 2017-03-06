@@ -1,21 +1,31 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.WebDriverManager;
+import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 public class ConvertedSteps extends StepUtils {
 
     public static void maximizeBrowser() {
-        MainRunner.getWebDriver().manage().window().maximize();
+        try {
+            WebDriverManager.getWebDriver().manage().window().maximize();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
     }
 
     /**
      * Clicks the mouse at its current location
      */
     public static void clickMouse() {
-        Actions actions = new Actions(MainRunner.getWebDriver());
-        actions.click().perform();
+        try {
+            Actions actions = new Actions(WebDriverManager.getWebDriver());
+            actions.click().perform();
+        } catch (DriverNotInitializedException e) {
+                Assert.fail("Driver not initialized");
+            }
     }
 
     /**
@@ -24,24 +34,47 @@ public class ConvertedSteps extends StepUtils {
      * @param element element to move the mouse over
      */
     public static void moveMouseTo(WebElement element) {
-        Actions actions = new Actions(MainRunner.getWebDriver());
-        actions.moveToElement(element).perform();
+        try {
+            Actions actions = new Actions(WebDriverManager.getWebDriver());
+            actions.moveToElement(element).perform();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
     }
 
     public static void acceptAlert() {
-        MainRunner.getWebDriver().switchTo().alert().accept();
+        try {
+            WebDriverManager.getWebDriver().switchTo().alert().accept();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
     }
 
     public static String getPageSource() {
-        return MainRunner.getWebDriver().getPageSource();
+        try {
+            return WebDriverManager.getWebDriver().getPageSource();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+            return null;
+        }
     }
 
     public static String getAlertText() {
-        return MainRunner.getWebDriver().switchTo().alert().getText();
+        try {
+            return WebDriverManager.getWebDriver().switchTo().alert().getText();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+            return null;
+        }
     }
 
     public static String getWindowHandle() {
-        return MainRunner.getWebDriver().getWindowHandle();
+        try {
+            return WebDriverManager.getWebDriver().getWindowHandle();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+            return null;
+        }
     }
 
 }

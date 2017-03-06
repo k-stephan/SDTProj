@@ -1,7 +1,8 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.Exceptions.EnvException;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.utils.PageElement;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
@@ -47,7 +48,7 @@ public class Elements {
             if (StepUtils.safari()) {
                 Wait.untilElementPresent(selector);
             }
-            List<WebElement> elements = MainRunner.getWebDriver().findElements(selector);
+            List<WebElement> elements = WebDriverManager.getWebDriver().findElements(selector);
             if (elements.size() == 0) {
                 throw new NoSuchElementException("Unable to locate an element using: " + selector);
             }
@@ -61,6 +62,8 @@ public class Elements {
         } catch (NoSuchElementException ex) {
             System.err.println("-->StepUtils.findElement() no element found with selector: " + selector);
             errLog.println(ex);
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
         }
         return null;
     }
@@ -115,11 +118,11 @@ public class Elements {
         for (int i = 0; i < 3; i++) {
             try {
                 if (filter != null) {
-                    return MainRunner.getWebDriver().findElements(selector).stream()
+                    return WebDriverManager.getWebDriver().findElements(selector).stream()
                             .filter(filter)
                             .collect(Collectors.toList());
                 } else {
-                    return MainRunner.getWebDriver().findElements(selector);
+                    return WebDriverManager.getWebDriver().findElements(selector);
                 }
             } catch (Exception ex) {
                 msg += ":" + i;
@@ -271,7 +274,7 @@ public class Elements {
      */
     public static boolean elementPresent(By selector) {
         try {
-            return MainRunner.getWebDriver().findElement(selector).isDisplayed();
+            return WebDriverManager.getWebDriver().findElement(selector).isDisplayed();
         } catch (Exception e) {
             return false;
         }

@@ -4,21 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import com.macys.sdt.framework.utils.analytics.DATagCollector;
 import com.macys.sdt.framework.utils.analytics.DigitalAnalytics;
 import cucumber.api.cli.Main;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
 import net.lightbody.bmp.BrowserMobProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +22,6 @@ import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.macys.sdt.framework.utils.StepUtils.ie;
 import static com.macys.sdt.framework.utils.StepUtils.stopPageLoad;
 import static java.lang.Runtime.getRuntime;
 
@@ -213,11 +207,6 @@ public class MainRunner {
 
     private static String repoJar = getEnvOrExParam("repo_jar");
 
-    /**
-     * webdriver instance
-     */
-    private static WebDriver driver = null;
-
     //satish-macys:4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
 
     /**
@@ -229,8 +218,8 @@ public class MainRunner {
     public static void main(String[] args) throws Throwable {
         // When we abort jobs we don't always close the driver, this should help with that
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (closeBrowserAtExit || useSauceLabs) {
-                driver.quit();
+            if (WebDriverManager.driverInitialized() && (closeBrowserAtExit || useSauceLabs)) {
+                WebDriverManager.driver.quit();
             }
         }));
 
@@ -316,6 +305,7 @@ public class MainRunner {
         new AuthenticationDialog();
         setAfterNavigationHooks();
         setBeforeNavigationHooks();
+        EnvironmentDetails.loadEnvironmentDetails(url, false);
 
         try {
             Thread cucumberThread = new Thread(() -> {
@@ -324,7 +314,7 @@ public class MainRunner {
                     status = Main.run(featureScenarios.toArray(new String[featureScenarios.size()]),
                             Thread.currentThread().getContextClassLoader());
                 } catch (IOException e) {
-                    System.err.println("ERROR : IOException in cucumber run");
+                    System.err.println("ERROR : IOException in cucumber run: " + e);
                 } finally {
                     runStatus = status;
                 }
@@ -350,7 +340,7 @@ public class MainRunner {
      * Adds the default after navigation hooks
      */
     public static void setAfterNavigationHooks() {
-        Navigate.addAfterNavigation(MainRunner::getCurrentUrl);
+        Navigate.addAfterNavigation(WebDriverManager::getCurrentUrl);
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
         Navigate.addAfterNavigation(StepUtils::checkSafariPage);
@@ -509,101 +499,6 @@ public class MainRunner {
         if (!(check.length == 2)) {
             Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
         }
-    }
-
-    /**
-     * Checks if the web driver exists
-     *
-     * @return true if a valid web driver is active
-     */
-    public static Boolean driverInitialized() {
-        return driver != null;
-    }
-
-    /**
-     * Gets the active Appium driver if the driver is an appium driver, otherwise null
-     * <p>
-     * The Appium driver can be used for most app specific interactions.
-     * For iOS/Android specific actions, use getIOSDriver and getAndroidDriver.
-     * </p>
-     *
-     * @return the active Appium driver
-     */
-    public static AppiumDriver getAppiumDriver() {
-        return driver instanceof AppiumDriver ? (AppiumDriver) driver : null;
-    }
-
-    /**
-     * Gets the active iOS driver if the driver is an iOS driver, otherwise null
-     *
-     * @return the active iOS driver
-     */
-    public static IOSDriver getIOSDriver() {
-        return driver instanceof IOSDriver ? (IOSDriver) driver : null;
-    }
-
-    /**
-     * Gets the active android driver if the driver is an android driver, otherwise null
-     *
-     * @return the active Android driver
-     */
-    public static AndroidDriver getAndroidDriver() {
-        return driver instanceof AndroidDriver ? (AndroidDriver) driver : null;
-    }
-
-    /**
-     * Gets the current webDriver instance or tries to create one
-     *
-     * @return current webDriver instance
-     */
-    public static synchronized WebDriver getWebDriver() {
-        if (URLStack.size() == 0) {
-            URLStack.add(url);
-        }
-
-        if (driver != null) {
-            if (!URLStack.get(URLStack.size() - 1).equals(currentURL)) {
-                URLStack.add(currentURL);
-            }
-            return driver;
-        }
-
-        for (int i = 0; i < 2; i++) {
-            if (disableProxy) {
-                // System.out.println("DEBUG stack trace: " +
-                //        Utils.listToString(Utils.getCallFromFunction("getWebDriver"), "\n\t ", null));
-                driver = WebDriverConfigurator.initDriver(null);
-            } else {
-                driver = WebDriverConfigurator.initDriverWithProxy();
-            }
-
-            try {
-                if (!useAppium) {
-                    if (browser.equals("safari")) {
-                        Dimension dimension = new Dimension(1280, 1024);
-                        driver.manage().window().setSize(dimension);
-                    } else {
-                        driver.manage().window().maximize();
-                    }
-                    String windowSize = driver.manage().window().getSize().toString();
-                    System.out.println("Init driver: browser window size = " + windowSize);
-                }
-                return driver;
-            } catch (Exception ex) {
-                System.err.println("-->Failed initialized driver:retry" + i + ":" + ex.getMessage());
-                Utils.threadSleep(2000, null);
-            }
-        }
-        System.err.println("Cannot initialize driver: exiting test...");
-
-        System.out.println("Quit the driver " + driver);
-        if (driver != null) {
-            driverQuit();
-        }
-        System.exit(-1);
-        // return is unreachable but IDE doesn't realize, return non-null
-        // to get rid of invalid lint errors
-        return new ChromeDriver();
     }
 
     /**
@@ -797,19 +692,6 @@ public class MainRunner {
         return scenarioList;
     }
 
-    /**
-     * Closes a firefox alert if present
-     */
-    public static void closeAlert() {
-        if (driver != null) {
-            try {
-                driver.switchTo().alert().accept();
-            } catch (org.openqa.selenium.NoAlertPresentException e) {
-                // there wasn't an alert
-            }
-        }
-    }
-
     private static boolean findScenario(ArrayList<Map> featureScenarios, String scenarioPath, int line) {
         HashMap<Integer, Map> hScenario = new HashMap<>();
         for (Map scenario : featureScenarios) {
@@ -854,79 +736,12 @@ public class MainRunner {
             DATagCollector.close();
         }
 
-        if (driver != null) {
+        if (WebDriverManager.driver != null) {
             System.out.println("Closing driver...");
             if (useSauceLabs || closeBrowserAtExit) {
-                driverQuit();
+                WebDriverManager.driverQuit();
             }
         }
-    }
-
-    /**
-     * quit the webdriver
-     */
-    private static void driverQuit() {
-        try {
-            driver.quit();
-            if (ie()) {
-                try {
-                    driver.quit();
-                } catch (Exception | Error e) {
-                    // nothing we can do if this doesn't work
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error closing driver. You may need to clean up execution machine. error: " + e);
-        }
-        driver = null;
-    }
-
-    /**
-     * Resets the driver
-     *
-     * @param quit whether to close the driver
-     */
-    public static void resetDriver(boolean quit) {
-        try {
-            if (quit || useSauceLabs) {
-                driver.quit();
-                System.out.println("driver quit");
-                if (ie()) { // workaround for IE browser closing
-                    driver.quit();
-                }
-
-            }
-            driver = null;
-            System.out.println("INFO : webdriver set to null");
-        } catch (Exception e) {
-            System.err.println("ERROR : error in resetDriver : " + e.getMessage());
-            driver = null;
-        } finally {
-            currentURL = "";
-        }
-    }
-
-    /**
-     * Get the current URL from browser and/or URL param
-     *
-     * @return the current url the browser is on
-     */
-    public static String getCurrentUrl() {
-        if (!driverInitialized()) {
-            return url;
-        }
-
-        if (appTest) {
-            return getAndroidDriver() != null ? getAndroidDriver().currentActivity() : "";
-        }
-
-        String curUrl = driver.getCurrentUrl();
-        if (curUrl.matches(".*?data.*?")) {
-            return url;
-        }
-        currentURL = curUrl;
-
-        return curUrl;
     }
 
     public static Timeouts timeouts() {
@@ -1058,7 +873,7 @@ public class MainRunner {
 
             while (true) {
                 Utils.threadSleep(4000, null);
-                curl = getWebDriver().getCurrentUrl();
+                curl = WebDriverManager.getCurrentUrl();
                 // current url is still the same domain, then skip
                 if (curl.contains(orgUrl)) {
                     continue;
@@ -1072,7 +887,7 @@ public class MainRunner {
                 // there seems to be Chrome Authentication Required Popup
                 try {
                     if (width == -1) {
-                        width = driver.manage().window().getSize().width;
+                        width = WebDriverManager.driver.manage().window().getSize().width;
                         filePath = filePath + " " + width;
                     }
                     p = getRuntime().exec(filePath);
@@ -1162,7 +977,7 @@ public class MainRunner {
         public void run() {
             while (cucumberThread.isAlive()) {
                 try {
-                    if (!driverInitialized()) {
+                    if (!WebDriverManager.driverInitialized()) {
                         continue;
                     } else if (pause) {
                         // if we've been waiting a while, send any browser command to prevent
@@ -1171,12 +986,12 @@ public class MainRunner {
                             interruptCucumberThread();
                         }
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
-                            getCurrentUrl();
+                            WebDriverManager.getCurrentUrl();
                             this.reset(this.currentUrl);
                         }
                         continue;
                     }
-                    String url = getCurrentUrl();
+                    String url = WebDriverManager.getCurrentUrl();
                     //System.err.println("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
                     if (url.contains("about:blank")) {
                         continue;

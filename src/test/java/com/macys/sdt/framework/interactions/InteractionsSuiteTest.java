@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtilsInteractionsTests;
 import org.junit.AfterClass;
@@ -46,7 +47,7 @@ public class InteractionsSuiteTest {
             MainRunner.remoteOS = "Windows 7";
             MainRunner.timeout = 90;
             MainRunner.url = "http://ui-standards.herokuapp.com";
-            MainRunner.getWebDriver();
+            WebDriverManager.getWebDriver();
             preCondition = true;
             File htmlFile = new File("src/test/java/com/macys/sdt/framework/resources/unit_test_page.html");
             if (htmlFile.exists()) {
@@ -62,8 +63,8 @@ public class InteractionsSuiteTest {
     public static void tearDown() throws Exception {
         try {
             MainRunner.debugMode = false;
-            if (MainRunner.driverInitialized()) {
-                MainRunner.resetDriver(true);
+            if (WebDriverManager.driverInitialized()) {
+                WebDriverManager.resetDriver(true);
             }
         } catch (Exception e) {
             System.err.println("-->Error - Test tearDown:" + e.getMessage());

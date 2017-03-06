@@ -1,9 +1,12 @@
 package com.macys.sdt.framework.interactions;
 
 
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
+import org.junit.Assert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
@@ -127,14 +130,18 @@ public class Navigate {
                 if (urlStackSize <= 1) {
                     visit("home");
                 } else {
-                    MainRunner.getWebDriver().get(MainRunner.URLStack.get(urlStackSize - 2));
+                    WebDriverManager.getWebDriver().get(MainRunner.URLStack.get(urlStackSize - 2));
                 }
                 Utils.threadSleep(1000, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            MainRunner.getWebDriver().navigate().back();
+            try {
+                WebDriverManager.getWebDriver().navigate().back();
+            } catch (DriverNotInitializedException e) {
+                Assert.fail("Driver not initialized");
+            }
         }
         Wait.forPageReady();
     }
@@ -147,7 +154,11 @@ public class Navigate {
             execJavascript("document.location.reload()");
             Utils.threadSleep(1000, null);
         } else {
-            MainRunner.getWebDriver().navigate().refresh();
+            try {
+                WebDriverManager.getWebDriver().navigate().refresh();
+            } catch (DriverNotInitializedException e) {
+                Assert.fail("Driver not initialized");
+            }
         }
         Wait.forPageReady();
     }
@@ -156,8 +167,8 @@ public class Navigate {
      * Restarts the browser session
      */
     public static void browserReset() {
-        MainRunner.resetDriver(true);
-        MainRunner.getWebDriver();
+        WebDriverManager.resetDriver(true);
+        WebDriverManager.startWebDriver();
     }
 
     /**
@@ -228,7 +239,7 @@ public class Navigate {
 
             System.out.println("...Loading " + givenURL);
             //Utils.ThreadWatchDog twd = new Utils.ThreadWatchDog(null, 60000, "ThreadWatchDog:visit(" + link + ")", () -> stopPageLoad());
-            MainRunner.getWebDriver().get(givenURL);
+            WebDriverManager.getWebDriver().get(givenURL);
             //twd.interrupt();
             Wait.forPageReady(urlFromJSON ? pageURL.replace(".url", "") : null);
             StepUtils.closeAlert();
@@ -276,20 +287,25 @@ public class Navigate {
      * @return the index of the window, -1 if not found
      */
     public static int findIndexOfWindow(String title) {
-        WebDriver driver = MainRunner.getWebDriver();
-        ArrayList<String> newTabs = new ArrayList<>(driver.getWindowHandles());
         int index = -1;
+        try {
+            WebDriver driver = WebDriverManager.getWebDriver();
+            ArrayList<String> newTabs = new ArrayList<>(driver.getWindowHandles());
 
-        for (int i = 0; i < newTabs.size(); i++) {
-            driver.switchTo().window(newTabs.get(i));
-            Wait.forPageReady();
-            if (driver.getTitle().contains(title)) {
-                index = i;
-                break;
+            for (int i = 0; i < newTabs.size(); i++) {
+                driver.switchTo().window(newTabs.get(i));
+                Wait.forPageReady();
+                if (driver.getTitle().contains(title)) {
+                    index = i;
+                    break;
+                }
             }
+            driver.switchTo().window(newTabs.get(0));
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
         }
-        driver.switchTo().window(newTabs.get(0));
         return index;
+
     }
 
     /**
@@ -299,22 +315,31 @@ public class Navigate {
      * @return WebDriver which can control the window
      */
     public static WebDriver switchWindow(int index) {
-        ArrayList<String> newTab = new ArrayList<>(MainRunner.getWebDriver().getWindowHandles());
-        if (newTab.size() > index) {
-            MainRunner.getWebDriver().switchTo().window(newTab.get(index));
+        try {
+            ArrayList<String> newTab = new ArrayList<>(WebDriverManager.getWebDriver().getWindowHandles());
+            if (newTab.size() > index) {
+                WebDriverManager.getWebDriver().switchTo().window(newTab.get(index));
+            }
+            return WebDriverManager.getWebDriver();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
         }
-        return MainRunner.getWebDriver();
+        return null;
     }
 
     /**
      * Closes the current window and switches to the base window
      */
     public static void switchWindowClose() {
-        WebDriver driver = MainRunner.getWebDriver();
-        ArrayList<String> newTab = new ArrayList<>(driver.getWindowHandles());
-        if (newTab.size() > 1) {
-            driver.close();
-            driver.switchTo().window(newTab.get(0));
+        try {
+            WebDriver driver = WebDriverManager.getWebDriver();
+            ArrayList<String> newTab = new ArrayList<>(driver.getWindowHandles());
+            if (newTab.size() > 1) {
+                driver.close();
+                driver.switchTo().window(newTab.get(0));
+            }
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
         }
     }
 
@@ -326,14 +351,14 @@ public class Navigate {
      * @return returned value of JS code (if any)
      */
     public static synchronized Object execJavascript(String script, Object... args) {
-        if (!MainRunner.driverInitialized()) {
+        if (!WebDriverManager.driverInitialized()) {
             return "";
         }
 
-        JavascriptExecutor scriptExe = ((JavascriptExecutor) MainRunner.getWebDriver());
         try {
             //System.err.print("$");
             //System.out.print("StepUtils.execJavascript(): " + script + ":");
+            JavascriptExecutor scriptExe = ((JavascriptExecutor) WebDriverManager.getWebDriver());
             return scriptExe.executeScript(script, args);
         } catch (Exception ex) {
             return "";

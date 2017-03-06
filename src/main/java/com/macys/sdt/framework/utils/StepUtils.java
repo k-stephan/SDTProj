@@ -1,11 +1,13 @@
 package com.macys.sdt.framework.utils;
 
 import com.google.gson.Gson;
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import cucumber.api.Scenario;
 import net.lightbody.bmp.core.har.Har;
@@ -229,12 +231,14 @@ public abstract class StepUtils {
     public static void switchToFrame(String frame) {
         try {
             if (frame.equalsIgnoreCase("default")) {
-                MainRunner.getWebDriver().switchTo().defaultContent();
+                WebDriverManager.getWebDriver().switchTo().defaultContent();
             } else {
-                MainRunner.getWebDriver().switchTo().frame(Elements.findElement(Elements.element(frame)));
+                WebDriverManager.getWebDriver().switchTo().frame(Elements.findElement(Elements.element(frame)));
             }
         } catch (NullPointerException e) {
             System.out.println("Frame " + frame + " does not exist.");
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
         }
     }
 
@@ -300,7 +304,7 @@ public abstract class StepUtils {
             return;
         }
 
-        MainRunner.closeAlert();
+        WebDriverManager.closeAlert();
     }
 
     public static void checkSafariPage() {
@@ -368,7 +372,7 @@ public abstract class StepUtils {
 
         ArrayList<String> expectedURLs = Elements.getValues(name + ".url");
 
-        String currentURL = MainRunner.getCurrentUrl();
+        String currentURL = WebDriverManager.getCurrentUrl();
         if (MainRunner.debugMode) {
             System.err.println("---> OnPage call: " + name + "\nfound url: " + currentURL);
         }
@@ -471,7 +475,12 @@ public abstract class StepUtils {
      * @return title of the current page
      */
     public static String title() {
-        return MainRunner.getWebDriver().getTitle();
+        try {
+            return WebDriverManager.getWebDriver().getTitle();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
+        return "";
     }
 
     /**
@@ -544,7 +553,7 @@ public abstract class StepUtils {
     public static void browserScreenCapture(String fileName) {
         File imgFile = new File(MainRunner.logs + fileName);
         try {
-            File scrFile = ((TakesScreenshot) MainRunner.getWebDriver()).getScreenshotAs(OutputType.FILE);
+            File scrFile = ((TakesScreenshot) WebDriverManager.getWebDriver()).getScreenshotAs(OutputType.FILE);
             boolean success = scrFile.renameTo(imgFile);
             if (!success) {
                 System.err.println("Failed to rename screenshot file");
@@ -554,8 +563,7 @@ public abstract class StepUtils {
             try {
                 Utils.desktopCapture(new FileOutputStream(imgFile));
             } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("Cannot capture desktop.");
+                System.err.println("Cannot capture desktop: " + e);
             }
         }
     }
@@ -578,14 +586,22 @@ public abstract class StepUtils {
      * Maximises the browser window
      */
     public static void maximizeWindow() {
-        MainRunner.getWebDriver().manage().window().setPosition(new Point(0, 0));
+        try {
+            WebDriverManager.getWebDriver().manage().window().setPosition(new Point(0, 0));
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
     }
 
     /**
      * Minimizes the browser window
      */
     public static void minimizeWindow() {
-        MainRunner.getWebDriver().manage().window().setPosition(new Point(-2000, 0));
+        try {
+            WebDriverManager.getWebDriver().manage().window().setPosition(new Point(-2000, 0));
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
     }
 
     /**

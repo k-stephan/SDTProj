@@ -106,7 +106,7 @@ public class SDTFormatter implements Reporter, Formatter {
             System.err.println(" --> " + result.getStatus().toUpperCase());
         }
         HashMap<String, Object> map = new HashMap<>(result.toMap());
-        if (!result.getStatus().equals("passed")) {
+        if (!MainRunner.dryRun && !result.getStatus().equals("passed")) {
             String tempUri = this.uri;
             if (ScenarioHelper.isScenarioOutline()) {
                 tempUri += ScenarioHelper.outlineCount;

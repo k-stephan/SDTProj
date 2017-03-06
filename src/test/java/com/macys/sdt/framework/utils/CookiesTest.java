@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.interactions.Navigate;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -25,7 +26,7 @@ public class CookiesTest {
         MainRunner.url = "http://www.macys.com";
         boolean preCondition = false;
         try {
-            MainRunner.getWebDriver();
+            WebDriverManager.getWebDriver();
             Navigate.visit(MainRunner.url);
             MainRunner.debugMode = true;
             preCondition = true;
@@ -39,8 +40,8 @@ public class CookiesTest {
     @AfterClass
     public static void tearDown() throws Exception {
         try {
-            if (MainRunner.driverInitialized()) {
-                MainRunner.resetDriver(true);
+            if (WebDriverManager.driverInitialized()) {
+                WebDriverManager.resetDriver(true);
             }
         } catch (Exception e) {
             System.err.println("-->Error - Test tearDown:" + e.getMessage());

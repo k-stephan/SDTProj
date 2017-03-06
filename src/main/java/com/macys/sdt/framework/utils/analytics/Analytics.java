@@ -3,6 +3,7 @@ package com.macys.sdt.framework.utils.analytics;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Utils;
 import gherkin.formatter.model.Result;
@@ -255,7 +256,7 @@ public abstract class Analytics {
     }
 
     private String getCurrentURL() {
-        return MainRunner.getWebDriver().getCurrentUrl();
+        return WebDriverManager.getCurrentUrl();
     }
 
     private void compareFilter(HashMap hdiff, String tagAttr, String gval, String cval, String tagid) {

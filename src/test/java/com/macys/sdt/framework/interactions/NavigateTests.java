@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.junit.Assert;
@@ -28,9 +30,16 @@ public class NavigateTests {
     public void testBrowserBack() throws Exception {
         Assume.assumeTrue("Test element not present - Ignoring BrowserBack Test", Wait.untilElementPresent("ui_standards.sample_form_link"));
         Clicks.javascriptClick("ui_standards.sample_form_link");
-        Assume.assumeTrue(Wait.until(() -> MainRunner.getCurrentUrl().contains("prototyping/index_valid.html")));
+        Assume.assumeTrue(Wait.until(() -> WebDriverManager.getCurrentUrl().contains("prototyping/index_valid.html")));
         Navigate.browserBack();
-        Assert.assertTrue(Wait.until(() -> MainRunner.getWebDriver().getTitle().contains("style guide")));
+        Assert.assertTrue(Wait.until(() -> {
+            try {
+                return WebDriverManager.getWebDriver().getTitle().contains("style guide");
+            } catch (DriverNotInitializedException e) {
+                Assert.fail("Driver not initialized");
+                return true;
+            }
+        }));
     }
 
     @Test
@@ -46,9 +55,9 @@ public class NavigateTests {
 
     @Test
     public void testBrowserReset() throws Exception {
-        WebDriver webDriver = MainRunner.getWebDriver();
+        WebDriver webDriver = WebDriverManager.getWebDriver();
         Navigate.browserReset();
-        Assert.assertFalse(webDriver.equals(MainRunner.getWebDriver()));
+        Assert.assertFalse(webDriver.equals(WebDriverManager.getWebDriver()));
         Navigate.visit("ui_standards");
         Wait.forPageReady();
         Assert.assertTrue(StepUtils.onPage("ui_standards"));
@@ -70,7 +79,7 @@ public class NavigateTests {
         Assert.assertEquals(Navigate.findIndexOfWindow("Third Party Header Component"), 1);
         Assert.assertTrue(Navigate.switchWindow(1).getTitle().equalsIgnoreCase("Third Party Header Component"));
         Navigate.switchWindowClose();
-        Assert.assertTrue(MainRunner.getWebDriver().getTitle().contains("style guide"));
+        Assert.assertTrue(WebDriverManager.getWebDriver().getTitle().contains("style guide"));
     }
 
     @Test

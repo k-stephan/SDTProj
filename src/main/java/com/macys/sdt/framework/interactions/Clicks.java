@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
@@ -118,8 +120,12 @@ public class Clicks {
         if (StepUtils.safari() || StepUtils.firefox()) {
             javascriptHover(el);
         } else {
-            Actions action = new Actions(MainRunner.getWebDriver());
-            action.moveToElement(el).build().perform();
+            try {
+                Actions action = new Actions(WebDriverManager.getWebDriver());
+                action.moveToElement(el).build().perform();
+            } catch (DriverNotInitializedException e) {
+                Assert.fail("Driver not initialized");
+            }
         }
         Wait.forPageReady();
     }
@@ -139,9 +145,13 @@ public class Clicks {
      * @param selector By selector to use
      */
     public static void hover(By selector) {
-        new WebDriverWait(MainRunner.getWebDriver(), MainRunner.timeout).until(
-                ExpectedConditions.visibilityOfElementLocated(selector)
-        );
+        try {
+            new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout).until(
+                    ExpectedConditions.visibilityOfElementLocated(selector)
+            );
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
     }
 
     /**
@@ -290,60 +300,64 @@ public class Clicks {
         Wait.forPageReady();
 
         Navigate.runBeforeNavigation();
-        WebDriver driver = MainRunner.getWebDriver();
-        Actions actions = new Actions(driver);
         try {
-            el = new WebDriverWait(driver, MainRunner.timeout).until(ExpectedConditions.elementToBeClickable(el));
-        } catch (Exception ex) {
+            WebDriver driver = WebDriverManager.getWebDriver();
+            Actions actions = new Actions(driver);
             try {
-                if (MainRunner.debugMode) {
-                    System.out.println("-->StepUtils.click(): element not clickable: " + el.getTagName() + ": " + el.getText() + ": " + ex.getMessage());
-                }
-                throw new NoSuchElementException("Unable to click element");
-            } catch (StaleElementReferenceException exc) {
-                if (MainRunner.debugMode) {
-                    System.out.println("-->StepUtils.click(): element not clickable: " + exc.getMessage());
-                }
-                throw new NoSuchElementException("Unable to click element");
-            }
-        }
-        if (MainRunner.analytics != null) {
-            String contents = (String) Navigate.execJavascript("return arguments[0].outerHTML;", el);
-            MainRunner.analytics.recordClickElement(contents);
-        }
-        try {
-            // actions not supported in safari and still in progress for FF marionette driver
-            if (StepUtils.safari() || (StepUtils.firefox() && MainRunner.browserVersion.compareTo("48.0") >= 0)) {
-                javascriptHover(el);
-                el.click();
-            } else if (StepUtils.ipad()) {
-                javascriptHover(el);
-                javascriptClick(el);
-            } else {
-                actions.moveToElement(el).perform();
-                actions.click().perform();
-            }
-        } catch (WebDriverException ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("Error while clicking, trying JS: " + ex);
-            }
-            javascriptClick(el);
-        }
-        StepUtils.closeAlert();
-        Wait.forPageReady();
-
-        if (StepUtils.ie() || StepUtils.firefox()) {
-            // IE & firefox like to leave the mouse over dropdown menus
-            Utils.redirectSErr();
-            if (Elements.elementPresent("home.open_flyout") || Elements.elementPresent("home.my_account_menu")
-                    || Elements.elementPresent("home.quickbag_items_list")) {
+                el = new WebDriverWait(driver, MainRunner.timeout).until(ExpectedConditions.elementToBeClickable(el));
+            } catch (Exception ex) {
                 try {
-                    actions.moveToElement(Elements.findElement(Elements.element("home.verify_page"))).perform();
-                } catch (Exception | Error ex) {
-                    // ignore
+                    if (MainRunner.debugMode) {
+                        System.out.println("-->StepUtils.click(): element not clickable: " + el.getTagName() + ": " + el.getText() + ": " + ex.getMessage());
+                    }
+                    throw new NoSuchElementException("Unable to click element");
+                } catch (StaleElementReferenceException exc) {
+                    if (MainRunner.debugMode) {
+                        System.out.println("-->StepUtils.click(): element not clickable: " + exc.getMessage());
+                    }
+                    throw new NoSuchElementException("Unable to click element");
                 }
             }
-            Utils.resetSErr();
+            if (MainRunner.analytics != null) {
+                String contents = (String) Navigate.execJavascript("return arguments[0].outerHTML;", el);
+                MainRunner.analytics.recordClickElement(contents);
+            }
+            try {
+                // actions not supported in safari and still in progress for FF marionette driver
+                if (StepUtils.safari() || (StepUtils.firefox() && MainRunner.browserVersion.compareTo("48.0") >= 0)) {
+                    javascriptHover(el);
+                    el.click();
+                } else if (StepUtils.ipad()) {
+                    javascriptHover(el);
+                    javascriptClick(el);
+                } else {
+                    actions.moveToElement(el).perform();
+                    actions.click().perform();
+                }
+            } catch (WebDriverException ex) {
+                if (MainRunner.debugMode) {
+                    System.err.println("Error while clicking, trying JS: " + ex);
+                }
+                javascriptClick(el);
+            }
+            StepUtils.closeAlert();
+            Wait.forPageReady();
+
+            if (StepUtils.ie() || StepUtils.firefox()) {
+                // IE & firefox like to leave the mouse over dropdown menus
+                Utils.redirectSErr();
+                if (Elements.elementPresent("home.open_flyout") || Elements.elementPresent("home.my_account_menu")
+                        || Elements.elementPresent("home.quickbag_items_list")) {
+                    try {
+                        actions.moveToElement(Elements.findElement(Elements.element("home.verify_page"))).perform();
+                    } catch (Exception | Error ex) {
+                        // ignore
+                    }
+                }
+                Utils.resetSErr();
+            }
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
         }
         Navigate.runAfterNavigation();
     }

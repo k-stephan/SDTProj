@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -23,13 +23,13 @@ public class ClicksTests {
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
+        WebDriverManager.startWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
     }
 
     @Test
     public void testClick() throws Exception {
         Clicks.click("unit_test_page.goto_button");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#button"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#button"));
     }
 
    @Test(expected = NoSuchElementException.class)
@@ -41,25 +41,25 @@ public class ClicksTests {
     @Test
     public void testClickRandomElement() throws Exception {
         Clicks.clickRandomElement("unit_test_page.links");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#"));
     }
 
     @Test
     public void testClickRandomElementPredicate() throws Exception {
         Clicks.clickRandomElement("unit_test_page.links", WebElement::isDisplayed);
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#"));
     }
 
     @Test
     public void testJavascriptClick() throws Exception {
         Clicks.javascriptClick("unit_test_page.goto_text_box");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#text"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#text"));
     }
 
     @Test
     public void testRandomJavascriptClick() throws Exception {
         Clicks.randomJavascriptClick("unit_test_page.links");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#"));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ClicksTests {
     @Test
     public void testClickIfPresent() throws Exception {
         Clicks.clickIfPresent("unit_test_page.goto_radio");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#radio"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#radio"));
         try {
             Clicks.clickIfPresent("unit_test_page.not_present");
         } catch (Exception e) {
@@ -85,26 +85,26 @@ public class ClicksTests {
     @Test
     public void testClickWhenPresent() throws Exception {
         Assert.assertTrue(Clicks.clickWhenPresent("unit_test_page.goto_dropdown"));
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#select"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#select"));
         Assert.assertFalse(Clicks.clickWhenPresent("unit_test_page.not_present"));
     }
 
     @Test
     public void testClickElementByText() throws Exception {
         Clicks.clickElementByText("unit_test_page.links", "Go to image");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#image"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#image"));
     }
 
     @Test
     public void testSendEnter() throws Exception {
         Clicks.sendEnter("unit_test_page.text_box");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("text="));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("text="));
     }
 
     @Test
     public void testSendRandomEnter() throws Exception {
         Clicks.sendRandomEnter("unit_test_page.text_box");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("text="));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("text="));
     }
 
     @Test
@@ -136,14 +136,14 @@ public class ClicksTests {
     public void testClickArea() throws Exception {
         Clicks.click("unit_test_page.goto_image");
         Clicks.clickArea("alt", "Sun");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#sun"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#sun"));
     }
 
     @Test
     public void testClickLazyElement() throws Exception {
         Assume.assumeFalse(Elements.elementPresent("unit_test_page.lazy_load"));
         Clicks.clickLazyElement("unit_test_page.lazy_load");
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#heading"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#heading"));
     }
 
     @Test

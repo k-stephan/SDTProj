@@ -1,6 +1,8 @@
 package com.macys.sdt.framework.utils;
 
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.interactions.Navigate;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +50,12 @@ public class Cookies {
             }
             return cookies;
         } else {
-            return MainRunner.getWebDriver().manage().getCookies();
+            try {
+                return WebDriverManager.getWebDriver().manage().getCookies();
+            } catch (DriverNotInitializedException e) {
+                Assert.fail("Driver not initialized");
+            }
+            return null;
         }
     }
 
@@ -92,7 +99,7 @@ public class Cookies {
         } else {
             try {
                 String encodedValue = encodeURL(value);
-                WebDriver.Options options = MainRunner.getWebDriver().manage();
+                WebDriver.Options options = WebDriverManager.getWebDriver().manage();
                 options.deleteCookieNamed(name);
                 options.addCookie(new Cookie(name, encodedValue, domain, path, expiry));
             } catch (Exception e) {
@@ -115,7 +122,7 @@ public class Cookies {
         }
 
         try {
-            WebDriver.Options options = MainRunner.getWebDriver().manage();
+            WebDriver.Options options = WebDriverManager.getWebDriver().manage();
             options.deleteCookieNamed(name);
             return true;
         } catch (Exception e) {
@@ -135,7 +142,11 @@ public class Cookies {
         if (ie() || safari() || edge()) {
             deleteAllCookiesJavascript();
         } else {
-            MainRunner.getWebDriver().manage().deleteAllCookies();
+            try {
+                WebDriverManager.getWebDriver().manage().deleteAllCookies();
+            } catch (DriverNotInitializedException e) {
+                Assert.fail("Driver not initialized");
+            }
         }
     }
 
@@ -259,7 +270,7 @@ public class Cookies {
                 return cookieValue;
             }
 
-            return URLDecoder.decode(MainRunner.getWebDriver().manage().getCookieNamed(name).getValue(), "UTF-8");
+            return URLDecoder.decode(WebDriverManager.getWebDriver().manage().getCookieNamed(name).getValue(), "UTF-8");
         } catch (Exception e) {
             System.err.println("Unable to get " + name + " cookie value: " + e);
             return "";

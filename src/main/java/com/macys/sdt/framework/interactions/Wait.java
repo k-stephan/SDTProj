@@ -1,8 +1,11 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -42,7 +45,7 @@ public class Wait {
      */
     public static boolean until(BooleanSupplier condition, Integer seconds) {
         try {
-            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), seconds);
             wait.until((WebDriver driver) -> condition.getAsBoolean());
             return true;
         } catch (Exception ex) {
@@ -71,7 +74,7 @@ public class Wait {
      */
     public static boolean untilElementNotPresent(By selector) {
         try {
-            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), MainRunner.timeout);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout);
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
@@ -90,7 +93,7 @@ public class Wait {
      */
     public static boolean untilElementNotPresent(List<WebElement> list) {
         try {
-            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), MainRunner.timeout);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout);
             wait.until(ExpectedConditions.invisibilityOfAllElements(list));
             return true;
         } catch (Exception ex) {
@@ -168,7 +171,7 @@ public class Wait {
             return false;
         }
         try {
-            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), seconds);
             wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
@@ -205,7 +208,7 @@ public class Wait {
             return false;
         }
         try {
-            WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), seconds);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), seconds);
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
@@ -312,28 +315,32 @@ public class Wait {
      * @param expectedValue value to wait for attribute to become
      */
     public static void attributeChanged(WebElement element, String attr, String expectedValue) {
-        WebDriverWait wait = new WebDriverWait(MainRunner.getWebDriver(), MainRunner.timeout);
+        try {
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout);
 
-        wait.until(new ExpectedCondition<Boolean>() {
-            private WebElement element;
-            private String attr;
-            private String expectedValue;
+            wait.until(new ExpectedCondition<Boolean>() {
+                private WebElement element;
+                private String attr;
+                private String expectedValue;
 
-            private ExpectedCondition<Boolean> init(WebElement element, String attr, String expectedValue) {
-                this.element = element;
-                this.attr = attr;
-                this.expectedValue = expectedValue;
-                return this;
-            }
-
-            public Boolean apply(WebDriver driver) {
-                String enabled = element.getAttribute(this.attr);
-                if (MainRunner.debugMode) {
-                    System.out.println("wait: init = (" + expectedValue + "), enabled = (" + enabled + ")");
+                private ExpectedCondition<Boolean> init(WebElement element, String attr, String expectedValue) {
+                    this.element = element;
+                    this.attr = attr;
+                    this.expectedValue = expectedValue;
+                    return this;
                 }
-                return enabled.matches(this.expectedValue);
-            }
-        }.init(element, attr, expectedValue));
+
+                public Boolean apply(WebDriver driver) {
+                    String enabled = element.getAttribute(this.attr);
+                    if (MainRunner.debugMode) {
+                        System.out.println("wait: init = (" + expectedValue + "), enabled = (" + enabled + ")");
+                    }
+                    return enabled.matches(this.expectedValue);
+                }
+            }.init(element, attr, expectedValue));
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
     }
 
     /**
@@ -368,24 +375,26 @@ public class Wait {
 
         int waitTime = MainRunner.timeout;
         //final long ts = System.currentTimeMillis();
-
-        new WebDriverWait(MainRunner.getWebDriver(), waitTime).until((WebDriver wDriver) -> {
-            // Safari takes a bit to update to "loading" status after an action
-            try {
-                if (StepUtils.safari()) {
-                    Utils.threadSleep(100, null);
+        try {
+            new WebDriverWait(WebDriverManager.getWebDriver(), waitTime).until((WebDriver wDriver) -> {
+                // Safari takes a bit to update to "loading" status after an action
+                try {
+                    if (StepUtils.safari()) {
+                        Utils.threadSleep(100, null);
+                    }
+                    return animationDone() && ajaxDone() && isPageLoaded();
+                } catch (Exception e) {
+                    // IE likes to throw a lot of garbage exceptions, don't bother printing them out
+                    if (MainRunner.debugMode && !StepUtils.ie() && !StepUtils.safari()) {
+                        System.out.println("Exception in forPageReady: ");
+                        System.err.println(e.getMessage());
+                    }
+                    return false;
                 }
-                return animationDone() && ajaxDone() && isPageLoaded();
-            } catch (Exception e) {
-                // IE likes to throw a lot of garbage exceptions, don't bother printing them out
-                if (MainRunner.debugMode && !StepUtils.ie() && !StepUtils.safari()) {
-                    System.out.println("Exception in forPageReady: ");
-                    System.err.println(e.getMessage());
-                }
-                return false;
-            }
-        });
-
+            });
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
 
         if (pageName != null) {
             By verifyElement = Elements.element(pageName + ".verify_page");
@@ -451,7 +460,7 @@ public class Wait {
             //System.out.print("." + queries + " AJAX");
 
             // TEMPORARY - currently a bug in BCOM sign in, checkout, MEW search and MCOM VGC PDP page that leaves AJAX calls hanging
-            MainRunner.getCurrentUrl();
+            WebDriverManager.getCurrentUrl();
             if ((StepUtils.bloomingdales() || StepUtils.MEW()) || (StepUtils.macys())) {
                 // now order review page and pdp have 2 open.
                 if (MainRunner.currentURL.matches(".*?(chkout|product).*?")) {

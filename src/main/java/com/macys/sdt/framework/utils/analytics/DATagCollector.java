@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.Utils.ProcessWatchDog;
@@ -98,8 +100,12 @@ public class DATagCollector {
         }
 
         // load any page to let the win auth module to work
-        MainRunner.getWebDriver().navigate().to("http://www.harvard.edu");
-        Wait.forPageReady();
+        try {
+            WebDriverManager.getWebDriver().navigate().to("http://www.harvard.edu");
+            Wait.forPageReady();
+        } catch (DriverNotInitializedException e) {
+            Assert.fail("Driver not initialized");
+        }
 
         // Window authentication dialog could happen when the first login after while
         Process p;

@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -24,7 +25,7 @@ public class WaitTests {
 
     @Before
     public void visitTestPage() {
-        MainRunner.getWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
+        WebDriverManager.startWebDriver().get(InteractionsSuiteTest.getTestPageUrl());
     }
 
     @Test
@@ -87,7 +88,7 @@ public class WaitTests {
     @Test
     public void testSecondsUntilElementPresentAndClick() throws Exception {
         Wait.secondsUntilElementPresentAndClick("unit_test_page.goto_button", 2);
-        Assert.assertTrue(MainRunner.getCurrentUrl().contains("#button"));
+        Assert.assertTrue(WebDriverManager.getCurrentUrl().contains("#button"));
     }
 
     @Test
