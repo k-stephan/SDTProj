@@ -18,10 +18,4 @@ public class ProxyFiltersTest {
     public void testGetDomain() throws Exception {
         Assert.assertEquals("test.getDomain.com", ProxyFilters.getDomain("http://test.getDomain.com"));
     }
-
-    @Test
-    public void testMain() throws Exception {
-        ProxyFilters.main(new String[]{});
-        Assert.assertTrue(ProxyFilters.filterDomains.contains("assets.data.coremetrics.com"));
-    }
 }

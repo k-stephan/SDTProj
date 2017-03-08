@@ -1,6 +1,8 @@
 package com.macys.sdt.framework.utils.rest.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.EnvironmentDetails;
+import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 
 public class RESTEndPoints {
@@ -23,6 +25,10 @@ public class RESTEndPoints {
      * @return environment stripped of all http/www data and parameters
      */
     public static String getEnvironment() {
+        if (StepUtils.prodEnv()) {
+                return (StepUtils.macys() ? "MCOM" : "BCOM") + "-PROD-" + EnvironmentDetails.getSite() + "/";
+        }
+
         return Utils.removeFromString(MainRunner.url, "www1.", "www.", "http://", "https://", "m.")
                 .split("\\.")[0] + "/";
     }

@@ -27,8 +27,7 @@ public class EnvironmentDetails {
     private static String releaseDate = null;
     private static String version = null;
 
-    private EnvironmentDetails() {
-    }
+    private EnvironmentDetails() {}
 
     public static String getSite() {
         if (site == null && !waitForReady()) {

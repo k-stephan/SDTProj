@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -197,7 +196,7 @@ public class DropDowns {
                 "a[i]=dl.options[i].text;" +
                 "}" +
                 "return a;", Elements.findElement(selector));
-        return allValues.stream().map(e -> e.toString()).collect(Collectors.toList());
+        return allValues.stream().map(Object::toString).collect(Collectors.toList());
     }
 
     /**
@@ -214,8 +213,9 @@ public class DropDowns {
             if (StepUtils.chrome()) {
                 Utils.threadSleep(500, null);
             }
-            if (StepUtils.edge() || StepUtils.firefox())
+            if (StepUtils.edge() || StepUtils.firefox()) {
                 Elements.elementInView(Elements.findElements(listId).stream().filter(e -> e.getText().equalsIgnoreCase(text)).findFirst().get());
+            }
             Clicks.clickElementByText(listId, text);
         }
     }

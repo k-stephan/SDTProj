@@ -47,9 +47,9 @@ public class ProxyFilters {
         }
     }
 
-    public static void main(String[] args) {
-        createFilterDomains("http://data.coremetrics.com/cookie-id.js?fn=eluminate967");
-    }
+    //public static void main(String[] args) {
+    //    createFilterDomains("http://data.coremetrics.com/cookie-id.js?fn=eluminate967");
+    //}
 
     private static File getCacheFile(String url) {
         return new File(MainRunner.temp + DigestUtils.shaHex(url));
