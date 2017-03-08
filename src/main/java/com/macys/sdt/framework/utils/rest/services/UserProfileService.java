@@ -2,6 +2,7 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.Exceptions.ProductionException;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
@@ -33,9 +34,11 @@ public class UserProfileService {
      * @return UserProfile that was created
      * @throws ProductionException if called while executing against production
      */
-    public static UserProfile createUserProfile(String userProfileDetailInXml) throws ProductionException {
+    public static UserProfile createUserProfile(String userProfileDetailInXml) throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
+        } else if (StepUtils.bloomingdales()) {
+            throw new EnvException("BCOM Environments do not support the user service");
         }
         try {
             HashMap<String, String> headers = new HashMap<>();
@@ -63,9 +66,11 @@ public class UserProfileService {
      * @return UserProfile that was created
      * @throws ProductionException if called while executing against production
      */
-    public static UserProfile createRandomUserProfile() throws ProductionException {
+    public static UserProfile createRandomUserProfile() throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
+        } else if (StepUtils.bloomingdales()) {
+            throw new EnvException("BCOM Environments do not support the user service");
         }
         UserProfile userProfile = TestUsers.getCustomer(null);
         XmlMapper mapper = new XmlMapper();
@@ -89,9 +94,11 @@ public class UserProfileService {
      * @return true if profile was created successfully
      * @throws ProductionException if called while executing against production
      */
-    public static boolean createUserProfile(UserProfile profile) throws ProductionException {
+    public static boolean createUserProfile(UserProfile profile) throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
+        } else if (StepUtils.bloomingdales()) {
+            throw new EnvException("BCOM Environments do not support the user service");
         }
         try {
             String createUserProfileDetail = new XmlMapper().writeValueAsString(profile);

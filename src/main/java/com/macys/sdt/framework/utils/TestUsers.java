@@ -2,6 +2,7 @@ package com.macys.sdt.framework.utils;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
+import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.Exceptions.ProductionException;
 import com.macys.sdt.framework.Exceptions.UserException;
 import com.macys.sdt.framework.model.*;
@@ -179,7 +180,7 @@ public class TestUsers {
      * @return UserProfile with customer data
      * @throws ProductionException when used on production environment
      */
-    public static UserProfile getRESTUser(String country) throws ProductionException {
+    public static UserProfile getRESTUser(String country) throws ProductionException, EnvException {
         if (prodEnv()) {
             throw new ProductionException("Cannot access REST APIs on production");
         }
