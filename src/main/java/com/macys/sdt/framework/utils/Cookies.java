@@ -521,6 +521,15 @@ public class Cookies {
         return getCookieValue("secure_user_token");
     }
 
+    /**
+     * Retrieves the user ID of the currently signed in user
+     *
+     * @return user ID of signed in user
+     */
+    public static String getCurrentUserId() {
+        return getCookieValue((macys()? "macys" : "bloomingdales") + "_online_uid");
+    }
+
 
     private static String encodeURL(String value) {
         try {

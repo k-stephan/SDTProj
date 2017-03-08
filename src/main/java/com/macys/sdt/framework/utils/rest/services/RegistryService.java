@@ -3,9 +3,12 @@ package com.macys.sdt.framework.utils.rest.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.macys.sdt.framework.Exceptions.ProductionException;
+import com.macys.sdt.framework.Exceptions.UserException;
 import com.macys.sdt.framework.model.registry.Registry;
+import com.macys.sdt.framework.model.user.TokenCredentials;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
+import com.macys.sdt.framework.utils.Cookies;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
@@ -62,23 +65,27 @@ public class RegistryService {
     /**
      * Creates a random registry optionally using given user
      *
-     * @param user User to base off of or null
+     * @param user User to base off of. Pass null to use current signed in user
      * @return Registry that is created or null on failure
      * @throws ProductionException if called while executing against production
      */
-    public static Registry createRandomRegistry(User user) throws ProductionException {
+    public static Registry createRandomRegistry(User user) throws ProductionException, UserException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
         }
 
-        if (user == null || user.getTokenCredentials() == null) {
+        if (user == null) {
             UserProfile customer = TestUsers.getCustomer(null);
             user = customer.getUser();
-            if (user.getId() == null) {
-                UserProfileService.createUserProfile(customer);
-                if (user.getId() == null) {
-                    Assert.fail("Registry service requires a previously existing customer and could not create one.");
-                }
+        }
+        if (user.getTokenCredentials() == null) {
+            user.setTokenCredentials(new TokenCredentials());
+            user.getTokenCredentials().setToken(Cookies.getSecureUserToken());
+        }
+        if (user.getId() == null || user.getId().equals("1234")) {
+            user.setId(Cookies.getCurrentUserId());
+            if (user.getId().isEmpty()) {
+                throw new UserException("Registry service requires user with valid user ID");
             }
         }
         Registry registry = new Registry();
