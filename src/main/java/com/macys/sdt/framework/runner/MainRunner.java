@@ -74,7 +74,7 @@ public class MainRunner {
     /**
      * Workspace path as given in "WORKSPACE" env variable
      */
-    public static String workspace = getEnvVar("workspace");
+    public static String workspace = getEnvOrExParam("WORKSPACE");
 
     /**
      * Path to logging folder
@@ -216,19 +216,18 @@ public class MainRunner {
      * @throws Throwable if an exception or error gets here, we're done
      */
     public static void main(String[] args) throws Throwable {
-        // When we abort jobs we didn't always close the driver, this should help with that
-        // This code should help with saucelabs : Test did not see a new command for 300 seconds
-        // When test are aborted by user or EE, saucelabs does not get command to terminate driver and wait for a new command and timeout at 300 second.
+        // When test are aborted by user or EE, need to make sure sauce labs still gets driver quit command
+        // This code should help with sauce labs : Test did not see a new command for 300 seconds
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (WebDriverManager.driverInitialized() && (closeBrowserAtExit || useSauceLabs)) {
                 WebDriverManager.driver.quit();
-        }}));
+            }
+        }));
 
         getEnvVars(args);
 
-        System.out.println("Using project: " + project + "\nIf this does not match your project, please" +
-                " add an environment variable \"sdt_project\" (previously called \"project\")" +
-                " with project name in format \"<domain>.<project>\"");
+        System.out.println("Using project: " + project + "\nIf this does not match your project," +
+                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
         if (repoJar != null) {
             projectDir = project.replace(".", "/");
             Utils.extractResources(new File(repoJar), workspace, projectDir);
@@ -236,64 +235,61 @@ public class MainRunner {
             projectDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/");
         }
 
-        ArrayList<String> featureScenarios = getFeatureScenarios();
-        if (featureScenarios == null) {
+        ArrayList<String> cucumberArgs = getFeatureScenarios();
+        if (cucumberArgs == null) {
             throw new Exception("Error getting scenarios");
         }
 
         // add any tags
         String tags = getEnvOrExParam("tags");
         if (tags != null) {
-            featureScenarios.add("--tags");
-            featureScenarios.add(tags);
+            cucumberArgs.add("--tags");
+            cucumberArgs.add(tags);
         }
 
         // attempt to use workspace as relative path to feature file (if needed)
-        if (workspace != null) {
-            for (int i = 0; i < featureScenarios.size(); i++) {
-                String value = featureScenarios.get(i);
-                if (value.equals("--tags")) {
-                    break;
-                }
-                // remove windows drive to avoid incorrect matches on ":"
-                String drive = "";
-                if (value.matches("[A-Z]:.*?")) {
-                    drive = value.substring(0, 2);
-                    value = value.substring(2);
-                }
-                // remove any line number args
-                value = value.split(":")[0];
-                value = drive + value;
-                // make sure file exists
-                File featureFile = new File(value);
-                if (!(featureFile.exists() || featureFile.getAbsoluteFile().exists())) {
-                    featureScenarios.set(i, workspace + "/" + featureScenarios.get(i));
-                }
+        for (int i = 0; i < cucumberArgs.size(); i++) {
+            String value = cucumberArgs.get(i);
+            if (value.equals("--tags")) {
+                break;
+            }
+            // remove windows drive to avoid incorrect matches on ":"
+            String drive = "";
+            if (value.matches("[A-Z]:.*?")) {
+                drive = value.substring(0, 2);
+                value = value.substring(2);
+            }
+            // remove any line number args
+            value = value.split(":")[0];
+            value = drive + value;
+            // make sure file exists
+            File featureFile = new File(value);
+            if (!(featureFile.exists() || featureFile.getAbsoluteFile().exists())) {
+                cucumberArgs.set(i, workspace + "/" + cucumberArgs.get(i));
             }
         }
 
         if (project != null) {
-            featureScenarios.add("--glue");
-            featureScenarios.add("com.macys.sdt.projects." + project);
+            cucumberArgs.add("--glue");
+            cucumberArgs.add("com.macys.sdt.projects." + project);
         }
 
-        featureScenarios.add("--glue");
-        featureScenarios.add("com.macys.sdt.shared");
-        featureScenarios.add("--plugin");
-        featureScenarios.add("com.macys.sdt.framework.utils.SDTFormatter");
-        featureScenarios.add("--plugin");
-        featureScenarios.add("html:logs");
+        cucumberArgs.add("--glue");
+        cucumberArgs.add("com.macys.sdt.shared");
+        cucumberArgs.add("--plugin");
+        cucumberArgs.add("com.macys.sdt.framework.utils.SDTFormatter");
+        cucumberArgs.add("--plugin");
+        cucumberArgs.add("html:logs");
 
         // intellij cucumber config gives scenario name to differentiate between scenarios at runtime
-        // may also specify dry run
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length; i++) {
                 if (args[i].equals("--name")) {
-                    featureScenarios.add(args[i]);
-                    featureScenarios.add(args[i+1]);
+                    cucumberArgs.add(args[i]);
+                    cucumberArgs.add(args[i+1]);
                 }
                 if (args[i].equals("--dry-run")) {
-                    featureScenarios.add(args[i]);
+                    cucumberArgs.add(args[i]);
                     dryRun = true;
                 }
             }
@@ -312,7 +308,7 @@ public class MainRunner {
             Thread cucumberThread = new Thread(() -> {
                 int status = 1;
                 try {
-                    status = Main.run(featureScenarios.toArray(new String[featureScenarios.size()]),
+                    status = Main.run(cucumberArgs.toArray(new String[cucumberArgs.size()]),
                             Thread.currentThread().getContextClassLoader());
                 } catch (IOException e) {
                     System.err.println("ERROR : IOException in cucumber run: " + e);
@@ -357,13 +353,9 @@ public class MainRunner {
     /**
      * get and set environment variables
      */
-    public static void getEnvVars(String[] args) {
+    static void getEnvVars(String[] args) {
         if (workspace == null) {
-            workspace = getEnvOrExParam("WORKSPACE");
-            if (workspace == null) {
-                workspace = ".";
-                System.err.println("WARNING: No workspace was specified in environment variables, this may cause unexpected behavior");
-            }
+            workspace = System.getProperty("user.dir");
         }
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
@@ -461,7 +453,7 @@ public class MainRunner {
         }
 
         // get project from environment variables
-        if (project == null) {
+        if (project == null || project.split("\\.").length != 2) {
             getProject();
         }
     }
@@ -482,22 +474,22 @@ public class MainRunner {
         } else {
             projectPath = scenarios.replace("/", ".");
             ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
-            int index = parts.lastIndexOf("SDT");
+            int index = parts.lastIndexOf("features");
             if (index == -1) {
-                index = parts.indexOf("features");
+                index = parts.indexOf("SDT");
                 if (index < 2) {
                     Assert.fail("Unable to determine project by given environment variables. Please" +
                             "add an environment variable \"sdt_project\" " +
                             "with project name in format \"<domain>.<project>\"");
                 }
-                project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
-            } else {
                 project = parts.get(index + 1) + "." + parts.get(index + 2);  // domain.project
+            } else {
+                project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
             }
         }
 
         String[] check = project.split("\\.");
-        if (!(check.length == 2)) {
+        if (check.length != 2) {
             Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
         }
     }
