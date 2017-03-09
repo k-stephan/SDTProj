@@ -43,7 +43,7 @@ public class MainRunnerTest {
 
         Assert.assertEquals("sdt.framework", MainRunner.project);
         Assert.assertEquals("chrome", MainRunner.browser);
-        Assert.assertEquals("./", MainRunner.workspace);
+        Assert.assertEquals(System.getProperty("user.dir").replace("\\", "/") + "/", MainRunner.workspace);
         Assert.assertFalse(MainRunner.debugMode);
         Assert.assertTrue(MainRunner.closeBrowserAtExit);
         Assert.assertNotNull(MainRunner.remoteOS);
