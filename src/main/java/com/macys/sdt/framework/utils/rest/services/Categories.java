@@ -13,7 +13,7 @@ import java.util.Map;
 public class Categories {
     private static final String SERVICE_ENDPOINT = "catalog/v2/categories/";
     private static final int MAX_ACTIVE_CATEGORY_LIMIT = 1000;
-    private static boolean useParasoftHost = false;
+    private static boolean useParasoftHost = true;
     private static final Logger LOGGER = LoggerFactory.getLogger(Categories.class);
 
     public static JSONObject category(String cat) {
