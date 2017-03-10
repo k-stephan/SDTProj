@@ -27,7 +27,16 @@ public class EnvironmentDetails {
     private static String releaseDate = null;
     private static String version = null;
 
-    private EnvironmentDetails() {}
+    private static JSONObject servicesJson;
+
+    private EnvironmentDetails() {
+    }
+
+    public static JSONObject getServicesJson() {
+        // make sure thread getting env details is done
+        waitForReady();
+        return servicesJson;
+    }
 
     public static String getSite() {
         if (site == null && !waitForReady()) {
@@ -101,16 +110,21 @@ public class EnvironmentDetails {
         String env = environment.replace("http://", "https://");
         t = new Thread(() -> {
             try {
+                // basic site details
                 String html = Utils.httpGet(env, null);
                 Document doc = Jsoup.parse(html);
-                site = doc.select("site").html();
-                type = doc.select("type").html();
-                appServer = doc.select("appserver").html();
-                server = doc.select("server").html();
-                timestamp = doc.select("timestamp").html();
-                release = doc.select("release").html();
-                releaseDate = doc.select("releasedate").html();
-                version = doc.select("version").html();
+                site = doc.select("site").first().html();
+                type = doc.select("type").first().html();
+                appServer = doc.select("appserver").first().html();
+                server = doc.select("server").first().html();
+                timestamp = doc.select("timestamp").first().html();
+                release = doc.select("release").first().html();
+                releaseDate = doc.select("releasedate").first().html();
+                version = doc.select("version").first().html();
+
+                // services data
+                String serviceUrl = getServiceURL(envUrl);
+                servicesJson = new JSONObject(Utils.httpGet(serviceUrl, null));
                 ready = true;
             } catch (Exception e) {
                 System.err.println("Unable to get environment details from " + env);
@@ -144,9 +158,9 @@ public class EnvironmentDetails {
                 System.err.println("Interrupted while waiting for env details request to return");
                 return false;
             }
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public static boolean ready() {
@@ -169,17 +183,15 @@ public class EnvironmentDetails {
         AppDetails appDetails = new AppDetails(null, null, null);
 
         try {
-            String json = getJSONString();
-            JSONObject jsonObject = new JSONObject(json);
-
             String eName = getEnv(envUrl);
-
             JSONArray myServicesInfo;
+            // make sure thread getting env details is done
+            waitForReady();
             if (stage5) {
-                JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
+                JSONArray environmentDetails = new JSONArray(servicesJson.get("envDetails").toString());
                 myServicesInfo = (JSONArray) environmentDetails.getJSONObject(0).get("myServicesIpBoList");
             } else {
-                myServicesInfo = (JSONArray) jsonObject.get("myServicesIpBoList");
+                myServicesInfo = (JSONArray) servicesJson.get("myServicesIpBoList");
             }
 
             for (int i = 0; i < myServicesInfo.length(); i++) {
@@ -209,17 +221,16 @@ public class EnvironmentDetails {
         AppDetails appDetails = new AppDetails(null, null, null);
 
         try {
-            String json = getJSONString();
-            JSONObject jsonObject = new JSONObject(json);
-
             String eName = getEnv(envUrl);
 
             JSONArray applicationInfo;
+            // make sure thread getting env details is done
+            waitForReady();
             if (stage5) {
-                JSONArray environmentDetails = new JSONArray(jsonObject.get("envDetails").toString());
+                JSONArray environmentDetails = new JSONArray(servicesJson.get("envDetails").toString());
                 applicationInfo = (JSONArray) environmentDetails.getJSONObject(0).get("applicationBolist");
             } else {
-                applicationInfo = (JSONArray) jsonObject.get("applicationBolist");
+                applicationInfo = (JSONArray) servicesJson.get("applicationBolist");
             }
 
             for (int i = 0; i < applicationInfo.length(); i++) {
@@ -242,25 +253,16 @@ public class EnvironmentDetails {
     }
 
     /**
-     * Returns environment details.
+     * Fills services details with test data from file
      *
-     * @return environment details
      * @throws Exception if response is unreadable
      */
-    public static String getJSONString() throws Exception {
-
+    static void getTestServiceData() throws Exception {
         // This is for AppDetails Unit Test
-        if (MainRunner.booleanParam("envDetailsUnitTest")) {
-            File envDetailsFile = new File("src/test/java/com/macys/sdt/framework/resources/sample_env_details.json");
-            if (envDetailsFile.exists()) {
-             return Utils.readTextFile(envDetailsFile);
-            }
+        File envDetailsFile = new File("src/test/java/com/macys/sdt/framework/resources/sample_env_details.json");
+        if (envDetailsFile.exists()) {
+            servicesJson = new JSONObject(Utils.readTextFile(envDetailsFile));
         }
-
-        String serviceUrl = getServiceURL(envUrl);
-
-        return  Utils.httpGet(serviceUrl, null);
-
     }
 
     /**

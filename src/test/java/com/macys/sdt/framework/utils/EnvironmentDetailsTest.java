@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.db.utils.Environment;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -26,32 +27,35 @@ public class EnvironmentDetailsTest {
     }
 
     @Test
-    public void testGceEnvDetails() {
+    public void testGceEnvDetails() throws Exception {
         String WEBSITE = "http://mcom-1114.c4d.devops.fds.com/";
         MainRunner.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
+        EnvironmentDetails.getTestServiceData();
         String url = EnvironmentDetails.getServiceURL(WEBSITE);
         Assert.assertEquals(url, "http://c4d.devops.fds.com/reinfo/mcom-1114");
     }
 
     @Test
-    public void testStage5EnvDetails() {
+    public void testStage5EnvDetails() throws Exception {
         String WEBSITE = "http://qa11codemacys.fds.com/";
         MainRunner.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
+        EnvironmentDetails.getTestServiceData();
         String url = EnvironmentDetails.getServiceURL(WEBSITE);
         Assert.assertEquals(url,
                 "http://mdc2vr6133:8088/EnvironmentDetailsRestApi/environmentService/getNewEnvDetails/qa11codemacys");
     }
 
     @Test
-    public void testStage5BcomEnvDetails() {
+    public void testStage5BcomEnvDetails() throws Exception {
         String WEBSITE = "http://qa7codebloomingdales.fds.com/";
         MainRunner.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
+        EnvironmentDetails.getTestServiceData();
         String url = EnvironmentDetails.getServiceURL(WEBSITE);
         Assert.assertEquals(url,
                 "http://mdc2vr6133:8088/EnvironmentDetailsRestApi/environmentService/getNewEnvDetails/qa7codebloomingdales");
@@ -63,6 +67,7 @@ public class EnvironmentDetailsTest {
         MainRunner.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
+        EnvironmentDetails.getTestServiceData();
         EnvironmentDetails.AppDetails envDetails = EnvironmentDetails.myServicesApp("NavApp");
         Assert.assertEquals("11.168.113.137", envDetails.ipAddress);
         Assert.assertEquals("jcie4312", envDetails.hostName);

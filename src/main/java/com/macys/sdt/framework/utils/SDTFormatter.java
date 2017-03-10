@@ -102,7 +102,7 @@ public class SDTFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-        if (!result.getStatus().equals("passed")) {
+        if (!result.getStatus().equals("passed") && !MainRunner.dryRun) {
             System.err.println(" --> " + result.getStatus().toUpperCase());
         }
         HashMap<String, Object> map = new HashMap<>(result.toMap());

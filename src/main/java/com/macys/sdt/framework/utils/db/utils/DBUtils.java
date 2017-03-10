@@ -6,7 +6,6 @@ import org.apache.http.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.Date;
 
@@ -82,36 +81,33 @@ public class DBUtils {
      */
     public DBConfig getConfig() {
 
-        String json = null;
+        String json;
 
         // This is for testing DBUtils and DBConnection
         if (MainRunner.booleanParam("dbUnitTest")) {
-            return createConfigFromJSON(MainRunner.getEnvVar("dbUnitTestConfig"));
+            json = MainRunner.getEnvVar("dbUnitTestConfig");
+            if (json == null) {
+                return null;
+            }
+            return createConfigFromJSON(new JSONObject(json));
         }
 
-        try {
-            json = com.macys.sdt.framework.utils.EnvironmentDetails.getJSONString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return createConfigFromJSON(json);
+        return createConfigFromJSON(EnvironmentDetails.getServicesJson());
 
     }
 
-    private DBConfig createConfigFromJSON(String json) {
+    private DBConfig createConfigFromJSON(JSONObject json) {
 
         DBConfig dbconfig = new DBConfig();
 
         try {
-            JSONObject jsonObject = new JSONObject(json);
             String eName;
             try {
-                eName = jsonObject.getString("envName");
+                eName = json.getString("envName");
             } catch (JSONException e) {
                 eName = "Unknown";
             }
-            JSONObject dbInfo = (JSONObject) jsonObject.get("dbInfo");
+            JSONObject dbInfo = (JSONObject) json.get("dbInfo");
 
             dbconfig.setPort(dbInfo.getString("dbPortNo"));
             dbconfig.setDBUrl(dbInfo.getString("dbUrl"));

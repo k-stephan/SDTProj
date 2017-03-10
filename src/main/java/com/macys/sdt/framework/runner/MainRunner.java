@@ -294,14 +294,19 @@ public class MainRunner {
                 }
             }
         }
+        // check if dry-run passed as env or ex param
+        if (!dryRun && booleanParam("dry-run")) {
+            dryRun = true;
+            cucumberArgs.add("--dry-run");
+        }
 
         System.out.println("-->Testing " + url + " using " +
                 (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
                 + (useSauceLabs ? " on Sauce Labs" : ""));
 
         new AuthenticationDialog();
-        setAfterNavigationHooks();
         setBeforeNavigationHooks();
+        setAfterNavigationHooks();
         EnvironmentDetails.loadEnvironmentDetails(url, false);
 
         try {
