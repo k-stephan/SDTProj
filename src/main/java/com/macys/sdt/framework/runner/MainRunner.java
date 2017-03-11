@@ -10,6 +10,7 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import com.macys.sdt.framework.utils.analytics.DATagCollector;
 import com.macys.sdt.framework.utils.analytics.DigitalAnalytics;
+import com.macys.sdt.framework.utils.analytics.PageLoadProfiler;
 import cucumber.api.cli.Main;
 import net.lightbody.bmp.BrowserMobProxy;
 import org.apache.commons.lang3.StringUtils;
@@ -346,6 +347,10 @@ public class MainRunner {
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
         Navigate.addAfterNavigation(StepUtils::checkSafariPage);
+        Navigate.addAfterNavigation(PageLoadProfiler::stopTimer);
+        Navigate.addAfterNavigation(() ->
+            System.out.println("Last load time: " + Utils.toDuration(PageLoadProfiler.getLoadTime()))
+        );
     }
 
     /**
@@ -353,6 +358,7 @@ public class MainRunner {
      */
     public static void setBeforeNavigationHooks() {
         Navigate.addBeforeNavigation(Wait::setWaitRequired);
+        Navigate.addBeforeNavigation(PageLoadProfiler::startTimer);
     }
 
     /**
