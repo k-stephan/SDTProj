@@ -121,13 +121,16 @@ public class EnvironmentDetails {
                 release = doc.select("release").first().html();
                 releaseDate = doc.select("releasedate").first().html();
                 version = doc.select("version").first().html();
-
+            } catch (Exception e) {
+                System.err.println("Unable to get environment details from " + env);
+            }
+            try {
                 // services data
                 String serviceUrl = getServiceURL(envUrl);
                 servicesJson = new JSONObject(Utils.httpGet(serviceUrl, null));
                 ready = true;
             } catch (Exception e) {
-                System.err.println("Unable to get environment details from " + env);
+                System.err.println("Unable to get server details for " + env);
             }
         });
         t.start();
@@ -141,6 +144,9 @@ public class EnvironmentDetails {
     }
 
     public static String getDetails() {
+        if (site == null) {
+            return "\n======> Environment Details <======\n\nUnable to get environment details\n\n" + "===================================\n";
+        }
         return "\n======> Environment Details <======\n\n" + site + "\n" + type + "\n" + appServer
                 + "\n" + server + "\n" + timestamp + "\n" + release + "\n" + releaseDate + "\n" + version
                 + "\n\n" + "===================================\n";
@@ -289,7 +295,7 @@ public class EnvironmentDetails {
         try {
             URL url = new URL(envUrl);
             String[] split = url.getHost().split("\\.");
-            return split[0].matches("www|m") ? split[1] : split[0];
+            return split[0].matches("www|m|m2qa1") ? split[1] : split[0];
         } catch (MalformedURLException e) {
             System.err.println("Unable to get environment details");
             return null;

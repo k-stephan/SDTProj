@@ -54,7 +54,7 @@ public class RegistryService {
 
             LOGGER.info("response : " + response);
             Assert.assertEquals(response.getStatus(), 200);
-            LOGGER.info("User profile created successfully");
+            LOGGER.info("User Registry created successfully");
             return registry;
         } catch (JsonProcessingException e) {
             LOGGER.error("error creating registry", e.getCause());
