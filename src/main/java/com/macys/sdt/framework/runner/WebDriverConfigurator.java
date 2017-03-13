@@ -24,6 +24,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ThreadGuard;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -87,7 +88,7 @@ class WebDriverConfigurator {
         switch (MainRunner.browser.toLowerCase()) {
             case "ie":
             case "internetexplorer":
-                return new InternetExplorerDriver(capabilities);
+                return ThreadGuard.protect(new InternetExplorerDriver(capabilities));
             case "chrome":
                 return new ChromeDriver(capabilities);
             case "safari":

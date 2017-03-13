@@ -14,6 +14,7 @@ import cucumber.api.cli.Main;
 import net.lightbody.bmp.BrowserMobProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
+import org.openqa.selenium.WebDriverException;
 
 import java.io.File;
 import java.io.IOException;
@@ -269,8 +270,8 @@ public class MainRunner {
             }
         }
 
+        cucumberArgs.add("--glue");
         if (project != null) {
-            cucumberArgs.add("--glue");
             cucumberArgs.add("com.macys.sdt.projects." + project);
         }
 
@@ -291,6 +292,10 @@ public class MainRunner {
                 if (args[i].equals("--dry-run")) {
                     cucumberArgs.add(args[i]);
                     dryRun = true;
+                }
+                if (args[i].equals("--glue")) {
+                    cucumberArgs.add(args[i]);
+                    cucumberArgs.add(args[i+1]);
                 }
             }
         }
@@ -1021,9 +1026,11 @@ public class MainRunner {
                     if (!pause && ex instanceof org.openqa.selenium.NoSuchSessionException) {
                         System.err.println("--> Error: PageHangWatchDog: driver session is dead, exiting");
                         break;
+                    } else if (!(ex instanceof WebDriverException)) {
+                        // WebDriverException thrown when we have a sync issue in IE
+                        System.err.println("--> Error: PageHangWatchDog: " + ex.getMessage());
+                        ex.printStackTrace();
                     }
-                    System.err.println("--> Error: PageHangWatchDog: " + ex.getMessage());
-                    ex.printStackTrace();
                 } finally {
                     //System.err.print(pause ? "|" : "~");
                     Utils.threadSleep(5000, this.getClass().getSimpleName());
