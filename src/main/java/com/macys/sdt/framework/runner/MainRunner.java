@@ -293,6 +293,10 @@ public class MainRunner {
                     cucumberArgs.add(args[i]);
                     dryRun = true;
                 }
+                if (args[i].equals("--glue") && !args[i+1].startsWith("com.macys.sdt.shared") && !args[i+1].contains(project)) {
+                    cucumberArgs.add(args[i]);
+                    cucumberArgs.add(args[i+1]);
+                }
             }
         }
         // check if dry-run passed as env or ex param
