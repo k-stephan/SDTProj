@@ -596,6 +596,11 @@ class WebDriverConfigurator {
         for (int i = 0; i < 10; i++) {
             try {
                 browsermobServer = new BrowserMobProxyServer();
+
+                // Disable upstream server certificate verification to avoid SSLHandshakeException
+                // as websites used for testing are trusted.
+                browsermobServer.setTrustAllServers(true);
+
                 browsermobServer.start(port);
                 System.out.println("using port : " + port);
                 found = true;
