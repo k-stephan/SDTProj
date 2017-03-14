@@ -270,8 +270,8 @@ public class MainRunner {
             }
         }
 
-        cucumberArgs.add("--glue");
         if (project != null) {
+            cucumberArgs.add("--glue");
             cucumberArgs.add("com.macys.sdt.projects." + project);
         }
 
@@ -292,10 +292,6 @@ public class MainRunner {
                 if (args[i].equals("--dry-run")) {
                     cucumberArgs.add(args[i]);
                     dryRun = true;
-                }
-                if (args[i].equals("--glue")) {
-                    cucumberArgs.add(args[i]);
-                    cucumberArgs.add(args[i+1]);
                 }
             }
         }
