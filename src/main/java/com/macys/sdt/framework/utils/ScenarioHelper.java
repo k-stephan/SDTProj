@@ -61,7 +61,7 @@ public class ScenarioHelper {
      * @return the index of the current step in the scenario
      */
     public static int getScenarioIndex() {
-        return scenario.getStepResults().size() - stepOffset - backgroundStepCount;
+        return scenario.getStepResuls().size() - stepOffset - backgroundStepCount;
     }
 
     /**
@@ -154,7 +154,7 @@ public class ScenarioHelper {
         if (step == -1) {
             step = getScenarioIndex();
         }
-        return scenario.getStepResults().get(step);
+        return scenario.getStepResuls().get(step);
     }
 
     /**
@@ -167,7 +167,7 @@ public class ScenarioHelper {
         if (step == -1) {
             step = getScenarioIndex();
         }
-        List<Result> steps = scenario.getStepResults();
+        List<Result> steps = scenario.getStepResuls();
         return steps.remove(step);
     }
 
@@ -186,7 +186,7 @@ public class ScenarioHelper {
      * @return the failed step Result
      */
     public static Result getFailedStepResult() {
-        List<Result> results = scenario.getStepResults();
+        List<Result> results = scenario.getStepResuls();
         for (Result result : results) {
             if (!result.getStatus().equals("passed")) {
                 return result;
@@ -201,7 +201,7 @@ public class ScenarioHelper {
      * @return true if last scenario passed
      */
     public static boolean isScenarioPassed() {
-        List<Result> results = scenario.getStepResults();
+        List<Result> results = scenario.getStepResuls();
         for (Result result : results) {
             if (!result.getStatus().equals("passed")) {
                 return false;
