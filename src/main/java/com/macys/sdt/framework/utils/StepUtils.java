@@ -251,11 +251,12 @@ public abstract class StepUtils {
      */
     public static void closeBcomPopup() {
         if (bloomingdales()) {
-            Navigate.switchWindow(1);
-            Navigate.switchWindowClose();
-            //close feedback dialog
             if (MEW()) {
+                //close feedback dialog
                 Clicks.clickIfPresent("category_browse.close_feedback_dialog");
+            } else {
+                Navigate.switchWindow(1);
+                Navigate.switchWindowClose();
             }
         }
     }
