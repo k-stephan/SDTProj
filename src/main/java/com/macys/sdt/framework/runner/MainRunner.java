@@ -13,6 +13,10 @@ import com.macys.sdt.framework.utils.analytics.DigitalAnalytics;
 import cucumber.api.cli.Main;
 import net.lightbody.bmp.BrowserMobProxy;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriverException;
 
@@ -299,6 +303,13 @@ public class MainRunner {
                 }
             }
         }
+
+        List<String> deps = getDependencies(project);
+        for (String dep : deps) {
+            cucumberArgs.add("--glue");
+            cucumberArgs.add(dep);
+        }
+
         // check if dry-run passed as env or ex param
         if (!dryRun && booleanParam("dry-run")) {
             dryRun = true;
@@ -749,6 +760,23 @@ public class MainRunner {
 
     public static Timeouts timeouts() {
         return Timeouts.instance();
+    }
+
+    public static List<String> getDependencies(String project) {
+        ArrayList<String> deps = new ArrayList<>();
+        String pom = workspace + project.replace(".", "/") + "/pom.xml";
+        try {
+            Document doc = Jsoup.parse(Utils.readTextFile(new File(pom)), "", Parser.xmlParser());
+            for (Element e : doc.select("dependencies dependency artifactid")) {
+                if (e.html().startsWith("sdt-")) {
+                    String[] name = e.html().split("-");
+                    deps.add("com.macys.sdt.projects." + name[1] + "." + name[2]);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Unable to read pom file: " + e);
+        }
+        return deps;
     }
 
     // protected methods

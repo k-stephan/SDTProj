@@ -145,11 +145,12 @@ public class EnvironmentDetails {
 
     public static String getDetails() {
         if (site == null) {
-            return "\n======> Environment Details <======\n\nUnable to get environment details\n\n" + "===================================\n";
+            return "\n======> Environment Details <======\n\nUnable to get environment details\n\n"
+                    + "===================================\n";
         }
-        return "\n======> Environment Details <======\n\n" + site + "\n" + type + "\n" + appServer
-                + "\n" + server + "\n" + timestamp + "\n" + release + "\n" + releaseDate + "\n" + version
-                + "\n\n" + "===================================\n";
+        return String.format("\n======> Environment Details <======\n\nSite: %s\nType: %s\nApp Server: %s\nServer: %s\n" +
+                "Timestamp: %s\nRelease: %s\nRelease Date: %s\nVersion: %s\n\n===================================\n",
+                site, type, appServer, server, timestamp, release, releaseDate, version);
     }
 
     public static boolean waitForReady() {
