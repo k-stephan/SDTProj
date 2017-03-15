@@ -311,6 +311,7 @@ public abstract class StepUtils {
     public static void checkSafariPage() {
         if (safari() && Elements.elementPresent("home.safari_error")) {
             Navigate.browserRefresh();
+            System.out.println("--> Attempted to refresh page on Safari error");
         }
     }
 
@@ -383,9 +384,11 @@ public abstract class StepUtils {
         for (String expectedURL : expectedURLs) {
             if (!verifyElement.isEmpty() && expectedURL != null) {
                 if (Elements.elementPresent(verifyElementKey) && currentURL.contains(expectedURL)) {
+                    System.out.println("On Page: " + name);
                     return true;
                 }
             } else if (expectedURL != null && currentURL.contains(expectedURL)) {
+                System.out.println("On Page: " + name);
                 return true;
             }
         }

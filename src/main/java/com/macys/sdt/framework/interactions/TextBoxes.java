@@ -24,6 +24,7 @@ public class TextBoxes {
      */
     public static void typeTextbox(String selector, String text) {
         typeTextbox(Elements.element(selector), text);
+        System.out.println(selector.split("\\.")[1] + ": " + text);
     }
 
     /**
@@ -60,6 +61,7 @@ public class TextBoxes {
      */
     public static void typeTextNEnter(String selector, String text) {
         typeTextNEnter(Elements.element(selector), text);
+        System.out.println(selector.split("\\.")[1] + ": " + text);
     }
 
     /**

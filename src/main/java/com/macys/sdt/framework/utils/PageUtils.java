@@ -236,7 +236,7 @@ public class PageUtils {
 
         // put new DataFile entry
         try {
-            if (file.getCanonicalPath().contains(MainRunner.project)) {
+            if (file.getCanonicalPath().replace("/", ".").replace("\\", ".").contains(MainRunner.project)) {
                 projectPages.put(pagePath, pageJson);
             } else {
                 sharedPages.put(pagePath, pageJson);
