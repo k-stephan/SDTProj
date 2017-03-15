@@ -413,6 +413,7 @@ public class MainRunner {
         }
         Utils.createDirectory(logs = workspace + "logs/", true);
         Utils.createDirectory(temp = workspace + "temp/", true);
+        Utils.initLogs();
 
         if (remoteOS == null) {
             System.out.println("INFO : Remote OS not specified. Using default (Windows 7)");
@@ -632,9 +633,8 @@ public class MainRunner {
 
         Collections.sort(scenarioList);
         ArrayList<Map> featureScenarios = null;
-        String workSpace = getEnvOrExParam("WORKSPACE");
-        if (workSpace == null) {
-            workSpace = "";
+        if (workspace == null) {
+            workspace = "";
         }
         for (String featureFilePath : scenarioList) {
             String[] featureInfo = featureFilePath.split(".feature:");
@@ -650,7 +650,7 @@ public class MainRunner {
                 File featureFile = new File(path);
                 if (!(featureFile.exists() || featureFile.getAbsoluteFile().exists())) {
                     System.out.println("File not found: " + path);
-                    path = workSpace + "/" + path;
+                    path = workspace + "/" + path;
                 }
                 String json = Utils.gherkinToJson(false, path);
                 try {

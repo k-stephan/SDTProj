@@ -787,18 +787,18 @@ public class Utils {
             return;
         }
         String rpath = "com/macys/sdt/framework/resources";
-        System.out.println(rpath);
+        infoLog.println(rpath);
         extractJarFile(repoJar, rpath, workspace + "/" + rpath);
 
         rpath = "com/macys/sdt/shared/resources";
-        System.out.println(rpath);
+        infoLog.println(rpath);
         extractJarFile(repoJar, rpath, workspace + "/" + rpath);
         saveDriver("chromedriver.exe", rpath);
         saveDriver("IEDriverServer.exe", rpath);
 
         rpath = "com/macys/sdt/projects/";
         System.out.println(rpath);
-        extractJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features");
+        extractJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features", "pom.xml");
         resourcesExtracted = true;
     }
 
@@ -850,10 +850,10 @@ public class Utils {
             } else {
                 File fOut = new File(getOutputPath(tarFilePath, outputPath, path));
                 long ts = System.currentTimeMillis();
-                System.out.print("writing " + fOut.getCanonicalPath() + "...");
+                infoLog.print("writing " + fOut.getCanonicalPath() + "...");
                 if (fOut.exists()) {
                     if (!fOut.delete()) {
-                        System.err.println("Unable to delete file: " + fOut.getName() + " before writing");
+                        errLog.println("Unable to delete file: " + fOut.getName() + " before writing");
                         continue;
                     }
                 }
@@ -864,7 +864,7 @@ public class Utils {
                 while ((length = inputTar.read(buff)) > -1) {
                     bout.write(buff, 0, length);
                 }
-                System.out.println(System.currentTimeMillis() - ts + ":" + bout.size());
+                infoLog.println(System.currentTimeMillis() - ts + ":" + bout.size());
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
                 Utils.createDirectory(ftemp.getParent(), false);
                 for (int i = 0; i < 100; i++) {
@@ -872,7 +872,7 @@ public class Utils {
                         renameFile(ftemp, fOut, 10);
                         break;
                     }
-                    System.out.println("--> retry extractCompressedFile:" + i);
+                    infoLog.println("--> retry extractCompressedFile:" + i);
                     threadSleep(3000, null);
                 }
             }
@@ -882,7 +882,6 @@ public class Utils {
     private static boolean renameFile(File src, File dest, int retryCount) {
         for (int i = 0; i < retryCount; i++) {
             if (src.renameTo(dest)) {
-                System.err.print(".");
                 return true;
             }
             threadSleep(3000, "--> file rename retry:" + src.getName() + ":" + dest.getName() + ":" + i);
@@ -1085,7 +1084,7 @@ public class Utils {
     /**
      * Initializes the PrintStream used to redirect any error message bloat
      */
-    private static void initLogs() {
+    public static void initLogs() {
         if (errLog == null || infoLog == null) {
             try {
                 File errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
