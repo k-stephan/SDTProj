@@ -1,8 +1,8 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
-import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import org.junit.Assert;
@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-import static com.macys.sdt.framework.runner.MainRunner.appTest;
-import static com.macys.sdt.framework.runner.MainRunner.useAppium;
+import static com.macys.sdt.framework.runner.MainRunner.*;
 import static com.macys.sdt.framework.utils.Utils.errLog;
 
 /**
@@ -40,7 +39,7 @@ public class Wait {
      * Waits a number of seconds until the given condition method returns true
      *
      * @param condition method to check whether we're done waiting
-     * @param seconds number of seconds to wait before timing out (default 5)
+     * @param seconds   number of seconds to wait before timing out (default 5)
      * @return true if condition returned true, false if timeout occurred
      */
     public static boolean until(BooleanSupplier condition, Integer seconds) {
@@ -114,6 +113,59 @@ public class Wait {
         ArrayList<WebElement> list = new ArrayList<>();
         list.add(el);
         return untilElementNotPresent(list);
+    }
+
+    /**
+     * Wait until the text of an element matches the given expected text
+     *
+     * @param selector     String selector in format "page_name.element_name"
+     * @param expectedText Expected value of text
+     * @param waitTime     Number of seconds to wait or 0 to use default wait time
+     * @return true if change occurred, false if not
+     */
+    public static boolean untilTextChanged(String selector, String expectedText, int waitTime) {
+        if (waitTime == 0) {
+            waitTime = timeouts().general();
+        }
+        return untilTextChanged(Elements.element(selector), expectedText, waitTime);
+    }
+
+    /**
+     * Wait until the text of an element matches the given expected text
+     *
+     * @param selector     By selector to use
+     * @param expectedText Expected value of text
+     * @param waitTime     Number of seconds to wait or 0 to use default wait time
+     * @return true if change occurred, false if not
+     */
+    public static boolean untilTextChanged(By selector, String expectedText, int waitTime) {
+        if (waitTime == 0) {
+            waitTime = timeouts().general();
+        }
+        return until(() -> Elements.getText(selector).equalsIgnoreCase(expectedText), waitTime);
+    }
+
+    /**
+     * Waits until the given text is present somewhere on the page
+     * <p>
+     * NOTE: This element is NOT safe from picking up comments in the page source. Be careful of false positives.
+     * </p>
+     *
+     * @param text     text to wait to be present
+     * @param waitTime Number of seconds to wait or null to use default wait time
+     * @return true if text showed up before timeout
+     */
+    public static boolean untilTextPresent(String text, int waitTime) {
+        if (waitTime == 0) {
+            waitTime = timeouts().general();
+        }
+        return until(() -> {
+            try {
+                return WebDriverManager.getWebDriver().getPageSource().contains(text);
+            } catch (DriverNotInitializedException e) {
+                return false;
+            }
+        }, waitTime);
     }
 
     /**
@@ -288,8 +340,8 @@ public class Wait {
     /**
      * Wait until an element's attribute has changed
      *
-     * @param selector     String selector in format "page_name.element_name"
-     * @param attr         attribute to use
+     * @param selector      String selector in format "page_name.element_name"
+     * @param attr          attribute to use
      * @param expectedValue value to wait for attribute to become
      */
     public static void attributeChanged(String selector, String attr, String expectedValue) {
@@ -299,8 +351,8 @@ public class Wait {
     /**
      * Wait until an element's attribute has changed
      *
-     * @param selector     By selector to use
-     * @param attr         attribute to use
+     * @param selector      By selector to use
+     * @param attr          attribute to use
      * @param expectedValue value to wait for attribute to become
      */
     public static void attributeChanged(By selector, String attr, String expectedValue) {
@@ -380,7 +432,7 @@ public class Wait {
                 // Safari takes a bit to update to "loading" status after an action
                 try {
                     if (StepUtils.safari()) {
-                        Utils.threadSleep(100, null);
+                        Utils.threadSleep(200, null);
                     }
                     return animationDone() && ajaxDone() && isPageLoaded();
                 } catch (Exception e) {
