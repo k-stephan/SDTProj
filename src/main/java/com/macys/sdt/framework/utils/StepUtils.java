@@ -308,13 +308,6 @@ public abstract class StepUtils {
         WebDriverManager.closeAlert();
     }
 
-    public static void checkSafariPage() {
-        if (safari() && Elements.elementPresent("home.safari_error")) {
-            Navigate.browserRefresh();
-            System.out.println("--> Attempted to refresh page on Safari error");
-        }
-    }
-
     /**
      * Closes the tutorial overlay on MEW experience if present
      */

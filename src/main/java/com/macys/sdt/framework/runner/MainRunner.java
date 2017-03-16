@@ -362,7 +362,6 @@ public class MainRunner {
         Navigate.addAfterNavigation(WebDriverManager::getCurrentUrl);
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
-        Navigate.addAfterNavigation(StepUtils::checkSafariPage);
     }
 
     /**
