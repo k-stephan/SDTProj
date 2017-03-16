@@ -42,6 +42,7 @@ public class RunFeature {
         this.dumpEnvironmentVariables();
 
         System.out.println("\n\nPreparing workspace...");
+        Utils.initLogs();
         Utils.extractResources(this.m_repo_jar, this.m_workspace, System.getenv("sdt_project").trim().replace(".", "/"));
 
         if (MainRunner.scenarios != null) {
