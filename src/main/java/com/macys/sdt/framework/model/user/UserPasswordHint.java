@@ -20,8 +20,9 @@ public class UserPasswordHint {
     public UserPasswordHint() {
     }
 
-    public UserPasswordHint(Long id, String answer) {
+    public UserPasswordHint(Long id, String question, String answer) {
         this.id = id;
+        this.question = question;
         this.answer = answer;
     }
 
@@ -31,7 +32,7 @@ public class UserPasswordHint {
      * @return UserPasswordHint DefaultUserPasswordHint
      */
     public static UserPasswordHint getDefaultUserPasswordHint() {
-        return new UserPasswordHint(1L, "My Name");
+        return new UserPasswordHint(1L, "What was the first concert you attended?", "Ben Brode");
     }
 
     /**

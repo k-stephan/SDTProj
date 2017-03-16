@@ -71,7 +71,7 @@ public class User {
         UserPasswordHint hint = UserPasswordHint.getDefaultUserPasswordHint();
         ProfileAddress address = ProfileAddress.getDefaultProfileAddress();
         LoginCredentials credentials = LoginCredentials.getDefaultLoginCredentials();
-        return new User("1989-11-09", "M", true, hint, address, credentials);
+        return new User("1989-11-09", "Male", true, hint, address, credentials);
     }
 
     /**

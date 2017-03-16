@@ -2,6 +2,7 @@ package com.macys.sdt.framework.utils;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.Exceptions.ProductionException;
 import com.macys.sdt.framework.Exceptions.UserException;
@@ -93,7 +94,7 @@ public class TestUsers {
             }
 
             String lockCustomer = Utils.httpGet(url, null);
-            Map<String, Map<String, String>> customer = new Gson().fromJson(lockCustomer, Map.class);
+            Map<String, Map<String, String>> customer = new Gson().fromJson(lockCustomer, new TypeToken<Map<String, String>>(){}.getType());
             prodCustomer.getUser().getLoginCredentials().setPassword(customer.get("login").get("password"));
             prodCustomer.getUser().getProfileAddress().setEmail(customer.get("login").get("email"));
             currentEmail = prodCustomer.getUser().getProfileAddress().getEmail();
@@ -130,6 +131,9 @@ public class TestUsers {
      * @param newCustomer customer to set to current
      */
     public static void setCurrentCustomer(UserProfile newCustomer) {
+        if (newCustomer.getUser().getLoginCredentials().getPassword() == null) {
+            newCustomer.getUser().getLoginCredentials().setPassword(getPassword());
+        }
         customer = newCustomer;
     }
 
@@ -245,10 +249,9 @@ public class TestUsers {
      * Creates a new customer with random data and valid USL info
      *
      * @param country         Country the profile should have (US if null)
-     * @param profileCreation "Profile_Creation" or "checkout" based on what you need
      * @return UserProfile with customer data
      */
-    public static UserProfile getuslCustomer(String country, String profileCreation) {
+    public static UserProfile getuslCustomer(String country) {
         if (country == null) {
             country = "United States";
         }
