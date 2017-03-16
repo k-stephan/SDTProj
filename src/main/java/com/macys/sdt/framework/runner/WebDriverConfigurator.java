@@ -397,6 +397,11 @@ class WebDriverConfigurator {
                 capabilities.setCapability("version", browserVersion);
             }
 
+            // temp fix until sauce labs updates it: Set the chrome driver version
+            if (StepUtils.chrome()) {
+                capabilities.setCapability("chromedriverVersion", "2.28");
+            }
+
             // set browser name
             if(MainRunner.browser.equalsIgnoreCase("ie"))
                 capabilities.setCapability("browserName", "iexplore");
