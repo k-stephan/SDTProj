@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.model.registry;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.macys.sdt.framework.model.addresses.CurrentAddress;
@@ -40,11 +41,13 @@ public class Registry {
     private String eventMonth;
     private String eventDay;
     private String eventYear;
-    private boolean publicRegistry;
 
     // These fields are shared between the two
     @JsonProperty("type")
     public String eventType = "WEDDING";
+
+    @JsonIgnore
+    private boolean publicRegistry;
 
     /**
      * Creates a copy of a registry with only the values present in User Service version of registry
