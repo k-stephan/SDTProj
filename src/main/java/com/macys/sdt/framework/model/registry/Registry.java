@@ -40,6 +40,7 @@ public class Registry {
     private String eventMonth;
     private String eventDay;
     private String eventYear;
+    private boolean publicRegistry;
 
     // These fields are shared between the two
     @JsonProperty("type")
@@ -116,6 +117,24 @@ public class Registry {
         copy.futureAddress = registry.futureAddress;
 
         return copy;
+    }
+
+    /**
+     * Gets whether the registry is public
+     *
+     * @return true if public
+     */
+    public boolean isPublicRegistry() {
+        return publicRegistry;
+    }
+
+    /**
+     * Sets whether the registry is public
+     *
+     * @param publicRegistry public status of registry
+     */
+    public void setPublicRegistry(boolean publicRegistry) {
+        this.publicRegistry = publicRegistry;
     }
 
     /**
