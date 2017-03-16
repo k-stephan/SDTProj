@@ -2,6 +2,7 @@ package com.macys.sdt.framework.runner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
@@ -654,7 +655,7 @@ public class MainRunner {
                 }
                 String json = Utils.gherkinToJson(false, path);
                 try {
-                    featureScenarios = new Gson().fromJson(json, ArrayList.class);
+                    featureScenarios = new Gson().fromJson(json, new TypeToken<ArrayList<Map>>() {}.getType());
                 } catch (JsonSyntaxException jex) {
                     System.err.println("--> Failed to parse : " + path);
                     System.err.println("--> json :\n\n" + json);
@@ -958,6 +959,7 @@ public class MainRunner {
         private static long pauseStartTime;
         private String currentUrl;
         private long ts;
+        private static Thread workerThread;
 
         private PageHangWatchDog() {
             System.err.println("--> Start: PageHangWatchDog: " + new Date());
@@ -998,11 +1000,18 @@ public class MainRunner {
             }
         }
 
-        private void interruptCucumberThread() {
+        private void interruptCucumberThread() throws InterruptedException {
             System.err.println("PageHangWatchDog timeout! Pushing things along...");
-            cucumberThread.interrupt();
-            this.reset(null);
-            pause = false;
+            if (workerThread.isAlive()) {
+                workerThread.join(TIMEOUT);
+            }
+            workerThread = new Thread(() -> {
+                cucumberThread.interrupt();
+                this.reset(null);
+                pause = false;
+            });
+            workerThread.start();
+            workerThread.join(TIMEOUT);
         }
 
         public void run() {
@@ -1011,11 +1020,11 @@ public class MainRunner {
                     if (!WebDriverManager.driverInitialized()) {
                         continue;
                     } else if (pause) {
-                        // if we've been waiting a while, send any browser command to prevent
-                        // dropping the sauce labs connection
                         if (System.currentTimeMillis() - pauseStartTime > PAUSE_TIMEOUT) {
                             interruptCucumberThread();
                         }
+                        // if we've been waiting a while, send any browser command to prevent
+                        // dropping the sauce labs connection
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
                             WebDriverManager.getCurrentUrl();
                             this.reset(this.currentUrl);
@@ -1032,7 +1041,10 @@ public class MainRunner {
                             System.err.println("--> PageHangWatchDog: timeout at " + this.currentUrl +
                                     ", " + (MAX_FAILURES - failCount) + " failures until exit");
                             failCount++;
-                            new Thread(() -> {
+                            if (workerThread.isAlive()) {
+                                workerThread.join(TIMEOUT);
+                            }
+                            workerThread = new Thread(() -> {
                                 try {
                                     stopPageLoad();
                                 } catch (Exception e) {
@@ -1040,7 +1052,9 @@ public class MainRunner {
                                 } finally {
                                     Navigate.browserRefresh();
                                 }
-                            }).start();
+                            });
+                            workerThread.start();
+                            workerThread.join(TIMEOUT);
 
                             this.reset(null);
                             if (failCount > MAX_FAILURES) {
@@ -1054,6 +1068,9 @@ public class MainRunner {
                     if (!pause && ex instanceof org.openqa.selenium.NoSuchSessionException) {
                         System.err.println("--> Error: PageHangWatchDog: driver session is dead, exiting");
                         break;
+                    } else if (ex instanceof InterruptedException) {
+                        cucumberThread.stop();
+                        Assert.fail("--> Error: Browser unresponsive. Ending test");
                     } else if (!(ex instanceof WebDriverException)) {
                         // WebDriverException thrown when we have a sync issue in IE
                         System.err.println("--> Error: PageHangWatchDog: " + ex.getMessage());
