@@ -113,6 +113,12 @@ public class PageUtils {
         loadPageAndPanels(responsivePage, sharedResponsivePath);
         loadPageAndPanels(page, sharedPath);
 
+        // shared elements for jenkins
+        String jarSharedPath = MainRunner.workspace + "com/macys/sdt/shared" + resPath;
+        String jarSharedResponsivePath = getResponsivePath(jarSharedPath);
+        loadPageAndPanels(responsivePage, jarSharedResponsivePath);
+        loadPageAndPanels(page, jarSharedPath);
+
         // also load panel elements
         if (page.contains(".page.")) {
             projectPath = projectPath.replace("/pages/", "/panels/");
@@ -121,9 +127,14 @@ public class PageUtils {
             loadPageAndPanels(page, projectPath);
 
             sharedPath = sharedPath.replace("/pages/", "/panels/");
-            responsivePath = sharedResponsivePath.replace("/pages/", "/panels/");
-            loadPageAndPanels(sharedResponsivePath, responsivePath);
+            sharedResponsivePath = sharedResponsivePath.replace("/pages/", "/panels/");
+            loadPageAndPanels(responsivePage, sharedResponsivePath);
             loadPageAndPanels(page, sharedPath);
+
+            jarSharedPath = jarSharedPath.replace("/pages/", "/panels/");
+            jarSharedResponsivePath = jarSharedResponsivePath.replace("/pages/", "/panels/");
+            loadPageAndPanels(responsivePage, jarSharedResponsivePath);
+            loadPageAndPanels(page, jarSharedPath);
         }
     }
 
