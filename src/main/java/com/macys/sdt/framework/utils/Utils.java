@@ -13,10 +13,7 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.jar.JarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.FileUtils;
@@ -977,6 +974,8 @@ public class Utils {
 
     public static String httpGet(String url, StringBuilder cookies) throws Exception {
         HttpClient client = new HttpClient();
+        HttpConnectionManager manager = client.getHttpConnectionManager();
+        manager.getParams().setConnectionTimeout(20);
         CookieStore cookieStore = new BasicCookieStore();
         HttpContext httpContext = new BasicHttpContext();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);

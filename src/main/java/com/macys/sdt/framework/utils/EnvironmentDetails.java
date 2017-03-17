@@ -26,6 +26,7 @@ public class EnvironmentDetails {
     private static String release = null;
     private static String releaseDate = null;
     private static String version = null;
+    private static boolean printOnFinish = false;
 
     private static JSONObject servicesJson;
 
@@ -121,6 +122,10 @@ public class EnvironmentDetails {
                 release = doc.select("release").first().html();
                 releaseDate = doc.select("releasedate").first().html();
                 version = doc.select("version").first().html();
+                if (printOnFinish) {
+                    System.out.println(getDetails());
+                    printOnFinish = false;
+                }
             } catch (Exception e) {
                 System.err.println("Unable to get environment details from " + env);
             }
@@ -144,6 +149,10 @@ public class EnvironmentDetails {
     }
 
     public static String getDetails() {
+        if (t.isAlive()) {
+            printOnFinish = true;
+            return "\nEnvironment Details are not ready yet\n";
+        }
         if (site == null) {
             return "\n======> Environment Details <======\n\nUnable to get environment details\n\n"
                     + "===================================\n";
