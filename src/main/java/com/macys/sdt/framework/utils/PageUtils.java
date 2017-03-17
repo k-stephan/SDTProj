@@ -30,6 +30,8 @@ public class PageUtils {
      */
     protected static HashMap<String, JSONObject> sharedPages = new HashMap<>();
 
+    private static String sharedDir = MainRunner.repoJar == null ? "shared" : "com/macys/sdt/shared";
+
     /**
      * Finds JSON entry value from page JSON object
      *
@@ -102,7 +104,7 @@ public class PageUtils {
     private static void loadJSONFiles(String resPath, String page) {
         String responsivePage = getResponsivePath(page);
         String projectPath = MainRunner.workspace + MainRunner.projectDir + resPath;
-        String sharedPath = MainRunner.workspace + "shared" + resPath;
+        String sharedPath = MainRunner.workspace + sharedDir + resPath;
         String responsivePath = getResponsivePath(projectPath);
         String sharedResponsivePath = getResponsivePath(sharedPath);
         // project elements first
@@ -112,12 +114,6 @@ public class PageUtils {
         // shared elements
         loadPageAndPanels(responsivePage, sharedResponsivePath);
         loadPageAndPanels(page, sharedPath);
-
-        // shared elements for jenkins
-        String jarSharedPath = MainRunner.workspace + "com/macys/sdt/shared" + resPath;
-        String jarSharedResponsivePath = getResponsivePath(jarSharedPath);
-        loadPageAndPanels(responsivePage, jarSharedResponsivePath);
-        loadPageAndPanels(page, jarSharedPath);
 
         // also load panel elements
         if (page.contains(".page.")) {
@@ -130,11 +126,6 @@ public class PageUtils {
             sharedResponsivePath = sharedResponsivePath.replace("/pages/", "/panels/");
             loadPageAndPanels(responsivePage, sharedResponsivePath);
             loadPageAndPanels(page, sharedPath);
-
-            jarSharedPath = jarSharedPath.replace("/pages/", "/panels/");
-            jarSharedResponsivePath = jarSharedResponsivePath.replace("/pages/", "/panels/");
-            loadPageAndPanels(responsivePage, jarSharedResponsivePath);
-            loadPageAndPanels(page, jarSharedPath);
         }
     }
 

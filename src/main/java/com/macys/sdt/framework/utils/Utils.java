@@ -1226,10 +1226,10 @@ public class Utils {
         return jsonObject;
     }
 
-    /*
-        Get the return_order.json file data
-        @param[HashMap] return_order => 'submitted'
-        @return[JSONObject]
+    /**
+     *  Get the return_order.json file data
+     *  @param options order details which should match a record in return_order.json
+     *  @return matching object from return_order.json
      */
     public static JSONObject getVirtualReturns(HashMap<String, String> options) {
         try {

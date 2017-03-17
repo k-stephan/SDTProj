@@ -433,7 +433,7 @@ public abstract class StepUtils {
      * @param names names of all allowed pages
      * @throws EnvException thrown if not on one of the expected pages
      */
-    public static void shouldBeOnPage(String... names) throws EnvException {
+    public static void shouldBeOnPage(String... names) {
         Wait.forPageReady();
         // check each allowed page - short timeout to avoid waiting forever
         for (String name : names) {

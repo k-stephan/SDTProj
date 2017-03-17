@@ -211,7 +211,7 @@ public class MainRunner {
      */
     protected static String appLocation = getEnvOrExParam("app_location");
 
-    private static String repoJar = getEnvOrExParam("repo_jar");
+    public static String repoJar = getEnvOrExParam("repo_jar");
 
     //satish-macys:4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
 
