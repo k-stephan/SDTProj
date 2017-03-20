@@ -101,7 +101,8 @@ public class UserProfileService {
             throw new EnvException("BCOM Environments do not support the user service");
         }
         try {
-            String createUserProfileDetail = new XmlMapper().writeValueAsString(profile);
+            String createUserProfileDetail = new XmlMapper().writeValueAsString(profile.getUser())
+                    .replace("<User>", "<user>").replace("</User>", "</user>");
             UserProfile createdProfile = createUserProfile(createUserProfileDetail);
             if (createdProfile == null) {
                 System.err.println("Error creating profile.");

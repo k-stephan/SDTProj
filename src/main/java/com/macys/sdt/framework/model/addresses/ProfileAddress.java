@@ -58,7 +58,7 @@ public class ProfileAddress extends Address {
      * @return ProfileAddress DefaultProfileAddress
      */
     public static ProfileAddress getDefaultProfileAddress() {
-        return new ProfileAddress(1234L, "testattention", 11L, "first", "last", "middle", "postbox", "AP", "Hyderabad",
+        return new ProfileAddress(null, "testattention", 11L, "first", "last", "middle", "postbox", "AP", "Hyderabad",
                 "AL", 32701, "USA", "test1010@blackhole.macys.com", "123-444-5577", true);
     }
 
