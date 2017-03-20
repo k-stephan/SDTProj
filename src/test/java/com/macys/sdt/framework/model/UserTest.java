@@ -71,7 +71,6 @@ public class UserTest {
         user.setProfileAddress(ProfileAddress.getDefaultProfileAddress());
         ProfileAddress address = user.getProfileAddress();
         Assert.assertNotNull(address);
-        Assert.assertNotNull(address.getId());
         Assert.assertNotNull(address.getAttention());
         Assert.assertNotNull(address.getSequenceNumber());
         Assert.assertNotNull(address.getFirstName());
