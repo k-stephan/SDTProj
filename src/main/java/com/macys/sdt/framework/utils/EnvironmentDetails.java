@@ -138,6 +138,7 @@ public class EnvironmentDetails {
                 System.err.println("Unable to get server details for " + env);
             }
         });
+        t.setName("Environment-Details-thread");
         t.start();
         if (waitForFinish) {
             try {

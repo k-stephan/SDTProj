@@ -975,7 +975,7 @@ public class Utils {
     public static String httpGet(String url, StringBuilder cookies) throws Exception {
         HttpClient client = new HttpClient();
         HttpConnectionManager manager = client.getHttpConnectionManager();
-        manager.getParams().setConnectionTimeout(20);
+        manager.getParams().setConnectionTimeout(20 * 1000);
         CookieStore cookieStore = new BasicCookieStore();
         HttpContext httpContext = new BasicHttpContext();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);

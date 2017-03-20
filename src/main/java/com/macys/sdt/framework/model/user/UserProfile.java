@@ -2,11 +2,14 @@ package com.macys.sdt.framework.model.user;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.model.registry.Registry;
+import com.macys.sdt.framework.utils.TestUsers;
 
 /**
  * This class represents a UserProfile and contains all the information about that UserProfile
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfile {
 
     private User user;
@@ -29,6 +32,20 @@ public class UserProfile {
      */
     public static UserProfile getDefaultProfile() {
         return new UserProfile(User.getDefaultUser(), null);
+    }
+
+    public static UserProfile v2Profile() {
+        UserProfile profile = new UserProfile();
+        profile.user = new User();
+        ProfileAddress address = new ProfileAddress();
+        address.setFirstName("first");
+        address.setLastName("last");
+        address.setEmail(TestUsers.generateRandomEmail(7));
+        profile.user.setProfileAddress(address);
+        LoginCredentials credentials = new LoginCredentials();
+        credentials.setPassword("Macys12345");
+        profile.user.setLoginCredentials(credentials);
+        return profile;
     }
 
     /**

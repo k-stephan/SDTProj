@@ -3,6 +3,7 @@ package com.macys.sdt.framework.model.registry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.macys.sdt.framework.model.addresses.CurrentAddress;
 import com.macys.sdt.framework.model.addresses.FutureAddress;
 
@@ -14,6 +15,7 @@ import static com.macys.sdt.framework.utils.TestUsers.*;
  * This class represents a Registry and contains all the information about that Registry
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonRootName("registry")
 public class Registry {
 
     // These fields are to satisfy the format of the Registry service representation of a registry

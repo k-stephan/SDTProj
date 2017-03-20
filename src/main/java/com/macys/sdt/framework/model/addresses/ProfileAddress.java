@@ -11,6 +11,7 @@ import static com.macys.sdt.framework.utils.TestUsers.*;
  * This class represents a ProfileAddress and contains all the information about that ProfileAddress
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileAddress extends Address {
     private Long id;
     private String attention;
@@ -334,6 +335,9 @@ public class ProfileAddress extends Address {
      * @return ProfileAddress BestPhone
      */
     public String getBestPhone() {
+        if (bestPhone == null) {
+            return null;
+        }
         // phone number cannot be started with '0' or '1'
         char[] notStartWith1 = bestPhone.toCharArray();
         if (notStartWith1[0] == '0' || notStartWith1[0] == '1') {
@@ -357,6 +361,9 @@ public class ProfileAddress extends Address {
      * @return ProfileAddress PhoneAreaCode
      */
     public String getPhoneAreaCode() {
+        if (bestPhone == null) {
+            return null;
+        }
         return bestPhone.substring(0, 3);
     }
 
@@ -366,6 +373,9 @@ public class ProfileAddress extends Address {
      * @return ProfileAddress PhoneExchange
      */
     public String getPhoneExchange() {
+        if (bestPhone == null) {
+            return null;
+        }
         return bestPhone.substring(3, 6);
     }
 
@@ -375,6 +385,9 @@ public class ProfileAddress extends Address {
      * @return ProfileAddress PhoneSubscriber
      */
     public String getPhoneSubscriber() {
+        if (bestPhone == null) {
+            return null;
+        }
         return bestPhone.substring(6, 10);
     }
 

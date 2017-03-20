@@ -338,6 +338,7 @@ public class MainRunner {
                     runStatus = status;
                 }
             });
+            cucumberThread.setName("Cucumber-thread");
             cucumberThread.start();
             if (!appTest) {
                 PageHangWatchDog.init(cucumberThread);
