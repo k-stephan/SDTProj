@@ -355,6 +355,12 @@ public class MainRunner {
             }
         }
     }
+    /**
+     * Adds the default before navigation hooks
+     */
+    public static void setBeforeNavigationHooks() {
+        Navigate.addBeforeNavigation(Wait::setWaitRequired);
+    }
 
     /**
      * Adds the default after navigation hooks
@@ -363,13 +369,6 @@ public class MainRunner {
         Navigate.addAfterNavigation(WebDriverManager::getCurrentUrl);
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
-    }
-
-    /**
-     * Adds the default before navigation hooks
-     */
-    public static void setBeforeNavigationHooks() {
-        Navigate.addBeforeNavigation(Wait::setWaitRequired);
     }
 
     /**
