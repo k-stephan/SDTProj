@@ -2,6 +2,7 @@ package com.macys.sdt.framework.model.addresses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.macys.sdt.framework.utils.TestUsers;
 import org.json.JSONObject;
 
 import static com.macys.sdt.framework.utils.TestUsers.*;
@@ -59,7 +60,7 @@ public class ProfileAddress extends Address {
      */
     public static ProfileAddress getDefaultProfileAddress() {
         return new ProfileAddress(null, "testattention", 11L, "first", "last", "middle", "postbox", "AP", "Hyderabad",
-                "AL", 32701, "USA", "test1010@blackhole.macys.com", "123-444-5577", true);
+                "AL", 32701, "USA", TestUsers.generateRandomEmail(7), "123-444-5577", true);
     }
 
     public void fillFromJson(JSONObject address) {
