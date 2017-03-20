@@ -107,21 +107,27 @@ public class PageUtils {
         String sharedPath = MainRunner.workspace + sharedDir + resPath;
         String responsivePath = getResponsivePath(projectPath);
         String sharedResponsivePath = getResponsivePath(sharedPath);
-        // project elements first
+
+        // project page first
         loadPageAndPanels(responsivePage, responsivePath);
         loadPageAndPanels(page, projectPath);
 
-        // shared elements
+        // shared page
         loadPageAndPanels(responsivePage, sharedResponsivePath);
         loadPageAndPanels(page, sharedPath);
 
-        // also load panel elements
+        // panels
         if (page.contains(".page.")) {
             projectPath = projectPath.replace("/pages/", "/panels/");
             responsivePath = responsivePath.replace("/pages/", "/panels/");
+            page = page.replace(".page.", ".panel.");
+            responsivePage = responsivePage.replace(".page.", ".panel.");
+
+            // project panel
             loadPageAndPanels(responsivePage, responsivePath);
             loadPageAndPanels(page, projectPath);
 
+            // shared panel
             sharedPath = sharedPath.replace("/pages/", "/panels/");
             sharedResponsivePath = sharedResponsivePath.replace("/pages/", "/panels/");
             loadPageAndPanels(responsivePage, sharedResponsivePath);

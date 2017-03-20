@@ -12,7 +12,7 @@ import org.junit.Test;
 public class PageUtilsTest {
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         MainRunner.project = "framework";
         MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
         MainRunner.workspace = System.getProperty("user.dir") + "/";
@@ -25,7 +25,7 @@ public class PageUtilsTest {
     }
 
     @Test
-    public void testDisplayPageJSONHash() throws Exception {
+    public void testDisplayPageJSONHash() {
         PageUtils.loadPageJSON("website.mcom.page.test_page");
         PageUtils.loadPageJSON("website.bcom.page.test_page");
         try {
@@ -36,7 +36,7 @@ public class PageUtilsTest {
     }
 
     @Test
-    public void testLoadPageJSON() throws Exception {
+    public void testLoadPageJSON() {
         PageUtils.loadPageJSON("website.mcom.page.test_page");
         Assert.assertNotNull(PageUtils.projectPages.get("website.mcom.page.test_page"));
         Assert.assertNotNull(PageUtils.projectPages.get("website.mcom.panel.test_panel"));
@@ -55,7 +55,7 @@ public class PageUtilsTest {
     }
 
     @Test
-    public void testGetElementJSONValue() throws Exception {
+    public void testGetElementJSONValue() {
         MainRunner.url = "http://www.qa0codebloomingdales.fds.com";
         String elementJSONValue = PageUtils.getElementJSONValue(new PageElement("test_page.test_element"));
         Assert.assertNotNull(elementJSONValue);
@@ -69,5 +69,15 @@ public class PageUtilsTest {
 
         // no file
         Assert.assertNull(PageUtils.getElementJSONValue(new PageElement("page_dos_not_exists.test_element")));
+    }
+
+    @Test
+    public void testDuplicatePagePanelName() {
+        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        PageElement pageElement = new PageElement("test.page_element");
+        PageElement panelElement = new PageElement("test.panel_element");
+
+        Assert.assertEquals(pageElement.elementValues.get(0), "page_element");
+        Assert.assertEquals(panelElement.elementValues.get(0), "panel_element");
     }
 }
