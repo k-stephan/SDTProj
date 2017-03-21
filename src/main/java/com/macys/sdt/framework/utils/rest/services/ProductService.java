@@ -92,6 +92,31 @@ public class ProductService {
     }
 
     /**
+     * Get all upc ids and BT status for given product
+     *
+     * @param prodId ID of product
+     * @param zipCode
+     * @return List with all upc and status
+     */
+    public static List<HashMap> getBTProductDeliverabilityStatus(String prodId, String zipCode) {
+        List<HashMap> upcList = new ArrayList<>();
+        try {
+            String url = getServiceURL() + prodId + "?_fields=upcs(deliverability)&zipcode=" + zipCode;
+            JSONArray jsonArray = new JSONObject(RESTOperations.doGET(url, null).readEntity(String.class)).getJSONObject("product").getJSONArray("upcs");
+            for (int index = 0; index < jsonArray.length(); index++) {
+                HashMap<String, String> upcInfo = new HashMap<>();
+                upcInfo.put("updId", jsonArray.getJSONObject(index).get("id").toString());
+                upcInfo.put("status", jsonArray.getJSONObject(index).getJSONObject("deliverability").getString("status"));
+                upcList.add(upcInfo);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return upcList;
+    }
+
+    /**
      * Add item (UPC ID) to bag using MSPOrder IP and get the response
      *
      * @param upcId ID of product to check

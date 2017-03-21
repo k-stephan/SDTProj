@@ -786,6 +786,14 @@ public class TestUsers {
             // for now all our products are orderable
             boolean orderable = options.containsKey("orderable") && options.get("orderable");
             options.remove("orderable");
+            // Big Ticket specific code
+            String BTRequestedStatus = null;
+            List<String> BTStatus = Arrays.asList("ONHAND", "BACKORDER", "UNAVAILABLE");
+            boolean BTFound = BTStatus.stream().anyMatch(e -> options.containsKey(e));
+            if (BTFound){
+                BTRequestedStatus = BTStatus.stream().filter(e -> options.containsKey(e)).findFirst().get();
+                options.remove(BTRequestedStatus);
+            }
             String jsonTxt = Utils.readTextFile(addressFile);
             JSONObject json = new JSONObject(jsonTxt);
             if (macys()) {
@@ -811,18 +819,25 @@ public class TestUsers {
                         }
                     }
                 }
-                List<String> upcIds = new ArrayList<>();
-                if (found && orderable) {
-                    upcIds = ProductService.getAllUpcIds(product.get("id").toString());
-                }
-                // Skip product if the product have more than one upcId
-                if (found && orderable && (upcIds.size() != 1)) {
-                    continue;
-                }
-                found = ((found && orderable) ? (ProductService.checkoutAvailability(product.get("id").toString()) && ProductService.checkProductAvailabilityAtMST(upcIds.get(0))) : found);
-                if (found) {
-                    System.out.println("found product id : " + new Product(product).id);
-                    return new Product(product);
+                if (found){
+                    if (BTFound){
+                        List<HashMap> BTProductStatus = ProductService.getBTProductDeliverabilityStatus(product.get("id").toString(), product.getString("zip_code"));
+                        final String finalBTRequestedStatus = BTRequestedStatus;
+                        found = BTProductStatus.stream().anyMatch(e -> e.get("status").equals(finalBTRequestedStatus));
+                    } else {
+                        if (orderable) {
+                            List<String> upcIds = new ArrayList<>();
+                            upcIds = ProductService.getAllUpcIds(product.get("id").toString());
+                            // Skip product if the product have more than one upcId
+                            if (upcIds.size() != 1)
+                                continue;
+                            found = ProductService.checkoutAvailability(product.get("id").toString()) && ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
+                        }
+                    }
+                    if (found) {
+                        System.out.println("found product id : " + new Product(product).id);
+                        return new Product(product);
+                    }
                 }
             }
 
