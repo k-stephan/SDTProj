@@ -2,6 +2,7 @@ package com.macys.sdt.framework.runner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
@@ -10,11 +11,15 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import com.macys.sdt.framework.utils.analytics.DATagCollector;
 import com.macys.sdt.framework.utils.analytics.DigitalAnalytics;
-import com.macys.sdt.framework.utils.analytics.PageLoadProfiler;
 import cucumber.api.cli.Main;
 import net.lightbody.bmp.BrowserMobProxy;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.junit.Assert;
+import org.openqa.selenium.WebDriverException;
 
 import java.io.File;
 import java.io.IOException;
@@ -206,7 +211,7 @@ public class MainRunner {
      */
     protected static String appLocation = getEnvOrExParam("app_location");
 
-    private static String repoJar = getEnvOrExParam("repo_jar");
+    public static String repoJar = getEnvOrExParam("repo_jar");
 
     //satish-macys:4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
 
@@ -293,8 +298,19 @@ public class MainRunner {
                     cucumberArgs.add(args[i]);
                     dryRun = true;
                 }
+                if (args[i].equals("--glue") && !args[i+1].startsWith("com.macys.sdt.shared") && !args[i+1].contains(project)) {
+                    cucumberArgs.add(args[i]);
+                    cucumberArgs.add(args[i+1]);
+                }
             }
         }
+
+        List<String> deps = getDependencies(project);
+        for (String dep : deps) {
+            cucumberArgs.add("--glue");
+            cucumberArgs.add(dep);
+        }
+
         // check if dry-run passed as env or ex param
         if (!dryRun && booleanParam("dry-run")) {
             dryRun = true;
@@ -322,6 +338,7 @@ public class MainRunner {
                     runStatus = status;
                 }
             });
+            cucumberThread.setName("Cucumber-thread");
             cucumberThread.start();
             if (!appTest) {
                 PageHangWatchDog.init(cucumberThread);
@@ -338,6 +355,12 @@ public class MainRunner {
             }
         }
     }
+    /**
+     * Adds the default before navigation hooks
+     */
+    public static void setBeforeNavigationHooks() {
+        Navigate.addBeforeNavigation(Wait::setWaitRequired);
+    }
 
     /**
      * Adds the default after navigation hooks
@@ -346,19 +369,6 @@ public class MainRunner {
         Navigate.addAfterNavigation(WebDriverManager::getCurrentUrl);
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
-        Navigate.addAfterNavigation(StepUtils::checkSafariPage);
-        Navigate.addAfterNavigation(PageLoadProfiler::stopTimer);
-        Navigate.addAfterNavigation(() ->
-            System.out.println("Last load time: " + Utils.toDuration(PageLoadProfiler.getLoadTime()))
-        );
-    }
-
-    /**
-     * Adds the default before navigation hooks
-     */
-    public static void setBeforeNavigationHooks() {
-        Navigate.addBeforeNavigation(Wait::setWaitRequired);
-        Navigate.addBeforeNavigation(PageLoadProfiler::startTimer);
     }
 
     /**
@@ -403,6 +413,7 @@ public class MainRunner {
         }
         Utils.createDirectory(logs = workspace + "logs/", true);
         Utils.createDirectory(temp = workspace + "temp/", true);
+        Utils.initLogs();
 
         if (remoteOS == null) {
             System.out.println("INFO : Remote OS not specified. Using default (Windows 7)");
@@ -622,9 +633,8 @@ public class MainRunner {
 
         Collections.sort(scenarioList);
         ArrayList<Map> featureScenarios = null;
-        String workSpace = getEnvOrExParam("WORKSPACE");
-        if (workSpace == null) {
-            workSpace = "";
+        if (workspace == null) {
+            workspace = "";
         }
         for (String featureFilePath : scenarioList) {
             String[] featureInfo = featureFilePath.split(".feature:");
@@ -640,11 +650,11 @@ public class MainRunner {
                 File featureFile = new File(path);
                 if (!(featureFile.exists() || featureFile.getAbsoluteFile().exists())) {
                     System.out.println("File not found: " + path);
-                    path = workSpace + "/" + path;
+                    path = workspace + "/" + path;
                 }
                 String json = Utils.gherkinToJson(false, path);
                 try {
-                    featureScenarios = new Gson().fromJson(json, ArrayList.class);
+                    featureScenarios = new Gson().fromJson(json, new TypeToken<ArrayList<Map>>() {}.getType());
                 } catch (JsonSyntaxException jex) {
                     System.err.println("--> Failed to parse : " + path);
                     System.err.println("--> json :\n\n" + json);
@@ -750,6 +760,23 @@ public class MainRunner {
 
     public static Timeouts timeouts() {
         return Timeouts.instance();
+    }
+
+    public static List<String> getDependencies(String project) {
+        ArrayList<String> deps = new ArrayList<>();
+        String pom = workspace + project.replace(".", "/") + "/pom.xml";
+        try {
+            Document doc = Jsoup.parse(Utils.readTextFile(new File(pom)), "", Parser.xmlParser());
+            for (Element e : doc.select("dependencies dependency artifactid")) {
+                if (e.html().startsWith("sdt-")) {
+                    String[] name = e.html().split("-");
+                    deps.add("com.macys.sdt.projects." + name[1] + "." + name[2]);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Unable to read pom file: " + e);
+        }
+        return deps;
     }
 
     // protected methods
@@ -931,6 +958,7 @@ public class MainRunner {
         private static long pauseStartTime;
         private String currentUrl;
         private long ts;
+        private static Thread workerThread;
 
         private PageHangWatchDog() {
             System.err.println("--> Start: PageHangWatchDog: " + new Date());
@@ -971,11 +999,18 @@ public class MainRunner {
             }
         }
 
-        private void interruptCucumberThread() {
+        private void interruptCucumberThread() throws InterruptedException {
             System.err.println("PageHangWatchDog timeout! Pushing things along...");
-            cucumberThread.interrupt();
-            this.reset(null);
-            pause = false;
+            if (workerThread.isAlive()) {
+                workerThread.join(TIMEOUT);
+            }
+            workerThread = new Thread(() -> {
+                cucumberThread.interrupt();
+                this.reset(null);
+                pause = false;
+            });
+            workerThread.start();
+            workerThread.join(TIMEOUT);
         }
 
         public void run() {
@@ -984,11 +1019,11 @@ public class MainRunner {
                     if (!WebDriverManager.driverInitialized()) {
                         continue;
                     } else if (pause) {
-                        // if we've been waiting a while, send any browser command to prevent
-                        // dropping the sauce labs connection
                         if (System.currentTimeMillis() - pauseStartTime > PAUSE_TIMEOUT) {
                             interruptCucumberThread();
                         }
+                        // if we've been waiting a while, send any browser command to prevent
+                        // dropping the sauce labs connection
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
                             WebDriverManager.getCurrentUrl();
                             this.reset(this.currentUrl);
@@ -1005,7 +1040,10 @@ public class MainRunner {
                             System.err.println("--> PageHangWatchDog: timeout at " + this.currentUrl +
                                     ", " + (MAX_FAILURES - failCount) + " failures until exit");
                             failCount++;
-                            new Thread(() -> {
+                            if (workerThread.isAlive()) {
+                                workerThread.join(TIMEOUT);
+                            }
+                            workerThread = new Thread(() -> {
                                 try {
                                     stopPageLoad();
                                 } catch (Exception e) {
@@ -1013,7 +1051,9 @@ public class MainRunner {
                                 } finally {
                                     Navigate.browserRefresh();
                                 }
-                            }).start();
+                            });
+                            workerThread.start();
+                            workerThread.join(TIMEOUT);
 
                             this.reset(null);
                             if (failCount > MAX_FAILURES) {
@@ -1027,9 +1067,14 @@ public class MainRunner {
                     if (!pause && ex instanceof org.openqa.selenium.NoSuchSessionException) {
                         System.err.println("--> Error: PageHangWatchDog: driver session is dead, exiting");
                         break;
+                    } else if (ex instanceof InterruptedException) {
+                        cucumberThread.stop();
+                        Assert.fail("--> Error: Browser unresponsive. Ending test");
+                    } else if (!(ex instanceof WebDriverException)) {
+                        // WebDriverException thrown when we have a sync issue in IE
+                        System.err.println("--> Error: PageHangWatchDog: " + ex.getMessage());
+                        ex.printStackTrace();
                     }
-                    System.err.println("--> Error: PageHangWatchDog: " + ex.getMessage());
-                    ex.printStackTrace();
                 } finally {
                     //System.err.print(pause ? "|" : "~");
                     Utils.threadSleep(5000, this.getClass().getSimpleName());

@@ -1,7 +1,9 @@
 package com.macys.sdt.framework.model.registry;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.macys.sdt.framework.model.addresses.CurrentAddress;
 import com.macys.sdt.framework.model.addresses.FutureAddress;
 
@@ -13,6 +15,7 @@ import static com.macys.sdt.framework.utils.TestUsers.*;
  * This class represents a Registry and contains all the information about that Registry
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonRootName("registry")
 public class Registry {
 
     // These fields are to satisfy the format of the Registry service representation of a registry
@@ -44,6 +47,9 @@ public class Registry {
     // These fields are shared between the two
     @JsonProperty("type")
     public String eventType = "WEDDING";
+
+    @JsonIgnore
+    private boolean publicRegistry;
 
     /**
      * Creates a copy of a registry with only the values present in User Service version of registry
@@ -116,6 +122,24 @@ public class Registry {
         copy.futureAddress = registry.futureAddress;
 
         return copy;
+    }
+
+    /**
+     * Gets whether the registry is public
+     *
+     * @return true if public
+     */
+    public boolean isPublicRegistry() {
+        return publicRegistry;
+    }
+
+    /**
+     * Sets whether the registry is public
+     *
+     * @param publicRegistry public status of registry
+     */
+    public void setPublicRegistry(boolean publicRegistry) {
+        this.publicRegistry = publicRegistry;
     }
 
     /**

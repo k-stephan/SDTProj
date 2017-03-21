@@ -153,7 +153,11 @@ public class Elements {
      */
     public static String getElementAttribute(By selector, String attr) {
         try {
-            String attribute = findElement(selector).getAttribute(attr);
+            WebElement el = findElement(selector);
+            if (el == null) {
+                throw new NullPointerException();
+            }
+            String attribute = el.getAttribute(attr);
             if (attribute == null) {
                 throw new NullPointerException();
             }
@@ -183,7 +187,11 @@ public class Elements {
      */
     public static String getElementCSSAttribute(By selector, String css_attr) {
         try {
-            String attribute = findElement(selector).getCssValue(css_attr);
+            WebElement el = findElement(selector);
+            if (el == null) {
+                throw new NullPointerException();
+            }
+            String attribute = el.getCssValue(css_attr);
             if (attribute == null) {
                 throw new NullPointerException();
             }
@@ -535,7 +543,11 @@ public class Elements {
      */
     public static String getText(By e) {
         try {
-            return findElement(e).getText();
+            WebElement el = findElement(e);
+            if (el == null) {
+                throw new NullPointerException();
+            }
+            return el.getText();
         } catch (NullPointerException ex) {
             return "null";
         }

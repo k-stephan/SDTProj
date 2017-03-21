@@ -3,6 +3,7 @@ package com.macys.sdt.framework.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
 
 import java.time.LocalDate;
@@ -13,6 +14,8 @@ import java.util.Random;
  * This class represents a User and contains all the information about that User
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonRootName("user")
 public class User {
 
     private String dateOfBirth;
@@ -71,7 +74,7 @@ public class User {
         UserPasswordHint hint = UserPasswordHint.getDefaultUserPasswordHint();
         ProfileAddress address = ProfileAddress.getDefaultProfileAddress();
         LoginCredentials credentials = LoginCredentials.getDefaultLoginCredentials();
-        return new User("1989-11-09", "M", true, hint, address, credentials);
+        return new User("1989-11-09", "Male", true, hint, address, credentials);
     }
 
     /**

@@ -98,7 +98,7 @@ public class TestUsersTest {
 
     @Test
     public void testGetuslCustomer() throws Exception {
-        UserProfile customer = TestUsers.getuslCustomer(null, null);
+        UserProfile customer = TestUsers.getuslCustomer(null);
         Assert.assertNotNull(customer);
         User user = customer.getUser();
         Assert.assertNotNull(user);

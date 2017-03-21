@@ -1,12 +1,12 @@
 package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.Exceptions.ProductionException;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.utils.ObjectMapperProvidor;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
@@ -30,11 +30,11 @@ public class UserProfileService {
     /**
      * This method will create user profile
      *
-     * @param userProfileDetailInXml : user profile details in JSON
+     * @param userProfileXml user profile details in XML
      * @return UserProfile that was created
      * @throws ProductionException if called while executing against production
      */
-    public static UserProfile createUserProfile(String userProfileDetailInXml) throws ProductionException, EnvException {
+    private static UserProfile createUserProfile(String userProfileXml, boolean v1) throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
         } else if (StepUtils.bloomingdales()) {
@@ -43,13 +43,13 @@ public class UserProfileService {
         try {
             HashMap<String, String> headers = new HashMap<>();
             headers.put("x-macys-webservice-client-id", macys() ? RESTEndPoints.MCOM_API_KEY : RESTEndPoints.BCOM_API_KEY);
-            Response response = RESTOperations.doPOST(getServiceURL(), MediaType.APPLICATION_XML,
-                    userProfileDetailInXml, headers);
+            Response response = RESTOperations.doPOST(getServiceURL(v1), MediaType.APPLICATION_XML,
+                    userProfileXml, headers);
             System.out.println("response : " + response);
             String entity = response.readEntity(String.class);
-            Assert.assertEquals(response.getStatus(), 200);
+            Assert.assertEquals(v1 ? 200 : 201, response.getStatus());
             LOGGER.info("User profile created successfully");
-            User user = new XmlMapper().readValue(entity, User.class);
+            User user = ObjectMapperProvidor.getXmlMapper().readValue(v1 ? entity : userProfileXml, User.class);
             UserProfile profile = new UserProfile(user, null);
             TestUsers.setCurrentCustomer(profile);
             return profile;
@@ -61,29 +61,46 @@ public class UserProfileService {
     }
 
     /**
+     * This method will create the given user profile
+     * <p>
+     * <p>
+     * Note: The v2 service requires significantly less data to create an account than v1.
+     * If you have only a few fields filled in, use v2.
+     * </p>
+     *
+     * @param profile profile to create
+     * @param v1      true for service v1, false for service v2
+     * @return true if profile was created successfully
+     * @throws ProductionException if called while executing against production
+     */
+    public static boolean createUserProfile(UserProfile profile, boolean v1) throws ProductionException, EnvException {
+        if (StepUtils.prodEnv()) {
+            throw new ProductionException("Cannot use services on prod!");
+        } else if (StepUtils.bloomingdales()) {
+            throw new EnvException("BCOM Environments do not support the user service");
+        }
+        try {
+            String createUserProfileDetail = ObjectMapperProvidor.getXmlMapper().writeValueAsString(profile.getUser());
+            UserProfile createdProfile = createUserProfile(createUserProfileDetail, v1);
+            if (createdProfile == null) {
+                System.err.println("Error creating profile.");
+                return false;
+            }
+            return true;
+        } catch (JsonProcessingException e) {
+            return false;
+        }
+    }
+
+    /**
      * This method will create random user profile
      *
      * @return UserProfile that was created
      * @throws ProductionException if called while executing against production
      */
     public static UserProfile createRandomUserProfile() throws ProductionException, EnvException {
-        if (StepUtils.prodEnv()) {
-            throw new ProductionException("Cannot use services on prod!");
-        } else if (StepUtils.bloomingdales()) {
-            throw new EnvException("BCOM Environments do not support the user service");
-        }
         UserProfile userProfile = TestUsers.getCustomer(null);
-        XmlMapper mapper = new XmlMapper();
-        String createUserProfileDetail = null;
-        try {
-            createUserProfileDetail = mapper.writeValueAsString(userProfile.getUser())
-                    .replace("<User>", "<user>").replace("</User>", "</user>");
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("user detail : " + createUserProfileDetail);
-        createUserProfile(createUserProfileDetail);
+        createUserProfile(userProfile, true);
         return userProfile;
     }
 
@@ -95,29 +112,14 @@ public class UserProfileService {
      * @throws ProductionException if called while executing against production
      */
     public static boolean createUserProfile(UserProfile profile) throws ProductionException, EnvException {
-        if (StepUtils.prodEnv()) {
-            throw new ProductionException("Cannot use services on prod!");
-        } else if (StepUtils.bloomingdales()) {
-            throw new EnvException("BCOM Environments do not support the user service");
-        }
-        try {
-            String createUserProfileDetail = new XmlMapper().writeValueAsString(profile);
-            UserProfile createdProfile = createUserProfile(createUserProfileDetail);
-            if (createdProfile == null) {
-                System.err.println("Error creating profile.");
-                return false;
-            }
-            return true;
-        } catch (JsonProcessingException e) {
-            return false;
-        }
+        return createUserProfile(profile, true);
     }
 
-    private static String getServiceURL() {
+    private static String getServiceURL(boolean v1) {
         try {
             URL url = new URL(MainRunner.url);
             return "http://api." + url.getHost().replace("www.", "").replace("www1.", "").replace("m.", "")
-                    + RESTEndPoints.CREATE_USER_PROFILE;
+                    + (v1 ? RESTEndPoints.CREATE_USER_PROFILE : RESTEndPoints.CREATE_USER_PROFILE_V2);
         } catch (MalformedURLException e) {
             return null;
         }

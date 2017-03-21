@@ -24,7 +24,7 @@ import static com.macys.sdt.framework.utils.StepUtils.*;
 public class Cookies {
 
     private static String domain = "." +
-            Utils.removeFromString(MainRunner.url, "www1.", "www.", "http://", "https://", "m\\.");
+            Utils.removeFromString(MainRunner.url, "www1.", "www.", "http://", "https://", "m\\.", "m2qa1\\.");
 
     /**
      * Changes the domain used to create and update cookies

@@ -57,10 +57,13 @@ public class UserTest {
     @Test
     public void testGetUserPasswordHint() throws Exception {
         Long id = 1234L;
-        user.setUserPasswordHint(new UserPasswordHint(id, "answer"));
+        String q = "question";
+        String a = "answer";
+        user.setUserPasswordHint(new UserPasswordHint(id, q, a));
         UserPasswordHint hint = user.getUserPasswordHint();
         Assert.assertEquals(id, hint.getId());
-        Assert.assertEquals("answer", hint.getAnswer());
+        Assert.assertEquals(q, hint.getQuestion());
+        Assert.assertEquals(a, hint.getAnswer());
     }
 
     @Test
@@ -68,7 +71,6 @@ public class UserTest {
         user.setProfileAddress(ProfileAddress.getDefaultProfileAddress());
         ProfileAddress address = user.getProfileAddress();
         Assert.assertNotNull(address);
-        Assert.assertNotNull(address.getId());
         Assert.assertNotNull(address.getAttention());
         Assert.assertNotNull(address.getSequenceNumber());
         Assert.assertNotNull(address.getFirstName());

@@ -90,8 +90,8 @@ public class AddToBagService {
         Random rand = new Random();
 
         JSONObject upc2 = new JSONObject();
-        upc2.put("number", (rand.nextInt(999) + 111));
-        upc2.put("price", (rand.nextInt(99) + 11));
+        upc2.put("number", 492018547910L);
+        upc2.put("price", 139.99);
 
         JSONArray mkpUpcs = new JSONArray();
         mkpUpcs.put(upc1);

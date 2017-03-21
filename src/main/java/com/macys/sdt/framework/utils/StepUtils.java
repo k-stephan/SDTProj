@@ -251,11 +251,12 @@ public abstract class StepUtils {
      */
     public static void closeBcomPopup() {
         if (bloomingdales()) {
-            Navigate.switchWindow(1);
-            Navigate.switchWindowClose();
-            //close feedback dialog
             if (MEW()) {
+                //close feedback dialog
                 Clicks.clickIfPresent("category_browse.close_feedback_dialog");
+            } else {
+                Navigate.switchWindow(1);
+                Navigate.switchWindowClose();
             }
         }
     }
@@ -305,12 +306,6 @@ public abstract class StepUtils {
         }
 
         WebDriverManager.closeAlert();
-    }
-
-    public static void checkSafariPage() {
-        if (safari() && Elements.elementPresent("home.safari_error")) {
-            Navigate.browserRefresh();
-        }
     }
 
     /**
@@ -382,9 +377,11 @@ public abstract class StepUtils {
         for (String expectedURL : expectedURLs) {
             if (!verifyElement.isEmpty() && expectedURL != null) {
                 if (Elements.elementPresent(verifyElementKey) && currentURL.contains(expectedURL)) {
+                    System.out.println("On Page: " + name);
                     return true;
                 }
             } else if (expectedURL != null && currentURL.contains(expectedURL)) {
+                System.out.println("On Page: " + name);
                 return true;
             }
         }
@@ -436,7 +433,7 @@ public abstract class StepUtils {
      * @param names names of all allowed pages
      * @throws EnvException thrown if not on one of the expected pages
      */
-    public static void shouldBeOnPage(String... names) throws EnvException {
+    public static void shouldBeOnPage(String... names) {
         Wait.forPageReady();
         // check each allowed page - short timeout to avoid waiting forever
         for (String name : names) {

@@ -26,6 +26,7 @@ public class EnvironmentDetails {
     private static String release = null;
     private static String releaseDate = null;
     private static String version = null;
+    private static boolean printOnFinish = false;
 
     private static JSONObject servicesJson;
 
@@ -121,15 +122,23 @@ public class EnvironmentDetails {
                 release = doc.select("release").first().html();
                 releaseDate = doc.select("releasedate").first().html();
                 version = doc.select("version").first().html();
-
+                if (printOnFinish) {
+                    System.out.println(getDetails());
+                    printOnFinish = false;
+                }
+            } catch (Exception e) {
+                System.err.println("Unable to get environment details from " + env);
+            }
+            try {
                 // services data
                 String serviceUrl = getServiceURL(envUrl);
                 servicesJson = new JSONObject(Utils.httpGet(serviceUrl, null));
                 ready = true;
             } catch (Exception e) {
-                System.err.println("Unable to get environment details from " + env);
+                System.err.println("Unable to get server details for " + env);
             }
         });
+        t.setName("Environment-Details-thread");
         t.start();
         if (waitForFinish) {
             try {
@@ -141,9 +150,17 @@ public class EnvironmentDetails {
     }
 
     public static String getDetails() {
-        return "\n======> Environment Details <======\n\n" + site + "\n" + type + "\n" + appServer
-                + "\n" + server + "\n" + timestamp + "\n" + release + "\n" + releaseDate + "\n" + version
-                + "\n\n" + "===================================\n";
+        if (t.isAlive()) {
+            printOnFinish = true;
+            return "\nEnvironment Details are not ready yet\n";
+        }
+        if (site == null) {
+            return "\n======> Environment Details <======\n\nUnable to get environment details\n\n"
+                    + "===================================\n";
+        }
+        return String.format("\n======> Environment Details <======\n\nSite: %s\nType: %s\nApp Server: %s\nServer: %s\n" +
+                "Timestamp: %s\nRelease: %s\nRelease Date: %s\nVersion: %s\n\n===================================\n",
+                site, type, appServer, server, timestamp, release, releaseDate, version);
     }
 
     public static boolean waitForReady() {
@@ -289,7 +306,7 @@ public class EnvironmentDetails {
         try {
             URL url = new URL(envUrl);
             String[] split = url.getHost().split("\\.");
-            return split[0].matches("www|m") ? split[1] : split[0];
+            return split[0].matches("www|m|m2qa1") ? split[1] : split[0];
         } catch (MalformedURLException e) {
             System.err.println("Unable to get environment details");
             return null;

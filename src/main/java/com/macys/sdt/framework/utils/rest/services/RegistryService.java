@@ -44,8 +44,7 @@ public class RegistryService {
         }
         try {
             String registryXml = new XmlMapper().writeValueAsString(registry);
-            registryXml = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>"
-                    + registryXml.replace("<Registry>", "<registry>").replace("</Registry>", "</registry>");
+            registryXml = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>" + registryXml;
 
             Map<String, String> headers = new HashMap<>();
             headers.put("X-Macys-SecurityToken", token);
@@ -54,7 +53,7 @@ public class RegistryService {
 
             LOGGER.info("response : " + response);
             Assert.assertEquals(response.getStatus(), 200);
-            LOGGER.info("User profile created successfully");
+            LOGGER.info("User Registry created successfully");
             return registry;
         } catch (JsonProcessingException e) {
             LOGGER.error("error creating registry", e.getCause());
@@ -85,7 +84,7 @@ public class RegistryService {
         if (user.getId() == null || user.getId().equals("1234")) {
             user.setId(Cookies.getCurrentUserId());
             if (user.getId().isEmpty()) {
-                throw new UserException("Registry service requires user with valid user ID");
+                throw new UserException("Registry service requires sign in user or user with valid user ID");
             }
         }
         Registry registry = new Registry();

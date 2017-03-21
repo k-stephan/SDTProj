@@ -187,7 +187,7 @@ public class ProductService {
             Response response = RESTOperations.doGET(fullUrl, null);
             JSONArray promoProducts = new JSONArray(response.readEntity(String.class));
             String promoJSON = promoProducts.getJSONObject(new Random().nextInt(promoProducts.length())).toString();
-            Promotion promotion = ObjectMapperProvidor.getMapper().readValue(promoJSON, Promotion.class);
+            Promotion promotion = ObjectMapperProvidor.getJsonMapper().readValue(promoJSON, Promotion.class);
             Product p = new Product(promotion.productIds.get(0));
             p.promo = promotion;
             return p;

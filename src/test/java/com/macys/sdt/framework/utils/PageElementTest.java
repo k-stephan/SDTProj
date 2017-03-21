@@ -24,6 +24,7 @@ public class PageElementTest {
         MainRunner.brand = null;
         MainRunner.device = null;
         MainRunner.appTest = false;
+        MainRunner.workspace = System.getProperty("user.dir") + "/";
     }
 
     @After

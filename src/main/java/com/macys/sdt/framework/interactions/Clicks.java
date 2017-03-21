@@ -37,7 +37,12 @@ public class Clicks {
      * @param selector By selector to use
      */
     public static void sendEnter(By selector) {
-        Elements.findElement(selector).sendKeys(Keys.ENTER);
+        Navigate.runBeforeNavigation();
+        WebElement el = Elements.findElement(selector);
+        if (el != null) {
+            el.sendKeys(Keys.ENTER);
+            Navigate.runAfterNavigation();
+        }
     }
 
     /**
@@ -161,6 +166,7 @@ public class Clicks {
      */
     public static void javascriptHover(WebElement element) {
         Wait.forPageReady();
+        Navigate.runBeforeNavigation();
         Navigate.execJavascript("if(document.createEvent){"
                 + "var evObj = document.createEvent('MouseEvents');"
                 + "evObj.initEvent('mouseover', true, false); "
@@ -168,6 +174,7 @@ public class Clicks {
                 + "}else if(document.createEventObject){"
                 + "arguments[0].focus();arguments[0].fireEvent('onmouseover');"
                 + "}", element);
+        Navigate.runAfterNavigation();
     }
 
     /**
@@ -349,7 +356,7 @@ public class Clicks {
                 if (Elements.elementPresent("home.open_flyout") || Elements.elementPresent("home.my_account_menu")
                         || Elements.elementPresent("home.quickbag_items_list")) {
                     try {
-                        actions.moveToElement(Elements.findElement(Elements.element("home.verify_page"))).perform();
+                        actions.moveToElement(Elements.findElement("home.verify_page")).perform();
                     } catch (Exception | Error ex) {
                         // ignore
                     }

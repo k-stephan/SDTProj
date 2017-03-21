@@ -24,6 +24,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ThreadGuard;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -87,7 +88,7 @@ class WebDriverConfigurator {
         switch (MainRunner.browser.toLowerCase()) {
             case "ie":
             case "internetexplorer":
-                return new InternetExplorerDriver(capabilities);
+                return ThreadGuard.protect(new InternetExplorerDriver(capabilities));
             case "chrome":
                 return new ChromeDriver(capabilities);
             case "safari":
@@ -396,6 +397,11 @@ class WebDriverConfigurator {
                 capabilities.setCapability("version", browserVersion);
             }
 
+            // temp fix until sauce labs updates it: Set the chrome driver version
+            if (StepUtils.chrome()) {
+                capabilities.setCapability("chromedriverVersion", "2.28");
+            }
+
             // set browser name
             if(MainRunner.browser.equalsIgnoreCase("ie"))
                 capabilities.setCapability("browserName", "iexplore");
@@ -595,6 +601,11 @@ class WebDriverConfigurator {
         for (int i = 0; i < 10; i++) {
             try {
                 browsermobServer = new BrowserMobProxyServer();
+
+                // Disable upstream server certificate verification to avoid SSLHandshakeException
+                // as websites used for testing are trusted.
+                browsermobServer.setTrustAllServers(true);
+
                 browsermobServer.start(port);
                 System.out.println("using port : " + port);
                 found = true;

@@ -538,17 +538,16 @@ public class MediaService {
             finalMediaInfo.removeIf(info -> ((List) info.get("refIds")).isEmpty());
             List<Map> finalMediaParameterData = mediaParameterData;
             finalMediaInfo = finalMediaInfo.stream().map(info -> {
-                List finalRefIds = new ArrayList<>();
-                ((List<String>) info.get("refIds")).stream().map(ref -> {
-                    if (finalMediaParameterData.stream().anyMatch(param -> param.get("mediaKey").toString().equals(ref))) {
+                List<String> finalRefIds = new ArrayList<>();
+                finalRefIds.addAll((List<String>) info.get("refIds"));
+                ((List<String>) info.get("refIds")).forEach(ref -> {
+                    if (finalMediaParameterData.stream().anyMatch(param -> param.get("mediaKey").toString().equals(ref))){
+                        finalRefIds.remove(ref);
                         finalRefIds.addAll(finalMediaParameterData.stream()
-                                .filter(param -> param.get("mediaKey").toString().equals(ref))
+                                .filter(param -> param.get("mediaKey").toString().equals(ref.toString()))
                                 .map(param -> param.get("refId").toString())
                                 .collect(Collectors.toList()));
-                    } else {
-                        finalRefIds.add(ref);
                     }
-                    return finalRefIds;
                 });
                 info.put("refIds", finalRefIds);
                 return info;
@@ -889,25 +888,28 @@ public class MediaService {
     }
 
     public static List getGroupIdsWithMultipleContext(String[] contextAttrNames, String[] contextAttrValues, String queryName) throws Throwable {
-        if (!((queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).isEmpty())) {
-            return (queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).stream()
-                    .filter(group -> ((Arrays.asList(group.get("contextAttrNames")).containsAll(Arrays.asList(contextAttrNames))) && (Arrays.asList(group.get("contextAttrValues")).containsAll(Arrays.asList(contextAttrValues))) && (group.get("queryName").equals(queryName))))
-                    .map(group -> group.get("mediaGroupIds"))
-                    .collect(Collectors.toList());
-        }
-        List<String[]> values = new ArrayList<>();
-        values.add(contextAttrNames);
-        values.add(contextAttrValues);
-        ResultSet resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get(queryName).toString(), values, "string"), (new String[]{}));
         List<String> mediaGroupIds = new ArrayList<>();
-        while (resultSet.next())
-            mediaGroupIds.add(resultSet.getString(queryName.equals("media_group_attribute_data") ? "media_group_id" : "component_id"));
-        HashMap group = new HashMap<>();
-        group.put("contextAttrNames", contextAttrNames);
-        group.put("contextAttrValues", contextAttrValues);
-        group.put("queryName", queryName);
-        group.put("mediaGroupIds", mediaGroupIds);
-        (queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).add(group);
+        if (!((queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).isEmpty())) {
+            for (Map group : (queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds)){
+                if(((Arrays.asList(group.get("contextAttrNames")).containsAll(Arrays.asList(contextAttrNames))) && (Arrays.asList(group.get("contextAttrValues")).containsAll(Arrays.asList(contextAttrValues))) && (group.get("queryName").equals(queryName)))){
+                    mediaGroupIds = ((List<String>)group.get("mediaGroupIds"));
+                }
+            }
+        }
+        if (mediaGroupIds.isEmpty()) {
+            List<String[]> values = new ArrayList<>();
+            values.add(contextAttrNames);
+            values.add(contextAttrValues);
+            ResultSet resultSet = executeQuery(updatedQuery(queries.getJSONObject("media_service").get(queryName).toString(), values, "string"), (new String[]{}));
+            while (resultSet.next())
+                mediaGroupIds.add(resultSet.getString(queryName.equals("media_group_attribute_data") ? "media_group_id" : "component_id"));
+            HashMap group = new HashMap<>();
+            group.put("contextAttrNames", contextAttrNames);
+            group.put("contextAttrValues", contextAttrValues);
+            group.put("queryName", queryName);
+            group.put("mediaGroupIds", mediaGroupIds);
+            (queryName.equals("media_group_attribute_data") ? allMediaGroupIds : allMediaComponentIds).add(group);
+        }
         return mediaGroupIds;
     }
 
