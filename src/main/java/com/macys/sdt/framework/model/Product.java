@@ -12,7 +12,7 @@ import java.util.Iterator;
 public class Product {
     public String name, currency, description, categoryName, categoryPageType, colorName, sizeName, colorNormalName,
             orderMethod, brand, type, department, reserved_for, estimated_delivery_date, tuxedo_description,
-            tuxedo_itemized_list, itemDeliveryMessage, bigTicketWNMDetail;
+            tuxedo_itemized_list, itemDeliveryMessage, bigTicketWNMDetail, zipCode;
     public String[] primaryImageColors, colorOptions, sizeOptions, quantities, promoDescriptions, promoCurrencies;
     public double[] promoPrices;
     public int id, quantity, orderLimit, categoryId, canvasId, storeLocationNum;
@@ -147,6 +147,8 @@ public class Product {
                 return "hasColor";
             case "master_product":
                 return "masterProduct";
+            case "zip_code":
+                return "zipCode";
             default:
                 return attr;
         }
