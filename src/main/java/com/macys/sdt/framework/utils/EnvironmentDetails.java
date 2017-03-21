@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -29,6 +31,7 @@ public class EnvironmentDetails {
     private static boolean printOnFinish = false;
 
     private static JSONObject servicesJson;
+    private static final Logger log = LoggerFactory.getLogger(EnvironmentDetails.class);
 
     private EnvironmentDetails() {
     }
@@ -123,7 +126,7 @@ public class EnvironmentDetails {
                 releaseDate = doc.select("releasedate").first().html();
                 version = doc.select("version").first().html();
                 if (printOnFinish) {
-                    System.out.println(getDetails());
+                    log.info(getDetails());
                     printOnFinish = false;
                 }
             } catch (Exception e) {
@@ -138,7 +141,7 @@ public class EnvironmentDetails {
                 System.err.println("Unable to get server details for " + env);
             }
         });
-        t.setName("Environment-Details-thread");
+        t.setName("EnvironmentDetails");
         t.start();
         if (waitForFinish) {
             try {

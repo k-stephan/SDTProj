@@ -3,6 +3,7 @@ package com.macys.sdt.framework.runner;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
@@ -11,6 +12,7 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import com.macys.sdt.framework.utils.analytics.DATagCollector;
 import com.macys.sdt.framework.utils.analytics.DigitalAnalytics;
+import com.macys.sdt.framework.utils.analytics.PageLoadProfiler;
 import cucumber.api.cli.Main;
 import net.lightbody.bmp.BrowserMobProxy;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +22,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriverException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +40,7 @@ import static java.lang.Runtime.getRuntime;
  * This class handles the configuration and running of cucumber scenarios and features
  */
 public class MainRunner {
-
+    
     /**
      * BrowserMob proxy server
      */
@@ -206,12 +211,12 @@ public class MainRunner {
 
     public static boolean dryRun = false;
 
+    public static String repoJar = getEnvOrExParam("repo_jar");
+
     /**
      * Location of app for app testing (appium)
      */
     protected static String appLocation = getEnvOrExParam("app_location");
-
-    public static String repoJar = getEnvOrExParam("repo_jar");
 
     //satish-macys:4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
 
@@ -338,7 +343,7 @@ public class MainRunner {
                     runStatus = status;
                 }
             });
-            cucumberThread.setName("Cucumber-thread");
+            cucumberThread.setName("Cucumber");
             cucumberThread.start();
             if (!appTest) {
                 PageHangWatchDog.init(cucumberThread);
@@ -360,6 +365,7 @@ public class MainRunner {
      */
     public static void setBeforeNavigationHooks() {
         Navigate.addBeforeNavigation(Wait::setWaitRequired);
+        Navigate.addBeforeNavigation(PageLoadProfiler::startTimer);
     }
 
     /**
@@ -369,6 +375,7 @@ public class MainRunner {
         Navigate.addAfterNavigation(WebDriverManager::getCurrentUrl);
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
+        Navigate.addAfterNavigation(PageLoadProfiler::stopTimer);
     }
 
     /**
@@ -477,6 +484,12 @@ public class MainRunner {
         // get project from environment variables
         if (project == null || project.split("\\.").length != 2) {
             getProject();
+        }
+
+        if (debugMode) {
+            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
+        } else {
+            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
         }
     }
 
@@ -948,6 +961,7 @@ public class MainRunner {
      *
      */
     public static class PageHangWatchDog extends Thread {
+        private static final Logger log = LoggerFactory.getLogger(PageHangWatchDog.class);
         private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 130 : 95) * 1000;
         private final static long PAUSE_TIMEOUT = 280 * 1000;
         private final static int MAX_FAILURES = 5;
@@ -961,7 +975,7 @@ public class MainRunner {
         private static Thread workerThread;
 
         private PageHangWatchDog() {
-            System.err.println("--> Start: PageHangWatchDog: " + new Date());
+            log.info("Start PageHangWatchDog: " + new Date());
             this.reset(url);
             this.setDaemon(true);
             this.start();
@@ -1000,7 +1014,7 @@ public class MainRunner {
         }
 
         private void interruptCucumberThread() throws InterruptedException {
-            System.err.println("PageHangWatchDog timeout! Pushing things along...");
+            log.error("Timeout! Pushing things along...");
             if (workerThread.isAlive()) {
                 workerThread.join(TIMEOUT);
             }
@@ -1031,13 +1045,13 @@ public class MainRunner {
                         continue;
                     }
                     String url = WebDriverManager.getCurrentUrl();
-                    //System.err.println("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
+                    //log.error("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
                     if (url.contains("about:blank")) {
                         continue;
                     }
                     if (url.equals(this.currentUrl)) {
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
-                            System.err.println("--> PageHangWatchDog: timeout at " + this.currentUrl +
+                            log.error("timeout at " + this.currentUrl +
                                     ", " + (MAX_FAILURES - failCount) + " failures until exit");
                             failCount++;
                             if (workerThread.isAlive()) {
@@ -1065,14 +1079,14 @@ public class MainRunner {
                     }
                 } catch (Exception ex) {
                     if (!pause && ex instanceof org.openqa.selenium.NoSuchSessionException) {
-                        System.err.println("--> Error: PageHangWatchDog: driver session is dead, exiting");
+                        log.error("Driver session is dead, exiting");
                         break;
                     } else if (ex instanceof InterruptedException) {
                         cucumberThread.stop();
-                        Assert.fail("--> Error: Browser unresponsive. Ending test");
+                        Assert.fail("Browser unresponsive. Ending test");
                     } else if (!(ex instanceof WebDriverException)) {
                         // WebDriverException thrown when we have a sync issue in IE
-                        System.err.println("--> Error: PageHangWatchDog: " + ex.getMessage());
+                        log.error(ex.getMessage());
                         ex.printStackTrace();
                     }
                 } finally {

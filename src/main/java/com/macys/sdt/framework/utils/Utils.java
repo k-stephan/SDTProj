@@ -271,6 +271,7 @@ public class Utils {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
         millis -= TimeUnit.MINUTES.toMillis(minutes);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+        millis -= TimeUnit.SECONDS.toMillis(seconds);
 
         StringBuilder sb = new StringBuilder(64);
         if (days > 0) {
@@ -282,7 +283,7 @@ public class Utils {
         if (minutes > 0) {
             sb.append(minutes).append(" Minutes ");
         }
-        sb.append(seconds).append(" Seconds");
+        sb.append(seconds).append(".").append(millis).append(" Seconds");
 
         return (sb.toString());
     }

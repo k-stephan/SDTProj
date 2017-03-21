@@ -19,7 +19,7 @@ public class Canvas {
         if (application == null) {
             application = "SITE";
         }
-        JSONObject jsonResponse = null;
+        JSONObject jsonResponse;
         String requestedContextParams = canvasId + "?catId=" + categoryId + "&_deviceType=" + ((Map) context.get(0)).get("DEVICE_TYPE") + "&_shoppingMode=" + ((Map) context.get(0)).get("SHOPPING_MODE") + "&_regionCode=" + ((Map) context.get(0)).get("REGION_CODE") + "&_application=" + application + "&_navigationType=" + ((Map) context.get(0)).get("NAVIGATION_TYPE") + "&_expand=media";
         if (!canvasIdsInheritable.isEmpty()) {
             String can = null;

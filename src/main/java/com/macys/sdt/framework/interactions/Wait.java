@@ -12,7 +12,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -24,6 +27,8 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
  * A collection of ways to wait for expected conditions
  */
 public class Wait {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Waits until the given condition method returns true
@@ -48,9 +53,7 @@ public class Wait {
             wait.until((WebDriver driver) -> condition.getAsBoolean());
             return true;
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:until: " + condition + ": " + ex.getMessage());
-            }
+            LOGGER.debug(ex.getMessage());
             return false;
         }
     }
@@ -77,9 +80,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:untilElementNotPresent(): " + selector.toString() + ": " + ex.getMessage());
-            }
+            LOGGER.debug("-->Error:untilElementNotPresent(): " + selector.toString() + ": " + ex.getMessage());
             return false;
         }
     }
@@ -96,9 +97,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfAllElements(list));
             return true;
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:untilElementNotPresent(): " + ex.getMessage());
-            }
+            LOGGER.debug("-->Error:untilElementNotPresent(): " + ex.getMessage());
             return false;
         }
     }
@@ -228,9 +227,8 @@ public class Wait {
             return true;
         } catch (Exception ex) {
             if (MainRunner.debugMode) {
-                System.err.println("-->Error:secondsUntilElementPresent(): " +
-                        Utils.listToString(Utils.getCallFromFunction("secondsUntilElementPresent"), "\n\t ", null) +
-                        ": " + selector.toString());
+                LOGGER.debug(Utils.listToString(Utils.getCallFromFunction(
+                        "secondsUntilElementPresent"), "\n\t ", null) + ": " + selector.toString());
             }
             errLog.println(ex.getMessage());
             return false;

@@ -12,7 +12,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.pagefactory.ByAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +29,9 @@ import static com.macys.sdt.framework.utils.Utils.errLog;
  * A collection of ways to get elements and other information about them
  */
 public class Elements {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     /**
      * Retrieves the first element
      *
@@ -60,8 +66,8 @@ public class Elements {
             }
             return elements.get(0);
         } catch (NoSuchElementException ex) {
-            System.err.println("-->StepUtils.findElement() no element found with selector: " + selector);
-            errLog.println(ex);
+            LOGGER.debug("-->StepUtils.findElement() no element found with selector: " + selector);
+            LOGGER.warn("Unable to find element", ex);
         } catch (DriverNotInitializedException e) {
             Assert.fail("Driver not initialized");
         }
@@ -114,7 +120,6 @@ public class Elements {
      * @return list of WebElements selected by el after filter is applied
      */
     public static List<WebElement> findElements(By selector, Predicate<WebElement> filter) {
-        String msg = "-->StepUtils.findElements(): " + selector;
         for (int i = 0; i < 3; i++) {
             try {
                 if (filter != null) {
@@ -125,11 +130,10 @@ public class Elements {
                     return WebDriverManager.getWebDriver().findElements(selector);
                 }
             } catch (Exception ex) {
-                msg += ":" + i;
                 Utils.threadSleep(100, null);
             }
         }
-        System.err.println(msg);
+        LOGGER.debug("No elements found with selector: " + selector);
         return null;
     }
 
@@ -412,10 +416,10 @@ public class Elements {
     public static By element(String elementKey) {
         PageElement elementData = new PageElement(elementKey);
         if (elementData.elementValues.isEmpty()) {
-            System.err.println("ERROR - UI: element '" + elementKey + "' is not defined.");
+            LOGGER.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
         }
         if (elementData.elementLocators.isEmpty()) {
-            System.err.println("ERROR - UI: element locator is not recognizable.");
+            LOGGER.warn("ERROR - UI: element locator is not recognizable.");
         }
         if (elementData.elementLocators.isEmpty() || elementData.elementValues.isEmpty()) {
             return null;
@@ -449,10 +453,10 @@ public class Elements {
     public static By paramElement(String elementKey, String... params) {
         PageElement elementData = new PageElement(elementKey);
         if (elementData.elementValues.isEmpty()) {
-            System.err.println("ERROR - UI: element '" + elementKey + "' is not defined.");
+            LOGGER.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
         }
         if (elementData.elementLocators.isEmpty()) {
-            System.err.println("ERROR - UI: element locator is not recognizable.");
+            LOGGER.warn("ERROR - UI: element locator is not recognizable.");
         }
         if (elementData.elementLocators.isEmpty() || elementData.elementValues.isEmpty()) {
             return null;

@@ -11,6 +11,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,9 @@ import static com.macys.sdt.framework.runner.MainRunner.appTest;
  * A collection of ways to click elements on the page
  */
 public class Clicks {
+
+    private static final Logger log = LoggerFactory.getLogger(Clicks.class);
+
     /**
      * Sends an enter key to an element
      *
@@ -294,7 +299,7 @@ public class Clicks {
     public static void click(WebElement el) throws NoSuchElementException {
         if (el == null) {
             if (MainRunner.debugMode) {
-                System.out.println("-->StepUtils.click(): element null");
+                log.debug("-->StepUtils.click(): element null");
             }
             throw new NoSuchElementException("Unable to click element");
         }
@@ -314,15 +319,11 @@ public class Clicks {
                 el = new WebDriverWait(driver, MainRunner.timeout).until(ExpectedConditions.elementToBeClickable(el));
             } catch (Exception ex) {
                 try {
-                    if (MainRunner.debugMode) {
-                        System.out.println("-->StepUtils.click(): element not clickable: " + el.getTagName() + ": " + el.getText() + ": " + ex.getMessage());
-                    }
-                    throw new NoSuchElementException("Unable to click element");
+                    log.debug("Element not clickable: " + el.getTagName() + ": " + el.getText() + ": " + ex.getMessage());
+                    throw new NoSuchElementException("Element not clickable: " + ex.getMessage());
                 } catch (StaleElementReferenceException exc) {
-                    if (MainRunner.debugMode) {
-                        System.out.println("-->StepUtils.click(): element not clickable: " + exc.getMessage());
-                    }
-                    throw new NoSuchElementException("Unable to click element");
+                    log.debug("Element not clickable: " + exc.getMessage());
+                    throw new NoSuchElementException("UElement not clickable: " + exc.getMessage());
                 }
             }
             if (MainRunner.analytics != null) {
@@ -343,7 +344,7 @@ public class Clicks {
                 }
             } catch (WebDriverException ex) {
                 if (MainRunner.debugMode) {
-                    System.err.println("Error while clicking, trying JS: " + ex);
+                    log.warn("Error while clicking, trying JS: " + ex);
                 }
                 javascriptClick(el);
             }

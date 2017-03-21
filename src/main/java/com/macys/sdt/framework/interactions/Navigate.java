@@ -9,7 +9,10 @@ import com.macys.sdt.framework.utils.Utils;
 import org.junit.Assert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.MissingFormatArgumentException;
 
@@ -22,6 +25,7 @@ import static com.macys.sdt.framework.runner.MainRunner.setBeforeNavigationHooks
 public class Navigate {
     private static ArrayList<Runnable> beforeNavigate = new ArrayList<>();
     private static ArrayList<Runnable> afterNavigate = new ArrayList<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Adds a method (or lambda) to the list of methods to run before any clicks or other navigation
@@ -247,9 +251,7 @@ public class Navigate {
                 MainRunner.analytics.recordPageSource(givenURL, getPageSource());
             }
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:StepUtils.visit(): " + pageURL + ": " + ex.getMessage());
-            }
+            LOGGER.debug("-->Error:StepUtils.visit(): " + pageURL + ": " + ex.getMessage());
         }
         runAfterNavigation();
     }
