@@ -76,7 +76,7 @@ public class UtilsTest {
 
     @Test
     public void testToDuration() throws Exception {
-        Assert.assertEquals("1 Days 10 Hours 17 Minutes 36 Seconds", Utils.toDuration(123456789));
+        Assert.assertEquals("1 Days 10 Hours 17 Minutes 36.789 Seconds", Utils.toDuration(123456789));
     }
 
     @Test
