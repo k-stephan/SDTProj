@@ -39,7 +39,7 @@ import static java.lang.Runtime.getRuntime;
  * This class handles the configuration and running of cucumber scenarios and features
  */
 public class MainRunner {
-    
+
     /**
      * BrowserMob proxy server
      */
@@ -296,15 +296,15 @@ public class MainRunner {
             for (int i = 0; i < args.length; i++) {
                 if (args[i].equals("--name")) {
                     cucumberArgs.add(args[i]);
-                    cucumberArgs.add(args[i+1]);
+                    cucumberArgs.add(args[i + 1]);
                 }
                 if (args[i].equals("--dry-run")) {
                     cucumberArgs.add(args[i]);
                     dryRun = true;
                 }
-                if (args[i].equals("--glue") && !args[i+1].startsWith("com.macys.sdt.shared") && !args[i+1].contains(project)) {
+                if (args[i].equals("--glue") && !args[i + 1].startsWith("com.macys.sdt.shared") && !args[i + 1].contains(project)) {
                     cucumberArgs.add(args[i]);
-                    cucumberArgs.add(args[i+1]);
+                    cucumberArgs.add(args[i + 1]);
                 }
             }
         }
@@ -359,6 +359,7 @@ public class MainRunner {
             }
         }
     }
+
     /**
      * Adds the default before navigation hooks
      */
@@ -403,7 +404,7 @@ public class MainRunner {
         }
         scenarios = scenarios.replace('\\', '/');
 
-        if (!url.matches("^https?://.*"))   {
+        if (!url.matches("^https?://.*")) {
             url = "http://" + url;
         }
 
@@ -674,7 +675,8 @@ public class MainRunner {
                 }
                 String json = Utils.gherkinToJson(false, path);
                 try {
-                    featureScenarios = new Gson().fromJson(json, new TypeToken<ArrayList<Map>>() {}.getType());
+                    featureScenarios = new Gson().fromJson(json, new TypeToken<ArrayList<Map>>() {
+                    }.getType());
                 } catch (JsonSyntaxException jex) {
                     System.err.println("--> Failed to parse : " + path);
                     System.err.println("--> json :\n\n" + json);
@@ -965,7 +967,6 @@ public class MainRunner {
 
     /**
      * Watchdog for Web Page
-     *
      */
     public static class PageHangWatchDog extends Thread {
         private static final Logger log = LoggerFactory.getLogger(PageHangWatchDog.class);
