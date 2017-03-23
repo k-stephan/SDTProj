@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.Exceptions.EnvException;
+import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.InteractionsSuiteTest;

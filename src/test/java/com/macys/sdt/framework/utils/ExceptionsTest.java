@@ -1,10 +1,10 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.Exceptions.*;
+import com.macys.sdt.framework.exceptions.*;
 import org.junit.Test;
 
 /**
- * Tests for Exceptions
+ * Tests for exceptions
  */
 public class ExceptionsTest {
 

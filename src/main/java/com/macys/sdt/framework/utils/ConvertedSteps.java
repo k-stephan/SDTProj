@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;

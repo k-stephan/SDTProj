@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.rest.services;
 
-import com.macys.sdt.framework.Exceptions.ProductionException;
+import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.model.GiftCard;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;

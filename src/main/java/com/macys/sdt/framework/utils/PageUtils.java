@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.utils.PageElement.getResponsivePath;
-import static com.macys.sdt.framework.utils.Utils.log;
+import static com.macys.sdt.framework.utils.Utils.LOGGER;
 
 /**
  * This class pulls and manages data from page and panel JSON files
@@ -333,7 +333,7 @@ public class PageUtils {
             value = getCachedElement(pagePath, elementName, sharedData);
         }
         if (value == null) {
-            log.debug("No value found for " + pagePath + "." + elementName);
+            LOGGER.debug("No value found for " + pagePath + "." + elementName);
         }
         return value;
     }

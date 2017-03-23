@@ -321,12 +321,6 @@ public class UtilsTest {
 
     @Test
     public void testThreadWatchDog() throws Exception {
-
-        // For initLogs
-        MainRunner.workspace = "";
-        Utils.redirectSOut();
-        Utils.resetSOut();
-
         try {
             class SimpleThread extends Thread {
                 public void run() {

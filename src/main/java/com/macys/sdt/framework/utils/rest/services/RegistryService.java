@@ -2,8 +2,8 @@ package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.macys.sdt.framework.Exceptions.ProductionException;
-import com.macys.sdt.framework.Exceptions.UserException;
+import com.macys.sdt.framework.exceptions.ProductionException;
+import com.macys.sdt.framework.exceptions.UserException;
 import com.macys.sdt.framework.model.registry.Registry;
 import com.macys.sdt.framework.model.user.TokenCredentials;
 import com.macys.sdt.framework.model.user.User;

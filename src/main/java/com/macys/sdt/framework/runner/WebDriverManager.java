@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.runner;
 
-import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.utils.Utils;
 import com.saucelabs.saucerest.SauceREST;
 import io.appium.java_client.AppiumDriver;

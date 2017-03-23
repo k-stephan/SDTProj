@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
-import com.macys.sdt.framework.Exceptions.EnvException;
+import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.utils.PageElement;
 import com.macys.sdt.framework.utils.StepUtils;
@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static com.macys.sdt.framework.utils.Utils.errLog;
 
 /**
  * A collection of ways to get elements and other information about them
@@ -415,11 +413,16 @@ public class Elements {
      */
     public static By element(String elementKey) {
         PageElement elementData = new PageElement(elementKey);
-        if (elementData.elementValues.isEmpty()) {
-            LOGGER.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
-        }
-        if (elementData.elementLocators.isEmpty()) {
-            LOGGER.warn("ERROR - UI: element locator is not recognizable.");
+
+        // We don't want to flood the user with messages if these are missing because they're checked
+        // often but not required. If they're missing it will be reported in on_page calls.
+        if (!elementKey.matches("(\\.verify_page|\\.url)$")) {
+            if (elementData.elementValues.isEmpty()) {
+                LOGGER.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
+            }
+            if (elementData.elementLocators.isEmpty()) {
+                LOGGER.warn("ERROR - UI: element locator is not recognizable.");
+            }
         }
         if (elementData.elementLocators.isEmpty() || elementData.elementValues.isEmpty()) {
             return null;

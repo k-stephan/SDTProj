@@ -3,7 +3,6 @@ package com.macys.sdt.framework.runner;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.macys.sdt.framework.Exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
@@ -234,7 +233,7 @@ public class MainRunner {
                 WebDriverManager.driver.quit();
             }
         }));
-
+        configureLogs();
         getEnvVars(args);
 
         System.out.println("Using project: " + project + "\nIf this does not match your project," +
@@ -420,7 +419,6 @@ public class MainRunner {
         }
         Utils.createDirectory(logs = workspace + "logs/", true);
         Utils.createDirectory(temp = workspace + "temp/", true);
-        Utils.initLogs();
 
         if (remoteOS == null) {
             System.out.println("INFO : Remote OS not specified. Using default (Windows 7)");
@@ -485,12 +483,21 @@ public class MainRunner {
         if (project == null || project.split("\\.").length != 2) {
             getProject();
         }
+    }
 
+    private static void configureLogs() {
         if (debugMode) {
             System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
         } else {
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+            String logLevel = getEnvOrExParam("log_level");
+            logLevel = logLevel == null ? "INFO" : logLevel.toUpperCase();
+            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, logLevel);
         }
+        System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
+        System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "HH:mm:ss:SS");
+        System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
+        System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.out");
+        System.setProperty(SimpleLogger.SHOW_SHORT_LOG_NAME_KEY, "true");
     }
 
     /**

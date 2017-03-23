@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.utils.StepUtils;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import static com.macys.sdt.framework.runner.MainRunner.*;
-import static com.macys.sdt.framework.utils.Utils.errLog;
 
 /**
  * A collection of ways to wait for expected conditions
@@ -230,7 +229,7 @@ public class Wait {
                 LOGGER.debug(Utils.listToString(Utils.getCallFromFunction(
                         "secondsUntilElementPresent"), "\n\t ", null) + ": " + selector.toString());
             }
-            errLog.println(ex.getMessage());
+           LOGGER.error(ex.getMessage());
             return false;
         }
     }
@@ -265,7 +264,7 @@ public class Wait {
             if (MainRunner.debugMode) {
                 System.err.println("-->Error:secondsUntilElementNotPresent(): " + selector.toString());
             }
-            errLog.println(ex.getMessage());
+            LOGGER.error(ex.getMessage());
             return false;
         }
     }
@@ -331,7 +330,7 @@ public class Wait {
             if (MainRunner.debugMode) {
                 System.err.println("-->Error:untilElementPresentWithRefreshAndClick(): " + waitFor.toString() + ": " + toClick.toString());
             }
-            errLog.println(ex.getMessage());
+            LOGGER.error(ex.getMessage());
         }
     }
 
@@ -490,7 +489,6 @@ public class Wait {
             return true;
         }
         StepUtils.ajaxCheck = true;
-        Utils.redirectSErr();
         try {
 
             //below script returns either string or long value, so fetching the results conditionally to avoid type cast error
@@ -504,7 +502,7 @@ public class Wait {
                 String response = (String) jsResponse;
                 return (response.startsWith("{\"hCode\"") || response.isEmpty());
             } else {
-                System.err.println("Unable to get num ajax calls!");
+                LOGGER.trace("Unable to get num ajax calls!");
                 return true;
             }
             //System.out.print("." + queries + " AJAX");
@@ -525,7 +523,6 @@ public class Wait {
 
             return queries == 0;
         } finally {
-            Utils.resetSErr();
             StepUtils.ajaxCheck = false;
         }
     }

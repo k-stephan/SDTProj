@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.Exceptions.EnvException;
+import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import org.junit.*;
 import org.openqa.selenium.By;

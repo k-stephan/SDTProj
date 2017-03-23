@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.interactions.Wait;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;

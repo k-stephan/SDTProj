@@ -40,7 +40,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
 import java.util.List;
@@ -54,14 +57,8 @@ import static com.macys.sdt.framework.utils.StepUtils.macys;
 @SuppressWarnings("deprecation")
 public class Utils {
 
-    public static PrintStream errLog = null;
-    public static PrintStream infoLog = null;
-    public static Logger log = LoggerFactory.getLogger(Utils.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
     // use these to redirect unneeded error output
-    private static PrintStream originalErr = System.err;
-    private static PrintStream originalInfo = System.out;
-    private static int errRedirectCalls = 0;
-    private static int infoRedirectCalls = 0;
     private static boolean resourcesExtracted = false;
 
     /**
@@ -396,17 +393,15 @@ public class Utils {
     public static boolean threadSleep(long sleepTime, String msg) {
         Thread cur = Thread.currentThread();
         try {
-            if (infoLog == null || errLog == null)
-                initLogs();
             if (msg != null)
-                infoLog.println("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleepTime);
+                LOGGER.debug("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleepTime);
             Thread.sleep(sleepTime);
             if (msg != null)
-                infoLog.println(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":normal");
+                LOGGER.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":normal");
             return false;
         } catch (InterruptedException e) {
             if (msg != null)
-                errLog.println(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":" + e.getMessage());
+                LOGGER.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":" + e.getMessage());
             return true;
         }
     }
@@ -784,19 +779,19 @@ public class Utils {
         if (resourcesExtracted) {
             return;
         }
-        String rpath = "com/macys/sdt/framework/resources";
-        infoLog.println(rpath);
-        extractJarFile(repoJar, rpath, workspace + "/" + rpath);
+        String resPath = "com/macys/sdt/framework/resources";
+        LOGGER.debug(resPath);
+        extractJarFile(repoJar, resPath, workspace + "/" + resPath);
 
-        rpath = "com/macys/sdt/shared/resources";
-        infoLog.println(rpath);
-        extractJarFile(repoJar, rpath, workspace + "/" + rpath);
-        saveDriver("chromedriver.exe", rpath);
-        saveDriver("IEDriverServer.exe", rpath);
+        resPath = "com/macys/sdt/shared/resources";
+        LOGGER.debug(resPath);
+        extractJarFile(repoJar, resPath, workspace + "/" + resPath);
+        saveDriver("chromedriver.exe", resPath);
+        saveDriver("IEDriverServer.exe", resPath);
 
-        rpath = "com/macys/sdt/projects/";
-        System.out.println(rpath);
-        extractJarFile(repoJar, rpath + project, workspace + "/" + project, "/resources", "/features", "pom.xml");
+        resPath = "com/macys/sdt/projects/";
+        System.out.println(resPath);
+        extractJarFile(repoJar, resPath + project, workspace + "/" + project, "/resources", "/features", "pom.xml");
         resourcesExtracted = true;
     }
 
@@ -848,10 +843,10 @@ public class Utils {
             } else {
                 File fOut = new File(getOutputPath(tarFilePath, outputPath, path));
                 long ts = System.currentTimeMillis();
-                infoLog.print("writing " + fOut.getCanonicalPath() + "...");
+                LOGGER.debug("writing " + fOut.getCanonicalPath() + "...");
                 if (fOut.exists()) {
                     if (!fOut.delete()) {
-                        errLog.println("Unable to delete file: " + fOut.getName() + " before writing");
+                        LOGGER.debug("Unable to delete file: " + fOut.getName() + " before writing");
                         continue;
                     }
                 }
@@ -862,7 +857,7 @@ public class Utils {
                 while ((length = inputTar.read(buff)) > -1) {
                     bout.write(buff, 0, length);
                 }
-                infoLog.println(System.currentTimeMillis() - ts + ":" + bout.size());
+                LOGGER.debug(System.currentTimeMillis() - ts + ":" + bout.size());
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
                 Utils.createDirectory(ftemp.getParent(), false);
                 for (int i = 0; i < 100; i++) {
@@ -870,7 +865,7 @@ public class Utils {
                         renameFile(ftemp, fOut, 10);
                         break;
                     }
-                    infoLog.println("--> retry extractCompressedFile:" + i);
+                    LOGGER.debug("--> retry extractCompressedFile:" + i);
                     threadSleep(3000, null);
                 }
             }
@@ -1081,102 +1076,6 @@ public class Utils {
         return items;
     }
 
-    /**
-     * Initializes the PrintStream used to redirect any error message bloat
-     */
-    public static void initLogs() {
-        if (errLog == null || infoLog == null) {
-            try {
-                File errFile = new File(MainRunner.workspace + "logs/sdt-error.log");
-                File infoFile = new File(MainRunner.workspace + "logs/sdt-info.log");
-                createDirectory(MainRunner.workspace + "logs");
-                if (!errFile.exists()) {
-                    if (!errFile.createNewFile()) {
-                        System.err.println("Could not create error log file");
-                    }
-                }
-                if (!infoFile.exists()) {
-                    if (!infoFile.createNewFile()) {
-                        System.err.println("Could not create info log file");
-                    }
-                }
-                FileOutputStream errStream = new FileOutputStream(errFile);
-                FileOutputStream infoStream = new FileOutputStream(infoFile);
-                errLog = new PrintStream(errStream);
-                infoLog = new PrintStream(infoStream);
-            } catch (IOException e) {
-                System.err.println("Error while creating file: " + e);
-            }
-        }
-    }
-
-    /**
-     * Redirects System.out prints to the log files to avoid console clutter
-     * <p>
-     * Maintains a call count with resetSOut so redirects/resets below
-     * each other don't mess each other up.
-     * </p>
-     */
-    public static void redirectSOut() {
-        if (infoLog == null) {
-            initLogs();
-        }
-        if (infoLog != null) {
-            System.setOut(infoLog);
-            infoRedirectCalls++;
-        }
-    }
-
-    /**
-     * Sets System.Out back to the console
-     * <p>
-     * Maintains a call count with redirectSOut so redirects/resets below
-     * each other don't mess each other up.
-     * </p>
-     */
-    public static void resetSOut() {
-        infoRedirectCalls--;
-        if (infoRedirectCalls < 0) {
-            infoRedirectCalls = 0;
-        }
-        if (infoRedirectCalls == 0) {
-            System.setOut(originalInfo);
-        }
-    }
-
-    /**
-     * Redirects System.err prints to the log files to avoid console clutter
-     * <p>
-     * Maintains a call count with resetSErr so redirects/resets below
-     * each other don't mess each other up.
-     * </p>
-     */
-    public static void redirectSErr() {
-        if (errLog == null) {
-            initLogs();
-        }
-        if (errLog != null) {
-            System.setErr(errLog);
-            errRedirectCalls++;
-        }
-    }
-
-    /**
-     * Sets System.err back to the console
-     * <p>
-     * Maintains a call count with redirectSErr so redirects/resets below
-     * each other don't mess each other up.
-     * </p>
-     */
-    public static void resetSErr() {
-        errRedirectCalls--;
-        if (errRedirectCalls < 0) {
-            errRedirectCalls = 0;
-        }
-        if (errRedirectCalls == 0) {
-            System.setErr(originalErr);
-        }
-    }
 
     /**
      * Gets the URL of execution engine

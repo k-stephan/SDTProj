@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;

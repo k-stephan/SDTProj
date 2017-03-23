@@ -1,10 +1,9 @@
 package com.macys.sdt.framework.interactions;
 
-import com.macys.sdt.framework.Exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
-import com.macys.sdt.framework.utils.Utils;
 import io.appium.java_client.MobileElement;
 import org.junit.Assert;
 import org.openqa.selenium.*;
@@ -353,7 +352,6 @@ public class Clicks {
 
             if (StepUtils.ie() || StepUtils.firefox()) {
                 // IE & firefox like to leave the mouse over dropdown menus
-                Utils.redirectSErr();
                 if (Elements.elementPresent("home.open_flyout") || Elements.elementPresent("home.my_account_menu")
                         || Elements.elementPresent("home.quickbag_items_list")) {
                     try {
@@ -362,7 +360,6 @@ public class Clicks {
                         // ignore
                     }
                 }
-                Utils.resetSErr();
             }
         } catch (DriverNotInitializedException e) {
             Assert.fail("Driver not initialized");
