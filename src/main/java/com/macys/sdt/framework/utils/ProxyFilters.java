@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.*;
 import net.lightbody.bmp.filters.RequestFilter;
@@ -52,7 +52,7 @@ public class ProxyFilters {
     //}
 
     private static File getCacheFile(String url) {
-        return new File(MainRunner.temp + DigestUtils.shaHex(url));
+        return new File(RunConfig.temp + DigestUtils.shaHex(url));
     }
 
     private static boolean isFilter(String url, HttpMessageContents contents) {

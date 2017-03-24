@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -13,9 +13,9 @@ public class PageUtilsTest {
 
     @BeforeClass
     public static void setUp() {
-        MainRunner.project = "framework";
-        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
-        MainRunner.workspace = System.getProperty("user.dir") + "/";
+        RunConfig.project = "framework";
+        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.workspace = System.getProperty("user.dir") + "/";
     }
 
     @After
@@ -56,7 +56,7 @@ public class PageUtilsTest {
 
     @Test
     public void testGetElementJSONValue() {
-        MainRunner.url = "http://www.qa0codebloomingdales.fds.com";
+        RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
         String elementJSONValue = PageUtils.getElementJSONValue(new PageElement("test_page.test_element"));
         Assert.assertNotNull(elementJSONValue);
         Assert.assertEquals("id, b_id || class,  b_class", elementJSONValue);
@@ -73,7 +73,7 @@ public class PageUtilsTest {
 
     @Test
     public void testDuplicatePagePanelName() {
-        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        RunConfig.url = "http://www.qa0codemacys.fds.com";
         PageElement pageElement = new PageElement("test.page_element");
         PageElement panelElement = new PageElement("test.panel_element");
 

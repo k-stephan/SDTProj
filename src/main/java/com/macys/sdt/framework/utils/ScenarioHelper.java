@@ -2,6 +2,7 @@ package com.macys.sdt.framework.utils;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import cucumber.api.Scenario;
 import cucumber.runtime.ScenarioImpl;
 import gherkin.formatter.model.Result;
@@ -29,7 +30,7 @@ public class ScenarioHelper {
             outlineCount = 1;
         }
         scenario = (ScenarioImpl) s;
-        for (Object o : MainRunner.features.values()) {
+        for (Object o : RunConfig.features.values()) {
             if (o instanceof LinkedTreeMap) {
                 LinkedTreeMap savedScenario = (LinkedTreeMap) o;
                 if (scenario.getName().equals(savedScenario.get("name"))) {

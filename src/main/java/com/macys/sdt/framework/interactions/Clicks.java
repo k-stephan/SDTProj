@@ -1,8 +1,8 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import io.appium.java_client.MobileElement;
 import org.junit.Assert;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static com.macys.sdt.framework.runner.MainRunner.appTest;
+import static com.macys.sdt.framework.runner.RunConfig.appTest;
 
 /**
  * A collection of ways to click elements on the page
@@ -155,7 +155,7 @@ public class Clicks {
      */
     public static void hover(By selector) {
         try {
-            new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout).until(
+            new WebDriverWait(WebDriverManager.getWebDriver(), RunConfig.timeout).until(
                     ExpectedConditions.visibilityOfElementLocated(selector)
             );
         } catch (DriverNotInitializedException e) {
@@ -297,9 +297,7 @@ public class Clicks {
      */
     public static void click(WebElement el) throws NoSuchElementException {
         if (el == null) {
-            if (MainRunner.debugMode) {
-                log.debug("-->StepUtils.click(): element null");
-            }
+            log.debug("-->StepUtils.click(): element null");
             throw new NoSuchElementException("Unable to click element");
         }
 
@@ -315,7 +313,7 @@ public class Clicks {
             WebDriver driver = WebDriverManager.getWebDriver();
             Actions actions = new Actions(driver);
             try {
-                el = new WebDriverWait(driver, MainRunner.timeout).until(ExpectedConditions.elementToBeClickable(el));
+                el = new WebDriverWait(driver, RunConfig.timeout).until(ExpectedConditions.elementToBeClickable(el));
             } catch (Exception ex) {
                 try {
                     log.debug("Element not clickable: " + el.getTagName() + ": " + el.getText() + ": " + ex.getMessage());
@@ -325,13 +323,13 @@ public class Clicks {
                     throw new NoSuchElementException("UElement not clickable: " + exc.getMessage());
                 }
             }
-            if (MainRunner.analytics != null) {
+            if (RunConfig.analytics != null) {
                 String contents = (String) Navigate.execJavascript("return arguments[0].outerHTML;", el);
-                MainRunner.analytics.recordClickElement(contents);
+                RunConfig.analytics.recordClickElement(contents);
             }
             try {
                 // actions not supported in safari and still in progress for FF marionette driver
-                if (StepUtils.safari() || (StepUtils.firefox() && MainRunner.browserVersion.compareTo("48.0") >= 0)) {
+                if (StepUtils.safari() || (StepUtils.firefox() && RunConfig.browserVersion.compareTo("48.0") >= 0)) {
                     javascriptHover(el);
                     el.click();
                 } else if (StepUtils.ipad()) {
@@ -342,9 +340,7 @@ public class Clicks {
                     actions.click().perform();
                 }
             } catch (WebDriverException ex) {
-                if (MainRunner.debugMode) {
-                    log.warn("Error while clicking, trying JS: " + ex);
-                }
+                log.debug("Error while clicking, trying JS: " + ex);
                 javascriptClick(el);
             }
             StepUtils.closeAlert();

@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class StepUtilsTest {
 
     @Test
     public void testChrome() throws Exception {
-        MainRunner.browser = "chrome";
+        RunConfig.browser = "chrome";
         Assert.assertTrue(StepUtils.chrome());
         Assert.assertFalse(StepUtils.firefox());
         Assert.assertFalse(StepUtils.ie());
@@ -24,7 +25,7 @@ public class StepUtilsTest {
 
     @Test
     public void testFirefox() throws Exception {
-        MainRunner.browser = "firefox";
+        RunConfig.browser = "firefox";
         Assert.assertFalse(StepUtils.chrome());
         Assert.assertTrue(StepUtils.firefox());
         Assert.assertFalse(StepUtils.ie());
@@ -34,7 +35,7 @@ public class StepUtilsTest {
 
     @Test
     public void testIe() throws Exception {
-        MainRunner.browser = "ie";
+        RunConfig.browser = "ie";
         Assert.assertFalse(StepUtils.chrome());
         Assert.assertFalse(StepUtils.firefox());
         Assert.assertTrue(StepUtils.ie());
@@ -44,7 +45,7 @@ public class StepUtilsTest {
 
     @Test
     public void testSafari() throws Exception {
-        MainRunner.browser = "safari";
+        RunConfig.browser = "safari";
         Assert.assertFalse(StepUtils.chrome());
         Assert.assertFalse(StepUtils.firefox());
         Assert.assertFalse(StepUtils.ie());
@@ -54,7 +55,7 @@ public class StepUtilsTest {
 
     @Test
     public void testEdge() throws Exception {
-        MainRunner.browser = "edge";
+        RunConfig.browser = "edge";
         Assert.assertFalse(StepUtils.chrome());
         Assert.assertFalse(StepUtils.firefox());
         Assert.assertFalse(StepUtils.ie());
@@ -64,49 +65,49 @@ public class StepUtilsTest {
 
     @Test
     public void testProdEnv() throws Exception {
-        MainRunner.url = "http://www.macys.com";
+        RunConfig.url = "http://www.macys.com";
         Assert.assertTrue(StepUtils.prodEnv());
-        MainRunner.url = "http://www.bloomingdales.com";
+        RunConfig.url = "http://www.bloomingdales.com";
         Assert.assertTrue(StepUtils.prodEnv());
-        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        RunConfig.url = "http://www.qa0codemacys.fds.com";
         Assert.assertFalse(StepUtils.prodEnv());
-        MainRunner.url = "http://www.qa0codebloomingdales.fds.com";
+        RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
         Assert.assertFalse(StepUtils.prodEnv());
     }
 
     @Test
     public void testMacys() throws Exception {
-        MainRunner.brand = "mcom";
+        RunConfig.brand = "mcom";
         Assert.assertTrue(StepUtils.macys());
         Assert.assertFalse(StepUtils.bloomingdales());
-        MainRunner.brand = null;
-        MainRunner.url = "http://www.macys.com";
+        RunConfig.brand = null;
+        RunConfig.url = "http://www.macys.com";
         Assert.assertTrue(StepUtils.macys());
         Assert.assertFalse(StepUtils.bloomingdales());
-        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        RunConfig.url = "http://www.qa0codemacys.fds.com";
         Assert.assertTrue(StepUtils.macys());
         Assert.assertFalse(StepUtils.bloomingdales());
     }
 
     @Test
     public void testBloomingdales() throws Exception {
-        MainRunner.brand = "bcom";
+        RunConfig.brand = "bcom";
         Assert.assertTrue(StepUtils.bloomingdales());
         Assert.assertFalse(StepUtils.macys());
-        MainRunner.brand = null;
-        MainRunner.url = "http://www.bloomingdales.com";
+        RunConfig.brand = null;
+        RunConfig.url = "http://www.bloomingdales.com";
         Assert.assertTrue(StepUtils.bloomingdales());
         Assert.assertFalse(StepUtils.macys());
-        MainRunner.url = "http://www.qa0codebloomingdales.fds.com";
+        RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
         Assert.assertTrue(StepUtils.bloomingdales());
         Assert.assertFalse(StepUtils.macys());
     }
 
     @Test
     public void testMobileDevice() throws Exception {
-        MainRunner.device = "iPhone 6";
+        RunConfig.device = "iPhone 6";
         Assert.assertTrue(StepUtils.mobileDevice());
-        MainRunner.device = null;
+        RunConfig.device = null;
         Assert.assertFalse(StepUtils.mobileDevice());
     }
 
@@ -120,41 +121,41 @@ public class StepUtilsTest {
 
     @Test
     public void testTablet() throws Exception {
-        MainRunner.device = "iPad";
+        RunConfig.device = "iPad";
         Assert.assertTrue(StepUtils.tablet());
-        MainRunner.device = "iPhone 6";
+        RunConfig.device = "iPhone 6";
         Assert.assertFalse(StepUtils.tablet());
-        MainRunner.device = null;
+        RunConfig.device = null;
         Assert.assertFalse(StepUtils.tablet());
     }
 
     @Test
     public void testIpad() throws Exception {
-        MainRunner.device = "iPad";
+        RunConfig.device = "iPad";
         Assert.assertTrue(StepUtils.ipad());
-        MainRunner.device = "Google Nexus 7";
+        RunConfig.device = "Google Nexus 7";
         Assert.assertFalse(StepUtils.ipad());
-        MainRunner.device = null;
+        RunConfig.device = null;
         Assert.assertFalse(StepUtils.ipad());
     }
 
     @Test
     public void testIOS() throws Exception {
-        MainRunner.device = "iPad";
+        RunConfig.device = "iPad";
         Assert.assertTrue(StepUtils.iOS());
-        MainRunner.device = "iPhone 6";
+        RunConfig.device = "iPhone 6";
         Assert.assertTrue(StepUtils.iOS());
-        MainRunner.device = "Google Nexus 7";
+        RunConfig.device = "Google Nexus 7";
         Assert.assertFalse(StepUtils.iOS());
-        MainRunner.device = null;
+        RunConfig.device = null;
         Assert.assertFalse(StepUtils.iOS());
     }
 
     @Test @Ignore("Not working in Jenkins")
     public void testDesktopScreenCapture() throws Exception {
-        MainRunner.logs = "logs/";
-        Utils.createDirectory(MainRunner.logs, false);
-        File file = new File(MainRunner.logs + "StepUtilsTestDesktopScreenCapture.jpg");
+        RunConfig.logs = "logs/";
+        Utils.createDirectory(RunConfig.logs, false);
+        File file = new File(RunConfig.logs + "StepUtilsTestDesktopScreenCapture.jpg");
         StepUtils.desktopScreenCapture(file);
         Assert.assertTrue(file.exists());
     }

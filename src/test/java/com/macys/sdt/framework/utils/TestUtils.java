@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.db.models.RegistryService;
 import org.junit.Test;
 
@@ -50,7 +50,7 @@ public class TestUtils {
 
     @Test
     public void asdf() {
-        MainRunner.url = "http://www.qa15codemacys.fds.com";
+        RunConfig.url = "http://www.qa15codemacys.fds.com";
         RegistryService.registryExists("12345");
     }
 }

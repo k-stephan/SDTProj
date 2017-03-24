@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -17,8 +17,8 @@ import java.net.URL;
  */
 public class EnvironmentDetails {
 
-    private static String envUrl = MainRunner.url;
-    private static boolean stage5 = MainRunner.url.matches(
+    private static String envUrl = RunConfig.url;
+    private static boolean stage5 = RunConfig.url.matches(
             ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
     private static String site = null;
     private static String type = null;
@@ -44,56 +44,56 @@ public class EnvironmentDetails {
 
     public static String getSite() {
         if (site == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return site;
     }
 
     public static String getType() {
         if (type == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return type;
     }
 
     public static String getAppServer() {
         if (appServer == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return appServer;
     }
 
     public static String getServer() {
         if (server == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return server;
     }
 
     public static String getTimestamp() {
         if (timestamp == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return timestamp;
     }
 
     public static String getRelease() {
         if (release == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return release;
     }
 
     public static String getReleaseDate() {
         if (releaseDate == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return releaseDate;
     }
 
     public static String getVersion() {
         if (version == null && !waitForReady()) {
-            loadEnvironmentDetails(MainRunner.url);
+            loadEnvironmentDetails(RunConfig.url);
         }
         return version;
     }

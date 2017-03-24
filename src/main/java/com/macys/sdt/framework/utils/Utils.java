@@ -2,7 +2,7 @@ package com.macys.sdt.framework.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import gherkin.formatter.JSONFormatter;
 import gherkin.formatter.JSONPrettyFormatter;
 import gherkin.parser.Parser;
@@ -40,10 +40,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
 import java.util.List;
@@ -532,7 +529,7 @@ public class Utils {
 
         // project data
         String full_path = getResourcePath(fname);
-        String path = MainRunner.projectDir + "/resources/data/" + full_path;
+        String path = RunConfig.projectDir + "/resources/data/" + full_path;
         File resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
@@ -606,7 +603,7 @@ public class Utils {
      */
     private static String getResourcePath(String fName) {
         String resPath;
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             resPath = StepUtils.iOS() ? "iOS/" : "android/";
         } else {
             resPath = StepUtils.MEW() ? "MEW/" : "website/";

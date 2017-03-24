@@ -1,8 +1,8 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.interactions.Navigate;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -19,16 +19,16 @@ public class CookiesTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        MainRunner.workspace = "";
-        MainRunner.browser = "firefox";
-        MainRunner.remoteOS = "Windows 7";
-        MainRunner.timeout = 90;
-        MainRunner.url = "http://www.macys.com";
+        RunConfig.workspace = "";
+        RunConfig.browser = "firefox";
+        RunConfig.remoteOS = "Windows 7";
+        RunConfig.timeout = 90;
+        RunConfig.url = "http://www.macys.com";
         boolean preCondition = false;
         try {
             WebDriverManager.getWebDriver();
-            Navigate.visit(MainRunner.url);
-            MainRunner.debugMode = true;
+            Navigate.visit(RunConfig.url);
+            RunConfig.debugMode = true;
             preCondition = true;
         } catch (Exception e) {
             System.err.println("-->Error - Test setUp:" + e.getMessage());
@@ -47,10 +47,10 @@ public class CookiesTest {
             System.err.println("-->Error - Test tearDown:" + e.getMessage());
         }
         Cookies.resetDomain();
-        MainRunner.debugMode = false;
-        MainRunner.browser = null;
-        MainRunner.remoteOS = null;
-        MainRunner.url = null;
+        RunConfig.debugMode = false;
+        RunConfig.browser = null;
+        RunConfig.remoteOS = null;
+        RunConfig.url = null;
     }
 
     @Test
@@ -182,22 +182,22 @@ public class CookiesTest {
 
     @Test
     public void testForceRc() throws Exception {
-        MainRunner.brand = "mcom";
+        RunConfig.brand = "mcom";
         Cookies.forceRc();
         String segments = Cookies.getCookieValue("SEGMENT");
         Assert.assertTrue(segments.contains("1067"));
         Assert.assertFalse(segments.contains("1066"));
-        MainRunner.brand = null;
+        RunConfig.brand = null;
     }
 
     @Test
     public void testForceNonRc() throws Exception {
-        MainRunner.brand = "bcom";
+        RunConfig.brand = "bcom";
         Cookies.forceNonRc();
         String segments = Cookies.getCookieValue("SEGMENT");
         Assert.assertTrue(segments.contains("1097"));
         Assert.assertFalse(segments.contains("1098"));
-        MainRunner.brand = null;
+        RunConfig.brand = null;
     }
 
     @Test

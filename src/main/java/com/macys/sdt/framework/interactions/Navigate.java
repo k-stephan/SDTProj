@@ -2,6 +2,7 @@ package com.macys.sdt.framework.interactions;
 
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
@@ -200,7 +201,7 @@ public class Navigate {
         }
 
         try {
-            String givenURL = MainRunner.url;
+            String givenURL = RunConfig.url;
             // check if pageURL has product, then directly navigate to the given url
             if (pageURL.contains("product") && pageURL.contains("ID=") && !pageURL.startsWith("https://") && !pageURL.startsWith("http://")) {
                 pageURL = "http://" + pageURL;
@@ -247,8 +248,8 @@ public class Navigate {
             //twd.interrupt();
             Wait.forPageReady(urlFromJSON ? pageURL.replace(".url", "") : null);
             StepUtils.closeAlert();
-            if (MainRunner.analytics != null) {
-                MainRunner.analytics.recordPageSource(givenURL, getPageSource());
+            if (RunConfig.analytics != null) {
+                RunConfig.analytics.recordPageSource(givenURL, getPageSource());
             }
         } catch (Exception ex) {
             LOGGER.debug("-->Error:StepUtils.visit(): " + pageURL + ": " + ex.getMessage());

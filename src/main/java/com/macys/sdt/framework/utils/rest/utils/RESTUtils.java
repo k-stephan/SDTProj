@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.utils.rest.utils;
 
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.junit.Assert;
@@ -74,7 +74,7 @@ public class RESTUtils {
      */
     public static String getBaseAddress() {
         try {
-            String baseAddress = Optional.ofNullable(MainRunner.url).orElseThrow(Exception::new);
+            String baseAddress = Optional.ofNullable(RunConfig.url).orElseThrow(Exception::new);
             baseAddress = baseAddress.replace("m.", "");
             return baseAddress;
         } catch (Exception e) {

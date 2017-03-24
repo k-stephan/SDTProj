@@ -7,6 +7,7 @@ import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
 import cucumber.api.Scenario;
@@ -16,6 +17,8 @@ import net.lightbody.bmp.core.har.HarRequest;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.Dimension;
@@ -29,12 +32,14 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.macys.sdt.framework.runner.MainRunner.appTest;
+import static com.macys.sdt.framework.runner.RunConfig.appTest;
 
 /**
  * This class contains page interaction and information methods to help write test steps.
  */
 public abstract class StepUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StepUtils.class);
 
     /**
      * A regex string that will match allowed mobile devices
@@ -67,7 +72,7 @@ public abstract class StepUtils {
      * @return true if using chrome
      */
     public static boolean chrome() {
-        return MainRunner.browser.equalsIgnoreCase("chrome");
+        return RunConfig.browser.equalsIgnoreCase("chrome");
     }
 
     /**
@@ -76,7 +81,7 @@ public abstract class StepUtils {
      * @return true if using firefox
      */
     public static boolean firefox() {
-        return MainRunner.browser.equalsIgnoreCase("firefox");
+        return RunConfig.browser.equalsIgnoreCase("firefox");
     }
 
     /**
@@ -85,7 +90,7 @@ public abstract class StepUtils {
      * @return true if using Internet Explorer
      */
     public static boolean ie() {
-        return MainRunner.browser.equalsIgnoreCase("ie");
+        return RunConfig.browser.equalsIgnoreCase("ie");
     }
 
     /**
@@ -94,7 +99,7 @@ public abstract class StepUtils {
      * @return true if using safari
      */
     public static boolean safari() {
-        return MainRunner.browser.equalsIgnoreCase("safari");
+        return RunConfig.browser.equalsIgnoreCase("safari");
     }
 
     /**
@@ -103,7 +108,7 @@ public abstract class StepUtils {
      * @return true if using edge browser
      */
     public static boolean edge() {
-        return MainRunner.browser.equalsIgnoreCase("edge");
+        return RunConfig.browser.equalsIgnoreCase("edge");
     }
 
     /**
@@ -112,7 +117,7 @@ public abstract class StepUtils {
      * @return true if on a prod env
      */
     public static boolean prodEnv() {
-        return MainRunner.url.contains(macys() ? "macys.com" : "bloomingdales.com");
+        return RunConfig.url.contains(macys() ? "macys.com" : "bloomingdales.com");
     }
 
     /**
@@ -121,11 +126,11 @@ public abstract class StepUtils {
      * @return true if on macys website
      */
     public static boolean macys() {
-        if (MainRunner.brand != null) {
-            return MainRunner.brand.equalsIgnoreCase("mcom");
+        if (RunConfig.brand != null) {
+            return RunConfig.brand.equalsIgnoreCase("mcom");
         }
 
-        return MainRunner.url.matches(".*?(macys|mcom).*?");
+        return RunConfig.url.matches(".*?(macys|mcom).*?");
     }
 
     /**
@@ -134,11 +139,11 @@ public abstract class StepUtils {
      * @return true if on bloomingdales website
      */
     public static boolean bloomingdales() {
-        if (MainRunner.brand != null) {
-            return MainRunner.brand.equalsIgnoreCase("bcom");
+        if (RunConfig.brand != null) {
+            return RunConfig.brand.equalsIgnoreCase("bcom");
         }
 
-        return MainRunner.url.matches(".*?(bloomingdales|bcom).*?");
+        return RunConfig.url.matches(".*?(bloomingdales|bcom).*?");
     }
 
     /**
@@ -156,7 +161,7 @@ public abstract class StepUtils {
      * @return true if using a mobile device
      */
     public static boolean mobileDevice() {
-        return MainRunner.device != null;
+        return RunConfig.device != null;
     }
 
     /**
@@ -167,7 +172,7 @@ public abstract class StepUtils {
     public static boolean MEW() {
         String url = url();
         if (url.isEmpty()) {
-            url = MainRunner.url;
+            url = RunConfig.url;
         }
         return url.matches(".*?m(2qa1)?\\.(qa[0-9][0-9]?code)?(macys|mcom|bcom|bloomingdales).*?");
     }
@@ -187,7 +192,7 @@ public abstract class StepUtils {
      * @return true if using a tablet device
      */
     public static boolean tablet() {
-        return MainRunner.device != null && MainRunner.device.matches(TABLETS);
+        return RunConfig.device != null && RunConfig.device.matches(TABLETS);
     }
 
     /**
@@ -196,7 +201,7 @@ public abstract class StepUtils {
      * @return true if using an IPAD
      */
     public static boolean ipad() {
-        return MainRunner.device != null && MainRunner.device.matches(IPAD);
+        return RunConfig.device != null && RunConfig.device.matches(IPAD);
     }
 
     /**
@@ -205,8 +210,8 @@ public abstract class StepUtils {
      * @return true if using an apple device
      */
     public static boolean iOS() {
-        return MainRunner.device != null && (MainRunner.device.toLowerCase().contains("ipad")
-                || MainRunner.device.toLowerCase().contains("iphone"));
+        return RunConfig.device != null && (RunConfig.device.toLowerCase().contains("ipad")
+                || RunConfig.device.toLowerCase().contains("iphone"));
     }
 
     /**
@@ -368,39 +373,35 @@ public abstract class StepUtils {
         ArrayList<String> expectedURLs = Elements.getValues(name + ".url");
 
         String currentURL = WebDriverManager.getCurrentUrl();
-        if (MainRunner.debugMode) {
-            System.err.println("---> OnPage call: " + name + "\nfound url: " + currentURL);
-        }
+        LOGGER.debug("---> OnPage call: " + name + "\nfound url: " + currentURL);
 
         String verifyElementKey = name + ".verify_page";
         List<String> verifyElement = Elements.getValues(verifyElementKey);
         for (String expectedURL : expectedURLs) {
             if (!verifyElement.isEmpty() && expectedURL != null) {
                 if (Elements.elementPresent(verifyElementKey) && currentURL.contains(expectedURL)) {
-                    System.out.println("On Page: " + name);
+                    LOGGER.info("On Page: " + name);
                     return true;
                 }
             } else if (expectedURL != null && currentURL.contains(expectedURL)) {
-                System.out.println("On Page: " + name);
+                LOGGER.info("On Page: " + name);
                 return true;
             }
         }
-        if (MainRunner.debugMode) {
-            if (verifyElement == null) {
-                System.err.println("-->Error StepUtils.onPage(): No verify_page element defined in page: " + name);
-            } else if (!Elements.elementPresent(verifyElementKey)) {
-                System.err.println("-->Error StepUtils.onPage(): verify_page element for page " + name + " not present");
-            }
+        if (verifyElement == null) {
+            LOGGER.debug("-->Error StepUtils.onPage(): No verify_page element defined in page: " + name);
+        } else if (!Elements.elementPresent(verifyElementKey)) {
+            LOGGER.debug("-->Error StepUtils.onPage(): verify_page element for page " + name + " not present");
+        }
 
-            if (expectedURLs.size() == 0) {
-                System.err.println("-->Error StepUtils.onPage(): No url element defined in page: " + name);
-            } else {
-                expectedURLs.forEach(expectedURL -> {
-                    if (!currentURL.contains(expectedURL)) {
-                        System.err.println("-->Error StepUtils.onPage(): Could not match expected url: " + expectedURL);
-                    }
-                });
-            }
+        if (expectedURLs.size() == 0) {
+            LOGGER.error("-->Error StepUtils.onPage(): No url element defined in page: " + name);
+        } else {
+            expectedURLs.forEach(expectedURL -> {
+                if (!currentURL.contains(expectedURL)) {
+                    LOGGER.error("-->Error StepUtils.onPage(): Could not match expected url: " + expectedURL);
+                }
+            });
         }
         return false;
     }
@@ -548,7 +549,7 @@ public abstract class StepUtils {
      * @param fileName file name to save screenshot as
      */
     public static void browserScreenCapture(String fileName) {
-        File imgFile = new File(MainRunner.logs + fileName);
+        File imgFile = new File(RunConfig.logs + fileName);
         try {
             File scrFile = ((TakesScreenshot) WebDriverManager.getWebDriver()).getScreenshotAs(OutputType.FILE);
             boolean success = scrFile.renameTo(imgFile);
@@ -606,7 +607,7 @@ public abstract class StepUtils {
      */
     public void analyticsTest() {
         Har har = MainRunner.browsermobServer.newHar();
-        if (MainRunner.analytics == null) {
+        if (RunConfig.analytics == null) {
             return;
         }
         int step = ScenarioHelper.getScenarioIndex();
@@ -623,18 +624,19 @@ public abstract class StepUtils {
                 }
             }
             harBuffer = entries;
-            MainRunner.analytics.analyze(ScenarioHelper.getScenarioInfo(), step, entries, ScenarioHelper.getLastStepResult());
+            RunConfig.analytics.analyze(ScenarioHelper.getScenarioInfo(), step, entries, ScenarioHelper.getLastStepResult());
         } catch (Throwable ex) {
             ex.printStackTrace();
-            Assert.fail(MainRunner.analytics.getClass().getSimpleName() + " test failed: " + ex.getMessage());
+            Assert.fail(RunConfig.analytics.getClass().getSimpleName() + " test failed: " + ex.getMessage());
         }
     }
 
     /**
      * If analytics is enabled, collect http archive data for the last step and get it
+     * @return list of har entries
      */
     public static ArrayList getHarBuffer() {
-        if (MainRunner.analytics == null) {
+        if (RunConfig.analytics == null) {
             return null;
         }
 
@@ -645,11 +647,11 @@ public abstract class StepUtils {
      * Flushes all analytics data
      */
     public void flushAnalytics() {
-        if (MainRunner.analytics == null) {
+        if (RunConfig.analytics == null) {
             return;
         }
         try {
-            MainRunner.analytics.flush(ScenarioHelper.isScenarioPassed());
+            RunConfig.analytics.flush(ScenarioHelper.isScenarioPassed());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -694,7 +696,7 @@ public abstract class StepUtils {
         public SingletonScenario(Scenario scenario) throws Exception {
             this.scenario = scenario;
             this.lockName = this.scenario.getName();
-            if (MainRunner.useSauceLabs || firefox() ||
+            if (RunConfig.useSauceLabs || firefox() ||
                     !this.scenario.getSourceTagNames().contains(TAG_SINGLETON)) {
                 return;
             }

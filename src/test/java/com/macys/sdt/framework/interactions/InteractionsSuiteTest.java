@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtilsInteractionsTests;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -39,21 +39,21 @@ public class InteractionsSuiteTest {
     @BeforeClass
     public static void setUp() throws Exception {
         try {
-            MainRunner.project = "framework";
-            MainRunner.workspace = "";
-            MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
-            MainRunner.browser = "firefox";
-            MainRunner.browserVersion = "";
-            MainRunner.remoteOS = "Windows 7";
-            MainRunner.timeout = 90;
-            MainRunner.url = "http://ui-standards.herokuapp.com";
+            RunConfig.project = "framework";
+            RunConfig.workspace = "";
+            RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+            RunConfig.browser = "firefox";
+            RunConfig.browserVersion = "";
+            RunConfig.remoteOS = "Windows 7";
+            RunConfig.timeout = 90;
+            RunConfig.url = "http://ui-standards.herokuapp.com";
             WebDriverManager.getWebDriver();
             preCondition = true;
             File htmlFile = new File("src/test/java/com/macys/sdt/framework/resources/unit_test_page.html");
             if (htmlFile.exists()) {
                 testPageUrl = "file://" + htmlFile.getAbsolutePath();
             }
-            MainRunner.debugMode = true;
+            RunConfig.debugMode = true;
         } catch (Exception e) {
             System.err.println("-->Error - Test setUp:" + e.getMessage());
         }
@@ -62,7 +62,7 @@ public class InteractionsSuiteTest {
     @AfterClass
     public static void tearDown() throws Exception {
         try {
-            MainRunner.debugMode = false;
+            RunConfig.debugMode = false;
             if (WebDriverManager.driverInitialized()) {
                 WebDriverManager.resetDriver(true);
             }

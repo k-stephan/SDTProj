@@ -3,8 +3,8 @@ package com.macys.sdt.framework.utils.analytics;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Utils;
 import gherkin.formatter.model.Result;
 import org.jsoup.Jsoup;
@@ -54,7 +54,7 @@ public abstract class Analytics {
 
     protected void loadGlobals() {
         try {
-            File fglobal = new File(getGoldPath() + MainRunner.getEnvVar("site_type").toLowerCase() + "_global.json");
+            File fglobal = new File(getGoldPath() + RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json");
             if (fglobal.exists()) {
                 Map globals = new Gson().fromJson(Utils.readTextFile(fglobal), Map.class);
                 if (globals.get("ignore") != null) {
@@ -96,7 +96,7 @@ public abstract class Analytics {
     }
 
     public String getGoldPath() throws IOException {
-        return Utils.createDirectory(MainRunner.workspace + "/golds").getCanonicalPath() + "/";
+        return Utils.createDirectory(RunConfig.workspace + "/golds").getCanonicalPath() + "/";
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class Analytics {
         File fgold = new File(getGoldPath() + getGoldName(this.scenario_info));
         if (!fgold.exists() || fgold.length() == 0) {
             if (isScenarioPassed) {
-                File flogGold = Utils.createDirectory(MainRunner.logs + "/golds");
+                File flogGold = Utils.createDirectory(RunConfig.logs + "/golds");
                 fgold = new File(flogGold.getCanonicalPath() + "/" + fgold.getName());
                 Utils.writeSmallBinaryFile(new Gson().toJson(this.gold).getBytes(), fgold);
                 System.out.println("INFO : Flushing recorded analytics as gold: " + fgold.getCanonicalPath());
@@ -120,12 +120,12 @@ public abstract class Analytics {
             }
             this.gold = null;
         } else {
-            File fresult = new File(MainRunner.logs + fgold.getName() + ".analytics.result.json");
+            File fresult = new File(RunConfig.logs + fgold.getName() + ".analytics.result.json");
             Utils.writeSmallBinaryFile(new Gson().toJson(this.results).getBytes(), fresult);
             System.out.println("INFO : Flushing analytics results: " + fresult.getCanonicalPath());
             this.results = new HashMap();
         }
-        Utils.writeSmallBinaryFile(new Gson().toJson(this.tag_histogram).getBytes(), new File(MainRunner.logs + fgold.getName() + ".tag_histogram.json"));
+        Utils.writeSmallBinaryFile(new Gson().toJson(this.tag_histogram).getBytes(), new File(RunConfig.logs + fgold.getName() + ".tag_histogram.json"));
         this.gold = null;
         this.tag_histogram.clear();
     }

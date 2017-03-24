@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.macys.sdt.framework.model.KillSwitch;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -44,8 +45,8 @@ public class RunFeature {
         System.out.println("\n\nPreparing workspace...");
         Utils.extractResources(this.m_repo_jar, this.m_workspace, System.getenv("sdt_project").trim().replace(".", "/"));
 
-        if (MainRunner.scenarios != null) {
-            MainRunner.scenarios = MainRunner.scenarios.replaceAll("features/", System.getenv("sdt_project").trim().replace(".", "/") + "/features/");
+        if (RunConfig.scenarios != null) {
+            RunConfig.scenarios = RunConfig.scenarios.replaceAll("features/", System.getenv("sdt_project").trim().replace(".", "/") + "/features/");
         }
         System.out.println("\n\n.getAnalyticsGolds");
         getAnalyticsGolds();
@@ -147,7 +148,7 @@ public class RunFeature {
     }
 
     public void getAnalyticsGolds() {
-        String analytics = MainRunner.getEnvOrExParam("analytics");
+        String analytics = RunConfig.getEnvOrExParam("analytics");
         if (analytics == null) {
             System.out.println("->non analytics run: skip analytics gold download.");
             return;
@@ -155,12 +156,12 @@ public class RunFeature {
         System.out.println("->dowloading golds...");
         File fgoldDir = Utils.createDirectory(this.m_workspace + "/golds");
         String url = "http://" + System.getenv("EE") + "/getAnalyticsGold/" + analytics + "/";
-        String global = MainRunner.getEnvVar("site_type").toLowerCase() + "_global.json";
+        String global = RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json";
         downloadGold(url + global, fgoldDir, global);
 
-        MainRunner.getFeatureScenarios();
-        for (String feature : MainRunner.features.keySet()) {
-            Map featureMap = MainRunner.features.get(feature);
+        RunConfig.getFeatureScenarios();
+        for (String feature : RunConfig.features.keySet()) {
+            Map featureMap = RunConfig.features.get(feature);
             if (featureMap != null) {
                 try {
                     String goldName = Analytics.getGoldName(featureMap);

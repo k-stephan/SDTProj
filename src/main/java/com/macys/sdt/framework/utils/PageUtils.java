@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +30,7 @@ public class PageUtils {
      */
     protected static HashMap<String, JSONObject> sharedPages = new HashMap<>();
 
-    private static String sharedDir = MainRunner.repoJar == null ? "shared" : "com/macys/sdt/shared";
+    private static String sharedDir = RunConfig.repoJar == null ? "shared" : "com/macys/sdt/shared";
 
     /**
      * Finds JSON entry value from page JSON object
@@ -103,8 +103,8 @@ public class PageUtils {
 
     private static void loadJSONFiles(String resPath, String page) {
         String responsivePage = getResponsivePath(page);
-        String projectPath = MainRunner.workspace + MainRunner.projectDir + resPath;
-        String sharedPath = MainRunner.workspace + sharedDir + resPath;
+        String projectPath = RunConfig.workspace + RunConfig.projectDir + resPath;
+        String sharedPath = RunConfig.workspace + sharedDir + resPath;
         String responsivePath = getResponsivePath(projectPath);
         String sharedResponsivePath = getResponsivePath(sharedPath);
 
@@ -244,7 +244,7 @@ public class PageUtils {
 
         // put new DataFile entry
         try {
-            if (file.getCanonicalPath().replace("/", ".").replace("\\", ".").contains(MainRunner.project)) {
+            if (file.getCanonicalPath().replace("/", ".").replace("\\", ".").contains(RunConfig.project)) {
                 projectPages.put(pagePath, pageJson);
             } else {
                 sharedPages.put(pagePath, pageJson);

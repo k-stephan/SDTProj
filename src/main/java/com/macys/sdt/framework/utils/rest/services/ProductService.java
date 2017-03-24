@@ -95,7 +95,7 @@ public class ProductService {
      * Get all upc ids and BT status for given product
      *
      * @param prodId ID of product
-     * @param zipCode
+     * @param zipCode zip code for delivery
      * @return List with all upc and status
      */
     public static List<HashMap> getBTProductDeliverabilityStatus(String prodId, String zipCode) {

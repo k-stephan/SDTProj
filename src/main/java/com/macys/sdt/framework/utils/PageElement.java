@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class PageElement {
      */
     private static String getPageFullPath(String pageName) {
         String pagePath;
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             pagePath = StepUtils.iOS() ? "iOS." : "android.";
         } else {
             pagePath = StepUtils.MEW() ? "MEW." : "website.";
@@ -139,7 +139,7 @@ public class PageElement {
                 if (isValidLocatorStrategy(locator)) {
                     value = value.replace(locator + ",", "").trim();
                     // Link text has some extra space in edge browser. So changing linkText locator to partialLinkText
-                    if (locator.contains("linkText") && MainRunner.browser.contains("edge"))
+                    if (locator.contains("linkText") && RunConfig.browser.contains("edge"))
                         locator = "partialLinkText";
                     elementLocators.add(locator);
                     elementValues.add(value);

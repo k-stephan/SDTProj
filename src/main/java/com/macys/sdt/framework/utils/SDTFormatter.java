@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import gherkin.deps.com.google.gson.GsonBuilder;
 import gherkin.deps.net.iharder.Base64;
 import gherkin.formatter.Formatter;
@@ -22,7 +23,7 @@ public class SDTFormatter implements Reporter, Formatter {
     private Map<String, Object> featureMap;
     private String uri;
     private List<Map> beforeHooks = new ArrayList<>();
-    private File m_fcucumberJson = new File(MainRunner.logs + "cucumber.json");
+    private File m_fcucumberJson = new File(RunConfig.logs + "cucumber.json");
 
     public SDTFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
@@ -102,11 +103,11 @@ public class SDTFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-        if (!result.getStatus().equals("passed") && !MainRunner.dryRun) {
+        if (!result.getStatus().equals("passed") && !RunConfig.dryRun) {
             System.err.println(" --> " + result.getStatus().toUpperCase());
         }
         HashMap<String, Object> map = new HashMap<>(result.toMap());
-        if (!MainRunner.dryRun && !result.getStatus().equals("passed")) {
+        if (!RunConfig.dryRun && !result.getStatus().equals("passed")) {
             String tempUri = this.uri;
             if (ScenarioHelper.isScenarioOutline()) {
                 tempUri += ScenarioHelper.outlineCount;

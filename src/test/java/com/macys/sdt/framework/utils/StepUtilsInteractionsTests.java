@@ -4,8 +4,8 @@ import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.InteractionsSuiteTest;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.*;
 import org.openqa.selenium.Point;
 
@@ -42,9 +42,9 @@ public class StepUtilsInteractionsTests {
     public void testClosePopup() throws Exception {
         Clicks.click("unit_test_page.open_popup_window");
         Assume.assumeTrue(new ArrayList<>(WebDriverManager.getWebDriver().getWindowHandles()).size() == 2);
-        MainRunner.brand = "bcom";
+        RunConfig.brand = "bcom";
         StepUtils.closePopup();
-        MainRunner.brand = null;
+        RunConfig.brand = null;
         Assert.assertEquals(1, new ArrayList<>(WebDriverManager.getWebDriver().getWindowHandles()).size());
         Assert.assertEquals("SDT Framework Interactions Unit Testing", StepUtils.title());
     }
@@ -110,11 +110,11 @@ public class StepUtilsInteractionsTests {
 
     @Test
     public void testBrowserScreenCapture() throws Exception {
-        MainRunner.logs = "logs/";
-        Utils.createDirectory(MainRunner.logs, false);
+        RunConfig.logs = "logs/";
+        Utils.createDirectory(RunConfig.logs, false);
         String fileName = "testBrowserScreenCapture.png";
         StepUtils.browserScreenCapture(fileName);
-        Assert.assertTrue(new File(MainRunner.logs + fileName).exists());
+        Assert.assertTrue(new File(RunConfig.logs + fileName).exists());
     }
 
     @Test

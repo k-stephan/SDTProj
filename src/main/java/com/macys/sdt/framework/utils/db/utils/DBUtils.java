@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.db.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.*;
 import org.apache.http.ParseException;
 import org.json.JSONException;
@@ -84,8 +84,8 @@ public class DBUtils {
         String json;
 
         // This is for testing DBUtils and DBConnection
-        if (MainRunner.booleanParam("dbUnitTest")) {
-            json = MainRunner.getEnvVar("dbUnitTestConfig");
+        if (RunConfig.booleanParam("dbUnitTest")) {
+            json = RunConfig.getEnvVar("dbUnitTestConfig");
             if (json == null) {
                 return null;
             }

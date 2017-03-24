@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.db.models;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
 import com.macys.sdt.framework.utils.rest.services.Canvas;
@@ -1181,8 +1181,7 @@ public class MediaService {
             preparedStatement.setString(index, values[index-1]);
             dummySqlQuery = dummySqlQuery.replaceFirst("\\?", "'"+values[index-1]+"'");
         }
-        if (MainRunner.debugMode)
-            LOGGER.info("--> executeQuery :: ->"+dummySqlQuery);
+        LOGGER.debug("--> executeQuery :: ->"+dummySqlQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
         return resultSet;
     }
@@ -1194,8 +1193,7 @@ public class MediaService {
             preparedStatement.setInt(index, values[index-1]);
             dummySqlQuery = dummySqlQuery.replaceFirst("\\?", String.valueOf(values[index-1]));
         }
-        if (MainRunner.debugMode)
-            LOGGER.info("--> executeQuery :: ->"+dummySqlQuery);
+        LOGGER.debug("--> executeQuery :: ->"+dummySqlQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
         return resultSet;
     }

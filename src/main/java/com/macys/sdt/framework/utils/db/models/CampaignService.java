@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.db.models;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
@@ -402,7 +402,7 @@ public class CampaignService extends StepUtils {
     private static void clearShopAppCampaignCache() {
         String url = "/account/campaigncontent?removeCache=true";
         try {
-            Response response = RESTOperations.doGET(MainRunner.url.replace("http:", "https:") + url, null);
+            Response response = RESTOperations.doGET(RunConfig.url.replace("http:", "https:") + url, null);
             if (response.getStatus() != 302) {
                 throw new Exception("ShopApp MBMoney cache is not cleared properly");
             }

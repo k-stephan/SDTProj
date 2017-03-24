@@ -1,7 +1,6 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.MainRunner;
-import com.macys.sdt.framework.utils.db.utils.Environment;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -23,13 +22,13 @@ public class EnvironmentDetailsTest {
 
     @AfterClass
     public static void tearDown() {
-        MainRunner.url = null;
+        RunConfig.url = null;
     }
 
     @Test
     public void testGceEnvDetails() throws Exception {
         String WEBSITE = "http://mcom-1114.c4d.devops.fds.com/";
-        MainRunner.url = WEBSITE;
+        RunConfig.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         EnvironmentDetails.getTestServiceData();
@@ -40,7 +39,7 @@ public class EnvironmentDetailsTest {
     @Test
     public void testStage5EnvDetails() throws Exception {
         String WEBSITE = "http://qa11codemacys.fds.com/";
-        MainRunner.url = WEBSITE;
+        RunConfig.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         EnvironmentDetails.getTestServiceData();
@@ -52,7 +51,7 @@ public class EnvironmentDetailsTest {
     @Test
     public void testStage5BcomEnvDetails() throws Exception {
         String WEBSITE = "http://qa7codebloomingdales.fds.com/";
-        MainRunner.url = WEBSITE;
+        RunConfig.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         EnvironmentDetails.getTestServiceData();
@@ -64,7 +63,7 @@ public class EnvironmentDetailsTest {
     @Test
     public void testMyServicesApp() throws Exception {
         String WEBSITE = "http://www.qa0codemacys.fds.com/";
-        MainRunner.url = WEBSITE;
+        RunConfig.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         EnvironmentDetails.getTestServiceData();
@@ -77,7 +76,7 @@ public class EnvironmentDetailsTest {
     @Test
     public void testOtherApp() throws Exception {
         String WEBSITE = "http://www.qa0codemacys.fds.com/";
-        MainRunner.url = WEBSITE;
+        RunConfig.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
         EnvironmentDetails.AppDetails envDetails = EnvironmentDetails.otherApp("BagApp");

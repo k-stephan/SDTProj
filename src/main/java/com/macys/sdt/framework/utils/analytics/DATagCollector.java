@@ -6,8 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.Utils.ProcessWatchDog;
 import cucumber.api.Scenario;
@@ -90,7 +90,7 @@ public class DATagCollector {
         // init outfile per scenario
         json_top = new JSONObject();
         json_steps = new JSONArray();
-        String tag_collection_dir = MainRunner.workspace + "/logs/";
+        String tag_collection_dir = RunConfig.workspace + "/logs/";
         Utils.createDirectory(tag_collection_dir);
         output_file = tag_collection_dir + getShaKey(scenario) + "-" + getTimestamp() + ".json";
 
@@ -154,7 +154,7 @@ public class DATagCollector {
         }
 
         if (capture_file == null) {
-            capture_file = MainRunner.workspace + "/temp/digital_analytics_capture";
+            capture_file = RunConfig.workspace + "/temp/digital_analytics_capture";
         }
         Process p = null;
         try {
@@ -254,7 +254,7 @@ public class DATagCollector {
     }
 
     private static String getShaKey(Scenario scenario) {
-        Iterator it = MainRunner.features.values().iterator();
+        Iterator it = RunConfig.features.values().iterator();
         Map feature = (Map) it.next();
         String featurepath = feature.get("uri").toString();
 

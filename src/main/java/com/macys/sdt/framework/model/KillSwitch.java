@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.model;
 
 import com.google.gson.Gson;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.Utils;
 
 import java.io.File;
@@ -28,7 +28,7 @@ public class KillSwitch {
         }
 
         // This is for KillSwitch Unit Test
-        if (MainRunner.booleanParam("killSwitchUnitTest")) {
+        if (RunConfig.booleanParam("killSwitchUnitTest")) {
             File ksDataFile = new File("src/test/java/com/macys/sdt/framework/resources/sample_ks_data.json");
             if (ksDataFile.exists()) {
                 try {

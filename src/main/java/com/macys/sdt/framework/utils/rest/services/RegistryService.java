@@ -67,6 +67,7 @@ public class RegistryService {
      * @param user User to base off of. Pass null to use current signed in user
      * @return Registry that is created or null on failure
      * @throws ProductionException if called while executing against production
+     * @throws UserException if unable to work with given user
      */
     public static Registry createRandomRegistry(User user) throws ProductionException, UserException {
         if (StepUtils.prodEnv()) {

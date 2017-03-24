@@ -2,7 +2,7 @@ package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.interactions.Navigate;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -23,8 +25,10 @@ import static com.macys.sdt.framework.utils.StepUtils.*;
  */
 public class Cookies {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Cookies.class);
+
     private static String domain = "." +
-            Utils.removeFromString(MainRunner.url, "www1.", "www.", "http://", "https://", "m\\.", "m2qa1\\.");
+            Utils.removeFromString(RunConfig.url, "www1.", "www.", "http://", "https://", "m\\.", "m2qa1\\.");
 
     /**
      * Changes the domain used to create and update cookies
@@ -63,7 +67,7 @@ public class Cookies {
      * Resets the domain back to the default domain based on the "website" environment variable
      */
     public static void resetDomain() {
-        domain = MainRunner.url.replace("www1", "").replace("www", "").replace("http://", "").replaceFirst("m\\.", "");
+        domain = RunConfig.url.replace("www1", "").replace("www", "").replace("http://", "").replaceFirst("m\\.", "");
     }
 
     /**
@@ -74,7 +78,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookie(String name, String value) {
-        return !MainRunner.useAppium && (ie() || edge()) ? addCookieJavascript(name, value) : addCookie(name, value, "/", getExpiry());
+        return !RunConfig.useAppium && (ie() || edge()) ? addCookieJavascript(name, value) : addCookie(name, value, "/", getExpiry());
     }
 
     /**
@@ -87,7 +91,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookie(String name, String value, String path, Date expiry) {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return false;
         }
 
@@ -117,7 +121,7 @@ public class Cookies {
      * @return true if cookie is deleted
      */
     public static boolean deleteCookie(String name) {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return false;
         }
 
@@ -135,7 +139,7 @@ public class Cookies {
      * Deletes all cookies. Uses JS on browsers that aren't supported by Selenium cookies
      */
     public static void deleteAllCookies() {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return;
         }
 
@@ -159,7 +163,7 @@ public class Cookies {
      * @return true if cookie is edited
      */
     public static boolean editCookie(String name, String replace, String with) {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return false;
         }
 
@@ -175,7 +179,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookieJavascript(String name, String value) {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return false;
         }
 
@@ -198,7 +202,7 @@ public class Cookies {
      * @return true if cookie is added
      */
     public static boolean addCookieJavascript(String name, String value, String path, Date expiry) {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return false;
         }
         String encodedValue = encodeURL(value);
@@ -221,7 +225,7 @@ public class Cookies {
      * @param name name of cookie to delete
      */
     public static void deleteCookieJavascript(String name) {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return;
         }
 
@@ -232,7 +236,7 @@ public class Cookies {
      * Delete all cookies using javascript
      */
     public static void deleteAllCookiesJavascript() {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return;
         }
 
@@ -255,7 +259,7 @@ public class Cookies {
      * @return String representation of cookie value. Empty string if cookie not found.
      */
     public static String getCookieValue(String name) {
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return "";
         }
 
@@ -406,14 +410,14 @@ public class Cookies {
             fsr_r = "{\"d\":90,\"i\":\"de25df2-105324912-a3ea-edc0-dcdd0\",\"e\":1406678138341}";
             fsr_s = "{\"v\":1,\"rid\":\"de25df2-105324912-a3ea-edc0-dcdd0\"," +
                     "\"cp\":{\"isAuthenticated\":\"none\",\"MEW_2_0\":\"2.0\",\"Currency\":\"false\"," +
-                    "\"Shipping_Country\":\"false\"},\"to\":3.1,\"c\":\"" + MainRunner.url + "\"," +
+                    "\"Shipping_Country\":\"false\"},\"to\":3.1,\"c\":\"" + RunConfig.url + "\"," +
                     "\"pv\":10,\"lc\":{\"d0\":{\"v\":10,\"s\":true}}," +
                     "\"cd\":0,\"sd\":0,\"l\":\"en\",\"i\":-1,\"f\":1406073395349}";
         } else {
             fsr_r = "{\"d\":365,\"i\":\"d036702-53369766-67bf-6dea-4b996\",\"e\":1408990569653, \"s\":1}";
             fsr_s = "{\"v2\":-2,\"v1\":1,\"rid\":\"d036702-53369766-67bf-6dea-4b996\"," +
                     "\"cp\":{isAuthenticated:\"none\"}," +
-                    "\"to\":3,\"c\":" + MainRunner.url +
+                    "\"to\":3,\"c\":" + RunConfig.url +
                     "\"pv\":1," +
                     "\"lc\":{\"d0\":{\"v\":1,\"s\":false}}," +
                     "\"cd\":0}";
@@ -505,9 +509,7 @@ public class Cookies {
      * @return true if experiments are disabled successfully
      */
     public static boolean disableExperimentation() {
-        if (MainRunner.debugMode) {
-            System.out.println("Disabling experimentation");
-        }
+        LOGGER.debug("Disabling experimentation");
         addCookie("mercury", "false");
         return setSingleSegment("");
     }

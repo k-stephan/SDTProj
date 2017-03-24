@@ -1,7 +1,7 @@
 package com.macys.sdt.framework.interactions;
 
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -53,11 +53,11 @@ public class WaitTests {
     @Test
     public void testUntilElementNotPresentNegative() throws Exception {
         Assume.assumeTrue(Elements.elementPresent("unit_test_page.div_hide"));
-        int timeout = MainRunner.timeout;
-        MainRunner.timeout = 2;
+        int timeout = RunConfig.timeout;
+        RunConfig.timeout = 2;
         Assert.assertFalse(Wait.untilElementNotPresent("unit_test_page.div_hide"));
         Assert.assertFalse(Wait.untilElementNotPresent(Elements.findElement("unit_test_page.div_hide")));
-        MainRunner.timeout = timeout;
+        RunConfig.timeout = timeout;
     }
 
     @Test
@@ -102,11 +102,11 @@ public class WaitTests {
     @Test
     public void testSecondsUntilElementNotPresentNegative() throws Exception {
         Assume.assumeTrue(Elements.elementPresent("unit_test_page.div_hide"));
-        int timeout = MainRunner.timeout;
-        MainRunner.timeout = 2;
+        int timeout = RunConfig.timeout;
+        RunConfig.timeout = 2;
         Assert.assertFalse(Wait.secondsUntilElementNotPresent("unit_test_page.div_hide", 2));
         Assert.assertFalse(Wait.secondsUntilElementNotPresent(Elements.element("unit_test_page.nod_defined"), 2));
-        MainRunner.timeout = timeout;
+        RunConfig.timeout = timeout;
     }
 
     @Test

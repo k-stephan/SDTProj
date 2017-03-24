@@ -28,32 +28,32 @@ public class WebDriverConfiguratorTest {
         } catch (Exception e) {
             System.err.println("--> Error - After Test reset driver: " + e.getMessage());
         }
-        MainRunner.browser = null;
-        MainRunner.remoteOS = null;
-        MainRunner.device = null;
+        RunConfig.browser = null;
+        RunConfig.remoteOS = null;
+        RunConfig.device = null;
     }
 
     @Test
     public void testDefaultBrowserVersion() throws Exception {
-        MainRunner.browser = "firefox";
+        RunConfig.browser = "firefox";
         Assert.assertNotNull(WebDriverConfigurator.defaultBrowserVersion());
-        MainRunner.browser = "edge";
+        RunConfig.browser = "edge";
         Assert.assertNotNull(WebDriverConfigurator.defaultBrowserVersion());
-        MainRunner.browser = "ie";
+        RunConfig.browser = "ie";
         Assert.assertNotNull(WebDriverConfigurator.defaultBrowserVersion());
-        MainRunner.browser = "safari";
+        RunConfig.browser = "safari";
         Assert.assertNotNull(WebDriverConfigurator.defaultBrowserVersion());
-        MainRunner.remoteOS = "OS";
+        RunConfig.remoteOS = "OS";
         Assert.assertNotNull(WebDriverConfigurator.defaultBrowserVersion());
-        MainRunner.browser = "chrome";
+        RunConfig.browser = "chrome";
         Assert.assertNotNull(WebDriverConfigurator.defaultBrowserVersion());
     }
 
     @Test @Ignore("Ignore for Jenkins")
     public void testInitDriverWithProxy() throws Exception {
-        MainRunner.browser = "firefox";
-        MainRunner.remoteOS = "Windows 7";
-        MainRunner.disableProxy = false;
+        RunConfig.browser = "firefox";
+        RunConfig.remoteOS = "Windows 7";
+        RunConfig.disableProxy = false;
         try {
             driver = WebDriverConfigurator.initDriverWithProxy();
             Assert.assertNotNull(MainRunner.browsermobServer);
@@ -66,15 +66,15 @@ public class WebDriverConfiguratorTest {
             Assert.fail("Failed to initialize the driver due to: " +e.getMessage());
         }
         finally {
-            MainRunner.disableProxy = true;
+            RunConfig.disableProxy = true;
             MainRunner.browsermobServer = null;
         }
     }
 
     @Test @Ignore("Ignore for Jenkins")
     public void testInitFirefoxDriver() throws Exception {
-        MainRunner.browser = "";
-        MainRunner.remoteOS = "Windows 7";
+        RunConfig.browser = "";
+        RunConfig.remoteOS = "Windows 7";
         try {
             driver = WebDriverConfigurator.initDriver(null);
             Assert.assertEquals(((FirefoxDriver) driver).getCapabilities().getBrowserName(), "firefox");
@@ -87,8 +87,8 @@ public class WebDriverConfiguratorTest {
     @Test @Ignore("Ignore for Jenkins")
     public void testInitChromeDriver() throws Exception {
         String browser = "chrome";
-        MainRunner.browser = browser;
-        MainRunner.remoteOS = "Windows 7";
+        RunConfig.browser = browser;
+        RunConfig.remoteOS = "Windows 7";
         try {
             driver = WebDriverConfigurator.initDriver(null);
             Assert.assertEquals(((ChromeDriver) driver).getCapabilities().getBrowserName(), browser);
@@ -100,8 +100,8 @@ public class WebDriverConfiguratorTest {
 
     @Test @Ignore("Ignore for Jenkins")
     public void testInitInternetExplorerDriver() throws Exception {
-        MainRunner.browser = "ie";
-        MainRunner.remoteOS = "Windows 7";
+        RunConfig.browser = "ie";
+        RunConfig.remoteOS = "Windows 7";
         HashMap<String, String> env = new HashMap<>();
         env.put("HOME", "src/test/java/com/macys/sdt/framework/resources");
         TestUtils.setEnv(env);
@@ -116,11 +116,11 @@ public class WebDriverConfiguratorTest {
 
     @Test @Ignore("Ignore for Jenkins")
     public void testSetupChromeEmulator() throws Exception {
-        MainRunner.useChromeEmulation = true;
-        MainRunner.browser = "chrome";
-        MainRunner.remoteOS = "Windows 7";
+        RunConfig.useChromeEmulation = true;
+        RunConfig.browser = "chrome";
+        RunConfig.remoteOS = "Windows 7";
         try {
-            MainRunner.device = "Google Nexus 6";
+            RunConfig.device = "Google Nexus 6";
             driver = WebDriverConfigurator.initDriver(null);
             Assert.assertTrue(((ChromeDriver) driver).getCapabilities().is("mobileEmulationEnabled"));
         }
@@ -128,19 +128,19 @@ public class WebDriverConfiguratorTest {
             Assert.fail("Failed to initialize the driver due to: " +e.getMessage());
         }
         finally {
-            MainRunner.useChromeEmulation = false;
+            RunConfig.useChromeEmulation = false;
         }
     }
 
     @Test
     public void testInitSauceLabs() throws Exception {
-        MainRunner.browser = "safari";
-        MainRunner.remoteOS = "OS X 10.11";
-        MainRunner.browserVersion = "10";
-        MainRunner.brand = "MCOM";
-        MainRunner.useSauceLabs = true;
-        MainRunner.sauceUser = "satish-macys";
-        MainRunner.sauceKey = "4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40";
+        RunConfig.browser = "safari";
+        RunConfig.remoteOS = "OS X 10.11";
+        RunConfig.browserVersion = "10";
+        RunConfig.brand = "MCOM";
+        RunConfig.useSauceLabs = true;
+        RunConfig.sauceUser = "satish-macys";
+        RunConfig.sauceKey = "4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40";
         try {
             driver = WebDriverConfigurator.initDriver(null);
             Assert.assertNotNull(((RemoteWebDriver) driver).getCapabilities().getCapability("webdriver.remote.sessionid"));
@@ -149,27 +149,27 @@ public class WebDriverConfiguratorTest {
             Assert.fail("Failed to initialize the driver due to: " +e.getMessage());
         }
         finally {
-            MainRunner.useSauceLabs = false;
-            MainRunner.sauceUser = null;
-            MainRunner.sauceKey = null;
-            MainRunner.browserVersion = null;
-            MainRunner.brand = null;
+            RunConfig.useSauceLabs = false;
+            RunConfig.sauceUser = null;
+            RunConfig.sauceKey = null;
+            RunConfig.browserVersion = null;
+            RunConfig.brand = null;
         }
     }
 
     @Test @Ignore("Ignore for Jenkins")
     public void testInitAppiumDevice() throws Exception {
-        MainRunner.browser = "safari";
-        MainRunner.device = "iPhone 6";
-        MainRunner.brand = "MCOM";
-        MainRunner.useAppium = true;
+        RunConfig.browser = "safari";
+        RunConfig.device = "iPhone 6";
+        RunConfig.brand = "MCOM";
+        RunConfig.useAppium = true;
         try {
             driver = WebDriverConfigurator.initDriver(null);
         } catch (Exception e) {
             Assert.fail("Failed to initialize the driver due to: " + e.getMessage());
         } finally {
-            MainRunner.useAppium = false;
-            MainRunner.brand = null;
+            RunConfig.useAppium = false;
+            RunConfig.brand = null;
         }
     }
 }

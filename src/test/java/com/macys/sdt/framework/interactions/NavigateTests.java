@@ -1,8 +1,8 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -21,7 +21,7 @@ public class NavigateTests {
     @BeforeClass
     public static void setUp() {
         Assume.assumeTrue("Precondition not met.", InteractionsSuiteTest.getPreCondition());
-        Navigate.visit(MainRunner.url);
+        Navigate.visit(RunConfig.url);
         Wait.forPageReady();
         Assume.assumeTrue(StepUtils.onPage("ui_standards"));
     }

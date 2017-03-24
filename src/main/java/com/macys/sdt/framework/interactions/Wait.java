@@ -2,6 +2,7 @@ package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
@@ -75,7 +76,7 @@ public class Wait {
      */
     public static boolean untilElementNotPresent(By selector) {
         try {
-            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), RunConfig.timeout);
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
@@ -92,7 +93,7 @@ public class Wait {
      */
     public static boolean untilElementNotPresent(List<WebElement> list) {
         try {
-            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), RunConfig.timeout);
             wait.until(ExpectedConditions.invisibilityOfAllElements(list));
             return true;
         } catch (Exception ex) {
@@ -225,11 +226,9 @@ public class Wait {
             wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                LOGGER.debug(Utils.listToString(Utils.getCallFromFunction(
-                        "secondsUntilElementPresent"), "\n\t ", null) + ": " + selector.toString());
-            }
-           LOGGER.error(ex.getMessage());
+            LOGGER.debug(Utils.listToString(Utils.getCallFromFunction(
+                    "secondsUntilElementPresent"), "\n\t ", null) + ": " + selector.toString());
+            LOGGER.error(ex.getMessage());
             return false;
         }
     }
@@ -261,9 +260,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:secondsUntilElementNotPresent(): " + selector.toString());
-            }
+            LOGGER.debug("-->Error:secondsUntilElementNotPresent(): " + selector.toString());
             LOGGER.error(ex.getMessage());
             return false;
         }
@@ -283,9 +280,7 @@ public class Wait {
                 Navigate.browserRefresh();
             }
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:untilElementPresentWithRefresh(): " + selector.toString() + ": " + ex.getMessage());
-            }
+            LOGGER.debug("-->Error:untilElementPresentWithRefresh(): " + selector.toString() + ": " + ex.getMessage());
         }
     }
 
@@ -306,9 +301,8 @@ public class Wait {
                 Navigate.browserRefresh();
             }
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:untilElementPresentWithRefresh(): " + el1.toString() + ": " + el2.toString() + ": " + ex.getMessage());
-            }
+            LOGGER.debug("-->Error:untilElementPresentWithRefresh(): " + el1.toString() + ": " + el2.toString() + ": " + ex.getMessage());
+
         }
     }
 
@@ -327,9 +321,7 @@ public class Wait {
                 }
             }
         } catch (Exception ex) {
-            if (MainRunner.debugMode) {
-                System.err.println("-->Error:untilElementPresentWithRefreshAndClick(): " + waitFor.toString() + ": " + toClick.toString());
-            }
+            LOGGER.debug("-->Error:untilElementPresentWithRefreshAndClick(): " + waitFor.toString() + ": " + toClick.toString());
             LOGGER.error(ex.getMessage());
         }
     }
@@ -365,7 +357,7 @@ public class Wait {
      */
     public static void attributeChanged(WebElement element, String attr, String expectedValue) {
         try {
-            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout);
+            WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), RunConfig.timeout);
 
             wait.until(new ExpectedCondition<Boolean>() {
                 private WebElement element;
@@ -381,9 +373,7 @@ public class Wait {
 
                 public Boolean apply(WebDriver driver) {
                     String enabled = element.getAttribute(this.attr);
-                    if (MainRunner.debugMode) {
-                        System.out.println("wait: init = (" + expectedValue + "), enabled = (" + enabled + ")");
-                    }
+                    LOGGER.debug("wait: init = (" + expectedValue + "), enabled = (" + enabled + ")");
                     return enabled.matches(this.expectedValue);
                 }
             }.init(element, attr, expectedValue));
@@ -418,11 +408,11 @@ public class Wait {
     public static boolean forPageReady(final String pageName) {
         // app loading is handled much better, there are already built-in waits in appium interactions
         // that work perfectly well. Sadly, not the same for the website.
-        if (appTest || waitDone) {
+        if (RunConfig.appTest || waitDone) {
             return true;
         }
 
-        int waitTime = MainRunner.timeout;
+        int waitTime = RunConfig.timeout;
         //final long ts = System.currentTimeMillis();
         try {
             new WebDriverWait(WebDriverManager.getWebDriver(), waitTime).until((WebDriver wDriver) -> {
@@ -434,7 +424,7 @@ public class Wait {
                     return animationDone() && ajaxDone() && isPageLoaded();
                 } catch (Exception e) {
                     // IE likes to throw a lot of garbage exceptions, don't bother printing them out
-                    if (MainRunner.debugMode && !StepUtils.ie() && !StepUtils.safari()) {
+                    if (RunConfig.debugMode && !StepUtils.ie() && !StepUtils.safari()) {
                         System.out.println("Exception in forPageReady: ");
                         System.err.println(e.getMessage());
                     }
@@ -485,7 +475,7 @@ public class Wait {
      * @return true if no active ajax calls
      */
     public static boolean ajaxDone() {
-        if (useAppium) {
+        if (RunConfig.useAppium) {
             return true;
         }
         StepUtils.ajaxCheck = true;

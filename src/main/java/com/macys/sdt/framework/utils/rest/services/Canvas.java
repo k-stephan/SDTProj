@@ -1,6 +1,6 @@
 package com.macys.sdt.framework.utils.rest.services;
 
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ public class Canvas {
         headers.put("X-Macys-ClientId", "NavApp");
         headers.put("X-Macys-Customer-Id", "1234");
         headers.put("X-Macys-RequestId", "123456");
-        if (MainRunner.debugMode){
+        if (RunConfig.debugMode){
             LOGGER.info("--> Service Request URL: -> "+serviceUrl);
             LOGGER.info("--> Headers: -> "+headers.toString());
         }

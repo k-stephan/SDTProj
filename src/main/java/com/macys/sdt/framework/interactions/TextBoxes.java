@@ -1,8 +1,8 @@
 package com.macys.sdt.framework.interactions;
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static com.macys.sdt.framework.runner.MainRunner.appTest;
+import static com.macys.sdt.framework.runner.RunConfig.appTest;
 
 /**
  * A collection of ways to interact with text boxes
@@ -37,7 +37,7 @@ public class TextBoxes {
         Navigate.runBeforeNavigation();
         Wait.forPageReady();
         try {
-            new WebDriverWait(WebDriverManager.getWebDriver(), MainRunner.timeout).until(ExpectedConditions.elementToBeClickable(selector));
+            new WebDriverWait(WebDriverManager.getWebDriver(), RunConfig.timeout).until(ExpectedConditions.elementToBeClickable(selector));
             WebElement element = Elements.findElement(selector);
             if (element != null) {
                 element.clear();

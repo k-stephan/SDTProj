@@ -5,7 +5,7 @@ import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.ObjectMapperProvidor;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
@@ -63,7 +63,6 @@ public class UserProfileService {
     /**
      * This method will create the given user profile
      * <p>
-     * <p>
      * Note: The v2 service requires significantly less data to create an account than v1.
      * If you have only a few fields filled in, use v2.
      * </p>
@@ -117,7 +116,7 @@ public class UserProfileService {
 
     private static String getServiceURL(boolean v1) {
         try {
-            URL url = new URL(MainRunner.url);
+            URL url = new URL(RunConfig.url);
             return "http://api." + url.getHost().replace("www.", "").replace("www1.", "").replace("m.", "")
                     + (v1 ? RESTEndPoints.CREATE_USER_PROFILE : RESTEndPoints.CREATE_USER_PROFILE_V2);
         } catch (MalformedURLException e) {

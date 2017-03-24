@@ -40,6 +40,7 @@ public class WebDriverManager {
      * </p>
      *
      * @return the active Appium driver
+     * @throws DriverNotInitializedException if driver isn't initialized
      */
     public static AppiumDriver getAppiumDriver() throws DriverNotInitializedException {
         if (driver == null) {
@@ -52,6 +53,7 @@ public class WebDriverManager {
      * Gets the active iOS driver if the driver is an iOS driver, otherwise null
      *
      * @return the active iOS driver
+     * @throws DriverNotInitializedException if driver isn't initialized
      */
     public static IOSDriver getIOSDriver() throws DriverNotInitializedException {
         if (driver == null) {
@@ -64,6 +66,7 @@ public class WebDriverManager {
      * Gets the active android driver if the driver is an android driver, otherwise null
      *
      * @return the active Android driver
+     * @throws DriverNotInitializedException if driver isn't initialized
      */
     public static AndroidDriver getAndroidDriver() throws DriverNotInitializedException {
         if (driver == null) {
@@ -76,10 +79,11 @@ public class WebDriverManager {
      * Gets the current webDriver instance or tries to create one
      *
      * @return current webDriver instance
+     * @throws DriverNotInitializedException if driver isn't initialized
      */
     public static synchronized WebDriver getWebDriver() throws DriverNotInitializedException {
         if (MainRunner.URLStack.size() == 0) {
-            MainRunner.URLStack.add(MainRunner.url);
+            MainRunner.URLStack.add(RunConfig.url);
         }
 
         if (driver == null) {
@@ -97,7 +101,7 @@ public class WebDriverManager {
             driver.quit();
         }
         for (int i = 0; i < 2; i++) {
-            if (MainRunner.disableProxy) {
+            if (RunConfig.disableProxy) {
                 // System.out.println("DEBUG stack trace: " +
                 //        Utils.listToString(Utils.getCallFromFunction("getWebDriver"), "\n\t ", null));
                 driver = WebDriverConfigurator.initDriver(null);
@@ -106,8 +110,8 @@ public class WebDriverManager {
             }
 
             try {
-                if (!MainRunner.useAppium) {
-                    if (MainRunner.browser.equals("safari")) {
+                if (!RunConfig.useAppium) {
+                    if (RunConfig.browser.equals("safari")) {
                         Dimension dimension = new Dimension(1280, 1024);
                         driver.manage().window().setSize(dimension);
                     } else {
@@ -158,7 +162,7 @@ public class WebDriverManager {
     }
 
     public static void setPassed(boolean passed) {
-        SauceREST client = new SauceREST(MainRunner.sauceUser, MainRunner.sauceKey);
+        SauceREST client = new SauceREST(RunConfig.sauceUser, RunConfig.sauceKey);
         String sessionId = ((RemoteWebDriver) driver).getSessionId().toString();
         if (passed) {
             client.jobPassed(sessionId);
@@ -174,7 +178,7 @@ public class WebDriverManager {
      */
     public static void resetDriver(boolean quit) {
         try {
-            if (quit || MainRunner.useSauceLabs) {
+            if (quit || RunConfig.useSauceLabs) {
                 driver.quit();
                 System.out.println("driver quit");
                 if (ie()) {
@@ -200,17 +204,17 @@ public class WebDriverManager {
      */
     public static String getCurrentUrl() {
         // apps don't have urls!
-        if (MainRunner.appTest) {
+        if (RunConfig.appTest) {
             return "";
         }
 
         if (!driverInitialized()) {
-            return MainRunner.url;
+            return RunConfig.url;
         }
 
         String curUrl = driver.getCurrentUrl();
         if (curUrl.matches(".*?data.*?")) {
-            return MainRunner.url;
+            return RunConfig.url;
         }
         MainRunner.currentURL = curUrl;
 

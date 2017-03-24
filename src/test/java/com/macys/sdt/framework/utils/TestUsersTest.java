@@ -4,7 +4,7 @@ import com.macys.sdt.framework.model.*;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.model.registry.Registry;
 import com.macys.sdt.framework.model.user.*;
-import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.RunConfig;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -22,9 +22,9 @@ public class TestUsersTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        MainRunner.project = "framework";
-        MainRunner.projectDir = "src/test/java/com/macys/sdt/framework";
-        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        RunConfig.project = "framework";
+        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.url = "http://www.qa0codemacys.fds.com";
     }
 
 
@@ -122,13 +122,13 @@ public class TestUsersTest {
 
     @Test
     public void testGetLoyallistInformation() throws Exception {
-        MainRunner.url = "http://www.qa0codebloomingdales.fds.com";
+        RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
         LoyalistDetails loyalist = TestUsers.getLoyallistInformation("basetier_loyallist");
         Assert.assertNotNull(loyalist);
         Assert.assertNotNull(loyalist.getLoyaltyId());
         Assert.assertNotNull(loyalist.getLastName());
         Assert.assertNotNull(loyalist.getZipCode());
-        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        RunConfig.url = "http://www.qa0codemacys.fds.com";
     }
 
     @Test
@@ -309,7 +309,7 @@ public class TestUsersTest {
 
     @Test
     public void testGetLoyallistDetails() throws Exception {
-        MainRunner.url = "http://www.qa0codebloomingdales.fds.com";
+        RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
         String loyalistType = "toptier_loyallist";
         LoyalistDetails loyalist = TestUsers.getLoyallistDetails(loyalistType);
         Assert.assertNotNull(loyalist);
@@ -321,7 +321,7 @@ public class TestUsersTest {
         Assert.assertNotNull(loyalist.getSecurityCode());
         Assert.assertNotNull(loyalist.getBillingLastName());
         Assert.assertNotNull(loyalist.getBillingZipCode());
-        MainRunner.url = "http://www.qa0codemacys.fds.com";
+        RunConfig.url = "http://www.qa0codemacys.fds.com";
     }
 
     @Test

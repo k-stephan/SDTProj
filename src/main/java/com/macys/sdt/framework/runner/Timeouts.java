@@ -58,7 +58,7 @@ public class Timeouts {
      */
     private int getTimeout(String key, int defaultSeconds) {
         if (!timeouts.containsKey(key)) {
-            String customValue = MainRunner.getEnvOrExParam(key);
+            String customValue = RunConfig.getEnvOrExParam(key);
             int timeout;
             if (customValue != null && customValue.matches("^\\d+$")) {
                 timeout = Integer.parseInt(customValue);

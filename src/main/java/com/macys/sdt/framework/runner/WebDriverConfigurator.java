@@ -27,6 +27,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ThreadGuard;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import static com.macys.sdt.framework.runner.MainRunner.*;
+import static com.macys.sdt.framework.runner.MainRunner.browsermobServer;
+import static com.macys.sdt.framework.runner.RunConfig.*;
 
 class WebDriverConfigurator {
 
@@ -70,8 +72,8 @@ class WebDriverConfigurator {
 
         if (!remoteOS.equals("Linux") && !appTest) {
             WebDriver.Timeouts to = driver.manage().timeouts();
-            to.pageLoadTimeout(MainRunner.timeout, TimeUnit.SECONDS);
-            to.setScriptTimeout(MainRunner.timeout, TimeUnit.SECONDS);
+            to.pageLoadTimeout(timeout, TimeUnit.SECONDS);
+            to.setScriptTimeout(timeout, TimeUnit.SECONDS);
         }
 
         return driver;
@@ -85,7 +87,7 @@ class WebDriverConfigurator {
      */
     private static WebDriver initBrowser(DesiredCapabilities capabilities) {
         WebDriver driver = null;
-        switch (MainRunner.browser.toLowerCase()) {
+        switch (browser.toLowerCase()) {
             case "ie":
             case "internetexplorer":
                 return ThreadGuard.protect(new InternetExplorerDriver(capabilities));
@@ -125,14 +127,14 @@ class WebDriverConfigurator {
     private static DesiredCapabilities initBrowserCapabilities() {
         DesiredCapabilities capabilities;
 
-        switch (MainRunner.browser.toLowerCase()) {
+        switch (browser.toLowerCase()) {
             case "ie":
             case "internetexplorer":
                 capabilities = DesiredCapabilities.internetExplorer();
                 String path = "shared/resources/framework/selenium_drivers/IEDriverServer.exe";
                 File file = new File(path);
                 if (!file.exists()) {
-                    file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+                    file = new File(workspace + "com/macys/sdt/" + path);
                     if (!file.exists() && Utils.isWindows()) {
                         file = new File(System.getenv("HOME") + "/IEDriverServer.exe");
                     }
@@ -156,6 +158,12 @@ class WebDriverConfigurator {
                 ChromeOptions chrome = new ChromeOptions();
                 chrome.addArguments("test-type");
                 chrome.addArguments("--disable-extensions");
+                try {
+                    String s = chrome.toJson().getAsString();
+                } catch (IOException e) {
+
+                }
+                chrome.setExperimentalOption("password_manager_enabled", false);
                 capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
                 return disabledProxyCap(capabilities);
             case "safari":
@@ -181,7 +189,10 @@ class WebDriverConfigurator {
                     }
                     extensions.add(file);
                 }
-                String envExtensions = MainRunner.getEnvOrExParam("firefox_extensions");
+                if (disableJS) {
+                    firefoxProfile.setPreference("javascript.enabled", false);
+                }
+                String envExtensions = getEnvOrExParam("firefox_extensions");
                 if (envExtensions != null) {
                     String[] extensionSplit = envExtensions.split(";");
                     for (String s : extensionSplit) {
@@ -218,9 +229,9 @@ class WebDriverConfigurator {
     private static void setChromeDriverLocation() {
         String fileName = Utils.isOSX() ? "chromedriver" : "chromedriver.exe";
         String path = "shared/resources/framework/selenium_drivers/" + fileName;
-        File file = new File(MainRunner.workspace + path);
+        File file = new File(workspace + path);
         if (!file.exists()) {
-            file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+            file = new File(workspace + "com/macys/sdt/" + path);
             if (!file.exists() && Utils.isWindows()) {
                 file = new File(System.getenv("HOME") + "/" + fileName);
             }
@@ -239,9 +250,9 @@ class WebDriverConfigurator {
     private static void setFirefoxDriverLocation() {
         String fileName = Utils.isOSX() ? "geckodriver" : "geckodriver.exe";
         String path = "shared/resources/framework/selenium_drivers/" + fileName;
-        File file = new File(MainRunner.workspace + path);
+        File file = new File(workspace + path);
         if (!file.exists()) {
-            file = new File(MainRunner.workspace + "com/macys/sdt/" + path);
+            file = new File(workspace + "com/macys/sdt/" + path);
             if (!file.exists() && Utils.isWindows()) {
                 file = new File(System.getenv("HOME") + "/" + fileName);
             }
@@ -260,7 +271,7 @@ class WebDriverConfigurator {
      * @return desiredCapabilities configurations including disable proxy capability
      */
     private static DesiredCapabilities disabledProxyCap(DesiredCapabilities capabilities) {
-        if (MainRunner.disableProxy) {
+        if (disableProxy) {
             //			Proxy py = new Proxy();
             //			py.setNoProxy( "DIRECT" );
             capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
@@ -327,7 +338,7 @@ class WebDriverConfigurator {
      */
     private static DesiredCapabilities setupChromeEmulator() {
         Map<String, String> emulationOptions = new HashMap<>();
-        switch (MainRunner.device.toLowerCase()) {
+        switch (device.toLowerCase()) {
             case "android emulator":
                 DesiredCapabilities androidCapabilities = DesiredCapabilities.android();
                 androidCapabilities.setBrowserName("chrome");
@@ -403,12 +414,12 @@ class WebDriverConfigurator {
             }
 
             // set browser name
-            if(MainRunner.browser.equalsIgnoreCase("ie"))
+            if(browser.equalsIgnoreCase("ie"))
                 capabilities.setCapability("browserName", "iexplore");
-            else if (MainRunner.browser.equalsIgnoreCase("edge"))
+            else if (browser.equalsIgnoreCase("edge"))
                 capabilities.setCapability("browserName", "microsoftedge");
             else
-                capabilities.setCapability("browserName", MainRunner.browser);
+                capabilities.setCapability("browserName", browser);
 
             capabilities.setCapability("idleTimeout", 300);
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
@@ -420,14 +431,14 @@ class WebDriverConfigurator {
             capabilities.setCapability("maxDuration", 3600);
 
             // to use sauce connect
-            if (MainRunner.tunnelIdentifier != null) {
-                if (MainRunner.tunnelIdentifier.equalsIgnoreCase("parent")) {
+            if (tunnelIdentifier != null) {
+                if (tunnelIdentifier.equalsIgnoreCase("parent")) {
                     capabilities.setCapability("tunnel-identifier", "macysParentTunnel");
                     capabilities.setCapability("parentTunnel", "satish-macys");
                     System.out.println("INFO : Using sauce connect tunnel: macysParentTunnel");
                 } else {
-                    capabilities.setCapability("tunnel-identifier", MainRunner.tunnelIdentifier);
-                    System.out.println("INFO : Using sauce connect tunnel: " + MainRunner.tunnelIdentifier);
+                    capabilities.setCapability("tunnel-identifier", tunnelIdentifier);
+                    System.out.println("INFO : Using sauce connect tunnel: " + tunnelIdentifier);
                 }
             } else {
                 System.out.println("INFO : running without sauce connect");
@@ -493,11 +504,11 @@ class WebDriverConfigurator {
      */
     private static WebDriver initAppiumDevice(DesiredCapabilities capabilities) {
         if (appTest) {
-            capabilities.setCapability(MobileCapabilityType.APP, MainRunner.appLocation);
+            capabilities.setCapability(MobileCapabilityType.APP, appLocation);
             capabilities.setCapability("browserName", StepUtils.iOS() ? "IOS" : "Android");
             capabilities.setCapability(MobileCapabilityType.NO_RESET, true);
         } else {
-            capabilities.setCapability("browserName", MainRunner.browser);
+            capabilities.setCapability("browserName", browser);
         }
 
         // setting appium version
@@ -549,7 +560,7 @@ class WebDriverConfigurator {
      * @return default version of browser asked
      */
     static String defaultBrowserVersion() {
-        switch (MainRunner.browser) {
+        switch (browser) {
             case "ie":
                 return "11.0";
             case "edge":
@@ -625,7 +636,10 @@ class WebDriverConfigurator {
         DesiredCapabilities capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initBrowserCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
         WebDriver driver = initDriver(capabilities);
-        browsermobServer.newHar(browsermobServerHarTs);
+        browsermobServer.newHar(System.currentTimeMillis() + "");
+        if (userAgent != null) {
+            browsermobServer.addHeader("User-Agent", userAgent);
+        }
 
         if (!StepUtils.mobileDevice() && !StepUtils.MEW()) {
             browsermobServer.addRequestFilter(new ProxyFilters.ProxyRequestFilter(url));
