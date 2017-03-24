@@ -150,7 +150,7 @@ public class Wait {
      * </p>
      *
      * @param text     text to wait to be present
-     * @param waitTime Number of seconds to wait or null to use default wait time
+     * @param waitTime Number of seconds to wait or 0 to use default wait time
      * @return true if text showed up before timeout
      */
     public static boolean untilTextPresent(String text, int waitTime) {

@@ -2,8 +2,8 @@ package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.interactions.Navigate;
-import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.runner.MainRunner;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -527,9 +527,21 @@ public class Cookies {
      * @return user ID of signed in user
      */
     public static String getCurrentUserId() {
-        return getCookieValue((macys()? "macys" : "bloomingdales") + "_online_uid");
+        return getCookieValue((macys() ? "macys" : "bloomingdales") + "_online_uid");
     }
 
+    private static boolean onDal = false;
+
+    /**
+     * Sets the cookie for dallas site
+     */
+    public static void setDalCookie() {
+        if (!onDal) {
+            addCookie("dca", "dal");
+            onDal = true;
+            Navigate.browserRefresh();
+        }
+    }
 
     private static String encodeURL(String value) {
         try {
