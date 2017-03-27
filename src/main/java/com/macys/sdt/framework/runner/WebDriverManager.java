@@ -9,6 +9,8 @@ import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.macys.sdt.framework.utils.StepUtils.ie;
 
@@ -17,6 +19,7 @@ import static com.macys.sdt.framework.utils.StepUtils.ie;
  */
 public class WebDriverManager {
 
+    private static final Logger logger = LoggerFactory.getLogger(WebDriverManager.class);
 
     /**
      * WebDriver instance - could be ChromeDriver, FirefoxDriver, IOSDriver, etc.
@@ -102,7 +105,7 @@ public class WebDriverManager {
         }
         for (int i = 0; i < 2; i++) {
             if (RunConfig.disableProxy) {
-                // System.out.println("DEBUG stack trace: " +
+                // logger.info("DEBUG stack trace: " +
                 //        Utils.listToString(Utils.getCallFromFunction("getWebDriver"), "\n\t ", null));
                 driver = WebDriverConfigurator.initDriver(null);
             } else {
@@ -118,11 +121,11 @@ public class WebDriverManager {
                         driver.manage().window().maximize();
                     }
                     String windowSize = driver.manage().window().getSize().toString();
-                    System.out.println("Init driver: browser window size = " + windowSize);
+                    logger.info("Init driver: browser window size = " + windowSize);
                 }
                 return driver;
             } catch (Exception ex) {
-                System.err.println("-->Failed initialized driver:retry" + i + ":" + ex.getMessage());
+                logger.error("Failed initialized webdriver: retry" + i + ":" + ex.getMessage());
                 Utils.threadSleep(2000, null);
             }
         }
@@ -156,7 +159,7 @@ public class WebDriverManager {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error closing driver. You may need to clean up execution machine. error: " + e);
+            logger.error("Error closing driver. You may need to clean up execution machine. error: " + e);
         }
         driver = null;
     }
@@ -180,17 +183,17 @@ public class WebDriverManager {
         try {
             if (quit || RunConfig.useSauceLabs) {
                 driver.quit();
-                System.out.println("driver quit");
+                logger.info("webdriver quit successful");
                 if (ie()) {
                     // workaround for IE browser not closing the first time
                     driver.quit();
+                    logger.info("webdriver quit successful for ie");
                 }
 
             }
             driver = null;
-            System.out.println("INFO : webdriver set to null");
         } catch (Exception e) {
-            System.err.println("ERROR : error in resetDriver : " + e.getMessage());
+            logger.error("error in reset webdriver : " + e.getMessage());
             driver = null;
         } finally {
             MainRunner.currentURL = "";

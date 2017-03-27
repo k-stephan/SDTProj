@@ -25,6 +25,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ThreadGuard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +42,8 @@ import static com.macys.sdt.framework.runner.MainRunner.browsermobServer;
 import static com.macys.sdt.framework.runner.RunConfig.*;
 
 class WebDriverConfigurator {
+
+    private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
 
     /**
      * This method initiate specific driver with customized configurations
@@ -58,9 +62,9 @@ class WebDriverConfigurator {
 
             // print the session id of saucelabs for tracking job on sauceLabs
             if (driver instanceof RemoteWebDriver) {
-                System.out.println("Link to your saucelabs job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
+                logger.info("Link to your saucelabs job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
             } else {
-                System.out.println("no RemoteWebDriver instance : " + driver);
+                logger.info("No RemoteWebDriver instance : " + driver);
             }
         } else if (useAppium) {
             driver = initAppiumDevice(capabilities);
@@ -99,8 +103,8 @@ class WebDriverConfigurator {
                     try {
                         driver = new SafariDriver(capabilities);
                     } catch (Exception e) {
-                        System.err.println("Failed to open safari driver: " + e);
-                        System.err.println("Retrying: " + count);
+                        logger.error("Failed to open safari driver: " + e);
+                        logger.error("Retrying: " + count);
                         Utils.threadSleep(5000, null);
                     }
                 return driver;
@@ -142,7 +146,7 @@ class WebDriverConfigurator {
                 if (file.exists()) {
                     System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
                 } else {
-                    System.out.println("Unable to use built-in IE driver, will use machine's IE driver if it exists");
+                    logger.info("Unable to use built-in IE driver, will use machine's IE driver if it exists");
                 }
                 capabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, true);
                 capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
@@ -160,7 +164,7 @@ class WebDriverConfigurator {
                 chrome.addArguments("--disable-extensions");
                 try {
                     String s = chrome.toJson().getAsString();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
 
                 }
                 chrome.setExperimentalOption("password_manager_enabled", false);
@@ -171,7 +175,7 @@ class WebDriverConfigurator {
                 capabilities.setCapability("unexpectedAlertBehaviour", "accept");
                 return disabledProxyCap(capabilities);
             case "edge":
-                System.err.println("WARNING: Microsoft's Edge Driver is not fully implemented yet. There may" +
+                logger.warn("WARNING: Microsoft's Edge Driver is not fully implemented yet. There may" +
                         " be strange or unexpected errors.");
                 capabilities = DesiredCapabilities.edge();
                 return disabledProxyCap(capabilities);
@@ -181,7 +185,7 @@ class WebDriverConfigurator {
                 FirefoxProfile firefoxProfile = new FirefoxProfile();
                 ArrayList<File> extensions = new ArrayList<>();
                 if (tagCollection) {
-                    System.out.println("tag collection started");
+                    logger.info("tag collection started ...");
                     path = "shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
                     file = new File(path);
                     if (!file.exists()) {
@@ -239,7 +243,7 @@ class WebDriverConfigurator {
         if (file.exists()) {
             System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
         } else {
-            System.out.println("Unable to use built-in chromedriver, will use machine's chromedriver if it exists");
+            logger.info("Unable to use built-in chromedriver, will use machine's chromedriver if it exists");
         }
 
     }
@@ -260,7 +264,7 @@ class WebDriverConfigurator {
         if (file.exists()) {
             System.setProperty("webdriver.gecko.driver", file.getAbsolutePath());
         } else {
-            System.out.println("Unable to use built-in firefox geckodriver, will use machine's geckodriver if it exists");
+            logger.info("Unable to use built-in firefox geckodriver, will use machine's geckodriver if it exists");
         }
     }
 
@@ -435,13 +439,13 @@ class WebDriverConfigurator {
                 if (tunnelIdentifier.equalsIgnoreCase("parent")) {
                     capabilities.setCapability("tunnel-identifier", "macysParentTunnel");
                     capabilities.setCapability("parentTunnel", "satish-macys");
-                    System.out.println("INFO : Using sauce connect tunnel: macysParentTunnel");
+                    logger.info("Using sauce connect tunnel: macysParentTunnel");
                 } else {
                     capabilities.setCapability("tunnel-identifier", tunnelIdentifier);
-                    System.out.println("INFO : Using sauce connect tunnel: " + tunnelIdentifier);
+                    logger.info("Using sauce connect tunnel: " + tunnelIdentifier);
                 }
             } else {
-                System.out.println("INFO : running without sauce connect");
+                logger.info("running without sauce connect");
             }
 
             // need to increase resolution or we get tablet layout
@@ -479,7 +483,7 @@ class WebDriverConfigurator {
                     }
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
-                    System.err.println("ERROR - SCRIPT : error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
+                    logger.warn("ERROR - SCRIPT : error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
 
                     // retry instantiating driver.
                     capabilities.setCapability("marionette", true);
@@ -490,7 +494,7 @@ class WebDriverConfigurator {
             }
 
         } catch (Exception e) {
-            System.err.println("ERROR - SCRIPT : Could not create remote web driver: " + e);
+            logger.error("ERROR - SCRIPT : Could not create remote web driver: " + e);
         }
         Assert.fail("ERROR - SCRIPT : Unable to initialize driver");
         return null;
@@ -549,7 +553,7 @@ class WebDriverConfigurator {
                 return new AndroidDriver(url, capabilities);
             }
         } catch (MalformedURLException e) {
-            System.err.println("Could not create appium driver: " + e);
+            logger.error("Could not create appium driver: " + e);
         }
         return null;
     }
@@ -598,15 +602,15 @@ class WebDriverConfigurator {
      */
     static WebDriver initDriverWithProxy() {
         if (browsermobServer != null) {
-            System.err.println("-->Aborting prev proxy server:" + browsermobServer.getPort());
+            logger.error("Aborting prev proxy server:" + browsermobServer.getPort());
             try {
                 browsermobServer.abort();
             } catch (Exception ex) {
-                System.err.println("-->Failed to abort prev proxy server:" + browsermobServer.getPort());
+                logger.error("Failed to abort prev proxy server:" + browsermobServer.getPort());
             }
         }
 
-        System.out.print("Initializing proxy server...");
+        logger.info("Initializing proxy server...");
         int port = 7000;
         boolean found = false;
         for (int i = 0; i < 10; i++) {
@@ -618,17 +622,17 @@ class WebDriverConfigurator {
                 browsermobServer.setTrustAllServers(true);
 
                 browsermobServer.start(port);
-                System.out.println("using port : " + port);
+                logger.info("using port : " + port);
                 found = true;
                 break;
             } catch (Exception ex) {
-                System.out.println("port " + port + " is in use" + ex.getMessage());
+                logger.info("port " + port + " is in use" + ex.getMessage());
                 port++;
             }
         }
         if (!found) {
-            System.err.println("--> Cannot find open port for proxy server");
-            System.err.println("--> Abort run.");
+            logger.error("Cannot find open port for proxy server");
+            logger.error("Abort run.");
             System.exit(-1);
         }
 

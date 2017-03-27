@@ -13,6 +13,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
  * This class holds all run config data statically
  */
 public class RunConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(RunConfig.class);
 
     /**
      * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
@@ -299,7 +303,7 @@ public class RunConfig {
         if (!scenarios.contains(project.replace('.', '/'))) {
             scenarios = scenarios.replaceAll("features/", project.replace(".", "/") + "/features/");
         }
-        System.out.println("-> Parsing env scenarios:" + scenarios);
+        logger.info("Parsing env scenarios:" + scenarios);
         String delimit = ".feature";
         int i = 0, end = scenarios.indexOf(delimit);
         while (i < scenarios.length()) {
@@ -308,7 +312,7 @@ public class RunConfig {
                 end = scenarios.length();
             }
             String scenarioPath = scenarios.substring(i, end).trim();
-            System.out.println("->" + scenarioPath);
+            logger.info("scenario path : " + scenarioPath);
             scenarioList.add(scenarioPath);
             i = end;
         }
@@ -331,7 +335,7 @@ public class RunConfig {
             if (!path.equals("")) {
                 File featureFile = new File(path);
                 if (!(featureFile.exists() || featureFile.getAbsoluteFile().exists())) {
-                    System.out.println("File not found: " + path);
+                    logger.info("File not found: " + path);
                     path = workspace + "/" + path;
                 }
                 String json = Utils.gherkinToJson(false, path);
@@ -339,9 +343,8 @@ public class RunConfig {
                     featureScenarios = new Gson().fromJson(json, new TypeToken<ArrayList<Map>>() {
                     }.getType());
                 } catch (JsonSyntaxException jex) {
-                    System.err.println("--> Failed to parse : " + path);
-                    System.err.println("--> json :\n\n" + json);
-                    System.err.println();
+                    logger.error("Failed to parse : " + path);
+                    logger.error("json :\n\n" + json);
                     throw jex;
                 }
             }
@@ -405,7 +408,7 @@ public class RunConfig {
                 hScenario.put(l, element);
             }
         }
-        System.out.println("Cannot find scenario with line: " + line);
+        logger.info("Cannot find scenario with line: " + line);
         int closest = 0;
         for (Integer l : hScenario.keySet()) {
             int dist = Math.abs(line - l);
@@ -415,7 +418,7 @@ public class RunConfig {
         }
         if (closest > 0) {
             features.put(scenarioPath + ":" + line, hScenario.get(closest));
-            System.out.println("Load closest scenario with line: " + closest);
+            logger.info("Load closest scenario with line: " + closest);
         }
     }
 
@@ -431,7 +434,7 @@ public class RunConfig {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Unable to read pom file: " + e);
+            logger.error("Unable to read pom file: " + e);
         }
         return deps;
     }
@@ -469,7 +472,7 @@ public class RunConfig {
         if (repoJar != null) {
             if (!(new File(repoJar).exists())) {
                 if (!(new File(workspace + repoJar).exists())) {
-                    System.err.println("-->Warning: Could not find given repo jar. Attempting to run without.");
+                    logger.warn("Could not find given repo jar. Attempting to run without.");
                     repoJar = null;
                 } else {
                     repoJar = workspace + repoJar;
@@ -480,7 +483,7 @@ public class RunConfig {
         Utils.createDirectory(temp = workspace + "temp/", true);
 
         if (remoteOS == null) {
-            System.out.println("INFO : Remote OS not specified. Using default (Windows 7)");
+            logger.info("Remote OS not specified. Using default (Windows 7)");
             remoteOS = "Windows 7";
         }
 
@@ -491,21 +494,19 @@ public class RunConfig {
                 analytics = new DigitalAnalytics();
             }
             if (analytics != null) {
-                System.out.print("INFO : including Analytics: " + analytics.getClass().getSimpleName());
+                logger.info("Including Analytics: " + analytics.getClass().getSimpleName());
             }
         }
-
-        System.out.println("\n\n");
 
         // tag_collection
         tagCollection = booleanParam("tag_collection");
         if (tagCollection) {
-            System.out.println("INFO : tag_collection is enabled");
+            logger.info("tag_collection is enabled");
         }
 
         // batch mode run on QA environment. Batch mode causes all products to be available
         if (batchMode) {
-            System.out.println("INFO : batch_mode is enabled");
+            logger.info("batch_mode is enabled");
         }
 
         // use saucelabs when valid "sauce_user" and "sauce_key" is provided
@@ -524,7 +525,7 @@ public class RunConfig {
             Assert.fail("\"website\" variable required to test a website");
         }
         if (browser == null && !appTest) {
-            System.out.println("INFO : No browser given, using default (chrome)");
+            logger.info("No browser given, using default (chrome)");
             browser = "chrome";
         }
         if (browserVersion == null) {

@@ -29,6 +29,8 @@ import static com.macys.sdt.framework.runner.RunConfig.*;
  */
 public class MainRunner {
 
+    private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
+
     /**
      * BrowserMob proxy server
      */
@@ -74,7 +76,7 @@ public class MainRunner {
         configureLogs();
         getEnvVars(args);
 
-        System.out.println("Using project: " + project + "\nIf this does not match your project," +
+        logger.info("Using project: " + project + "\nIf this does not match your project," +
                 " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
         if (repoJar != null) {
             projectDir = project.replace(".", "/");
@@ -159,7 +161,7 @@ public class MainRunner {
             cucumberArgs.add("--dry-run");
         }
 
-        System.out.println("-->Testing " + url + " using " +
+        logger.info("Testing website: " + url + " using " +
                 (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
                 + (useSauceLabs ? " on Sauce Labs" : ""));
 
@@ -175,7 +177,7 @@ public class MainRunner {
                     status = Main.run(cucumberArgs.toArray(new String[cucumberArgs.size()]),
                             Thread.currentThread().getContextClassLoader());
                 } catch (IOException e) {
-                    System.err.println("ERROR : IOException in cucumber run: " + e);
+                    logger.error("IOException in cucumber run: " + e);
                 } finally {
                     runStatus = status;
                 }
@@ -216,6 +218,9 @@ public class MainRunner {
         Navigate.addAfterNavigation(PageLoadProfiler::stopTimer);
     }
 
+    /**
+     * This method set logger configuration
+     */
     private static void configureLogs() {
         if (debugMode) {
             System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
@@ -243,7 +248,7 @@ public class MainRunner {
         }
 
         if (WebDriverManager.driver != null) {
-            System.out.println("Closing driver...");
+            logger.info("Closing driver...");
             if (useSauceLabs || closeBrowserAtExit) {
                 WebDriverManager.driverQuit();
             }
@@ -263,13 +268,13 @@ public class MainRunner {
         public AuthenticationDialog() {
             String osName = System.getProperty("os.name").toLowerCase();
             if (getEnvOrExParam("require_authentication") == null) {
-                System.out.println("AuthenticationDialog not required");
+                logger.info("AuthenticationDialog not required");
                 return;
             }
             if (!(Utils.isWindows() && browser.equals("firefox")) &&
                     !(Utils.isWindows() && browser.equals("chrome")) &&
                     !((Utils.isOSX() || (remoteOS != null && remoteOS.contains("OS X"))) && browser.equals("safari"))) {
-                System.out.println("AuthenticationDialog not required : "
+                logger.info("AuthenticationDialog not required : "
                         + getEnvOrExParam("require_authentication")
                         + " : " + osName
                         + " : " + browser);
@@ -295,10 +300,10 @@ public class MainRunner {
         protected static void runFirefoxBackgroundMethod() {
             Utils.threadSleep(4000, null);
             if (socketMutex == null) {
-                System.out.println("-->Another Authentication monitoring background thread already exist.");
+                logger.warn("Another Authentication monitoring background thread already exist.");
                 return;
             }
-            System.out.println("-->Firefox Windows Authentication monitoring background thread started");
+            logger.info("Firefox Windows Authentication monitoring background thread started");
 
             Process p;
             String filePath = "src/com/macys/sdt/shared/resources/framework/authentication_popup/windows_authentication_firefox.exe";
@@ -323,10 +328,10 @@ public class MainRunner {
         protected static void runSafariBackgroundMethod() {
             Utils.threadSleep(4000, null);
             if (socketMutex == null) {
-                System.err.println("-->Another Authentication monitoring background thread already exist.");
+                logger.warn("Another Authentication monitoring background thread already exist.");
                 return;
             }
-            System.err.println("-->Authentication monitoring background thread started");
+            logger.info("Authentication monitoring background thread started");
 
             String fileName;
             fileName = "mac_authentication_safari.app";
@@ -334,7 +339,7 @@ public class MainRunner {
             String filePath = "/Applications/" + fileName;
             File f = new File(filePath);
             if (!f.exists()) {
-                System.err.println("-->Authentication monitoring program '" + filePath + "' does not exit.");
+                logger.warn("Authentication monitoring program '" + filePath + "' does not exit.");
                 return;
             }
 
@@ -358,10 +363,10 @@ public class MainRunner {
         protected static void runChromeBackgroundMethod() {
             Utils.threadSleep(4000, null);
             if (socketMutex == null) {
-                System.out.println("-->Another Authentication monitoring background thread already exist.");
+                logger.warn("Another Authentication monitoring background thread already exist.");
                 return;
             }
-            System.out.println("-->Chrome Windows Authentication monitoring background thread started");
+            logger.info("Chrome Windows Authentication monitoring background thread started");
 
             Process p;
             String filePath = "src/com/macys/sdt/shared/resources/framework/authentication_popup/windows_authentication_chrome.exe";
@@ -423,7 +428,7 @@ public class MainRunner {
      * Watchdog for Web Page
      */
     public static class PageHangWatchDog extends Thread {
-        private static final Logger log = LoggerFactory.getLogger(PageHangWatchDog.class);
+        private static final Logger logger = LoggerFactory.getLogger(PageHangWatchDog.class);
         private final static long TIMEOUT = (StepUtils.safari() || StepUtils.ie() ? 130 : 95) * 1000;
         private final static long PAUSE_TIMEOUT = 280 * 1000;
         private final static int MAX_FAILURES = 5;
@@ -437,7 +442,7 @@ public class MainRunner {
         private static Thread workerThread;
 
         private PageHangWatchDog() {
-            log.info("Start PageHangWatchDog: " + new Date());
+            logger.info("Start PageHangWatchDog: " + new Date());
             this.reset(url);
             this.setDaemon(true);
             this.start();
@@ -472,7 +477,7 @@ public class MainRunner {
         }
 
         private void interruptCucumberThread() throws InterruptedException {
-            log.error("Timeout! Pushing things along...");
+            logger.error("Timeout! Pushing things along...");
             if (workerThread.isAlive()) {
                 workerThread.join(TIMEOUT);
             }
@@ -503,13 +508,13 @@ public class MainRunner {
                         continue;
                     }
                     String url = WebDriverManager.getCurrentUrl();
-                    //log.error("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
+                    //logger.error("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
                     if (url.contains("about:blank")) {
                         continue;
                     }
                     if (url.equals(this.currentUrl)) {
                         if (System.currentTimeMillis() - this.ts > TIMEOUT) {
-                            log.error("timeout at " + this.currentUrl +
+                            logger.error("timeout at " + this.currentUrl +
                                     ", " + (MAX_FAILURES - failCount) + " failures until exit");
                             failCount++;
                             if (workerThread.isAlive()) {
@@ -537,18 +542,18 @@ public class MainRunner {
                     }
                 } catch (Exception ex) {
                     if (!pause && ex instanceof org.openqa.selenium.NoSuchSessionException) {
-                        log.error("Driver session is dead, exiting");
+                        logger.error("Driver session is dead, exiting");
                         break;
                     } else if (ex instanceof InterruptedException) {
                         cucumberThread.stop();
                         Assert.fail("Browser unresponsive. Ending test");
                     } else if (!(ex instanceof WebDriverException)) {
                         // WebDriverException thrown when we have a sync issue in IE
-                        log.error(ex.getMessage());
+                        logger.error(ex.getMessage());
                         ex.printStackTrace();
                     }
                 } finally {
-                    //System.err.print(pause ? "|" : "~");
+                    //logger.info(pause ? "|" : "~");
                     Utils.threadSleep(5000, this.getClass().getSimpleName());
                 }
             }
