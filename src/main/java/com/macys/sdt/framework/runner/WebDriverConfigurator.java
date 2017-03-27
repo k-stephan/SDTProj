@@ -146,7 +146,7 @@ class WebDriverConfigurator {
                 if (file.exists()) {
                     System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
                 } else {
-                    logger.info("Unable to use built-in IE driver, will use machine's IE driver if it exists");
+                    logger.warn("Unable to use built-in IE driver, will use machine's IE driver if it exists");
                 }
                 capabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, true);
                 capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
@@ -173,8 +173,7 @@ class WebDriverConfigurator {
                 capabilities.setCapability("unexpectedAlertBehaviour", "accept");
                 return disabledProxyCap(capabilities);
             case "edge":
-                logger.warn("WARNING: Microsoft's Edge Driver is not fully implemented yet. There may" +
-                        " be strange or unexpected errors.");
+                logger.warn("Microsoft's Edge Driver is not fully implemented yet. There may be strange or unexpected errors.");
                 capabilities = DesiredCapabilities.edge();
                 return disabledProxyCap(capabilities);
             default:
@@ -241,7 +240,7 @@ class WebDriverConfigurator {
         if (file.exists()) {
             System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
         } else {
-            logger.info("Unable to use built-in chromedriver, will use machine's chromedriver if it exists");
+            logger.warn("Unable to use built-in chromedriver, will use machine's chromedriver if it exists");
         }
 
     }
@@ -262,7 +261,7 @@ class WebDriverConfigurator {
         if (file.exists()) {
             System.setProperty("webdriver.gecko.driver", file.getAbsolutePath());
         } else {
-            logger.info("Unable to use built-in firefox geckodriver, will use machine's geckodriver if it exists");
+            logger.warn("Unable to use built-in firefox geckodriver, will use machine's geckodriver if it exists");
         }
     }
 
@@ -378,19 +377,23 @@ class WebDriverConfigurator {
      * This method set up capabilities for Chrome Emulator based on device asked
      *
      * @param emulationOptions device name
-     * @return desiredCapabilites preferred configurations for Chrome Emulator
+     * @return desiredCapabilities preferred configurations for Chrome Emulator
      */
     private static DesiredCapabilities getChromeEmulatorConfig(Map<String, String> emulationOptions) {
-        Map<String, Object> chromeOptions = new HashMap<>();
-        chromeOptions.put("mobileEmulation", emulationOptions);
-        ArrayList<String> args = new ArrayList<>();
-        args.add("--disable-extensions");
-        chromeOptions.put("args", args);
-        //TODO : set chrome options to disable automated info for mobile
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         setChromeDriverLocation();
-        return capabilities;
+        ChromeOptions chromeOptions = new ChromeOptions();
+
+        // set mobile emulation information like device name
+        chromeOptions.setExperimentalOption("mobileEmulation", emulationOptions);
+
+        chromeOptions.addArguments("--disable-extensions");
+
+        //hide infobar session is being controlled by an automated test
+        chromeOptions.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
+        desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+        return desiredCapabilities;
     }
 
     /**
