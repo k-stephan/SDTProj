@@ -29,6 +29,7 @@ public class RunFeature {
     private String m_eeURL;
 
     public RunFeature() throws Throwable {
+        MainRunner.configureLogs();
         int remoteDebugDelay = Utils.parseInt(System.getenv("REMOTE_DEBUG_DELAY"), 0);
         if (remoteDebugDelay > 0) {
             Utils.threadSleep(remoteDebugDelay * 1000, "Remote debug delay:" + remoteDebugDelay);

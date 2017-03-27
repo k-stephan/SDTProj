@@ -373,7 +373,7 @@ public abstract class StepUtils {
         ArrayList<String> expectedURLs = Elements.getValues(name + ".url");
 
         String currentURL = WebDriverManager.getCurrentUrl();
-        LOGGER.debug("---> OnPage call: " + name + "\nfound url: " + currentURL);
+        LOGGER.debug("OnPage call: " + name + "\nfound url: " + currentURL);
 
         String verifyElementKey = name + ".verify_page";
         List<String> verifyElement = Elements.getValues(verifyElementKey);
@@ -389,17 +389,17 @@ public abstract class StepUtils {
             }
         }
         if (verifyElement == null) {
-            LOGGER.debug("-->Error StepUtils.onPage(): No verify_page element defined in page: " + name);
+            LOGGER.debug("onPage(): No verify_page element defined in page: " + name);
         } else if (!Elements.elementPresent(verifyElementKey)) {
-            LOGGER.debug("-->Error StepUtils.onPage(): verify_page element for page " + name + " not present");
+            LOGGER.debug("onPage(): verify_page element for page " + name + " not present");
         }
 
         if (expectedURLs.size() == 0) {
-            LOGGER.error("-->Error StepUtils.onPage(): No url element defined in page: " + name);
+            LOGGER.debug("onPage(): No url element defined in page: " + name);
         } else {
             expectedURLs.forEach(expectedURL -> {
                 if (!currentURL.contains(expectedURL)) {
-                    LOGGER.error("-->Error StepUtils.onPage(): Could not match expected url: " + expectedURL);
+                    LOGGER.debug("onPage(): Could not match expected url: " + expectedURL);
                 }
             });
         }

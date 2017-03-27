@@ -66,8 +66,10 @@ public class MainRunner {
      * @throws Throwable if an exception or error gets here, we're done
      */
     public static void main(String[] args) throws Throwable {
-        configureLogs();
-        logger = LoggerFactory.getLogger(MainRunner.class);
+        // will already be done in EE run
+        if (args != null) {
+            configureLogs();
+        }
         // When test are aborted by user or EE, need to make sure sauce labs still gets driver quit command
         // This code should help with sauce labs : Test did not see a new command for 300 seconds
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -222,7 +224,7 @@ public class MainRunner {
     /**
      * This method set logger configuration
      */
-    private static void configureLogs() {
+    public static void configureLogs() {
         if (debugMode) {
             System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
         } else {
@@ -235,6 +237,7 @@ public class MainRunner {
         System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
         System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.out");
         System.setProperty(SimpleLogger.SHOW_SHORT_LOG_NAME_KEY, "true");
+        logger = LoggerFactory.getLogger(MainRunner.class);
         RunConfig.openLog();
     }
 
