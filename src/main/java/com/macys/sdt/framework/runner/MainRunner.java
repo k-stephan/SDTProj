@@ -29,7 +29,7 @@ import static com.macys.sdt.framework.runner.RunConfig.*;
  */
 public class MainRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
+    private static Logger logger;
 
     /**
      * BrowserMob proxy server
@@ -66,6 +66,8 @@ public class MainRunner {
      * @throws Throwable if an exception or error gets here, we're done
      */
     public static void main(String[] args) throws Throwable {
+        configureLogs();
+        logger = LoggerFactory.getLogger(MainRunner.class);
         // When test are aborted by user or EE, need to make sure sauce labs still gets driver quit command
         // This code should help with sauce labs : Test did not see a new command for 300 seconds
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -73,7 +75,6 @@ public class MainRunner {
                 WebDriverManager.driver.quit();
             }
         }));
-        configureLogs();
         getEnvVars(args);
 
         logger.info("Using project: " + project + "\nIf this does not match your project," +
@@ -234,6 +235,7 @@ public class MainRunner {
         System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
         System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.out");
         System.setProperty(SimpleLogger.SHOW_SHORT_LOG_NAME_KEY, "true");
+        RunConfig.openLog();
     }
 
     /**

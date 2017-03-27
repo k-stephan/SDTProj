@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class RunConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(RunConfig.class);
+    private static Logger logger;
 
     /**
      * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
@@ -147,6 +147,10 @@ public class RunConfig {
      */
     public static String projectDir = null;
     /**
+     * Path to shared resources
+     */
+    public static String sharedDir = "shared/resources/src/main/resources";
+    /**
      * Whether we're running in debug mode
      */
     public static boolean debugMode = booleanParam("debug");
@@ -165,6 +169,10 @@ public class RunConfig {
 
     // don't allow objects of this type to be initialized, static access only
     private RunConfig(){}
+
+    static void openLog() {
+        logger = LoggerFactory.getLogger(RunConfig.class);
+    }
 
     /**
      * Retrieves project info either from "sdt_project" or "scenarios" env val if possible
