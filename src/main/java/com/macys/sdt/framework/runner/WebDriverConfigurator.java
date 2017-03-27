@@ -158,12 +158,6 @@ class WebDriverConfigurator {
                 ChromeOptions chrome = new ChromeOptions();
                 chrome.addArguments("test-type");
                 chrome.addArguments("--disable-extensions");
-                try {
-                    String s = chrome.toJson().getAsString();
-                } catch (IOException e) {
-
-                }
-                chrome.setExperimentalOption("password_manager_enabled", false);
                 capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
                 return disabledProxyCap(capabilities);
             case "safari":
