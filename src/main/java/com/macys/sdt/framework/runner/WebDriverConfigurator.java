@@ -420,20 +420,24 @@ class WebDriverConfigurator {
             }
 
             // set browser name
-            if(browser.equalsIgnoreCase("ie"))
-                capabilities.setCapability("browserName", "iexplore");
-            else if (browser.equalsIgnoreCase("edge"))
-                capabilities.setCapability("browserName", "microsoftedge");
-            else
-                capabilities.setCapability("browserName", browser);
+            switch (browser.toLowerCase()) {
+                case "ie":
+                    capabilities.setCapability("browserName", "iexplore");
+                    break;
+                case "edge":
+                    capabilities.setCapability("browserName", "microsoftedge");
+                    break;
+                default:
+                    capabilities.setCapability("browserName", browser);
+            }
 
             capabilities.setCapability("idleTimeout", 300);
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
 
             // set test name for sauceLabs
-            String scenario = ScenarioHelper.scenario != null ? ScenarioHelper.scenario.getName() : "";
+            String scenarioName = ScenarioHelper.scenario != null ? ScenarioHelper.scenario.getName() : "";
             capabilities.setCapability("name", (StepUtils.macys() ? "MCOM" : "BCOM") +
-                    " SDT " + (project != null ? project : "") + " : " + scenario);
+                    " SDT " + (project != null ? project : "") + " : " + scenarioName);
             capabilities.setCapability("maxDuration", 3600);
 
             // to use sauce connect
@@ -485,7 +489,7 @@ class WebDriverConfigurator {
                     }
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
-                    logger.warn("ERROR - SCRIPT : error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
+                    logger.warn("error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
 
                     // retry instantiating driver.
                     capabilities.setCapability("marionette", true);
