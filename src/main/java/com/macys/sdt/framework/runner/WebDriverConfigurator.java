@@ -32,6 +32,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -161,6 +162,10 @@ class WebDriverConfigurator {
                 ChromeOptions chrome = new ChromeOptions();
                 chrome.addArguments("test-type");
                 chrome.addArguments("--disable-extensions");
+
+                //hide infobar if a session is being controlled by an automated test
+                chrome.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+
                 capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
                 return disabledProxyCap(capabilities);
             case "safari":
@@ -381,6 +386,7 @@ class WebDriverConfigurator {
         ArrayList<String> args = new ArrayList<>();
         args.add("--disable-extensions");
         chromeOptions.put("args", args);
+        //TODO : set chrome options to disable automated info for mobile
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         setChromeDriverLocation();
