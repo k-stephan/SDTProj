@@ -2,12 +2,19 @@ package com.macys.sdt.framework.runner;
 
 import com.macys.sdt.framework.utils.TestUtils;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RunConfigTest {
+
+    @Before
+    public void setup() {
+        MainRunner.configureLogs();
+        RunConfig.openLog();
+    }
 
     @Test
     public void testScenarioRecognition() {

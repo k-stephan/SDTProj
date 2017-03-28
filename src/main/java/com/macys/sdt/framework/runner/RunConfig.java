@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class RunConfig {
 
-    private static Logger logger = LoggerFactory.getLogger(RunConfig.class);
+    private static Logger logger;
 
     /**
      * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
