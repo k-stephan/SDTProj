@@ -1,6 +1,5 @@
 package com.macys.sdt.framework.utils.db.models;
 
-import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
 import com.macys.sdt.framework.utils.rest.services.Canvas;
@@ -33,7 +32,7 @@ public class MediaService {
     public static List<HashMap> allMediaComponentIds = new ArrayList<>();
     public static Date customDate;
     public static JSONObject contextData;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MediaService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MediaService.class);
 
 
     public static List<Map> getFinalContextualizeCanvasData(String[] mediaNamesArray, String rowType, String[] contextAttrNames, String[] contextAttrValues) throws Throwable {
@@ -1181,7 +1180,7 @@ public class MediaService {
             preparedStatement.setString(index, values[index-1]);
             dummySqlQuery = dummySqlQuery.replaceFirst("\\?", "'"+values[index-1]+"'");
         }
-        LOGGER.debug("--> executeQuery :: ->"+dummySqlQuery);
+        logger.debug("--> executeQuery :: ->"+dummySqlQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
         return resultSet;
     }
@@ -1193,7 +1192,7 @@ public class MediaService {
             preparedStatement.setInt(index, values[index-1]);
             dummySqlQuery = dummySqlQuery.replaceFirst("\\?", String.valueOf(values[index-1]));
         }
-        LOGGER.debug("--> executeQuery :: ->"+dummySqlQuery);
+        logger.debug("--> executeQuery :: ->"+dummySqlQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
         return resultSet;
     }

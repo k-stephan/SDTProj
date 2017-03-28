@@ -26,7 +26,7 @@ import static com.macys.sdt.framework.runner.MainRunner.setBeforeNavigationHooks
 public class Navigate {
     private static ArrayList<Runnable> beforeNavigate = new ArrayList<>();
     private static ArrayList<Runnable> afterNavigate = new ArrayList<>();
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Adds a method (or lambda) to the list of methods to run before any clicks or other navigation
@@ -252,7 +252,7 @@ public class Navigate {
                 RunConfig.analytics.recordPageSource(givenURL, getPageSource());
             }
         } catch (Exception ex) {
-            LOGGER.debug("-->Error:StepUtils.visit(): " + pageURL + ": " + ex.getMessage());
+            logger.debug("-->Error:StepUtils.visit(): " + pageURL + ": " + ex.getMessage());
         }
         runAfterNavigation();
     }

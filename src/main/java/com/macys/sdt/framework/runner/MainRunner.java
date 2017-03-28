@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +28,7 @@ import static com.macys.sdt.framework.runner.RunConfig.*;
  */
 public class MainRunner {
 
-    private static Logger logger;
+    private static final Logger logger;
 
     /**
      * BrowserMob proxy server
@@ -59,6 +58,12 @@ public class MainRunner {
     // username and API key for main sauce labs account:
     // satish-macys 4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
 
+    static {
+        // this handles log config initialization before any logs are created
+        RunConfig.init();
+        logger = LoggerFactory.getLogger(MainRunner.class);
+    }
+
     /**
      * Main method to run tests
      *
@@ -66,10 +71,7 @@ public class MainRunner {
      * @throws Throwable if an exception or error gets here, we're done
      */
     public static void main(String[] args) throws Throwable {
-        // will already be done in EE run
-        if (args != null) {
-            configureLogs();
-        }
+
         // When test are aborted by user or EE, need to make sure sauce labs still gets driver quit command
         // This code should help with sauce labs : Test did not see a new command for 300 seconds
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -77,6 +79,7 @@ public class MainRunner {
                 WebDriverManager.driver.quit();
             }
         }));
+
         getEnvVars(args);
 
         logger.info("Using project: " + project + "\nIf this does not match your project," +
@@ -219,26 +222,6 @@ public class MainRunner {
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
         Navigate.addAfterNavigation(PageLoadProfiler::stopTimer);
-    }
-
-    /**
-     * This method set logger configuration
-     */
-    public static void configureLogs() {
-        if (debugMode) {
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
-        } else {
-            String logLevel = getEnvOrExParam("log_level");
-            logLevel = logLevel == null ? "INFO" : logLevel.toUpperCase();
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, logLevel);
-        }
-        System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
-        System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "HH:mm:ss:SS");
-        System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
-        System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.out");
-        System.setProperty(SimpleLogger.SHOW_SHORT_LOG_NAME_KEY, "true");
-        logger = LoggerFactory.getLogger(MainRunner.class);
-        RunConfig.openLog();
     }
 
     /**

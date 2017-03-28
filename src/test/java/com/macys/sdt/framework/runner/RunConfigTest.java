@@ -10,12 +10,6 @@ import java.util.HashMap;
 
 public class RunConfigTest {
 
-    @Before
-    public void setup() {
-        MainRunner.configureLogs();
-        RunConfig.openLog();
-    }
-
     @Test
     public void testScenarioRecognition() {
         RunConfig.scenarios = "src/test/java/com/macys/sdt/framework/Features/website/mcom/test.feature " +

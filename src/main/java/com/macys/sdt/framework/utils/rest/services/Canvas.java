@@ -13,7 +13,7 @@ import java.util.Map;
 public class Canvas {
 
     private static final String CONTEXT_SERVICE_ENDPOINT = "content/v2/canvas/";
-    private static final Logger LOGGER = LoggerFactory.getLogger(Canvas.class);
+    private static final Logger logger = LoggerFactory.getLogger(Canvas.class);
 
     public static JSONObject contextPoolMedia(String canvasId, String categoryId, List context, String application, List<String> canvasIdsInheritable) {
         if (application == null) {
@@ -37,8 +37,8 @@ public class Canvas {
         headers.put("X-Macys-Customer-Id", "1234");
         headers.put("X-Macys-RequestId", "123456");
         if (RunConfig.debugMode){
-            LOGGER.info("--> Service Request URL: -> "+serviceUrl);
-            LOGGER.info("--> Headers: -> "+headers.toString());
+            logger.info("--> Service Request URL: -> "+serviceUrl);
+            logger.info("--> Headers: -> "+headers.toString());
         }
         jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class));
         return jsonResponse;

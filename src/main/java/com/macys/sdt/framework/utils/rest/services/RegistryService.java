@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class RegistryService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistryService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistryService.class);
 
     /**
      * Attempts to create a registry using xml registry service
@@ -51,12 +51,12 @@ public class RegistryService {
 
             Response response = RESTOperations.doPOST(getServiceURL(), MediaType.APPLICATION_XML, registryXml, headers);
 
-            LOGGER.info("response : " + response);
+            logger.info("response : " + response);
             Assert.assertEquals(response.getStatus(), 200);
-            LOGGER.info("User Registry created successfully");
+            logger.info("User Registry created successfully");
             return registry;
         } catch (JsonProcessingException e) {
-            LOGGER.error("error creating registry", e.getCause());
+            logger.error("error creating registry", e.getCause());
             return null;
         }
     }

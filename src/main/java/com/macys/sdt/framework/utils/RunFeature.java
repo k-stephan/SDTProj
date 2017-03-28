@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.xerces.impl.dv.util.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,15 +29,22 @@ public class RunFeature {
     private File m_repo_jar;
     private String m_workspace;
     private String m_eeURL;
+    private static final Logger logger;
+
+    static {
+        // init logging
+        RunConfig.init();
+        logger = LoggerFactory.getLogger(MainRunner.class); // this class should be invisible to end user
+    }
 
     public RunFeature() throws Throwable {
-        MainRunner.configureLogs();
+        
         int remoteDebugDelay = Utils.parseInt(System.getenv("REMOTE_DEBUG_DELAY"), 0);
         if (remoteDebugDelay > 0) {
             Utils.threadSleep(remoteDebugDelay * 1000, "Remote debug delay:" + remoteDebugDelay);
         }
 
-        System.out.println("RunFeature version: " + m_version);
+        logger.debug("RunFeature version: " + m_version);
         m_pid = Utils.getProcessId();
         this.m_eeURL = "http://" + System.getenv("EE") + "/json";
         this.m_workspace = System.getenv("WORKSPACE");
@@ -43,17 +52,17 @@ public class RunFeature {
         this.cleanWorkSpace();
         this.dumpEnvironmentVariables();
 
-        System.out.println("\n\nPreparing workspace...");
+        logger.info("\n\nPreparing workspace...");
         Utils.extractResources(this.m_repo_jar, this.m_workspace, System.getenv("sdt_project").trim().replace(".", "/"));
 
         if (RunConfig.scenarios != null) {
             RunConfig.scenarios = RunConfig.scenarios.replaceAll("features/", System.getenv("sdt_project").trim().replace(".", "/") + "/features/");
         }
-        System.out.println("\n\n.getAnalyticsGolds");
+        logger.info("\n\n.getAnalyticsGolds");
         getAnalyticsGolds();
 
         try {
-            System.out.println("\n\nInitializing MainRunner()...");
+            logger.trace("\n\nInitializing MainRunner()...");
             MainRunner.main(null);
         } catch (Throwable th) {
             th.printStackTrace();
@@ -97,7 +106,7 @@ public class RunFeature {
     }
 
     public static String getBuildConsole(String jobBuildLink) {
-        System.out.println("-->Archiver.getBuildConsole():" + jobBuildLink);
+        logger.info("getBuildConsole():" + jobBuildLink);
         String console = "console is not available...";
         try {
             console = "<pre>" + Utils.httpGet(jobBuildLink + "/logText/progressiveHtml", null) + "</pre>";
@@ -110,17 +119,17 @@ public class RunFeature {
 
     public static void downloadGold(String url, File fgolds, String goldName) {
         try {
-            System.out.println("->dowloading from:" + url);
+            logger.info("downloading from:" + url);
             String data = Utils.httpGet(url, null);
-            System.out.println("-->received :" + data.length() + " bytes");
+            logger.info("received :" + data.length() + " bytes");
             Utils.writeBinaryFile(data.getBytes(), new File(fgolds.getCanonicalPath() + "/" + goldName), false);
         } catch (Exception ex) {
-            System.out.println("-->RunFeature.downloadGolds():Cannot download gold:" + url);
+            logger.info("downloadGolds():Cannot download gold:" + url);
         }
     }
 
     public void cleanWorkSpace() {
-        System.err.println("-->cleanWorkSpace()...");
+        logger.info("cleanWorkSpace()...");
         try {
             File[] files = new File(m_workspace).listFiles();
             if (files == null) {
@@ -130,17 +139,17 @@ public class RunFeature {
                 if (f.getName().equals(this.m_repo_jar.getName())) {
                     continue;
                 }
-                System.out.println("--> removing " + f.getPath());
+                logger.info(" removing " + f.getPath());
                 if (f.isDirectory()) {
                     try {
                         FileUtils.cleanDirectory(f);
                     } catch (IOException iex) {
-                        System.err.println("-->Cannot clean " + f.getPath() + ":" + iex.getMessage());
+                        logger.error("Cannot clean " + f.getPath() + ":" + iex.getMessage());
                         continue;
                     }
                 }
                 if (!f.delete()) {
-                    System.err.println("Failed to delete file: " + f.getPath());
+                    logger.error("Failed to delete file: " + f.getPath());
                 }
             }
         } catch (Exception ex) {
@@ -151,14 +160,14 @@ public class RunFeature {
     public void getAnalyticsGolds() {
         String analytics = RunConfig.getEnvOrExParam("analytics");
         if (analytics == null) {
-            System.out.println("->non analytics run: skip analytics gold download.");
+            logger.info("non analytics run: skip analytics gold download.");
             return;
         }
-        System.out.println("->dowloading golds...");
-        File fgoldDir = Utils.createDirectory(this.m_workspace + "/golds");
+        logger.info("dowloading golds...");
+        File goldDir = Utils.createDirectory(this.m_workspace + "/golds");
         String url = "http://" + System.getenv("EE") + "/getAnalyticsGold/" + analytics + "/";
         String global = RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json";
-        downloadGold(url + global, fgoldDir, global);
+        downloadGold(url + global, goldDir, global);
 
         RunConfig.getFeatureScenarios();
         for (String feature : RunConfig.features.keySet()) {
@@ -166,15 +175,15 @@ public class RunFeature {
             if (featureMap != null) {
                 try {
                     String goldName = Analytics.getGoldName(featureMap);
-                    System.out.println("->dowloading golds:" + goldName);
-                    downloadGold(url + goldName, fgoldDir, goldName);
+                    logger.info("dowloading golds:" + goldName);
+                    downloadGold(url + goldName, goldDir, goldName);
                 } catch (Exception ex) {
-                    System.out.println("-->Cannot download gold:" + feature + ":" + ex.getMessage());
-                    System.out.println(featureMap);
+                    logger.info("Cannot download gold:" + feature + ":" + ex.getMessage());
+                    logger.info(featureMap.toString());
                     ex.printStackTrace();
                 }
             } else {
-                System.out.println("-->Cannot download gold:" + feature);
+                logger.info("Cannot download gold:" + feature);
             }
         }
     }
@@ -189,43 +198,41 @@ public class RunFeature {
         String logsPath = this.m_workspace + "/logs";
         //File f = Utils.createDirectory(new File(logsPath), true);
         File f = new File(logsPath + "/env_variables.json");
-        System.out.println("\n\nDumping Environment variables...:" + logsPath + "/env_variables.json");
+        logger.info("\n\nDumping Environment variables...:" + logsPath + "/env_variables.json");
         Hashtable<String, String> h = new Hashtable<>();
         h.putAll(System.getenv());
         h.put("pid", Utils.getProcessId() + "");
         h.put("kill_switch", KillSwitch.dump());
         String json = new GsonBuilder().setPrettyPrinting().create().toJson(h);
-        System.out.println(json);
-        System.out.println();
-        System.out.println();
+        logger.info(json + "\n\n");
         Utils.writeSmallBinaryFile(json.getBytes(), f);
     }
 
     public void archive() throws Exception {
-        System.out.println("Archiving logs directory...");
+        logger.info("Archiving logs directory...");
         File ftempfiles = Utils.createDirectory(new File("tempfiles"), true);
 
         File ws = new File(this.m_workspace);
-        File flog = new File(ws.getCanonicalPath() + File.separator + "logs");
-        if (!flog.exists() || (flog.isDirectory() && flog.listFiles().length == 0)) {
-            System.out.println("Logs dir is empty:" + flog.getCanonicalPath());
+        File logFile = new File(ws.getCanonicalPath() + File.separator + "logs");
+        if (!logFile.exists() || (logFile.isDirectory() && logFile.listFiles().length == 0)) {
+            logger.info("Logs dir is empty:" + logFile.getCanonicalPath());
             return;
         }
 
-        File fenv = new File(flog.getCanonicalPath() + File.separator + "env_variables.json");
-        if (!fenv.exists()) {
+        File fEnv = new File(logFile.getCanonicalPath() + File.separator + "env_variables.json");
+        if (!fEnv.exists()) {
             this.dumpEnvironmentVariables();
         }
-        if (!new File(flog.getCanonicalPath() + File.separator + "cucumber.json").exists()) {
+        if (!new File(logFile.getCanonicalPath() + File.separator + "cucumber.json").exists()) {
             try {
-                if (fenv.exists()) {
-                    Map env = new Gson().fromJson(Utils.readTextFile(fenv), Map.class);
+                if (fEnv.exists()) {
+                    Map env = new Gson().fromJson(Utils.readTextFile(fEnv), Map.class);
                     String jenkinsURL = env.get("JENKINS_URL").toString();
                     String jobName = env.get("JOB_NAME").toString();
                     String build = env.get("BUILD_NUMBER").toString();
                     String link = jenkinsURL + "job/" + jobName + "/" + build;
                     String console = getBuildConsole(link);
-                    System.out.println("Notifying admins: " + this.m_eeURL);
+                    logger.info("Notifying admins: " + this.m_eeURL);
                     StringBuilder res = new StringBuilder();
                     try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
                         Hashtable<String, String> hparams = new Hashtable<>();
@@ -236,7 +243,7 @@ public class RunFeature {
                         hparams.put("_subject", "Abornormal Completion:" + jobName + ": " + env.get("NODE_NAME") + " " + new Date());
                         Utils.post(client, this.m_eeURL, hparams, new StringBuilder(), res);
                     } finally {
-                        System.out.println("==> " + res);
+                        logger.info("==> " + res);
                     }
                 }
             } catch (Exception ex) {
@@ -252,21 +259,21 @@ public class RunFeature {
             return;
         }
 
-        System.out.println(Utils.executeCMD("cd \"" + flog.getCanonicalPath() + "\" && tar -cvf log.tar *"));
-        File flogtar = new File(flog.getCanonicalPath() + File.separator + "log.tar");
-        System.out.println("Locating log.tar:" + flogtar.exists() + ":" + flogtar.getCanonicalPath() + ":" + flogtar.length());
+        logger.info(Utils.executeCMD("cd \"" + logFile.getCanonicalPath() + "\" && tar -cvf log.tar *"));
+        File flogtar = new File(logFile.getCanonicalPath() + File.separator + "log.tar");
+        logger.info("Locating log.tar:" + flogtar.exists() + ":" + flogtar.getCanonicalPath() + ":" + flogtar.length());
         File ftempPushtar = new File(ftempfiles.getCanonicalFile() + File.separator +
                 ws.getName().replaceAll(" ", "_") + "." +
                 System.getenv("BUILD_NUMBER") + "." +
                 System.currentTimeMillis() + ".tar");
         if (!flogtar.renameTo(ftempPushtar)) {
-            System.err.println("Failed to rename lot tar to temp push tar");
+            logger.error("Failed to rename lot tar to temp push tar");
         }
         sendToServer(ftempPushtar, fpushed);
     }
 
     public void sendToServer(File ftempPushtar, File fpushed) throws Exception {
-        System.out.println("pushing log.tar:" + ftempPushtar.getCanonicalPath());
+        logger.info("pushing log.tar:" + ftempPushtar.getCanonicalPath());
         HashMap<String, String> hparams = new HashMap<>();
         hparams.put("file_name", "builds/" + InetAddress.getLocalHost().getHostAddress() + "." + ftempPushtar.getName());
         hparams.put("last_modified", ftempPushtar.lastModified() + "");
@@ -297,10 +304,10 @@ public class RunFeature {
             long dur = 3 * 60 * 60 * 1000;
             while (System.currentTimeMillis() - ts < dur) {
                 if (checkAborted()) {
-                    System.out.println(Utils.executeCMD("taskkill /f /t /PID " + m_pid));
+                    logger.info(Utils.executeCMD("taskkill /f /t /PID " + m_pid));
                     break;
                 }
-                Utils.threadSleep(60 * 1000, "RunFeature.ProcessWatchDog.run()");
+                Utils.threadSleep(60 * 1000, "ProcessWatchDog.run()");
             }
         }
     }
@@ -325,7 +332,7 @@ public class RunFeature {
                 pushLogObj(this.m_pushObj);
             } catch (Exception ex) {
                 if (m_fpushed != null && !m_fpushed.delete()) {
-                    System.err.println("Unable to delete fPushed file");
+                    logger.error("Unable to delete fPushed file");
                 }
                 ex.printStackTrace();
             }
@@ -336,7 +343,7 @@ public class RunFeature {
             try {
                 Map hpushObj = new Gson().fromJson(Utils.readTextFile(fpushObj), Map.class);
                 File flogTar = new File(hpushObj.get("flogtar").toString());
-                System.out.println("-->Pushing " + flogTar.getCanonicalPath());
+                logger.info("Pushing " + flogTar.getCanonicalPath());
                 fis = new FileInputStream(flogTar);
                 StringBuilder cookies = new StringBuilder();
                 StringBuilder result = new StringBuilder();
@@ -351,7 +358,7 @@ public class RunFeature {
                     hparams.put("file_data", Base64.encode(wbuffer));
                     this.m_runFeature.postToServer(hparams, cookies, result);
                     hparams.put("append", "true");
-                    //					System.out.println("-->result: " + result);
+                    //					logger.info("result: " + result);
                     if (result.toString().toLowerCase().contains("error")) {
                         throw new Exception(result.toString());
                     }
@@ -363,12 +370,12 @@ public class RunFeature {
                 hparams.put("append", "close");
                 hparams.remove("file_data");
                 this.m_runFeature.postToServer(hparams, cookies, result);
-                System.out.println("File uploaded:" + flogTar.getCanonicalPath() + ":" + total + ":" + hparams.get("file_name") + "\n" + hparams);
+                logger.info("File uploaded:" + flogTar.getCanonicalPath() + ":" + total + ":" + hparams.get("file_name") + "\n" + hparams);
                 if (!flogTar.delete()) {
-                    System.err.println("Unable to delete log tar file");
+                    logger.error("Unable to delete log tar file");
                 }
                 if (!fpushObj.delete()) {
-                    System.err.println("Unable to delete push object file");
+                    logger.error("Unable to delete push object file");
                 }
             } finally {
                 try {

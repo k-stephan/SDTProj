@@ -28,7 +28,7 @@ import static com.macys.sdt.framework.runner.MainRunner.*;
  */
 public class Wait {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Waits until the given condition method returns true
@@ -53,7 +53,7 @@ public class Wait {
             wait.until((WebDriver driver) -> condition.getAsBoolean());
             return true;
         } catch (Exception ex) {
-            LOGGER.debug(ex.getMessage());
+            logger.debug(ex.getMessage());
             return false;
         }
     }
@@ -80,7 +80,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            LOGGER.debug("-->Error:untilElementNotPresent(): " + selector.toString() + ": " + ex.getMessage());
+            logger.debug("-->Error:untilElementNotPresent(): " + selector.toString() + ": " + ex.getMessage());
             return false;
         }
     }
@@ -97,7 +97,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfAllElements(list));
             return true;
         } catch (Exception ex) {
-            LOGGER.debug("-->Error:untilElementNotPresent(): " + ex.getMessage());
+            logger.debug("-->Error:untilElementNotPresent(): " + ex.getMessage());
             return false;
         }
     }
@@ -226,9 +226,9 @@ public class Wait {
             wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            LOGGER.debug(Utils.listToString(Utils.getCallFromFunction(
+            logger.debug(Utils.listToString(Utils.getCallFromFunction(
                     "secondsUntilElementPresent"), "\n\t ", null) + ": " + selector.toString());
-            LOGGER.error(ex.getMessage());
+            logger.error(ex.getMessage());
             return false;
         }
     }
@@ -260,8 +260,8 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            LOGGER.debug("-->Error:secondsUntilElementNotPresent(): " + selector.toString());
-            LOGGER.error(ex.getMessage());
+            logger.debug("-->Error:secondsUntilElementNotPresent(): " + selector.toString());
+            logger.error(ex.getMessage());
             return false;
         }
     }
@@ -280,7 +280,7 @@ public class Wait {
                 Navigate.browserRefresh();
             }
         } catch (Exception ex) {
-            LOGGER.debug("-->Error:untilElementPresentWithRefresh(): " + selector.toString() + ": " + ex.getMessage());
+            logger.debug("-->Error:untilElementPresentWithRefresh(): " + selector.toString() + ": " + ex.getMessage());
         }
     }
 
@@ -301,7 +301,7 @@ public class Wait {
                 Navigate.browserRefresh();
             }
         } catch (Exception ex) {
-            LOGGER.debug("-->Error:untilElementPresentWithRefresh(): " + el1.toString() + ": " + el2.toString() + ": " + ex.getMessage());
+            logger.debug("-->Error:untilElementPresentWithRefresh(): " + el1.toString() + ": " + el2.toString() + ": " + ex.getMessage());
 
         }
     }
@@ -321,8 +321,8 @@ public class Wait {
                 }
             }
         } catch (Exception ex) {
-            LOGGER.debug("-->Error:untilElementPresentWithRefreshAndClick(): " + waitFor.toString() + ": " + toClick.toString());
-            LOGGER.error(ex.getMessage());
+            logger.debug("-->Error:untilElementPresentWithRefreshAndClick(): " + waitFor.toString() + ": " + toClick.toString());
+            logger.error(ex.getMessage());
         }
     }
 
@@ -373,7 +373,7 @@ public class Wait {
 
                 public Boolean apply(WebDriver driver) {
                     String enabled = element.getAttribute(this.attr);
-                    LOGGER.debug("wait: init = (" + expectedValue + "), enabled = (" + enabled + ")");
+                    logger.debug("wait: init = (" + expectedValue + "), enabled = (" + enabled + ")");
                     return enabled.matches(this.expectedValue);
                 }
             }.init(element, attr, expectedValue));
@@ -492,7 +492,7 @@ public class Wait {
                 String response = (String) jsResponse;
                 return (response.startsWith("{\"hCode\"") || response.isEmpty());
             } else {
-                LOGGER.trace("Unable to get num ajax calls!");
+                logger.trace("Unable to get num ajax calls!");
                 return true;
             }
             //System.out.print("." + queries + " AJAX");

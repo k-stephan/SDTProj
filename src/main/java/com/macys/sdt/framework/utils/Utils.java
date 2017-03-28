@@ -54,7 +54,7 @@ import static com.macys.sdt.framework.utils.StepUtils.macys;
 @SuppressWarnings("deprecation")
 public class Utils {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+    public static final Logger logger = LoggerFactory.getLogger(Utils.class);
     // use these to redirect unneeded error output
     private static boolean resourcesExtracted = false;
 
@@ -391,14 +391,14 @@ public class Utils {
         Thread cur = Thread.currentThread();
         try {
             if (msg != null)
-                LOGGER.debug("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleepTime);
+                logger.debug("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleepTime);
             Thread.sleep(sleepTime);
             if (msg != null)
-                LOGGER.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":normal");
+                logger.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":normal");
             return false;
         } catch (InterruptedException e) {
             if (msg != null)
-                LOGGER.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":" + e.getMessage());
+                logger.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":" + e.getMessage());
             return true;
         }
     }
@@ -777,11 +777,11 @@ public class Utils {
             return;
         }
         String resPath = "com/macys/sdt/framework/resources";
-        LOGGER.debug(resPath);
+        logger.debug(resPath);
         extractJarFile(repoJar, resPath, workspace + "/" + resPath);
 
         resPath = "com/macys/sdt/shared/resources";
-        LOGGER.debug(resPath);
+        logger.debug(resPath);
         extractJarFile(repoJar, resPath, workspace + "/" + resPath);
         saveDriver("chromedriver.exe", resPath);
         saveDriver("IEDriverServer.exe", resPath);
@@ -840,10 +840,10 @@ public class Utils {
             } else {
                 File fOut = new File(getOutputPath(tarFilePath, outputPath, path));
                 long ts = System.currentTimeMillis();
-                LOGGER.debug("writing " + fOut.getCanonicalPath() + "...");
+                logger.debug("writing " + fOut.getCanonicalPath() + "...");
                 if (fOut.exists()) {
                     if (!fOut.delete()) {
-                        LOGGER.debug("Unable to delete file: " + fOut.getName() + " before writing");
+                        logger.debug("Unable to delete file: " + fOut.getName() + " before writing");
                         continue;
                     }
                 }
@@ -854,7 +854,7 @@ public class Utils {
                 while ((length = inputTar.read(buff)) > -1) {
                     bout.write(buff, 0, length);
                 }
-                LOGGER.debug(System.currentTimeMillis() - ts + ":" + bout.size());
+                logger.debug(System.currentTimeMillis() - ts + ":" + bout.size());
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
                 Utils.createDirectory(ftemp.getParent(), false);
                 for (int i = 0; i < 100; i++) {
@@ -862,7 +862,7 @@ public class Utils {
                         renameFile(ftemp, fOut, 10);
                         break;
                     }
-                    LOGGER.debug("--> retry extractCompressedFile:" + i);
+                    logger.debug("--> retry extractCompressedFile:" + i);
                     threadSleep(3000, null);
                 }
             }

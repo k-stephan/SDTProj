@@ -25,7 +25,7 @@ import static com.macys.sdt.framework.utils.StepUtils.macys;
 
 public class UserProfileService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserProfileService.class);
 
     /**
      * This method will create user profile
@@ -48,13 +48,13 @@ public class UserProfileService {
             System.out.println("response : " + response);
             String entity = response.readEntity(String.class);
             Assert.assertEquals(v1 ? 200 : 201, response.getStatus());
-            LOGGER.info("User profile created successfully");
+            logger.info("User profile created successfully");
             User user = ObjectMapperProvidor.getXmlMapper().readValue(v1 ? entity : userProfileXml, User.class);
             UserProfile profile = new UserProfile(user, null);
             TestUsers.setCurrentCustomer(profile);
             return profile;
         } catch (Exception e) {
-            LOGGER.error("error creating user profile", e.getCause());
+            logger.error("error creating user profile", e.getCause());
             Assert.fail(e.getMessage());
         }
         return null;

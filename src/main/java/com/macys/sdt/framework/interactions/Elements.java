@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class Elements {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Retrieves the first element
@@ -64,8 +64,8 @@ public class Elements {
             }
             return elements.get(0);
         } catch (NoSuchElementException ex) {
-            LOGGER.debug("-->StepUtils.findElement() no element found with selector: " + selector);
-            LOGGER.warn("Unable to find element", ex);
+            logger.debug("-->StepUtils.findElement() no element found with selector: " + selector);
+            logger.warn("Unable to find element", ex);
         } catch (DriverNotInitializedException e) {
             Assert.fail("Driver not initialized");
         }
@@ -131,7 +131,7 @@ public class Elements {
                 Utils.threadSleep(100, null);
             }
         }
-        LOGGER.debug("No elements found with selector: " + selector);
+        logger.debug("No elements found with selector: " + selector);
         return null;
     }
 
@@ -418,10 +418,10 @@ public class Elements {
         // often but not required. If they're missing it will be reported in on_page calls.
         if (!elementKey.matches("(\\.verify_page|\\.url)$")) {
             if (elementData.elementValues.isEmpty()) {
-                LOGGER.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
+                logger.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
             }
             if (elementData.elementLocators.isEmpty()) {
-                LOGGER.warn("ERROR - UI: element locator is not recognizable.");
+                logger.warn("ERROR - UI: element locator is not recognizable.");
             }
         }
         if (elementData.elementLocators.isEmpty() || elementData.elementValues.isEmpty()) {
@@ -456,10 +456,10 @@ public class Elements {
     public static By paramElement(String elementKey, String... params) {
         PageElement elementData = new PageElement(elementKey);
         if (elementData.elementValues.isEmpty()) {
-            LOGGER.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
+            logger.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
         }
         if (elementData.elementLocators.isEmpty()) {
-            LOGGER.warn("ERROR - UI: element locator is not recognizable.");
+            logger.warn("ERROR - UI: element locator is not recognizable.");
         }
         if (elementData.elementLocators.isEmpty() || elementData.elementValues.isEmpty()) {
             return null;

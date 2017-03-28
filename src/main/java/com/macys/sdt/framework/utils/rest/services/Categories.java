@@ -14,7 +14,7 @@ public class Categories {
     private static final String SERVICE_ENDPOINT = "catalog/v2/categories/";
     private static final int MAX_ACTIVE_CATEGORY_LIMIT = 1000;
     private static boolean useParasoftHost = true;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Categories.class);
+    private static final Logger logger = LoggerFactory.getLogger(Categories.class);
 
     public static JSONObject category(String cat) {
         JSONObject jsonResponse = null;
@@ -29,8 +29,8 @@ public class Categories {
         headers.put("X-Macys-Customer-Id", "1234");
         headers.put("X-Macys-RequestId", "123456");
         if (RunConfig.debugMode){
-            LOGGER.info("--> Service Request URL: -> "+serviceUrl);
-            LOGGER.info("--> Headers: -> "+headers.toString());
+            logger.info("--> Service Request URL: -> "+serviceUrl);
+            logger.info("--> Headers: -> "+headers.toString());
         }
         try {
             jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class)).getJSONObject("category");
@@ -52,8 +52,8 @@ public class Categories {
         headers.put("X-Macys-Customer-Id", "1234");
         headers.put("X-Macys-RequestId", "123456");
         if (RunConfig.debugMode){
-            LOGGER.info("--> Service Request URL: -> "+serviceUrl);
-            LOGGER.info("--> Headers: -> "+headers.toString());
+            logger.info("--> Service Request URL: -> "+serviceUrl);
+            logger.info("--> Headers: -> "+headers.toString());
         }
         try {
             jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class));

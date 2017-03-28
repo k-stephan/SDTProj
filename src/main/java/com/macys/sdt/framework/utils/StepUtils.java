@@ -39,7 +39,7 @@ import static com.macys.sdt.framework.runner.RunConfig.appTest;
  */
 public abstract class StepUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StepUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(StepUtils.class);
 
     /**
      * A regex string that will match allowed mobile devices
@@ -373,33 +373,33 @@ public abstract class StepUtils {
         ArrayList<String> expectedURLs = Elements.getValues(name + ".url");
 
         String currentURL = WebDriverManager.getCurrentUrl();
-        LOGGER.debug("OnPage call: " + name + "\nfound url: " + currentURL);
+        logger.debug("OnPage call: " + name + "\nfound url: " + currentURL);
 
         String verifyElementKey = name + ".verify_page";
         List<String> verifyElement = Elements.getValues(verifyElementKey);
         for (String expectedURL : expectedURLs) {
             if (!verifyElement.isEmpty() && expectedURL != null) {
                 if (Elements.elementPresent(verifyElementKey) && currentURL.contains(expectedURL)) {
-                    LOGGER.info("On Page: " + name);
+                    logger.info("On Page: " + name);
                     return true;
                 }
             } else if (expectedURL != null && currentURL.contains(expectedURL)) {
-                LOGGER.info("On Page: " + name);
+                logger.info("On Page: " + name);
                 return true;
             }
         }
         if (verifyElement == null) {
-            LOGGER.debug("onPage(): No verify_page element defined in page: " + name);
+            logger.debug("onPage(): No verify_page element defined in page: " + name);
         } else if (!Elements.elementPresent(verifyElementKey)) {
-            LOGGER.debug("onPage(): verify_page element for page " + name + " not present");
+            logger.debug("onPage(): verify_page element for page " + name + " not present");
         }
 
         if (expectedURLs.size() == 0) {
-            LOGGER.debug("onPage(): No url element defined in page: " + name);
+            logger.debug("onPage(): No url element defined in page: " + name);
         } else {
             expectedURLs.forEach(expectedURL -> {
                 if (!currentURL.contains(expectedURL)) {
-                    LOGGER.debug("onPage(): Could not match expected url: " + expectedURL);
+                    logger.debug("onPage(): Could not match expected url: " + expectedURL);
                 }
             });
         }

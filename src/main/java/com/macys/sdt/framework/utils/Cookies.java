@@ -25,7 +25,7 @@ import static com.macys.sdt.framework.utils.StepUtils.*;
  */
 public class Cookies {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Cookies.class);
+    private static final Logger logger = LoggerFactory.getLogger(Cookies.class);
 
     private static String domain = "." +
             Utils.removeFromString(RunConfig.url, "www1.", "www.", "http://", "https://", "m\\.", "m2qa1\\.");
@@ -509,7 +509,7 @@ public class Cookies {
      * @return true if experiments are disabled successfully
      */
     public static boolean disableExperimentation() {
-        LOGGER.debug("Disabling experimentation");
+        logger.debug("Disabling experimentation");
         addCookie("mercury", "false");
         return setSingleSegment("");
     }
