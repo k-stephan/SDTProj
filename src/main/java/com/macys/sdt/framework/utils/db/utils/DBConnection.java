@@ -1,6 +1,8 @@
 package com.macys.sdt.framework.utils.db.utils;
 
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +10,8 @@ import java.sql.SQLException;
 
 
 public class DBConnection {
+
+    private static final Logger logger = LoggerFactory.getLogger(DBConnection.class);
 
     private static Connection con = null;
 
@@ -39,16 +43,16 @@ public class DBConnection {
 
             try {
                 Class.forName(config.getDriver(null));
-                System.out.println("Connecting to database...");
+                logger.info("Connecting to database...");
                 Assert.assertFalse("ERROR - ENV : Unable to fetch database details from REAPPS URL",
                         (config.getDBUrl() == null || config.getUserName() == null || config.getPassword() == null));
                 con = DriverManager.getConnection(config.getDBUrl(), config.getUserName(), config.getPassword());
-                System.out.println("Connection complete");
+                logger.info("Database connection successful");
             } catch (Exception e) {
-                System.out.println("Error occurred while creating database connection" + e.getMessage());
+                logger.error("Error occurred while creating database connection " + e.getMessage());
             }
         } else {
-            System.out.println("INFO : Database connection already exists hence no new connection created");
+            logger.info("Database connection already exists hence no new connection created");
         }
 
         return con;
@@ -68,16 +72,16 @@ public class DBConnection {
         if (con == null) {
             try {
                 Class.forName(new DBConfig().getDriver(databaseName));
-                System.out.println("Connecting to database...");
-                Assert.assertFalse("ERROR : valid value for database connection not given",
+                logger.info("Connecting to database...");
+                Assert.assertFalse("ERROR - DATA : valid value for database connection not given",
                         (dbUrl == null || username == null || password == null));
                 con = DriverManager.getConnection(dbUrl, username, password);
-                System.out.println("Connection complete");
+                logger.info("Database connection successful");
             } catch (Exception e) {
-                System.out.println("Error occurred while creating database connection" + e.getMessage());
+                logger.error("Error occurred while creating database connection " + e.getMessage());
             }
         } else {
-            System.out.println("INFO : Database connection already exists hence no new connection created");
+            logger.info("Database connection already exists hence no new connection created");
         }
 
         return con;

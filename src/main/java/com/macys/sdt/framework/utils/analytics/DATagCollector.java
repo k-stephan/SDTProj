@@ -14,6 +14,8 @@ import cucumber.api.Scenario;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,6 +78,9 @@ import static java.lang.Runtime.getRuntime;
  */
 
 public class DATagCollector {
+
+    private static final Logger logger = LoggerFactory.getLogger(DATagCollector.class);
+
     private static String capture_file = null;
     private static String output_file = null;
     private static JSONObject json_top = null;
@@ -122,15 +127,15 @@ public class DATagCollector {
                 p.waitFor();  // wait for process to complete
                 int exitStatus = p.exitValue();
                 if (exitStatus == 0) {
-                    System.out.println("da_login.exe launch sucess: exit_status:" + exitStatus);
+                    logger.info("da_login.exe launch success: exit_status: " + exitStatus);
                     success = true;
                     pw.interrupt();
                     break;
                 } else {
-                    System.out.println("ERROR - ENV: IBM Digital Analytics Plugin cannot be enabled: Retrying...:" + i);
+                    logger.error("ERROR - ENV: IBM Digital Analytics Plugin cannot be enabled: Retrying...: " + i);
                 }
             } catch (Exception e) {
-                Assert.fail("Cannot execute plugin utility: da_login.exe:" + e.getMessage());
+                Assert.fail("Cannot execute plugin utility: da_login.exe: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -138,7 +143,7 @@ public class DATagCollector {
             Assert.fail("ERROR - ENV: IBM Digital Analytics Plugin cannot be enabled. Retry has exhausted");
             return;
         }
-        System.out.println("IBM Digital Analytics Plugin sucessfully enabled.");
+        logger.info("IBM Digital Analytics Plugin successfully enabled.");
         tag_collection_started = true;
     }
 
@@ -183,9 +188,9 @@ public class DATagCollector {
                 Assert.fail("ERROR - ENV: Could not capture IBM Digital Analytics Plugin Tag Monitor Data");
             }
             step_item.put("tags", step_tags);
-            // System.out.println("****** Chang: " + content);
+            // logger.info("****** Chang: " + content);
         } catch (Exception e) {
-            // System.out.println("****** Chang: Parsing Error happened");
+            // logger.info("****** Chang: Parsing Error happened");
             e.printStackTrace();
         }
 
@@ -243,7 +248,7 @@ public class DATagCollector {
             p.waitFor();  // wait for process to complete
         } catch (Exception e) {
             // ignore all errors
-            System.out.println("ignored error : " + e.getMessage());
+            logger.warn("ignored error : " + e.getMessage());
         }
 
         tag_collection_started = false;
@@ -263,7 +268,7 @@ public class DATagCollector {
             json_top.put("scenario", scenario.getName());
         } catch (Exception e) {
             // ignore all errors
-            System.out.println("ignored error : " + e.getMessage());
+            logger.warn("ignored error : " + e.getMessage());
         }
 
         return Utils.getScenarioShaKey(featurepath, scenario.getName());
@@ -306,7 +311,7 @@ public class DATagCollector {
                 flag_findCorrectHeader = true;
             } else if (s.matches("^Clear.*$")) {
                 // ignore
-                System.out.println("ignore");
+                logger.info("ignore");
             } else if (s.matches(".* tag \\(.*$")) {
                 // new tag
                 new_tag = new JSONObject();

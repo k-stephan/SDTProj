@@ -43,7 +43,7 @@ import static com.macys.sdt.framework.runner.RunConfig.*;
 
 class WebDriverConfigurator {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebDriverConfigurator.class);
 
     /**
      * This method initiate specific driver with customized configurations
@@ -72,7 +72,7 @@ class WebDriverConfigurator {
             driver = initBrowser(capabilities);
         }
 
-        Assert.assertNotNull("ERROR - SCRIPT : Driver should have been initialized by now", driver);
+        Assert.assertNotNull("ERROR - SCRIPT : Driver should have been initialized by now ", driver);
 
         if (!remoteOS.equals("Linux") && !appTest) {
             WebDriver.Timeouts to = driver.manage().timeouts();
@@ -570,7 +570,7 @@ class WebDriverConfigurator {
      * @return default version of browser asked
      */
     static String defaultBrowserVersion() {
-        switch (browser) {
+        switch (browser.toLowerCase()) {
             case "ie":
                 return "11.0";
             case "edge":
@@ -608,11 +608,11 @@ class WebDriverConfigurator {
      */
     static WebDriver initDriverWithProxy() {
         if (browsermobServer != null) {
-            logger.error("Aborting prev proxy server:" + browsermobServer.getPort());
+            logger.error("Aborting prev proxy server: " + browsermobServer.getPort());
             try {
                 browsermobServer.abort();
             } catch (Exception ex) {
-                logger.error("Failed to abort prev proxy server:" + browsermobServer.getPort());
+                logger.error("Failed to abort prev proxy server: " + browsermobServer.getPort());
             }
         }
 
@@ -637,8 +637,7 @@ class WebDriverConfigurator {
             }
         }
         if (!found) {
-            logger.error("Cannot find open port for proxy server");
-            logger.error("Abort run.");
+            logger.error("Cannot find open port for proxy server.\nAbort run.");
             System.exit(-1);
         }
 

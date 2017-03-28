@@ -14,7 +14,7 @@ public class PageLoadProfiler {
     private static long lastLoadTime;
     private static String lastUrl;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PageLoadProfiler.class);
+    private static final Logger logger = LoggerFactory.getLogger(PageLoadProfiler.class);
 
     private PageLoadProfiler(){}
 
@@ -33,7 +33,7 @@ public class PageLoadProfiler {
     }
 
     public static void printLoadTime() {
-        LOGGER.info("Page load time: " + Utils.toDuration(lastLoadTime));
+        logger.info("Page load time: " + Utils.toDuration(lastLoadTime));
         lastLoadTime = 0;
     }
 

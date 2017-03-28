@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public abstract class Analytics {
 
-    private Logger logger = LoggerFactory.getLogger(Analytics.class);
+    protected Logger logger = LoggerFactory.getLogger(Analytics.class);
 
     protected ArrayList<LinkedTreeMap> entries;
     protected LinkedTreeMap gold;
@@ -66,9 +66,11 @@ public abstract class Analytics {
                 if (globals.get("update") != null) {
                     this.global_values = (Map) globals.get("update");
                 }
+            } else {
+                logger.info("Global analytics data file does not exist.");
             }
         } catch (Exception ex) {
-            System.out.println("Cannot load global data: " + ex.getMessage());
+            logger.warn("Cannot load analytics global data file : " + ex.getMessage());
         }
     }
 
@@ -86,7 +88,7 @@ public abstract class Analytics {
             gold = new LinkedTreeMap();
             gold.put("0", this.scenario_info);
         }
-        System.out.println("INFO : recording analytics for step " + (this.step - 1));
+        logger.info("recording analytics for step " + (this.step - 1));
         HashMap<String, Object> hrecord = new HashMap<>();
         hrecord.put("har_entries", this.entries);
         hrecord.put("tag_check", new HashMap());
@@ -114,15 +116,15 @@ public abstract class Analytics {
                 File flogGold = Utils.createDirectory(RunConfig.logs + "/golds");
                 fgold = new File(flogGold.getCanonicalPath() + "/" + fgold.getName());
                 Utils.writeSmallBinaryFile(new Gson().toJson(this.gold).getBytes(), fgold);
-                System.out.println("INFO : Flushing recorded analytics as gold: " + fgold.getCanonicalPath());
+                logger.info("Flushing recorded analytics as gold: " + fgold.getCanonicalPath());
             } else {
-                System.out.println("INFO : Scenario did not pass.  Skip gold recording.");
+                logger.info("Scenario did not pass. Skip gold recording.");
             }
             this.gold = null;
         } else {
             File fresult = new File(RunConfig.logs + fgold.getName() + ".analytics.result.json");
             Utils.writeSmallBinaryFile(new Gson().toJson(this.results).getBytes(), fresult);
-            System.out.println("INFO : Flushing analytics results: " + fresult.getCanonicalPath());
+            logger.info("Flushing analytics results: " + fresult.getCanonicalPath());
             this.results = new HashMap();
         }
         Utils.writeSmallBinaryFile(new Gson().toJson(this.tag_histogram).getBytes(), new File(RunConfig.logs + fgold.getName() + ".tag_histogram.json"));
@@ -351,7 +353,7 @@ public abstract class Analytics {
         return hdiff;
     }
 
-    public boolean attributeFormatValidation_emailValidator(String email) {
+    public boolean emailValidator(String email) {
         if (email == null) {
             return false;
         }
@@ -362,11 +364,4 @@ public abstract class Analytics {
         return matcher.matches();
     }
 
-    public static class AnalyticsException extends Exception {
-        private static final long serialVersionUID = -5394782789087798477L;
-
-        public AnalyticsException(String msg) {
-            super(msg);
-        }
-    }
 }

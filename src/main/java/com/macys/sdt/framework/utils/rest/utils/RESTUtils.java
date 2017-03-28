@@ -25,7 +25,7 @@ public class RESTUtils {
      * @return absolute REST uri
      */
     public static String fullURI(String relativePath) {
-        return getBaseAddress().toString().replace("m.", "") + relativePath;
+        return getBaseAddress() + relativePath;
     }
 
     /**
@@ -76,10 +76,11 @@ public class RESTUtils {
         try {
             String baseAddress = Optional.ofNullable(RunConfig.url).orElseThrow(Exception::new);
             baseAddress = baseAddress.replace("m.", "");
+            logger.info("base address : " + baseAddress);
             return baseAddress;
         } catch (Exception e) {
             Assert.fail("Website detail not present");
+            return null;
         }
-        return null;
     }
 }

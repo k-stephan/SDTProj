@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class RunConfig {
 
-    private static Logger logger;
+    private static Logger logger = LoggerFactory.getLogger(RunConfig.class);
 
     /**
      * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
@@ -274,7 +274,7 @@ public class RunConfig {
     /**
      * Retrieves an environment variable
      *
-     * @param name name of parameter to retrieve
+     * @param name environment variable name to retrieve its value
      * @return value of parameter or null if not found
      */
     public static String getEnvVar(String name) {
@@ -311,7 +311,7 @@ public class RunConfig {
         if (!scenarios.contains(project.replace('.', '/'))) {
             scenarios = scenarios.replaceAll("features/", project.replace(".", "/") + "/features/");
         }
-        logger.info("Parsing env scenarios:" + scenarios);
+        logger.info("Parsing env scenarios : " + scenarios);
         String delimit = ".feature";
         int i = 0, end = scenarios.indexOf(delimit);
         while (i < scenarios.length()) {

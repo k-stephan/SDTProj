@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class RESTOperations {
 
-    private static Logger log = LoggerFactory.getLogger(RESTOperations.class);
+    private static Logger logger = LoggerFactory.getLogger(RESTOperations.class);
 
     /**
      * POST operation
@@ -28,10 +28,10 @@ public class RESTOperations {
         Client client = RESTUtils.createClient();
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            System.out.println("requestpayload : " + requestPayload);
+            logger.info("request payload : " + requestPayload);
             response = webTarget.request(mediaType).post(Entity.entity(requestPayload, mediaType));
-        } catch (javax.ws.rs.ProcessingException e) {
-            log.error(e.toString());
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
@@ -50,7 +50,7 @@ public class RESTOperations {
         Client client = RESTUtils.createClient();
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            System.out.println("request payload : " + requestPayload);
+            logger.info("request payload : " + requestPayload);
             Invocation.Builder requestBuilder = webTarget.request(mediaType);
             if (headers != null && !headers.isEmpty()) {
                 for (String headerKey : headers.keySet()) {
@@ -58,8 +58,8 @@ public class RESTOperations {
                 }
             }
             response = requestBuilder.post(Entity.entity(requestPayload, mediaType));
-        } catch (javax.ws.rs.ProcessingException e) {
-            log.error(e.toString());
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
@@ -77,8 +77,8 @@ public class RESTOperations {
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             response = webTarget.request().get();
-        } catch (javax.ws.rs.ProcessingException e) {
-            log.error(e.toString());
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
@@ -102,8 +102,8 @@ public class RESTOperations {
                 }
             }
             response = requestBuilder.get();
-        } catch (javax.ws.rs.ProcessingException e) {
-            log.error(e.toString());
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
@@ -121,8 +121,8 @@ public class RESTOperations {
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             response = webTarget.request().delete();
-        } catch (javax.ws.rs.ProcessingException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
@@ -146,8 +146,8 @@ public class RESTOperations {
                 }
             }
             response = requestBuilder.delete();
-        } catch (javax.ws.rs.ProcessingException e) {
-            log.error(e.toString());
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
@@ -166,10 +166,10 @@ public class RESTOperations {
         Client client = RESTUtils.createClient();
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            System.out.println("requestpayload : " + requestPayload);
+            logger.info("request payload : " + requestPayload);
             response = webTarget.request(mediaType).put(Entity.entity(requestPayload, mediaType));
-        } catch (javax.ws.rs.ProcessingException e) {
-            log.error(e.toString());
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
@@ -188,7 +188,7 @@ public class RESTOperations {
         Client client = RESTUtils.createClient();
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            System.out.println("requestpayload : " + requestPayload);
+            logger.info("request payload : " + requestPayload);
             Invocation.Builder requestBuilder = webTarget.request(mediaType);
             if (headers != null && !headers.isEmpty()) {
                 for (String headerKey : headers.keySet()) {
@@ -196,8 +196,8 @@ public class RESTOperations {
                 }
             }
             response = requestBuilder.put(Entity.entity(requestPayload, mediaType));
-        } catch (javax.ws.rs.ProcessingException e) {
-            log.error(e.toString());
+        } catch (Exception e) {
+            logger.error("error in REST call : " + e.toString());
         }
         return response;
     }
