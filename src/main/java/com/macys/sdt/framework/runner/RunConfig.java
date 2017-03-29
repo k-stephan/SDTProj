@@ -146,11 +146,7 @@ public class RunConfig {
     /**
      * Path to active project files on file system
      */
-    public static String projectDir = null;
-    /**
-     * Path to shared resources
-     */
-    public static String sharedDir = "shared/resources/src/main/resources";
+    public static String projectResourceDir = null;
     /**
      * Whether we're running in debug mode
      */
@@ -163,6 +159,10 @@ public class RunConfig {
      * Name of jar being run if running from jar
      */
     public static String repoJar = getEnvOrExParam("repo_jar");
+    /**
+     * Path to shared resources
+     */
+    public static String sharedResourceDir = repoJar != null ? "com/macys/sdt/shared/resources" : "shared/resources/";
     /**
      * Location of app for app testing (appium)
      */
@@ -225,6 +225,22 @@ public class RunConfig {
         String[] check = project.split("\\.");
         if (check.length != 2) {
             Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
+        }
+
+        logger.info("Using project: " + project + "\nIf this does not match your project," +
+                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
+        // maven standard resource location
+        projectResourceDir = project.replace(".", "/") + "/src/main/resources";
+        // old, proprietary resource location
+        if (!new File(projectResourceDir).exists()) {
+            projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
+        }
+        try {
+            if (repoJar != null) {
+                Utils.extractResources(new File(repoJar), workspace, projectResourceDir);
+            }
+        } catch (IOException e) {
+            logger.warn("Failed to extract resources");
         }
     }
 
@@ -434,7 +450,6 @@ public class RunConfig {
                 hScenario.put(l, element);
             }
         }
-        logger.info("Cannot find scenario with line: " + line);
         int closest = 0;
         for (Integer l : hScenario.keySet()) {
             int dist = Math.abs(line - l);

@@ -172,7 +172,7 @@ public class UtilsTest {
 
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
         Assert.assertTrue(Utils.getResourceFile("orderable_products.json").exists());
 
         //fallback to website resources
@@ -191,7 +191,7 @@ public class UtilsTest {
         RunConfig.url = null;
         MainRunner.currentURL = "";
         RunConfig.project = null;
-        RunConfig.projectDir = null;
+        RunConfig.projectResourceDir = null;
     }
 
     @Test
@@ -233,7 +233,7 @@ public class UtilsTest {
         Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/queries.json").exists());
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
 
         JSONObject sqlQueries = Utils.getSqlQueries();
         Assert.assertNotNull(sqlQueries);
@@ -241,7 +241,7 @@ public class UtilsTest {
 
         RunConfig.url = null;
         RunConfig.project = null;
-        RunConfig.projectDir = null;
+        RunConfig.projectResourceDir = null;
     }
 
     @Test
@@ -249,7 +249,7 @@ public class UtilsTest {
         Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/return_orders.json").exists());
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
 
         HashMap<String, String> options = new HashMap<>();
         options.put("return_order", "intransit");
@@ -259,7 +259,7 @@ public class UtilsTest {
 
         RunConfig.url = null;
         RunConfig.project = null;
-        RunConfig.projectDir = null;
+        RunConfig.projectResourceDir = null;
     }
 
     @Test
@@ -267,7 +267,7 @@ public class UtilsTest {
         Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/order_mods_data.json").exists());
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
 
         String orderNumber = Utils.getOrderNumber("processing");
         Assert.assertNotNull(orderNumber);
@@ -275,7 +275,7 @@ public class UtilsTest {
 
         RunConfig.url = null;
         RunConfig.project = null;
-        RunConfig.projectDir = null;
+        RunConfig.projectResourceDir = null;
     }
 
     @Test
@@ -283,7 +283,7 @@ public class UtilsTest {
         Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/password.json").exists());
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
 
         String pwd = Utils.decryptPassword("11_AU0QXqYqq/tRJXonlBjwew==");
         Assert.assertNotNull(pwd);
@@ -291,7 +291,7 @@ public class UtilsTest {
 
         RunConfig.url = null;
         RunConfig.project = null;
-        RunConfig.projectDir = null;
+        RunConfig.projectResourceDir = null;
     }
 
     @Test
@@ -299,13 +299,13 @@ public class UtilsTest {
         Assume.assumeTrue(new File("src/test/java/com/macys/sdt/framework/resources/data/website/mcom/contextualize_media.json").exists());
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
 
         Assert.assertNotNull(Utils.getContextualizeMedia());
 
         RunConfig.url = null;
         RunConfig.project = null;
-        RunConfig.projectDir = null;
+        RunConfig.projectResourceDir = null;
     }
 
     @Test

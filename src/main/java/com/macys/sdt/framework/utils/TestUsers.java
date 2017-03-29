@@ -94,7 +94,7 @@ public class TestUsers {
             }
 
             String lockCustomer = Utils.httpGet(url, null);
-            Map<String, Map<String, String>> customer = new Gson().fromJson(lockCustomer, new TypeToken<Map<String, String>>(){}.getType());
+            Map<String, Map<String, String>> customer = new Gson().fromJson(lockCustomer, new TypeToken<Map<String, Map<String, String>>>(){}.getType());
             prodCustomer.getUser().getLoginCredentials().setPassword(customer.get("login").get("password"));
             prodCustomer.getUser().getProfileAddress().setEmail(customer.get("login").get("email"));
             currentEmail = prodCustomer.getUser().getProfileAddress().getEmail();

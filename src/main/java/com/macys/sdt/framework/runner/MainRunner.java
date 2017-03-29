@@ -71,9 +71,8 @@ public class MainRunner {
      * @throws Throwable if an exception or error gets here, we're done
      */
     public static void main(String[] args) throws Throwable {
-
         // When test are aborted by user or EE, need to make sure sauce labs still gets driver quit command
-        // This code should help with sauce labs : Test did not see a new command for 300 seconds
+        // This code should help with "Test did not see a new command for 300 seconds" error
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (WebDriverManager.driverInitialized() && (closeBrowserAtExit || useSauceLabs)) {
                 WebDriverManager.driver.quit();
@@ -81,15 +80,6 @@ public class MainRunner {
         }));
 
         getEnvVars(args);
-
-        logger.info("Using project: " + project + "\nIf this does not match your project," +
-                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
-        if (repoJar != null) {
-            projectDir = project.replace(".", "/");
-            Utils.extractResources(new File(repoJar), workspace, projectDir);
-        } else {
-            projectDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/");
-        }
 
         ArrayList<String> cucumberArgs = getFeatureScenarios();
         if (cucumberArgs == null) {
@@ -167,7 +157,7 @@ public class MainRunner {
             cucumberArgs.add("--dry-run");
         }
 
-        logger.info("Testing website: " + url + " using " +
+        logger.info("Testing " + url + " on " +
                 (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
                 + (useSauceLabs ? " on Sauce Labs" : ""));
 
@@ -294,10 +284,7 @@ public class MainRunner {
             logger.info("Firefox Windows Authentication monitoring background thread started");
 
             Process p;
-            String filePath = "src/com/macys/sdt/shared/resources/framework/authentication_popup/windows_authentication_firefox.exe";
-            if (!new File("src").exists()) {
-                filePath = "shared/resources/framework/authentication_popup/windows_authentication_firefox.exe";
-            }
+            String filePath = sharedResourceDir + "/framework/authentication_popup/windows_authentication_firefox.exe";
 
             while (true) {
                 try {
@@ -357,10 +344,7 @@ public class MainRunner {
             logger.info("Chrome Windows Authentication monitoring background thread started");
 
             Process p;
-            String filePath = "src/com/macys/sdt/shared/resources/framework/authentication_popup/windows_authentication_chrome.exe";
-            if (!new File("src").exists()) {
-                filePath = "shared/resources/framework/authentication_popup/windows_authentication_chrome.exe";
-            }
+            String filePath = sharedResourceDir + "/framework/authentication_popup/windows_authentication_chrome.exe";
 
             // chrome need workaround for the Chrome Authentication Required popup
             // check the current URL periodically and compare it with original URL

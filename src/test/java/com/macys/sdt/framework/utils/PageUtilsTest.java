@@ -14,7 +14,7 @@ public class PageUtilsTest {
     @BeforeClass
     public static void setUp() {
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
         RunConfig.workspace = System.getProperty("user.dir") + "/";
     }
 

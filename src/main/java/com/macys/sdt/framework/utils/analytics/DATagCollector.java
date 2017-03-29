@@ -28,6 +28,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.macys.sdt.framework.runner.RunConfig.sharedResourceDir;
 import static java.lang.Runtime.getRuntime;
 
 /**
@@ -118,10 +119,7 @@ public class DATagCollector {
         boolean success = false;
         for (int i = 0; i < 5; i++) {
             try {
-                String file_path = "src/com/macys/sdt/shared/resources/framework/digital_analytics/plugin_utilities/da_login.exe";
-                if (!new File("src").exists()) {
-                    file_path = "shared/resources/framework/digital_analytics/plugin_utilities/da_login.exe";
-                }
+                String file_path = sharedResourceDir + "/framework/digital_analytics/plugin_utilities/da_login.exe";
                 p = getRuntime().exec(file_path + " 90067660 MCOMREG macy$123");
                 ProcessWatchDog pw = new ProcessWatchDog(p, 30 * 1000, "DATagCollector.start()");
                 p.waitFor();  // wait for process to complete
@@ -163,10 +161,7 @@ public class DATagCollector {
         }
         Process p = null;
         try {
-            String file_path = "src/com/macys/sdt/shared/resources/framework/digital_analytics/plugin_utilities/da_capture.exe";
-            if (!new File("src").exists()) {
-                file_path = "shared/resources/framework/digital_analytics/plugin_utilities/da_capture.exe";
-            }
+            String file_path = sharedResourceDir + "/framework/digital_analytics/plugin_utilities/da_capture.exe";
             p = getRuntime().exec(file_path + " " + capture_file);
             p.waitFor();  // wait for process to complete
         } catch (Exception e) {
@@ -239,10 +234,7 @@ public class DATagCollector {
 
         Process p;
         try {
-            String file_path = "src/com/macys/sdt/shared/resources/framework/digital_analytics/plugin_utilities/da_close.exe";
-            if (!new File("src").exists()) {
-                file_path = "shared/resources/framework/digital_analytics/plugin_utilities/da_close.exe";
-            }
+            String file_path = sharedResourceDir + "/framework/digital_analytics/plugin_utilities/da_close.exe";
 
             p = getRuntime().exec(file_path);
             p.waitFor();  // wait for process to complete

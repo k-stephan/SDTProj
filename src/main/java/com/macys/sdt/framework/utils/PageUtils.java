@@ -30,15 +30,12 @@ public class PageUtils {
      */
     protected static HashMap<String, JSONObject> sharedPages = new HashMap<>();
 
-    private static String sharedDir = RunConfig.repoJar == null ? "shared" : "com/macys/sdt/shared";
-
     /**
      * Finds JSON entry value from page JSON object
      *
      * @param element PageElement containing data to find
      * @return Value of the element
      */
-    //
     public static String getElementJSONValue(PageElement element) {
         if (element.pageName == null || element.elementName == null) {
             return null;
@@ -84,7 +81,7 @@ public class PageUtils {
         }
 
         String path = pagePath.replace(".page.", ".pages.").replace(".panel.", ".panels.").replace(".", "/");
-        String resPath = "/resources/elements/" + path + ".json";
+        String resPath = "/elements/" + path + ".json";
 
         // find & load files
         loadJSONFiles(resPath, pagePath);
@@ -103,8 +100,8 @@ public class PageUtils {
 
     private static void loadJSONFiles(String resPath, String page) {
         String responsivePage = getResponsivePath(page);
-        String projectPath = RunConfig.workspace + RunConfig.projectDir + resPath;
-        String sharedPath = RunConfig.workspace + sharedDir + resPath;
+        String projectPath = RunConfig.workspace + RunConfig.projectResourceDir + resPath;
+        String sharedPath = RunConfig.workspace + RunConfig.sharedResourceDir + resPath;
         String responsivePath = getResponsivePath(projectPath);
         String sharedResponsivePath = getResponsivePath(sharedPath);
 
@@ -135,11 +132,11 @@ public class PageUtils {
         }
     }
 
-    private static boolean loadPageAndPanels(String pagePath, String filePath) {
+    private static void loadPageAndPanels(String pagePath, String filePath) {
         File f = new File(filePath);
         if (f.exists() && !f.isDirectory()) {
             loadPageJsonFiles(pagePath, f);
-            return true;
+            return;
         }
 
         // find file recursively under the directory
@@ -154,17 +151,15 @@ public class PageUtils {
         if (f != null && f.exists() && !f.isDirectory()) {
             int fileCount = countFoundPages(dir, fName);
             if (fileCount < 1) {
-                return false;
+                return;
             }
             if (fileCount == 1) {
                 loadPageJsonFiles(pagePath, f);
-                return true;
             } else {
                 Assert.fail("Resource Error: Multiple '" + fName + "'(total: " + fileCount + ") " +
                         " files found under '" + dir.getAbsolutePath() + "'");
             }
         }
-        return false;
     }
 
     /**

@@ -23,7 +23,7 @@ public class TestUsersTest {
     @BeforeClass
     public static void setUp() throws Exception {
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
         RunConfig.url = "http://www.qa0codemacys.fds.com";
     }
 

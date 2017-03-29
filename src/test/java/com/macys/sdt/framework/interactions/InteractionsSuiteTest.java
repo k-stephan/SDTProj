@@ -41,7 +41,7 @@ public class InteractionsSuiteTest {
         try {
             RunConfig.project = "framework";
             RunConfig.workspace = "";
-            RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+            RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
             RunConfig.browser = "firefox";
             RunConfig.browserVersion = "";
             RunConfig.remoteOS = "Windows 7";

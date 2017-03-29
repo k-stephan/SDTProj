@@ -17,7 +17,7 @@ public class DBConnectionTest {
     public static void setup() {
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-        RunConfig.projectDir = "src/test/java/com/macys/sdt/framework";
+        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework";
         HashMap<String, String> env = new HashMap<>();
         env.put("dbUnitTest", "true");
         env.put("dbUnitTestConfig", "{\"dbInfo\":{\"dbName\":\"mcyprdst\",\"dbSchema\":\"DB2MCYS\",\"dbUsername\":\"mcyapp\",\"dbPassword\":\"dbacce5s\",\"dbPortNo\":\"60020\",\"dbHost\":\"ibm80p49\",\"dbUrl\":\"jdbc:db2://ibm80p49:60020/MCYPRDST\"}}");

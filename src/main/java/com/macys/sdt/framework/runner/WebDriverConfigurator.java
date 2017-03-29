@@ -135,7 +135,7 @@ class WebDriverConfigurator {
             case "ie":
             case "internetexplorer":
                 capabilities = DesiredCapabilities.internetExplorer();
-                String path = "shared/resources/framework/selenium_drivers/IEDriverServer.exe";
+                String path = sharedResourceDir + "/framework/selenium_drivers/IEDriverServer.exe";
                 File file = new File(path);
                 if (!file.exists()) {
                     file = new File(workspace + "com/macys/sdt/" + path);
@@ -183,7 +183,7 @@ class WebDriverConfigurator {
                 ArrayList<File> extensions = new ArrayList<>();
                 if (tagCollection) {
                     logger.info("tag collection started ...");
-                    path = "shared/resources/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
+                    path = sharedResourceDir + "/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
                     file = new File(path);
                     if (!file.exists()) {
                         file = new File("com/macys/sdt/" + path);
@@ -229,7 +229,7 @@ class WebDriverConfigurator {
      */
     private static void setChromeDriverLocation() {
         String fileName = Utils.isOSX() ? "chromedriver" : "chromedriver.exe";
-        String path = "shared/resources/framework/selenium_drivers/" + fileName;
+        String path = sharedResourceDir + "/framework/selenium_drivers/" + fileName;
         File file = new File(workspace + path);
         if (!file.exists()) {
             file = new File(workspace + "com/macys/sdt/" + path);
@@ -250,7 +250,7 @@ class WebDriverConfigurator {
      */
     private static void setFirefoxDriverLocation() {
         String fileName = Utils.isOSX() ? "geckodriver" : "geckodriver.exe";
-        String path = "shared/resources/framework/selenium_drivers/" + fileName;
+        String path = sharedResourceDir + "/framework/selenium_drivers/" + fileName;
         File file = new File(workspace + path);
         if (!file.exists()) {
             file = new File(workspace + "com/macys/sdt/" + path);

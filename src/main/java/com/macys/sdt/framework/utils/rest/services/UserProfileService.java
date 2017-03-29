@@ -82,7 +82,7 @@ public class UserProfileService {
             String createUserProfileDetail = ObjectMapperProvidor.getXmlMapper().writeValueAsString(profile.getUser());
             UserProfile createdProfile = createUserProfile(createUserProfileDetail, v1);
             if (createdProfile == null) {
-                System.err.println("Error creating profile.");
+                logger.error("Error creating profile.");
                 return false;
             }
             return true;

@@ -522,14 +522,14 @@ public class Utils {
     /**
      * Gets a resource file with a given name
      *
-     * @param fname file name
+     * @param fName file name
      * @return resulting File
      */
-    public static File getResourceFile(String fname) {
+    public static File getResourceFile(String fName) {
 
         // project data
-        String full_path = getResourcePath(fname);
-        String path = RunConfig.projectDir + "/resources/data/" + full_path;
+        String full_path = getResourcePath(fName);
+        String path = RunConfig.projectResourceDir + "/data/" + full_path;
         File resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
@@ -544,21 +544,7 @@ public class Utils {
         }
 
         // shared data
-        path = "shared/resources/data/" + full_path;
-        resource = new File(path);
-        if (resource.exists() && !resource.isDirectory()) {
-            return resource;
-        }
-        if (!resource.exists()) {
-            //fallback to website resources
-            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
-            if (resource.exists() && !resource.isDirectory()) {
-                return resource;
-            }
-        }
-
-        // shared data extracted from jar
-        path = "com/macys/sdt/shared/resources/data/" + full_path;
+        path = RunConfig.sharedResourceDir + "/data/" + full_path;
         resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
