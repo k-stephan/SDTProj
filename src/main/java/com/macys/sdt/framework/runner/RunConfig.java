@@ -229,18 +229,18 @@ public class RunConfig {
 
         logger.info("Using project: " + project + "\nIf this does not match your project," +
                 " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
-        // maven standard resource location
-        projectResourceDir = project.replace(".", "/") + "/src/main/resources";
         // old, proprietary resource location
-        if (!new File(projectResourceDir).exists()) {
-            projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
-        }
+        projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
         try {
             if (repoJar != null) {
-                Utils.extractResources(new File(repoJar), workspace, projectResourceDir);
+                Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
+            }
+            if (!new File(projectResourceDir).exists()) {
+                // maven standard resource location
+                projectResourceDir = project.replace(".", "/") + "/src/main/resources";
             }
         } catch (IOException e) {
-            logger.warn("Failed to extract resources");
+            logger.error("Failed to extract resources from jar");
         }
     }
 

@@ -773,7 +773,7 @@ public class Utils {
         saveDriver("IEDriverServer.exe", resPath);
 
         resPath = "com/macys/sdt/projects/";
-        System.out.println(resPath);
+        logger.debug(resPath);
         extractJarFile(repoJar, resPath + project, workspace + "/" + project, "/resources", "/features", "pom.xml");
         resourcesExtracted = true;
     }
