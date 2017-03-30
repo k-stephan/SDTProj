@@ -331,7 +331,7 @@ public abstract class StepUtils {
             if (errPane != null && errPane.isDisplayed() && errPane.getText().contains("Oops!")) {
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             // exception means we couldn't find the error pane
         }
         return false;

@@ -47,6 +47,7 @@ public class Elements {
      * @return first element selected by el
      */
     public static WebElement findElement(By selector) {
+        logger.debug("find element using selector : " + selector);
         try {
             Wait.forPageReady();
             if (StepUtils.safari()) {
@@ -54,7 +55,7 @@ public class Elements {
             }
             List<WebElement> elements = WebDriverManager.getWebDriver().findElements(selector);
             if (elements.size() == 0) {
-                throw new NoSuchElementException("Unable to locate an element using: " + selector);
+                throw new NoSuchElementException("Unable to locate an element using : " + selector);
             }
             if (elements.size() > 1) {
                 List<WebElement> visible = elements.stream().filter(WebElement::isDisplayed).collect(Collectors.toList());
@@ -64,8 +65,8 @@ public class Elements {
             }
             return elements.get(0);
         } catch (NoSuchElementException ex) {
-            logger.debug("-->StepUtils.findElement() no element found with selector: " + selector);
-            logger.warn("Unable to find element", ex);
+            logger.debug("No element found with selector : " + selector);
+            logger.warn("Unable to find element : ", ex);
         } catch (DriverNotInitializedException e) {
             Assert.fail("Driver not initialized");
         }
@@ -131,7 +132,7 @@ public class Elements {
                 Utils.threadSleep(100, null);
             }
         }
-        logger.debug("No elements found with selector: " + selector);
+        logger.debug("No elements found with selector : " + selector);
         return null;
     }
 

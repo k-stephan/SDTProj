@@ -97,7 +97,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfAllElements(list));
             return true;
         } catch (Exception ex) {
-            logger.debug("-->Error:untilElementNotPresent(): " + ex.getMessage());
+            logger.warn("Unable to ensure if elements are no longer present due to " + ex.getMessage());
             return false;
         }
     }
@@ -260,7 +260,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            logger.debug("-->Error:secondsUntilElementNotPresent(): " + selector.toString());
+            logger.debug("Element targeted by selector: " + selector.toString());
             logger.error(ex.getMessage());
             return false;
         }
@@ -280,7 +280,7 @@ public class Wait {
                 Navigate.browserRefresh();
             }
         } catch (Exception ex) {
-            logger.debug("-->Error:untilElementPresentWithRefresh(): " + selector.toString() + ": " + ex.getMessage());
+            logger.warn("error in locating element with selector: " + selector + " : " + ex.getMessage());
         }
     }
 
@@ -301,7 +301,7 @@ public class Wait {
                 Navigate.browserRefresh();
             }
         } catch (Exception ex) {
-            logger.debug("-->Error:untilElementPresentWithRefresh(): " + el1.toString() + ": " + el2.toString() + ": " + ex.getMessage());
+            logger.warn(String.format("Elements %s and %s are not present with error message : %s", el1.toString(), el2.toString(), ex.getMessage()));
 
         }
     }
@@ -313,6 +313,7 @@ public class Wait {
      * @param toClick By selector to use if waitFor does not appear
      */
     public static void untilElementPresentWithRefreshAndClick(By waitFor, By toClick) {
+        logger.debug("wait for element: " + waitFor.toString() + " and click element: " + toClick.toString());
         try {
             for (int i = 0; i < 2; i++) {
                 if (secondsUntilElementPresent(waitFor, MainRunner.timeouts().untilElementPresent())) {
@@ -321,7 +322,6 @@ public class Wait {
                 }
             }
         } catch (Exception ex) {
-            logger.debug("-->Error:untilElementPresentWithRefreshAndClick(): " + waitFor.toString() + ": " + toClick.toString());
             logger.error(ex.getMessage());
         }
     }
@@ -425,8 +425,7 @@ public class Wait {
                 } catch (Exception e) {
                     // IE likes to throw a lot of garbage exceptions, don't bother printing them out
                     if (RunConfig.debugMode && !StepUtils.ie() && !StepUtils.safari()) {
-                        System.out.println("Exception in forPageReady: ");
-                        System.err.println(e.getMessage());
+                        logger.debug("Exception while checking for page ready : " + e.getMessage());
                     }
                     return false;
                 }
@@ -438,8 +437,14 @@ public class Wait {
         if (pageName != null) {
             By verifyElement = Elements.element(pageName + ".verify_page");
             if (verifyElement != null) {
-                untilElementPresent(verifyElement);
+                if (!untilElementPresent(verifyElement)) {
+                    logger.warn("element " + verifyElement + " not on page " + pageName);
+                }
+            } else {
+                logger.debug("page does not have element to validate page");
             }
+        } else {
+            logger.debug("page name entered as null");
         }
         StepUtils.closeJQueryPopup();
         return true;
