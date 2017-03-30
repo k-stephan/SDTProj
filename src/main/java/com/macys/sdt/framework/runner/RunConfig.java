@@ -564,6 +564,10 @@ public class RunConfig {
         if (url == null && !appTest) {
             Assert.fail("\"website\" variable required to test a website");
         }
+        if (url.endsWith("/")) {
+            // having a slash on the end messes up relative navigation & cookie domain
+            url = url.substring(0, url.length() - 1);
+        }
         if (browser == null && !appTest) {
             logger.info("No browser given, using default (chrome)");
             browser = "chrome";
