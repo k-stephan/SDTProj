@@ -190,9 +190,6 @@ class WebDriverConfigurator {
                     }
                     extensions.add(file);
                 }
-                if (disableJS) {
-                    firefoxProfile.setPreference("javascript.enabled", false);
-                }
                 String envExtensions = getEnvOrExParam("firefox_extensions");
                 if (envExtensions != null) {
                     String[] extensionSplit = envExtensions.split(";");

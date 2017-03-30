@@ -64,10 +64,6 @@ public class RunConfig {
      */
     public static String userAgent = getEnvOrExParam("user_agent");
     /**
-     * Whether to disable javascript - ONLY WORKS IN FIREFOX
-     */
-    public static boolean disableJS = booleanParam("disable_js");
-    /**
      * Browser to use as given in "browser" env variable. Default chrome.
      */
     public static String browser = getEnvVar("browser");
@@ -537,6 +533,9 @@ public class RunConfig {
             if (analytics != null) {
                 logger.info("Including Analytics: " + analytics.getClass().getSimpleName());
             }
+        }
+        if (userAgent != null) {
+            disableProxy = false;
         }
 
         // tag_collection
