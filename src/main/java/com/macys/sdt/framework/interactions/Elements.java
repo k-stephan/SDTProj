@@ -54,8 +54,8 @@ public class Elements {
                 Wait.untilElementPresent(selector);
             }
             List<WebElement> elements = WebDriverManager.getWebDriver().findElements(selector);
-            if (elements.size() == 0) {
-                throw new NoSuchElementException("Unable to locate an element using : " + selector);
+            if (elements == null || elements.size() == 0) {
+                throw new NoSuchElementException("Unable to locate an element using selector : " + selector);
             }
             if (elements.size() > 1) {
                 List<WebElement> visible = elements.stream().filter(WebElement::isDisplayed).collect(Collectors.toList());

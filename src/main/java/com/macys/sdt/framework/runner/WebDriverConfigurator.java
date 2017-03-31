@@ -518,10 +518,7 @@ class WebDriverConfigurator {
      * @return instance of TestObject related driver with preferred capabilities
      */
     private static WebDriver initTestObject(DesiredCapabilities capabilities) {
-        String testobjectApiKey = "6D6F0911308342B6AECBF8DFB4DE9AF8";
-        String testobjectDevice = "LG_Nexus_4_E960_real";
-
-        capabilities.setCapability("testobject_api_key", testobjectApiKey);
+        capabilities.setCapability("testobject_api_key", testobjectAPIKey);
         capabilities.setCapability("testobject_device", testobjectDevice);
 
         try {
