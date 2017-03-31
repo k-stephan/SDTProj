@@ -38,6 +38,11 @@ public class RunConfig {
      * Name of Sauce Connect tunnel to use
      */
     public static String tunnelIdentifier = getEnvOrExParam("tunnel_identifier");
+
+    /**
+     * True if executing through TestObject. Checks for valid TestObject info in "testobject_api_key" and "testobject_device" env variables
+     */
+    public static boolean useTestObject;
     /**
      * True if using chrome device emulation
      */
@@ -91,6 +96,17 @@ public class RunConfig {
      * The Sauce Labs API key for the user
      */
     public static String sauceKey = getEnvOrExParam("sauce_key");
+
+    /**
+     * The TestObject API key for the device
+     */
+    public static String testobjectAPIKey = getEnvOrExParam("testobject_api_key");
+
+    /**
+     * The TestObject Device
+     */
+    public static String testobjectDevice = getEnvOrExParam("testobject_device");
+
     /**
      * Workspace path as given in "WORKSPACE" env variable
      */
@@ -551,6 +567,9 @@ public class RunConfig {
 
         // use saucelabs when valid "sauce_user" and "sauce_key" is provided
         useSauceLabs = sauceUser != null && sauceKey != null;
+
+        // use testobject when valid "testobject_api_key" and "testobject_device" is provided
+        useTestObject = testobjectAPIKey != null && testobjectDevice != null;
 
         // use chrome emulation when it is mobile device and use of Appium is not mentioned
         useChromeEmulation = StepUtils.mobileDevice() && !useAppium;

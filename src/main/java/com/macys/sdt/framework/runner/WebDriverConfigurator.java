@@ -66,6 +66,14 @@ class WebDriverConfigurator {
             } else {
                 logger.info("No RemoteWebDriver instance : " + driver);
             }
+        } else if (useTestObject && !useAppium) {
+            driver = initTestObject(capabilities);
+            // print the testobject url for tracking job on testobject
+            if (driver instanceof RemoteWebDriver) {
+                logger.info("Link to your testobject job: http://appium.testobject.com/wd/hub and sessionID : " + ((RemoteWebDriver) driver).getSessionId());
+            } else {
+                logger.info("No RemoteWebDriver instance : " + driver);
+            }
         } else if (useAppium) {
             driver = initAppiumDevice(capabilities);
         } else {
@@ -504,6 +512,28 @@ class WebDriverConfigurator {
     }
 
     /**
+     * This method initiate TestObject customized driver with preferred capabilities
+     *
+     * @param capabilities preferred configurations for driver
+     * @return instance of TestObject related driver with preferred capabilities
+     */
+    private static WebDriver initTestObject(DesiredCapabilities capabilities) {
+        String testobjectApiKey = "6D6F0911308342B6AECBF8DFB4DE9AF8";
+        String testobjectDevice = "LG_Nexus_4_E960_real";
+
+        capabilities.setCapability("testobject_api_key", testobjectApiKey);
+        capabilities.setCapability("testobject_device", testobjectDevice);
+
+        try {
+            return new RemoteWebDriver(new URL("http://appium.testobject.com/wd/hub"), capabilities);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Assert.fail("ERROR - SCRIPT : Unable to initialize driver");
+        return null;
+    }
+
+    /**
      * initiate appium driver (ios or android) with given capabilities for local execution or saucelabs
      *
      * @param capabilities preferred configurations for ios or android driver
@@ -525,7 +555,10 @@ class WebDriverConfigurator {
             } else {
                 capabilities.setCapability("appiumVersion", "1.5.3");
             }
-        } else {    // for non saucelabs execution
+        } else if (useTestObject) { // for testobject execution
+            capabilities.setCapability("testobject_api_key", testobjectAPIKey);
+            capabilities.setCapability("testobject_device", testobjectDevice);
+        } else {    // for non saucelabs or testobject execution
             capabilities.setCapability("appiumVersion", "1.6");
         }
 
@@ -535,6 +568,8 @@ class WebDriverConfigurator {
             // URL creation
             if (useSauceLabs) {
                 url = new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub");
+            } else if (useTestObject) {
+                url = new URL("http://appium.testobject.com/wd/hub");
             } else {
                 String appiumURL = getEnvOrExParam("appium_server");
                 appiumURL = appiumURL == null ? "http://127.0.0.1" : appiumURL;
