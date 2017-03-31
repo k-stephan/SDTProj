@@ -66,14 +66,6 @@ class WebDriverConfigurator {
             } else {
                 logger.info("No RemoteWebDriver instance : " + driver);
             }
-        } else if (useTestObject && !useAppium) {
-            driver = initTestObject(capabilities);
-            // print the testobject url for tracking job on testobject
-            if (driver instanceof RemoteWebDriver) {
-                logger.info("Link to your testobject job: http://appium.testobject.com/wd/hub and sessionID : " + ((RemoteWebDriver) driver).getSessionId());
-            } else {
-                logger.info("No RemoteWebDriver instance : " + driver);
-            }
         } else if (useAppium) {
             driver = initAppiumDevice(capabilities);
         } else {
@@ -506,25 +498,6 @@ class WebDriverConfigurator {
 
         } catch (Exception e) {
             logger.error("ERROR - SCRIPT : Could not create remote web driver: " + e);
-        }
-        Assert.fail("ERROR - SCRIPT : Unable to initialize driver");
-        return null;
-    }
-
-    /**
-     * This method initiate TestObject customized driver with preferred capabilities
-     *
-     * @param capabilities preferred configurations for driver
-     * @return instance of TestObject related driver with preferred capabilities
-     */
-    private static WebDriver initTestObject(DesiredCapabilities capabilities) {
-        capabilities.setCapability("testobject_api_key", testobjectAPIKey);
-        capabilities.setCapability("testobject_device", testobjectDevice);
-
-        try {
-            return new RemoteWebDriver(new URL("http://appium.testobject.com/wd/hub"), capabilities);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         }
         Assert.fail("ERROR - SCRIPT : Unable to initialize driver");
         return null;
