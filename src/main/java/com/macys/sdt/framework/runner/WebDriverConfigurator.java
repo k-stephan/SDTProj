@@ -520,11 +520,8 @@ class WebDriverConfigurator {
 
         // setting appium version
         if (useSauceLabs) { // for saucelabs execution
-            if (StepUtils.iOS() && Integer.parseInt(remoteOS.split(Pattern.quote("."))[0]) >= 10) {
-                capabilities.setCapability("appiumVersion", "1.6");
-            } else {
-                capabilities.setCapability("appiumVersion", "1.5.3");
-            }
+            // Appium version compatible for both iOS (9.x, 10.x) and Android (5.x, 6.x, 7.x)
+            capabilities.setCapability("appiumVersion", "1.6.3");
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testobjectAPIKey);
             capabilities.setCapability("testobject_device", testobjectDevice);
