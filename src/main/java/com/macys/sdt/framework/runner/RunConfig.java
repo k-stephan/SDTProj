@@ -15,7 +15,6 @@ import org.jsoup.parser.Parser;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class RunConfig {
 
-    private static final Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(RunConfig.class);
 
     /**
      * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
@@ -182,27 +181,6 @@ public class RunConfig {
 
     // don't allow objects of this type to be initialized, static access only
     private RunConfig(){}
-
-    static {
-        if (debugMode) {
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
-        } else {
-            String logLevel = getEnvOrExParam("log_level");
-            logLevel = logLevel == null ? "INFO" : logLevel.toUpperCase();
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, logLevel);
-        }
-        System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
-        System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "HH:mm:ss:SS");
-        System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
-        System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.out");
-        System.setProperty(SimpleLogger.SHOW_SHORT_LOG_NAME_KEY, "true");
-        logger = LoggerFactory.getLogger(RunConfig.class);
-    }
-
-    /**
-     * This method exists so all potential program entry points can call it to init static log config
-     */
-    public static void init(){}
 
     /**
      * Retrieves project info either from "sdt_project" or "scenarios" env val if possible
@@ -508,13 +486,14 @@ public class RunConfig {
 
         // get cucumber scenarios from args if not in env - cucumber config does this in intellij
         if (scenarios.isEmpty() && args != null && args.length > 0) {
-            scenarios = "";
+            StringBuilder temp = new StringBuilder("");
             for (String arg : args) {
                 File f = new File(arg);
                 if (f.exists() || f.getAbsoluteFile().exists()) {
-                    scenarios += arg;
+                    temp.append(arg);
                 }
             }
+            scenarios = temp.toString();
         }
         scenarios = scenarios.replace('\\', '/');
 
@@ -583,8 +562,8 @@ public class RunConfig {
         if (url == null && !appTest) {
             Assert.fail("\"website\" variable required to test a website");
         }
+        // having a slash on the end messes up relative navigation & cookie domain
         if (url.endsWith("/")) {
-            // having a slash on the end messes up relative navigation & cookie domain
             url = url.substring(0, url.length() - 1);
         }
         if (browser == null && !appTest) {

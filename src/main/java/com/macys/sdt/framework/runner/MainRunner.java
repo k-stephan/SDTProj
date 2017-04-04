@@ -28,7 +28,7 @@ import static com.macys.sdt.framework.runner.RunConfig.*;
  */
 public class MainRunner {
 
-    private static final Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
 
     /**
      * BrowserMob proxy server
@@ -57,12 +57,6 @@ public class MainRunner {
 
     // username and API key for main sauce labs account:
     // satish-macys 4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
-
-    static {
-        // this handles log config initialization before any logs are created
-        RunConfig.init();
-        logger = LoggerFactory.getLogger(MainRunner.class);
-    }
 
     /**
      * Main method to run tests
@@ -138,10 +132,6 @@ public class MainRunner {
                     cucumberArgs.add(args[i]);
                     dryRun = true;
                 }
-                if (args[i].equals("--glue") && !args[i + 1].startsWith("com.macys.sdt.shared") && !args[i + 1].contains(project)) {
-                    cucumberArgs.add(args[i]);
-                    cucumberArgs.add(args[i + 1]);
-                }
             }
         }
 
@@ -161,7 +151,6 @@ public class MainRunner {
                 (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
                 + (useSauceLabs ? " on Sauce Labs" : ""));
 
-        new AuthenticationDialog();
         setBeforeNavigationHooks();
         setAfterNavigationHooks();
         EnvironmentDetails.loadEnvironmentDetails(url, false);
@@ -182,6 +171,7 @@ public class MainRunner {
             cucumberThread.start();
             if (!appTest) {
                 PageHangWatchDog.init(cucumberThread);
+                new AuthenticationDialog(cucumberThread);
             }
             cucumberThread.join();
 
@@ -243,7 +233,7 @@ public class MainRunner {
     protected static class AuthenticationDialog extends Thread {
         private static ServerSocket socketMutex;
 
-        public AuthenticationDialog() {
+        public AuthenticationDialog(Thread cucumberThread) {
             String osName = System.getProperty("os.name").toLowerCase();
             if (getEnvOrExParam("require_authentication") == null) {
                 logger.info("AuthenticationDialog not required");
@@ -263,19 +253,19 @@ public class MainRunner {
             new Thread(() -> {
                 switch (browser) {
                     case "firefox":
-                        runFirefoxBackgroundMethod();
+                        runFirefoxBackgroundMethod(cucumberThread);
                         break;
                     case "safari":
-                        runSafariBackgroundMethod();
+                        runSafariBackgroundMethod(cucumberThread);
                         break;
                     case "chrome":
-                        runChromeBackgroundMethod();
+                        runChromeBackgroundMethod(cucumberThread);
                         break;
                 }
             }).start();
         }
 
-        protected static void runFirefoxBackgroundMethod() {
+        protected static void runFirefoxBackgroundMethod(Thread cucumberThread) {
             Utils.threadSleep(4000, null);
             if (socketMutex == null) {
                 logger.warn("Another Authentication monitoring background thread already exist.");
@@ -286,7 +276,7 @@ public class MainRunner {
             Process p;
             String filePath = sharedResourceDir + "/framework/authentication_popup/windows_authentication_firefox.exe";
 
-            while (true) {
+            while (cucumberThread.isAlive()) {
                 try {
                     p = getRuntime().exec(filePath);
                     Utils.ProcessWatchDog pd = new Utils.ProcessWatchDog(p, 5000, "runFirefoxBackgroundMethod()");
@@ -300,7 +290,7 @@ public class MainRunner {
             }
         }
 
-        protected static void runSafariBackgroundMethod() {
+        protected static void runSafariBackgroundMethod(Thread cucumberThread) {
             Utils.threadSleep(4000, null);
             if (socketMutex == null) {
                 logger.warn("Another Authentication monitoring background thread already exist.");
@@ -320,7 +310,7 @@ public class MainRunner {
 
             filePath = "open -a " + filePath;
 
-            while (true) {
+            while (cucumberThread.isAlive()) {
                 try {
                     p = getRuntime().exec(filePath);
                     Utils.ProcessWatchDog pd = new Utils.ProcessWatchDog(p, 20000, "runSafariBackgroundMethod()");
@@ -335,7 +325,7 @@ public class MainRunner {
             }
         }
 
-        protected static void runChromeBackgroundMethod() {
+        protected static void runChromeBackgroundMethod(Thread cucumberThread) {
             Utils.threadSleep(4000, null);
             if (socketMutex == null) {
                 logger.warn("Another Authentication monitoring background thread already exist.");
@@ -355,7 +345,7 @@ public class MainRunner {
             orgUrl = orgUrl.replace("www.", "");
             int width = -1;
 
-            while (true) {
+            while (cucumberThread.isAlive()) {
                 Utils.threadSleep(4000, null);
                 curl = WebDriverManager.getCurrentUrl();
                 // current url is still the same domain, then skip
@@ -423,6 +413,7 @@ public class MainRunner {
         public static void init(Thread t) {
             if (hangWatchDog == null) {
                 hangWatchDog = new PageHangWatchDog();
+                hangWatchDog.setName("watchdog");
                 cucumberThread = t;
             }
         }

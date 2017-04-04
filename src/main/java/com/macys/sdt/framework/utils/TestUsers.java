@@ -825,9 +825,8 @@ public class TestUsers {
                         final String finalBTRequestedStatus = BTRequestedStatus;
                         found = BTProductStatus.stream().anyMatch(e -> e.get("status").equals(finalBTRequestedStatus));
                     } else {
-                        if (orderable) {
-                            List<String> upcIds = new ArrayList<>();
-                            upcIds = ProductService.getAllUpcIds(product.get("id").toString());
+                        if (orderable && !prodEnv()) {
+                            List<String> upcIds = ProductService.getAllUpcIds(product.get("id").toString());
                             // Skip product if the product have more than one upcId
                             if (upcIds.size() != 1)
                                 continue;

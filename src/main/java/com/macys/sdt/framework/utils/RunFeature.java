@@ -29,13 +29,7 @@ public class RunFeature {
     private File m_repo_jar;
     private String m_workspace;
     private String m_eeURL;
-    private static final Logger logger;
-
-    static {
-        // init logging
-        RunConfig.init();
-        logger = LoggerFactory.getLogger(MainRunner.class); // this class should be invisible to end user
-    }
+    private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
 
     public RunFeature() throws Throwable {
         

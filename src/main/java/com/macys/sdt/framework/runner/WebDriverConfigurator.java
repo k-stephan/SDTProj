@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.runner.MainRunner.browsermobServer;
 import static com.macys.sdt.framework.runner.RunConfig.*;
@@ -462,23 +461,10 @@ class WebDriverConfigurator {
 
             if (useAppium) { // iOS or Android
                 return initAppiumDevice(capabilities);
-            } else if (StepUtils.safari()) {    // Desktop Safari
-                // safari driver is not stable, try up to 3 times
-                int count = 0;
-                while (count++ < 3) {
-                    try {
-                        return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
-                    } catch (Error | Exception e) {
-                        Utils.threadSleep(1000, null);
-                        if (count == 3) {
-                            Assert.fail("Failed to initialize Sauce Labs connection: " + e);
-                        }
-                    }
-                }
             } else if (StepUtils.firefox()) {   // Desktop Firefox
                 try {
                     // depending on firefox version, marionette is set
-                    if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta")))   {
+                    if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta"))) {
                         capabilities.setCapability("seleniumVersion", "3.0.1");
                         capabilities.setCapability("marionette", true);
                     } else if (browserVersion != null && browserVersion.compareTo("48.0") < 0) {
@@ -486,7 +472,7 @@ class WebDriverConfigurator {
                     }
                     return new RemoteWebDriver(new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub"), capabilities);
                 } catch (IllegalStateException | SessionNotCreatedException e) {
-                    logger.warn("error to instantiate firefox remote driver for saucelabs. Will retry with marionette true.");
+                    logger.warn("error to instantiate firefox remote driver for sauce labs. Will retry with marionette true.");
 
                     // retry instantiating driver.
                     capabilities.setCapability("marionette", true);

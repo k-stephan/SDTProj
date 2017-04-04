@@ -529,7 +529,7 @@ public class Utils {
 
         // project data
         String full_path = getResourcePath(fName);
-        String path = RunConfig.projectResourceDir + "/data/" + full_path;
+        String path = RunConfig.workspace + RunConfig.projectResourceDir + "/data/" + full_path;
         File resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
@@ -544,7 +544,7 @@ public class Utils {
         }
 
         // shared data
-        path = RunConfig.sharedResourceDir + "/data/" + full_path;
+        path = RunConfig.workspace + RunConfig.sharedResourceDir + "/data/" + full_path;
         resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;
