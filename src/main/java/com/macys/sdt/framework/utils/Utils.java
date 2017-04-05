@@ -537,7 +537,7 @@ public class Utils {
 
         if (!resource.exists()) {
             //fallback to website resources
-            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
+            resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
@@ -551,7 +551,7 @@ public class Utils {
         }
         if (!resource.exists()) {
             //fallback to website resources
-            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
+            resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
