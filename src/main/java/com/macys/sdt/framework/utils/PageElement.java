@@ -84,10 +84,10 @@ public class PageElement {
      * @return responsive path of the page or panel
      */
     public static String getResponsivePath(String pagePath) {
-        if (!(pagePath.contains("/website/") || pagePath.contains("/MEW/"))) {
+        if (!(pagePath.contains("website") || pagePath.contains("MEW"))) {
             return pagePath;
         }
-        return pagePath.replaceFirst("/website/", "/responsive/").replaceFirst("/MEW/", "/responsive/");
+        return pagePath.replaceFirst("website", "responsive").replaceFirst("MEW", "responsive");
     }
 
     /**
