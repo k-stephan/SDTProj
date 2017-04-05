@@ -419,11 +419,13 @@ public class Elements {
         // often but not required. If they're missing it will be reported in on_page calls.
         if (!elementKey.matches("(\\.verify_page|\\.url)$")) {
             if (elementData.elementValues.isEmpty()) {
-                logger.warn("ERROR - UI: element '" + elementKey + "' is not defined.");
+                logger.warn("UI: element '" + elementKey + "' is not defined.");
             }
             if (elementData.elementLocators.isEmpty()) {
-                logger.warn("ERROR - UI: element locator is not recognizable.");
+                logger.warn("UI: element locator is not recognizable.");
             }
+        } else {
+            logger.debug("UI: element '" + elementKey + "' is not defined.");
         }
         if (elementData.elementLocators.isEmpty() || elementData.elementValues.isEmpty()) {
             return null;

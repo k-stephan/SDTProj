@@ -391,14 +391,14 @@ public class Utils {
         Thread cur = Thread.currentThread();
         try {
             if (msg != null)
-                logger.debug("--> Thread sleep: " + msg + ":id-" + cur.getId() + ":" + sleepTime);
+                logger.trace("Thread \"" + cur.getName() + "\" sleeping for: " + sleepTime + "ms");
             Thread.sleep(sleepTime);
             if (msg != null)
-                logger.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":normal");
+                logger.trace("Thread \"" + cur.getName() + " is awake");
             return false;
         } catch (InterruptedException e) {
             if (msg != null)
-                logger.debug(new Date() + "--> Thread awake: " + msg + ":id-" + cur.getId() + ":" + e.getMessage());
+                logger.trace("Thread \"" + cur.getName() + " was interrupted:" + e.getMessage());
             return true;
         }
     }
@@ -1267,7 +1267,6 @@ public class Utils {
         StringBuilder console = new StringBuilder();
         String name;
         InputStream is;
-        Thread thread;
 
         public ReadStream(String name, InputStream is) {
             this.name = name;

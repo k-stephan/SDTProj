@@ -8,6 +8,9 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
 import com.macys.sdt.framework.utils.analytics.DigitalAnalytics;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -479,6 +482,11 @@ public class RunConfig {
         }
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
+
+        if (debugMode) {
+            ((ConsoleAppender)org.apache.log4j.Logger.getRootLogger().getAppender("STDOUT")).setThreshold(Level.DEBUG);
+            ((FileAppender)org.apache.log4j.Logger.getRootLogger().getAppender("FILE")).setThreshold(Level.TRACE);
+        }
 
         if (scenarios == null) {
             scenarios = "";

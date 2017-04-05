@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.RunConfig;
+import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -115,7 +116,7 @@ public class EnvironmentDetails {
         t = new Thread(() -> {
             try {
                 // basic site details
-                String html = Utils.httpGet(env, null);
+                String html = RESTOperations.doGET(env, null).readEntity(String.class);
                 Document doc = Jsoup.parse(html);
                 site = doc.select("site").first().html();
                 type = doc.select("type").first().html();
