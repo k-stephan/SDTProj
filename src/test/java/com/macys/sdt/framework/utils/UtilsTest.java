@@ -182,12 +182,6 @@ public class UtilsTest {
         //no file found
         Assert.assertFalse(Utils.getResourceFile("not_present.json").exists());
 
-        //absolute file path
-        Assert.assertTrue(Utils.getResourceFile("src/test/java/com/macys/sdt/framework/resources/data/website/mcom", "orderable_products.json").exists());
-
-        //absolute file path, no file found
-        Assert.assertFalse(Utils.getResourceFile("src/test/java/com/macys/sdt/framework/resources/data/website/mcom", "not_present.json").exists());
-
         RunConfig.url = null;
         MainRunner.currentURL = "";
         RunConfig.project = null;

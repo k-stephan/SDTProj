@@ -537,7 +537,7 @@ public class Utils {
 
         if (!resource.exists()) {
             //fallback to website resources
-            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
+            resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
@@ -551,33 +551,12 @@ public class Utils {
         }
         if (!resource.exists()) {
             //fallback to website resources
-            resource = new File(path.replace("MEW", "website").replace("iOS", "website").replace("android", "website"));
+            resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
         }
 
-        return resource;
-    }
-
-    /**
-     * Gets a resource file with given file path and file name
-     *
-     * @param absoluteFilepath absolute file path
-     * @param filename         file name
-     * @return resulting File
-     */
-    public static File getResourceFile(String absoluteFilepath, String filename) {
-        String path = absoluteFilepath + "/" + filename;
-        File resource = null;
-        try {
-            resource = new File(path);
-            if (resource.exists() && !resource.isDirectory()) {
-                return resource;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return resource;
     }
 
@@ -733,7 +712,7 @@ public class Utils {
     }
 
     private static boolean saveDriver(String driver, String rpath) {
-        if (Utils.isWindows()) {
+        if (Utils.isWindows() && System.getenv("HOME") != null) {
             System.out.println(new Date() + " --> Saving driver: " + driver);
             File fcdriver = new File(System.getenv("HOME") + "/" + driver);
             File fdriver = new File(rpath + "/framework/selenium_drivers/" + driver);

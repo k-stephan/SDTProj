@@ -143,10 +143,6 @@ public class PageUtils {
         String fName = f.getName();
         File dir = f.getParentFile();
         f = findFile(dir, fName);
-        if (filePath.contains("shared/") && f == null) {
-            dir = new File("com/macys/sdt/" + dir.getPath());
-            f = findFile(dir, fName);
-        }
 
         if (f != null && f.exists() && !f.isDirectory()) {
             int fileCount = countFoundPages(dir, fName);

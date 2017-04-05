@@ -87,7 +87,11 @@ public class PageElement {
         if (!(pagePath.contains("website") || pagePath.contains("MEW"))) {
             return pagePath;
         }
-        return pagePath.replaceFirst("website", "responsive").replaceFirst("MEW", "responsive");
+        pagePath = pagePath.replaceFirst("MEW\\.", "responsive.");
+        pagePath = pagePath.replaceFirst("website\\.", "responsive.");
+        pagePath = pagePath.replaceFirst("MEW/", "responsive/");
+        pagePath = pagePath.replaceFirst("website/", "responsive/");
+        return pagePath;
     }
 
     /**
