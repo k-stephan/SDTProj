@@ -177,7 +177,7 @@ public class RunConfig {
      * Path to shared resources
      */
     public static String sharedResourceDir = repoJar != null ?
-            "com/macys/sdt/shared/resources/src/main/resources" : "shared/resources/src/main/resources";
+            "com/macys/sdt/shared/resources" : "shared/resources/src/main/resources";
     /**
      * Location of app for app testing (appium)
      */
