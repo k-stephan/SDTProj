@@ -54,6 +54,10 @@ public class RunConfig {
      */
     public static boolean useAppium = booleanParam("use_appium");
     /**
+     * To set desired / compatible appium version for running appium tests
+     */
+    public static String appiumVersion = getEnvOrExParam("appium_version");
+    /**
      * True if testing a mobile application
      */
     public static boolean appTest;
