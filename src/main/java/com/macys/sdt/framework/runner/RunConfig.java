@@ -236,6 +236,10 @@ public class RunConfig {
             if (!new File(projectResourceDir).exists()) {
                 // maven standard resource location
                 projectResourceDir = project.replace(".", "/") + "/src/main/resources";
+                // proprietary location in EE build
+                if (!new File(projectResourceDir).exists()) {
+                    projectResourceDir = project.replace(".", "/") + "/resources";
+                }
             }
         } catch (IOException e) {
             logger.error("Failed to extract resources from jar");
