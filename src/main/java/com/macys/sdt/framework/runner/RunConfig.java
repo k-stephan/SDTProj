@@ -244,6 +244,7 @@ public class RunConfig {
         } catch (IOException e) {
             logger.error("Failed to extract resources from jar");
         }
+        logger.debug("Using project resource dir: " + projectResourceDir);
     }
 
     /**
