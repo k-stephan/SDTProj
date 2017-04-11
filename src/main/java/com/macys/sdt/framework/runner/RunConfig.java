@@ -224,27 +224,6 @@ public class RunConfig {
         if (check.length != 2) {
             Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
         }
-
-        logger.info("Using project: " + project + "\nIf this does not match your project," +
-                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
-        // old, proprietary resource location
-        projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
-        try {
-            if (repoJar != null) {
-                Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
-            }
-            if (!new File(projectResourceDir).exists()) {
-                // maven standard resource location
-                projectResourceDir = project.replace(".", "/") + "/src/main/resources";
-                // proprietary location in EE build
-                if (!new File(projectResourceDir).exists()) {
-                    projectResourceDir = project.replace(".", "/") + "/resources";
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Failed to extract resources from jar");
-        }
-        logger.debug("Using project resource dir: " + projectResourceDir);
     }
 
     /**
@@ -603,5 +582,29 @@ public class RunConfig {
         if (project == null || project.split("\\.").length != 2) {
             getProject();
         }
+        getProjectResourceDir();
+    }
+
+    private static void getProjectResourceDir() {
+        logger.info("Using project: " + project + "\nIf this does not match your project," +
+                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
+        // old, proprietary resource location
+        projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
+        try {
+            if (repoJar != null) {
+                Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
+            }
+            if (!new File(projectResourceDir).exists()) {
+                // maven standard resource location
+                projectResourceDir = project.replace(".", "/") + "/src/main/resources";
+                // proprietary location in EE build
+                if (!new File(projectResourceDir).exists()) {
+                    projectResourceDir = project.replace(".", "/") + "/resources";
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Failed to extract resources from jar");
+        }
+        logger.debug("Using project resource dir: " + projectResourceDir);
     }
 }
