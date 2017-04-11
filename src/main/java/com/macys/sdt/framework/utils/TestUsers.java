@@ -215,6 +215,13 @@ public class TestUsers {
         if (userProfile != null && registry == null) {
             registry = new Registry();
             registry.addRandomData();
+
+            // Registrant and co-registrant names should not be same
+            if (registry.getCoRegistrantFirstName().equals(userProfile.getUser().getProfileAddress().getFirstName()) &&
+                    registry.getCoRegistrantLastName().equals(userProfile.getUser().getProfileAddress().getLastName())) {
+                registry.setCoRegistrantFirstName(registry.getCoRegistrantFirstName() + "CO");
+            }
+
             userProfile.setRegistry(registry);
         }
         currentEmail = userProfile != null ? userProfile.getUser().getProfileAddress().getEmail() : currentEmail;
