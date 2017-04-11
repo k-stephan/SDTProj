@@ -227,6 +227,41 @@ public class RunConfig {
     }
 
     /**
+     * Sets the resource directory for the current project
+     * <p>
+     *     Can use the following dirs:<br>
+     *     <code>Maven standard: <br>
+     *         [domain]/[project]/src/main/resources</code><br>
+     *     <code>SDT Proprietary: <br>
+     *         [domain]/[project]/src/main/java/com/macys/sdt/projects/[domain]/[project]/resources</code><br>
+     *     <code>EE resource dir: <br>
+     *         [domain]/[project]/resources</code><br>
+     * </p>
+     */
+    private static void getProjectResourceDir() {
+        logger.info("Using project: " + project + "\nIf this does not match your project," +
+                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
+        // old, proprietary resource location
+        projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
+        try {
+            if (repoJar != null && getEnvOrExParam("EE") == null) {
+                Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
+            }
+            if (!new File(projectResourceDir).exists()) {
+                // maven standard resource location
+                projectResourceDir = project.replace(".", "/") + "/src/main/resources";
+                // proprietary location in EE build
+                if (!new File(projectResourceDir).exists()) {
+                    projectResourceDir = project.replace(".", "/") + "/resources";
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Failed to extract resources from jar");
+        }
+        logger.debug("Using project resource dir: " + projectResourceDir);
+    }
+
+    /**
      * Retrieves a parameter value from "ex_params" environment variable
      *
      * @param name name of the parameter to retrieve
@@ -583,28 +618,5 @@ public class RunConfig {
             getProject();
         }
         getProjectResourceDir();
-    }
-
-    private static void getProjectResourceDir() {
-        logger.info("Using project: " + project + "\nIf this does not match your project," +
-                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
-        // old, proprietary resource location
-        projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
-        try {
-            if (repoJar != null) {
-                Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
-            }
-            if (!new File(projectResourceDir).exists()) {
-                // maven standard resource location
-                projectResourceDir = project.replace(".", "/") + "/src/main/resources";
-                // proprietary location in EE build
-                if (!new File(projectResourceDir).exists()) {
-                    projectResourceDir = project.replace(".", "/") + "/resources";
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Failed to extract resources from jar");
-        }
-        logger.debug("Using project resource dir: " + projectResourceDir);
     }
 }
