@@ -38,6 +38,20 @@ public class Categories {
         return jsonResponse;
     }
 
+    public static JSONObject categoryProducts(String categoryId, HashMap<String, String> otherParams) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("productsPerPage", "40");
+        params.put("pageNumber", "1");
+        params.put("countryCode", "US");
+        params.put("deviceType", "DESKTOP");
+        if (otherParams != null ) {
+            params.putAll(otherParams);
+        }
+        String serviceUrl = "http://" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080/api/catalog/v2/categories/" + categoryId + "/products?_offset=" + params.get("pageNumber") + "&_limit=" + params.get("productsPerPage") + "&_sortby=ORIGINAL&sdpGrid=primary&returnNavigationProductPool=true&_deviceType=" + params.get("deviceType") + "&_shoppingMode=SITE&_regionCode=" + params.get("countryCode") + "&_application=SITE&_navigationType=BROWSE&matchAll=false&_customerExperiment=NO_EXPERIMENT";
+        logger.debug("Service Request URL: " + serviceUrl);
+        return new JSONObject(RESTOperations.doGET(serviceUrl, null).readEntity(String.class));
+    }
+
     public static boolean activeCategory(String cat) {
         JSONObject jsonResponse;
         String serviceUrl = null;
