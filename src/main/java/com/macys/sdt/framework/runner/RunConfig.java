@@ -160,11 +160,11 @@ public class RunConfig {
     /**
      * Path to project currently being run optionally given by "sdt_project" env variable
      */
-    public static String project = getEnvVar("sdt_project");
+    public static String project;
     /**
      * Path to active project files on file system
      */
-    public static String projectResourceDir = null;
+    public static List<String> projectResourceDirs = new ArrayList<>();
     /**
      * Whether we're running in debug mode
      */
@@ -183,17 +183,77 @@ public class RunConfig {
     public static String sharedResourceDir = repoJar != null ?
             "com/macys/sdt/shared/resources" : "shared/resources/src/main/resources";
     /**
+     * List of all projects who's steps this test relies on
+     */
+    public static List<String> includedProjects;
+    /**
      * Location of app for app testing (appium)
      */
     protected static String appLocation = getEnvOrExParam("app_location");
 
     // don't allow objects of this type to be initialized, static access only
-    private RunConfig(){}
+    private RunConfig() {
+    }
 
     /**
      * Retrieves project info either from "sdt_project" or "scenarios" env val if possible
      */
     static void getProject() {
+        project = getEnvVar("sdt_project");
+        if (project == null) {
+            project = getProjectFromFilePath();
+        }
+
+        String[] check = project.split("\\.");
+        if (check.length != 2) {
+            Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
+        }
+
+        logger.info("Using project: " + project + "\nIf this does not match your project," +
+                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
+        try {
+            if (repoJar != null) {
+                Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
+            }
+        } catch (IOException e) {
+            logger.error("Failed to extract resources from jar");
+        }
+        includedProjects = getDependencies(project);
+        // old, proprietary resource location
+        projectResourceDirs.add(getProjectResourceDir(project));
+        for (String prj : includedProjects) {
+            projectResourceDirs.add(getProjectResourceDir(prj));
+        }
+    }
+
+    /**
+     * Gets the resources directory for the given project
+     * <p>
+     * Can use the following dirs:<br>
+     * <code>Maven standard: <br>
+     * [domain]/[project]/src/main/resources</code><br>
+     * <code>SDT Proprietary: <br>
+     * [domain]/[project]/src/main/java/com/macys/sdt/projects/[domain]/[project]/resources</code><br>
+     * <code>EE resource dir: <br>
+     * [domain]/[project]/resources</code><br>
+     * </p>
+     */
+    private static String getProjectResourceDir(String prj) {
+        String prjResDir = prj.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + prj.replace(".", "/") + "/resources/";
+        if (!new File(prjResDir).exists()) {
+            // maven standard resource location
+            prjResDir = prj.replace(".", "/") + "/src/main/resources";
+            if (!new File(prjResDir).exists()) {
+                // location for EE runs
+                prjResDir = prj.replace(".", "/") + "/resources";
+            }
+        }
+
+        return prjResDir;
+    }
+
+    private static String getProjectFromFilePath() {
+        String project;
         String projectPath;
         if (!workspace.equals(".")) {
             projectPath = scenarios.replace(workspace, "").replace("/", ".").replace("\\", ".");
@@ -204,7 +264,7 @@ public class RunConfig {
                 project = "";
             }
         } else {
-            projectPath = scenarios.replace("/", ".");
+            projectPath = scenarios.replace("/", ".").replace("\\", ".");
             ArrayList<String> parts = new ArrayList<>(Arrays.asList(projectPath.split("\\.")));
             int index = parts.lastIndexOf("features");
             if (index == -1) {
@@ -219,46 +279,7 @@ public class RunConfig {
                 project = parts.get(index - 2) + "." + parts.get(index - 1);  // domain.project
             }
         }
-
-        String[] check = project.split("\\.");
-        if (check.length != 2) {
-            Assert.fail("Project info is malformed. Please make sure it is in the format \"<domain>.<project>\"");
-        }
-    }
-
-    /**
-     * Sets the resource directory for the current project
-     * <p>
-     *     Can use the following dirs:<br>
-     *     <code>Maven standard: <br>
-     *         [domain]/[project]/src/main/resources</code><br>
-     *     <code>SDT Proprietary: <br>
-     *         [domain]/[project]/src/main/java/com/macys/sdt/projects/[domain]/[project]/resources</code><br>
-     *     <code>EE resource dir: <br>
-     *         [domain]/[project]/resources</code><br>
-     * </p>
-     */
-    private static void getProjectResourceDir() {
-        logger.info("Using project: " + project + "\nIf this does not match your project," +
-                " add an env variable \"sdt_project\" with value \"<domain>.<project>\"");
-        // old, proprietary resource location
-        projectResourceDir = project.replace(".", "/") + "/src/main/java/com/macys/sdt/projects/" + project.replace(".", "/") + "/resources/";
-        try {
-            if (repoJar != null && getEnvOrExParam("EE") == null) {
-                Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
-            }
-            if (!new File(projectResourceDir).exists()) {
-                // maven standard resource location
-                projectResourceDir = project.replace(".", "/") + "/src/main/resources";
-                // proprietary location in EE build
-                if (!new File(projectResourceDir).exists()) {
-                    projectResourceDir = project.replace(".", "/") + "/resources";
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Failed to extract resources from jar");
-        }
-        logger.debug("Using project resource dir: " + projectResourceDir);
+        return project;
     }
 
     /**
@@ -488,7 +509,7 @@ public class RunConfig {
             for (Element e : doc.select("dependencies dependency artifactid")) {
                 if (e.html().startsWith("sdt-")) {
                     String[] name = e.html().split("-");
-                    deps.add("com.macys.sdt.projects." + name[1] + "." + name[2]);
+                    deps.add(name[1] + "." + name[2]);
                 }
             }
         } catch (IOException e) {
@@ -508,8 +529,8 @@ public class RunConfig {
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
 
         if (debugMode) {
-            ((ConsoleAppender)org.apache.log4j.Logger.getRootLogger().getAppender("STDOUT")).setThreshold(Level.DEBUG);
-            ((FileAppender)org.apache.log4j.Logger.getRootLogger().getAppender("FILE")).setThreshold(Level.TRACE);
+            ((ConsoleAppender) org.apache.log4j.Logger.getRootLogger().getAppender("STDOUT")).setThreshold(Level.DEBUG);
+            ((FileAppender) org.apache.log4j.Logger.getRootLogger().getAppender("FILE")).setThreshold(Level.TRACE);
         }
 
         if (scenarios == null) {
@@ -614,9 +635,6 @@ public class RunConfig {
         }
 
         // get project from environment variables
-        if (project == null || project.split("\\.").length != 2) {
-            getProject();
-        }
-        getProjectResourceDir();
+        getProject();
     }
 }

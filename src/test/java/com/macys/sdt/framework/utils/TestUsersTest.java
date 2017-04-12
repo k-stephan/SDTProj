@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,7 +24,8 @@ public class TestUsersTest {
     @BeforeClass
     public static void setUp() throws Exception {
         RunConfig.project = "framework";
-        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework/resources";
+        RunConfig.projectResourceDirs = new ArrayList<>();
+        RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         RunConfig.url = "http://www.qa0codemacys.fds.com";
     }
 

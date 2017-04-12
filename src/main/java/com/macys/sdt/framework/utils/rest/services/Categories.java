@@ -38,7 +38,7 @@ public class Categories {
         return jsonResponse;
     }
 
-    public static JSONObject categoryProducts(String categoryId, HashMap<String, String> otherParams) {
+    public static JSONObject getProductsByCategory(String categoryId, HashMap<String, String> otherParams) {
         HashMap<String, String> params = new HashMap<>();
         params.put("productsPerPage", "40");
         params.put("pageNumber", "1");

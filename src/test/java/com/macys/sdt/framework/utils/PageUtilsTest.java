@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 /**
  * Tests for PageUtils
  */
@@ -14,7 +16,8 @@ public class PageUtilsTest {
     @BeforeClass
     public static void setUp() {
         RunConfig.project = "framework";
-        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework/resources";
+        RunConfig.projectResourceDirs = new ArrayList<>();
+        RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         RunConfig.workspace = System.getProperty("user.dir") + "/";
     }
 

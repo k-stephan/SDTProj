@@ -135,10 +135,9 @@ public class MainRunner {
             }
         }
 
-        List<String> deps = getDependencies(project);
-        for (String dep : deps) {
+        for (String project : includedProjects) {
             cucumberArgs.add("--glue");
-            cucumberArgs.add(dep);
+            cucumberArgs.add("com.macys.sdt.projects." + project);
         }
 
         // check if dry-run passed as env or ex param

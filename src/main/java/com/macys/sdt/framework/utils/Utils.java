@@ -526,25 +526,27 @@ public class Utils {
      * @return resulting File
      */
     public static File getResourceFile(String fName) {
-
+        File resource;
+        String path;
         // project data
-        String full_path = getResourcePath(fName);
-        String path = RunConfig.workspace + RunConfig.projectResourceDir + "/data/" + full_path;
-        File resource = new File(path);
-        if (resource.exists() && !resource.isDirectory()) {
-            return resource;
-        }
-
-        if (!resource.exists()) {
-            //fallback to website resources
-            resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
+        String resourcePath = getResourcePath(fName);
+        for (String dir : RunConfig.projectResourceDirs) {
+            path = RunConfig.workspace + dir + "/data/" + resourcePath;
+            resource = new File(path);
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
+            }
+            if (!resource.exists()) {
+                //fallback to website resources
+                resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
+                if (resource.exists() && !resource.isDirectory()) {
+                    return resource;
+                }
             }
         }
 
         // shared data
-        path = RunConfig.workspace + RunConfig.sharedResourceDir + "/data/" + full_path;
+        path = RunConfig.workspace + RunConfig.sharedResourceDir + "/data/" + resourcePath;
         resource = new File(path);
         if (resource.exists() && !resource.isDirectory()) {
             return resource;

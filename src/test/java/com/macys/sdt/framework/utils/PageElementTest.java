@@ -19,7 +19,8 @@ public class PageElementTest {
     @BeforeClass
     public static void setUp() throws Exception {
         RunConfig.project = "framework";
-        RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework/resources";
+        RunConfig.projectResourceDirs = new ArrayList<>();
+        RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         RunConfig.url = null;
         MainRunner.currentURL = "";
         RunConfig.brand = null;

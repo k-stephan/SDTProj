@@ -8,7 +8,9 @@ import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -53,10 +55,10 @@ public class PageUtils {
      */
     public static void displayPageJSONHash() {
         for (Map.Entry mapEntry : projectPages.entrySet()) {
-            System.out.println("project page cache: key: '" + mapEntry.getKey() + "' Value: '" + mapEntry.getValue() + "'");
+            logger.info("project page cache: key: '" + mapEntry.getKey() + "' Value: '" + mapEntry.getValue() + "'");
         }
         for (Map.Entry mapEntry : projectPages.entrySet()) {
-            System.out.println("shared page cache: key: '" + mapEntry.getKey() + "' Value: '" + mapEntry.getValue() + "'");
+            logger.info("shared page cache: key: '" + mapEntry.getKey() + "' Value: '" + mapEntry.getValue() + "'");
         }
     }
 
@@ -100,14 +102,19 @@ public class PageUtils {
 
     private static void loadJSONFiles(String resPath, String page) {
         String responsivePage = getResponsivePath(page);
-        String projectPath = RunConfig.workspace + RunConfig.projectResourceDir + resPath;
+        ArrayList<String> projectPaths = new ArrayList<>();
+        ArrayList<String> responsiveProjectPaths = new ArrayList<>();
         String sharedPath = RunConfig.workspace + RunConfig.sharedResourceDir + resPath;
-        String responsivePath = getResponsivePath(projectPath);
+        for (int i = 0; i < RunConfig.projectResourceDirs.size(); i++) {
+            projectPaths.add(i, RunConfig.workspace + RunConfig.projectResourceDirs.get(i) + resPath);
+            responsiveProjectPaths.add(getResponsivePath(projectPaths.get(i)));
+
+            // project page first
+            loadPageAndPanels(responsivePage, responsiveProjectPaths.get(i));
+            loadPageAndPanels(page, projectPaths.get(i));
+        }
         String sharedResponsivePath = getResponsivePath(sharedPath);
 
-        // project page first
-        loadPageAndPanels(responsivePage, responsivePath);
-        loadPageAndPanels(page, projectPath);
 
         // shared page
         loadPageAndPanels(responsivePage, sharedResponsivePath);
@@ -115,15 +122,16 @@ public class PageUtils {
 
         // panels
         if (page.contains(".page.")) {
-            projectPath = projectPath.replace("/pages/", "/panels/");
-            responsivePath = responsivePath.replace("/pages/", "/panels/");
             page = page.replace(".page.", ".panel.");
             responsivePage = responsivePage.replace(".page.", ".panel.");
+            for (int i = 0; i < projectPaths.size(); i++) {
+                projectPaths.set(i, projectPaths.get(i).replace("/pages/", "/panels/"));
+                responsiveProjectPaths.set(i, responsiveProjectPaths.get(i).replace("/pages/", "/panels/"));
 
-            // project panel
-            loadPageAndPanels(responsivePage, responsivePath);
-            loadPageAndPanels(page, projectPath);
-
+                // project panel
+                loadPageAndPanels(responsivePage, responsiveProjectPaths.get(i));
+                loadPageAndPanels(page, projectPaths.get(i));
+            }
             // shared panel
             sharedPath = sharedPath.replace("/pages/", "/panels/");
             sharedResponsivePath = sharedResponsivePath.replace("/pages/", "/panels/");
@@ -139,82 +147,48 @@ public class PageUtils {
             return;
         }
 
-        // find file recursively under the directory
+        // find matching files recursively under the directory
         String fName = f.getName();
         File dir = f.getParentFile();
-        f = findFile(dir, fName);
+        List<File> files = findFiles(dir, fName);
 
-        if (f != null && f.exists() && !f.isDirectory()) {
-            int fileCount = countFoundPages(dir, fName);
-            if (fileCount < 1) {
-                return;
-            }
-            if (fileCount == 1) {
-                loadPageJsonFiles(pagePath, f);
+        if (!files.isEmpty()) {
+            if (files.size() == 1) {
+                loadPageJsonFiles(pagePath, files.get(0));
             } else {
-                Assert.fail("Resource Error: Multiple '" + fName + "'(total: " + fileCount + ") " +
+                Assert.fail("Resource Error: Multiple '" + fName + "'(total: " + files.size() + ") " +
                         " files found under '" + dir.getAbsolutePath() + "'");
             }
         }
     }
 
     /**
-     * Recursively checks all subdirectories for a file matching given page name
+     * Recursively checks given directory and all subdirectories for a file matching given page name
      *
-     * @param dir directory
-     * @param pageName file name or page name
+     * @param dir      directory
+     * @param fileName file name
      * @return File matching given page name
      */
-    private static File findFile(File dir, String pageName) {
+    private static List<File> findFiles(File dir, String fileName) {
+        ArrayList<File> list = new ArrayList<>();
         File[] subDirs = dir.listFiles(File::isDirectory);
         File[] resources = dir.listFiles(File::isFile);
         if (resources != null) {
             for (File resource : resources) {
-                if (resource.getName().equals(pageName)) {
-                    return resource;
+                if (resource.getName().equals(fileName)) {
+                    list.add(resource);
+                    // can't have files in one dir w/ same name, safe to break
+                    break;
                 }
             }
         }
         if (subDirs == null) {
-            return null;
+            return list;
         }
-        File resource = null;
         for (File subDir : subDirs) {
-            resource = findFile(subDir, pageName);
-            if (resource != null && resource.getName().equals(pageName)) {
-                break;
-            }
+            list.addAll(findFiles(subDir, fileName));
         }
-        return resource;
-    }
-
-    /**
-     * Recursively checks all subdirectories to count files matching given page name
-     *
-     * @param dir directory
-     * @param pageName file name or page name
-     * @return number of same file name found
-     */
-    private static int countFoundPages(File dir, String pageName) {
-        int count = 0;
-        File[] subDirs = dir.listFiles(File::isDirectory);
-        File[] resources = dir.listFiles(File::isFile);
-        if (resources != null) {
-            for (File resource : resources) {
-                if (resource.getName().equals(pageName)) {
-                    count++;
-                }
-            }
-        }
-        if (subDirs == null) {
-            return count;
-        }
-
-        for (File subDir : subDirs) {
-            int subCount = countFoundPages(subDir, pageName);
-            count += subCount;
-        }
-        return count;
+        return list;
     }
 
     /**
@@ -228,17 +202,22 @@ public class PageUtils {
         try {
             pageJson = new JSONObject(Utils.readTextFile(file));
         } catch (IOException | JSONException e) {
-            System.err.println("-->Error parsing json at PageUtils.loadPageJSON() for page: " + file.getAbsolutePath());
+           logger.error("-->Error parsing json at PageUtils.loadPageJSON() for page: " + file.getAbsolutePath());
             e.printStackTrace();
             return;
         }
 
         // put new DataFile entry
         try {
-            if (file.getCanonicalPath().replace("/", ".").replace("\\", ".").contains(RunConfig.project)) {
-                projectPages.put(pagePath, pageJson);
-            } else {
+            if (file.getCanonicalPath().replace(File.separator, "/").contains("shared/resources")) {
                 sharedPages.put(pagePath, pageJson);
+            } else {
+                // if multiple projects have files w/ the same name we may hit a collision
+                if (projectPages.get(pagePath) != null) {
+                    logger.warn("Multiple definitions of page \"" + pagePath + "\" found. Elements may not load correctly.");
+                    pageJson = mergeJsonObjects(projectPages.get(pagePath), pageJson);
+                }
+                projectPages.put(pagePath, pageJson);
             }
         } catch (IOException e) {
             sharedPages.put(pagePath, pageJson);
@@ -266,6 +245,28 @@ public class PageUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Attempts to merge two JSONObjects, warning user about conflicts.
+     * <p>
+     * If conflict occurs, element from "first" JSONObject is kept
+     * </p>
+     *
+     * @param first  base JSONObject
+     * @param second other JSONObject
+     * @return merged JSONObject
+     */
+    private static JSONObject mergeJsonObjects(JSONObject first, JSONObject second) {
+        for (String key : second.keySet()) {
+            if (first.has(key)) {
+                logger.warn("Found duplicate element definition for \"" + key + "\": \""
+                        + first.get(key) + "\" and \"" + second.get(key) + "\". Keeping \"" + first.get(key) + "\"");
+            } else {
+                first.put(key, second.get(key));
+            }
+        }
+        return first;
     }
 
     /**
@@ -323,7 +324,9 @@ public class PageUtils {
         if (value == null && sharedData != null) {
             value = getCachedElement(pagePath, elementName, sharedData);
         }
-        if (value == null) {
+        // warning for when no value found
+        if (value == null && !elementName.matches("verify_page|url")) {
+            // don't need to print verify_page and url elements as they come up empty a lot
             logger.debug("No value found for " + pagePath + "." + elementName);
         }
         return value;

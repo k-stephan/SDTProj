@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Interactions Tests Suite
@@ -41,7 +42,8 @@ public class InteractionsSuiteTest {
         try {
             RunConfig.project = "framework";
             RunConfig.workspace = "";
-            RunConfig.projectResourceDir = "src/test/java/com/macys/sdt/framework/resources";
+            RunConfig.projectResourceDirs = new ArrayList<>();
+            RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
             RunConfig.browser = "firefox";
             RunConfig.browserVersion = "";
             RunConfig.remoteOS = "Windows 7";
