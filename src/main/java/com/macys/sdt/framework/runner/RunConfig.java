@@ -615,17 +615,22 @@ public class RunConfig {
         if (url == null && !appTest) {
             Assert.fail("\"website\" variable required to test a website");
         }
+
         // having a slash on the end messes up relative navigation & cookie domain
         if (url.endsWith("/")) {
             url = url.substring(0, url.length() - 1);
         }
+
         if (browser == null && !appTest) {
             logger.info("No browser given, using default (chrome)");
             browser = "chrome";
         }
+
         if (browserVersion == null) {
             browserVersion = WebDriverConfigurator.defaultBrowserVersion();
+            logger.info("No Browser Version given, using default : " + browserVersion);
         }
+
         // close the test browser at scenario exit
         String envVal = getEnvOrExParam("timeout");
         if (envVal != null) {

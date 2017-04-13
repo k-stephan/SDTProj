@@ -55,9 +55,6 @@ public class MainRunner {
      */
     public static int runStatus = 0;
 
-    // username and API key for main sauce labs account:
-    // satish-macys 4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40
-
     /**
      * Main method to run tests
      *

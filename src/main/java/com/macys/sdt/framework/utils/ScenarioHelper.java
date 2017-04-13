@@ -6,11 +6,15 @@ import com.macys.sdt.framework.runner.RunConfig;
 import cucumber.api.Scenario;
 import cucumber.runtime.ScenarioImpl;
 import gherkin.formatter.model.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScenarioHelper {
+
+    private static final Logger logger = LoggerFactory.getLogger(ScenarioHelper.class);
 
     public static int outlineCount = 1;
     public static ScenarioImpl scenario = null;
@@ -123,7 +127,7 @@ public class ScenarioHelper {
      */
     public static String getScenarioStepName(int stepIndex) {
         if (scenarioInfo == null) {
-            System.err.println("Can't get scenario step name - scenario not initialized");
+            logger.error("Can't get scenario step name - scenario not initialized");
             return "";
         }
         try {
@@ -131,7 +135,7 @@ public class ScenarioHelper {
             LinkedTreeMap currentStep = (LinkedTreeMap) list.get(stepIndex);
             return stepIndex + ": " + Utils.parseInt(currentStep.get("line"), -1) + " - " + currentStep.get("name");
         } catch (NullPointerException e) {
-            System.err.println("Failed to get scenario name from current scenario");
+            logger.error("Failed to get scenario name from current scenario");
             return "";
         }
     }

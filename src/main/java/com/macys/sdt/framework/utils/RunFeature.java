@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ *  This class is the entry point for EE
+ */
 public class RunFeature {
     private static final String m_version = "1a.0001";
     private static int m_pid;
