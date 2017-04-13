@@ -242,7 +242,7 @@ public class Navigate {
                 givenURL = "http://" + givenURL;
             }
 
-            System.out.println("...Loading " + givenURL);
+            logger.info("...Loading " + givenURL);
             //Utils.ThreadWatchDog twd = new Utils.ThreadWatchDog(null, 60000, "ThreadWatchDog:visit(" + link + ")", () -> stopPageLoad());
             WebDriverManager.getWebDriver().get(givenURL);
             //twd.interrupt();
