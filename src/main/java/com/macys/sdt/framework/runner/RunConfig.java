@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -62,6 +63,14 @@ public class RunConfig {
      */
     public static boolean appTest;
     /**
+     * True if using header file
+     */
+    public static boolean useHeaders = booleanParam("use_headers");
+    /**
+     * Map of all headers and their values
+     */
+    public static HashMap<String, String> headers = new HashMap<>();
+    /**
      * Contains OS to use when executing on sauce labs or os version for app as given in "remote_os" env variable
      * <p>
      * Options: windows 7|8|8.1|10, OSX 10.10|10.11,
@@ -70,10 +79,6 @@ public class RunConfig {
      * </p>
      */
     public static String remoteOS = getEnvOrExParam("remote_os");
-    /**
-     * arg for adding custom "user-agent" header to requests using browsermob proxy
-     */
-    public static String userAgent = getEnvOrExParam("user_agent");
     /**
      * Browser to use as given in "browser" env variable. Default chrome.
      */
@@ -93,7 +98,7 @@ public class RunConfig {
     /**
      * Whether the proxy is disabled
      */
-    public static boolean disableProxy = true;
+    public static boolean useProxy = false;
     /**
      * The Sauce Labs username to use
      */
@@ -518,6 +523,30 @@ public class RunConfig {
         return deps;
     }
 
+    private static void getHeaders() {
+        if (!useHeaders) {
+            return;
+        }
+        try {
+            File headerFile = Utils.getResourceFile("headers.json");
+            if (!headerFile.exists()) {
+                return;
+            }
+            useProxy = true;
+            JSONObject headerJSON = new JSONObject(Utils.readTextFile(headerFile));
+            for (String key : headerJSON.keySet()) {
+                Object o = headerJSON.get(key);
+                if (o instanceof String) {
+                    headers.put(key, (String) headerJSON.get(key));
+                } else {
+                    logger.warn("Bad header: " + key);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Unable to read header file");
+        }
+    }
+
     /**
      * get and set environment variables
      */
@@ -574,16 +603,13 @@ public class RunConfig {
 
         String analyticsClass = getEnvOrExParam("analytics");
         if (analyticsClass != null) {
-            disableProxy = false;
+            useProxy = false;
             if (analyticsClass.equals("da")) {
                 analytics = new DigitalAnalytics();
             }
             if (analytics != null) {
                 logger.info("Including Analytics: " + analytics.getClass().getSimpleName());
             }
-        }
-        if (userAgent != null) {
-            disableProxy = false;
         }
 
         // tag_collection
@@ -641,5 +667,9 @@ public class RunConfig {
 
         // get project from environment variables
         getProject();
+
+        // check for headers file
+        // needs to be after project is set in order to check project resources
+        getHeaders();
     }
 }

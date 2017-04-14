@@ -536,8 +536,17 @@ public class Utils {
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
+
+            // check for a responsive resource if applicable
+            if (!resource.exists() && path.matches(".*?(/MEW/|/website/).*?")) {
+                resource = new File(path.replace("/MEW/", "/responsive/").replace("/website/", "responsive"));
+                if (resource.exists() && !resource.isDirectory()) {
+                    return resource;
+                }
+            }
+
+            //fallback to website resources
             if (!resource.exists()) {
-                //fallback to website resources
                 resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
                 if (resource.exists() && !resource.isDirectory()) {
                     return resource;

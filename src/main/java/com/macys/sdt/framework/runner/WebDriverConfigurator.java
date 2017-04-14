@@ -268,12 +268,9 @@ class WebDriverConfigurator {
      * @return desiredCapabilities configurations including disable proxy capability
      */
     private static DesiredCapabilities disabledProxyCap(DesiredCapabilities capabilities) {
-        if (disableProxy) {
-            //			Proxy py = new Proxy();
-            //			py.setNoProxy( "DIRECT" );
+        if (!useProxy) {
             capabilities.setCapability(CapabilityType.ForSeleniumServer.AVOIDING_PROXY, true);
             capabilities.setCapability(CapabilityType.ForSeleniumServer.PROXYING_EVERYTHING, false);
-            //			desiredCap.setCapability ( CapabilityType.PROXY, py );
         }
         capabilities.setCapability("version", browserVersion);
         return capabilities;
@@ -636,10 +633,6 @@ class WebDriverConfigurator {
         capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
         WebDriver driver = initDriver(capabilities);
         browsermobServer.newHar(System.currentTimeMillis() + "");
-        if (userAgent != null) {
-            browsermobServer.addHeader("User-Agent", userAgent);
-        }
-
         if (!StepUtils.mobileDevice() && !StepUtils.MEW()) {
             browsermobServer.addRequestFilter(new ProxyFilters.ProxyRequestFilter(url));
             browsermobServer.addResponseFilter(new ProxyFilters.ProxyResponseFilter());

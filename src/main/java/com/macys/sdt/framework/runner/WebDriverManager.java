@@ -104,12 +104,10 @@ public class WebDriverManager {
             driver.quit();
         }
         for (int i = 0; i < 2; i++) {
-            if (RunConfig.disableProxy) {
-                // logger.info("DEBUG stack trace: " +
-                //        Utils.listToString(Utils.getCallFromFunction("getWebDriver"), "\n\t ", null));
-                driver = WebDriverConfigurator.initDriver(null);
-            } else {
+            if (RunConfig.useProxy) {
                 driver = WebDriverConfigurator.initDriverWithProxy();
+            } else {
+                driver = WebDriverConfigurator.initDriver(null);
             }
 
             try {

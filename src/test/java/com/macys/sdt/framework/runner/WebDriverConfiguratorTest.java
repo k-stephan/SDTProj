@@ -53,7 +53,7 @@ public class WebDriverConfiguratorTest {
     public void testInitDriverWithProxy() throws Exception {
         RunConfig.browser = "firefox";
         RunConfig.remoteOS = "Windows 7";
-        RunConfig.disableProxy = false;
+        RunConfig.useProxy = true;
         try {
             driver = WebDriverConfigurator.initDriverWithProxy();
             Assert.assertNotNull(MainRunner.browsermobServer);
@@ -66,7 +66,7 @@ public class WebDriverConfiguratorTest {
             Assert.fail("Failed to initialize the driver due to: " +e.getMessage());
         }
         finally {
-            RunConfig.disableProxy = true;
+            RunConfig.useProxy = false;
             MainRunner.browsermobServer = null;
         }
     }

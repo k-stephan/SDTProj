@@ -14,12 +14,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 
+import static com.macys.sdt.framework.runner.RunConfig.headers;
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_LENGTH;
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 
 public class ProxyFilters {
     static String envURL;
-    static HashSet filterDomains = new HashSet();
+    static HashSet<String> filterDomains = new HashSet<>();
     static String domain;
     static String[] excludeDomains = new String[]{
             "coremetrics",
@@ -89,6 +90,10 @@ public class ProxyFilters {
                         DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer(Utils.readSmallBinaryFile(fcache)));
                         response.headers().set(CONTENT_TYPE, contents.getContentType());
                         response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
+                        for (String key : headers.keySet()) {
+                            request.headers().remove(key);
+                            request.headers().add(key, headers.get(key));
+                        }
                         return response;
                     }
                 }
