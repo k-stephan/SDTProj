@@ -603,7 +603,7 @@ public class RunConfig {
 
         String analyticsClass = getEnvOrExParam("analytics");
         if (analyticsClass != null) {
-            useProxy = false;
+            useProxy = true;
             if (analyticsClass.equals("da")) {
                 analytics = new DigitalAnalytics();
             }
