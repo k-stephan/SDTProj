@@ -65,8 +65,8 @@ public class Elements {
             }
             return elements.get(0);
         } catch (NoSuchElementException ex) {
-            logger.debug("No element found with selector : " + selector);
-            logger.warn("Unable to find element : ", ex);
+            logger.warn("No element found with selector : " + selector);
+            logger.debug("Unable to find element : ", ex);
         } catch (DriverNotInitializedException e) {
             Assert.fail("Driver not initialized");
         }
