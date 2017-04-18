@@ -444,7 +444,7 @@ public class Wait {
                 logger.debug("page does not have element to validate page");
             }
         } else {
-            logger.debug("page name entered as null");
+            logger.debug("No page name provided");
         }
         StepUtils.closeJQueryPopup();
         return true;

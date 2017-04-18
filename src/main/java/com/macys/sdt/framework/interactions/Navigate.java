@@ -2,9 +2,9 @@ package com.macys.sdt.framework.interactions;
 
 
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import org.junit.Assert;
@@ -87,17 +87,38 @@ public class Navigate {
     }
 
     /**
+     * Whether we're currently executing navigation hooks
+     * <p>
+     * If we do any navigation steps during navigation hooks, running hooks again will cause an infinite loop.
+     * This boolean is here to prevent that problem. There may still be unexpected behavior, however.
+     * </p>
+     */
+    private static boolean inHooks = false;
+
+    /**
      * Runs all methods / lambdas that have been set to run before navigation
      */
     public static void runBeforeNavigation() {
+        if (inHooks) {
+            logger.debug("Skipping before hooks");
+            return;
+        }
+        inHooks = true;
         beforeNavigate.forEach(Runnable::run);
+        inHooks = false;
     }
 
     /**
      * Runs all methods / lambdas that have been set to run after navigation
      */
     public static void runAfterNavigation() {
+        if (inHooks) {
+            logger.debug("Skipping after hooks");
+            return;
+        }
+        inHooks = true;
         afterNavigate.forEach(Runnable::run);
+        inHooks = false;
     }
 
     /**
@@ -242,7 +263,7 @@ public class Navigate {
                 givenURL = "http://" + givenURL;
             }
 
-            logger.info("...Loading " + givenURL);
+            logger.info("Loading " + givenURL);
             //Utils.ThreadWatchDog twd = new Utils.ThreadWatchDog(null, 60000, "ThreadWatchDog:visit(" + link + ")", () -> stopPageLoad());
             WebDriverManager.getWebDriver().get(givenURL);
             //twd.interrupt();

@@ -9,7 +9,6 @@ import com.macys.sdt.framework.utils.analytics.DATagCollector;
 import com.macys.sdt.framework.utils.analytics.PageLoadProfiler;
 import cucumber.api.cli.Main;
 import net.lightbody.bmp.BrowserMobProxy;
-import org.junit.Assert;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,6 +186,7 @@ public class MainRunner {
      */
     public static void setBeforeNavigationHooks() {
         Navigate.addBeforeNavigation(Wait::setWaitRequired);
+        Navigate.addBeforeNavigation(Wait::forPageReady);
         Navigate.addBeforeNavigation(PageLoadProfiler::startTimer);
     }
 
@@ -397,7 +397,7 @@ public class MainRunner {
         private static long pauseStartTime;
         private String currentUrl;
         private long ts;
-        private static Thread workerThread;
+        private static Thread workerThread = new Thread();
 
         private PageHangWatchDog() {
             logger.info("Start PageHangWatchDog: " + new Date());
@@ -467,7 +467,6 @@ public class MainRunner {
                         continue;
                     }
                     String url = WebDriverManager.getCurrentUrl();
-                    //logger.error("Watchdog tick:\n>old url: " + this.currentUrl + "\n>new url: " + url);
                     if (url.contains("about:blank")) {
                         continue;
                     }
@@ -501,18 +500,17 @@ public class MainRunner {
                     }
                 } catch (Exception ex) {
                     if (!pause && ex instanceof org.openqa.selenium.NoSuchSessionException) {
-                        logger.error("Driver session is dead, exiting");
+                        logger.error("Driver session is dead. Exiting");
                         break;
                     } else if (ex instanceof InterruptedException) {
-                        cucumberThread.stop();
-                        Assert.fail("Browser unresponsive. Ending test");
+                        logger.error("Browser unresponsive. Exiting");
+                        break;
                     } else if (!(ex instanceof WebDriverException)) {
                         // WebDriverException thrown when we have a sync issue in IE
                         logger.error(ex.getMessage());
                         ex.printStackTrace();
                     }
                 } finally {
-                    //logger.info(pause ? "|" : "~");
                     Utils.threadSleep(5000, this.getClass().getSimpleName());
                 }
             }

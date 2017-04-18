@@ -597,7 +597,7 @@ public class RunConfig {
         Utils.createDirectory(temp = workspace + "temp/", true);
 
         if (remoteOS == null) {
-            logger.info("Remote OS not specified. Using default (Windows 7)");
+            logger.debug("Remote OS not specified. Using default (Windows 7)");
             remoteOS = "Windows 7";
         }
 

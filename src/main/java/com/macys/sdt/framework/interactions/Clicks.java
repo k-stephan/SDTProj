@@ -169,7 +169,6 @@ public class Clicks {
      * @param element Element to hover over
      */
     public static void javascriptHover(WebElement element) {
-        Wait.forPageReady();
         Navigate.runBeforeNavigation();
         Navigate.execJavascript("if(document.createEvent){"
                 + "var evObj = document.createEvent('MouseEvents');"
@@ -205,7 +204,6 @@ public class Clicks {
      * @param e element to be clicked
      */
     public static void javascriptClick(WebElement e) {
-        Wait.forPageReady();
         Navigate.runBeforeNavigation();
 
         Navigate.execJavascript("arguments[0].focus();arguments[0].click();", e);
@@ -297,16 +295,13 @@ public class Clicks {
      */
     public static void click(WebElement el) throws NoSuchElementException {
         if (el == null) {
-            log.debug("-->StepUtils.click(): element null");
-            throw new NoSuchElementException("Unable to click element");
+            throw new NoSuchElementException("Unable to click null element");
         }
 
         if (appTest) {
             ((MobileElement) el).tap(1, 250);
             return;
         }
-
-        Wait.forPageReady();
 
         Navigate.runBeforeNavigation();
         try {
@@ -316,11 +311,9 @@ public class Clicks {
                 el = new WebDriverWait(driver, RunConfig.timeout).until(ExpectedConditions.elementToBeClickable(el));
             } catch (Exception ex) {
                 try {
-                    log.debug("Element not clickable: " + el.getTagName() + ": " + el.getText() + ": " + ex.getMessage());
-                    throw new NoSuchElementException("Element not clickable: " + ex.getMessage());
+                    throw new NoSuchElementException("Element not clickable: " + el.getTagName() + ": " + el.getText() + ": " + ex.getMessage());
                 } catch (StaleElementReferenceException exc) {
-                    log.debug("Element not clickable: " + exc.getMessage());
-                    throw new NoSuchElementException("UElement not clickable: " + exc.getMessage());
+                    throw new NoSuchElementException("Element not clickable: " + exc.getMessage());
                 }
             }
             if (RunConfig.analytics != null) {
@@ -404,13 +397,19 @@ public class Clicks {
     public static void clickArea(String attribute, String searchValue) throws NoSuchElementException {
         List<WebElement> allOptions = Elements.findElements(By.tagName("area"), WebElement::isDisplayed);
         if (allOptions == null) {
-            throw new NoSuchElementException("Unable to find any areas on this page");
+            throw new NoSuchElementException("Unable to find any 'area' elements on this page");
         }
-        for (WebElement option : allOptions)
+        boolean found = false;
+        for (WebElement option : allOptions) {
             if (searchValue.equals(option.getAttribute(attribute))) {
-                option.click();
-                return;
+                click(option);
+                found = true;
+                break;
             }
+        }
+        if (!found) {
+            throw new NoSuchElementException("No 'area' elements found with " + attribute + " = " + searchValue);
+        }
     }
 
     /**
@@ -519,5 +518,4 @@ public class Clicks {
             Assert.fail("element with text \"" + find + "\" not found");
         }
     }
-
 }

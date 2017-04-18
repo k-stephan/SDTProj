@@ -59,9 +59,9 @@ class WebDriverConfigurator {
         if (useSauceLabs) {
             driver = initSauceLabs(capabilities);
 
-            // print the session id of saucelabs for tracking job on sauceLabs
+            // print the session id of sauce labs for tracking job on sauceLabs
             if (driver instanceof RemoteWebDriver) {
-                logger.info("Link to your saucelabs job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
+                logger.info("Link to your Sauce Labs job: https://saucelabs.com/jobs/" + ((RemoteWebDriver) driver).getSessionId());
             } else {
                 logger.info("No RemoteWebDriver instance : " + driver);
             }
@@ -162,7 +162,7 @@ class WebDriverConfigurator {
                 chrome.addArguments("test-type");
                 chrome.addArguments("--disable-extensions");
 
-                //hide infobar if a session is being controlled by an automated test
+                //hide info bar if a session is being controlled by an automated test
                 chrome.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
 
                 capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
@@ -209,7 +209,7 @@ class WebDriverConfigurator {
                 }
                 capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
 
-                // latest firefox from 48 use marionette. But in Lorein VM firefox installed (default firefox version) is 46. Hence the conditional branching
+                // latest firefox from 48 use marionette. But in Lorain VM firefox installed (default firefox version) is 46. Hence the conditional branching
                 if (browserVersion != null && browserVersion.compareTo("48.0") >= 0) {
                     capabilities.setCapability("marionette", true);
                 } else {
@@ -381,7 +381,7 @@ class WebDriverConfigurator {
 
         chromeOptions.addArguments("--disable-extensions");
 
-        //hide infobar session is being controlled by an automated test
+        //hide info bar session is being controlled by an automated test
         chromeOptions.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
 
         DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();

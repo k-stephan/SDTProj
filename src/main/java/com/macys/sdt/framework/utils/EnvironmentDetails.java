@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,14 +119,15 @@ public class EnvironmentDetails {
                 // basic site details
                 String html = RESTOperations.doGET(env, null).readEntity(String.class);
                 Document doc = Jsoup.parse(html);
-                site = doc.select("site").first().html();
-                type = doc.select("type").first().html();
-                appServer = doc.select("appserver").first().html();
-                server = doc.select("server").first().html();
-                timestamp = doc.select("timestamp").first().html();
-                release = doc.select("release").first().html();
-                releaseDate = doc.select("releasedate").first().html();
-                version = doc.select("version").first().html();
+                Element siteInfo = doc.select("div#soasta_pageinfo").last();
+                site = siteInfo.select("site").html();
+                type = siteInfo.select("type").html();
+                appServer = siteInfo.select("appserver").html();
+                server = siteInfo.select("server").html();
+                timestamp = siteInfo.select("timestamp").html();
+                release = siteInfo.select("release").html();
+                releaseDate = siteInfo.select("releasedate").html();
+                version = siteInfo.select("version").html();
                 if (printOnFinish) {
                     log.info(getDetails());
                     printOnFinish = false;
