@@ -65,8 +65,11 @@ public class PageElement {
         } else {
             pagePath = StepUtils.MEW() ? "MEW." : "website.";
         }
-
-        pagePath += (StepUtils.macys() ? "mcom." : (StepUtils.bloomingdales() ? "bcom." : "other."));
+        if (RunConfig.mst) {
+            pagePath += "mst.";
+        } else {
+            pagePath += (StepUtils.macys() ? "mcom." : (StepUtils.bloomingdales() ? "bcom." : "other."));
+        }
 
         if (pageName.contains("panel.")) {
             pagePath = pagePath + pageName;

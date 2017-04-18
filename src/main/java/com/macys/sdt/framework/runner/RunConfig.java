@@ -191,6 +191,8 @@ public class RunConfig {
      * List of all projects who's steps this test relies on
      */
     public static List<String> includedProjects;
+
+    public static boolean mst;
     /**
      * Location of app for app testing (appium)
      */
@@ -547,6 +549,11 @@ public class RunConfig {
         }
     }
 
+    private static void checkMST() {
+        File mstPages = new File(projectResourceDirs.get(0) + "elements/website/mst");
+        mst = mstPages.exists() && mstPages.isDirectory();
+    }
+
     /**
      * get and set environment variables
      */
@@ -667,6 +674,9 @@ public class RunConfig {
 
         // get project from environment variables
         getProject();
+
+        //check if project is MST project
+        checkMST();
 
         // check for headers file
         // needs to be after project is set in order to check project resources

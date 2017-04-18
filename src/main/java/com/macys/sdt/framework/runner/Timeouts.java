@@ -10,8 +10,9 @@ public class Timeouts {
 
     private Timeouts() {}
 
-    private static final int DEFAULT_GENERAL_TIMEOUT = 5;
-    private static final int DEFAULT_UNTIL_ELEMENT_PRESENT_TIMEOUT = 5;
+    // repo jar is present on command line run & EE, which implies slow VM's. Give them some extra time.
+    private static final int DEFAULT_GENERAL_TIMEOUT = RunConfig.repoJar == null ? 5 : 20;
+    private static final int DEFAULT_UNTIL_ELEMENT_PRESENT_TIMEOUT = RunConfig.repoJar == null ? 5 : 20;
     private static final String GENERAL_TIMEOUT_KEY = "general_timeout";
     private static final String UNTIL_ELEMENT_PRESENT_TIMEOUT_KEY = "until_element_present_timeout";
 
