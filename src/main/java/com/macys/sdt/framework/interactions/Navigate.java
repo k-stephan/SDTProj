@@ -372,7 +372,7 @@ public class Navigate {
      *
      * @param script String containing JS code
      * @param args   Any arguments to JS code in script
-     * @return returned value of JS code (if any)
+     * @return returned value of JS code - One of Boolean, Long, Double, String, List or WebElement. Or null. (if any) otherwise empty string
      */
     public static synchronized Object execJavascript(String script, Object... args) {
         if (!WebDriverManager.driverInitialized()) {
@@ -380,11 +380,10 @@ public class Navigate {
         }
 
         try {
-            //System.err.print("$");
-            //System.out.print("StepUtils.execJavascript(): " + script + ":");
             JavascriptExecutor scriptExe = ((JavascriptExecutor) WebDriverManager.getWebDriver());
             return scriptExe.executeScript(script, args);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            logger.debug("Error in executing javascript : " + e.getMessage());
             return "";
         }
     }

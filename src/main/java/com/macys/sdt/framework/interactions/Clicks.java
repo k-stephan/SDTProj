@@ -24,7 +24,7 @@ import static com.macys.sdt.framework.runner.RunConfig.appTest;
  */
 public class Clicks {
 
-    private static final Logger log = LoggerFactory.getLogger(Clicks.class);
+    private static final Logger logger = LoggerFactory.getLogger(Clicks.class);
 
     /**
      * Sends an enter key to an element
@@ -333,7 +333,7 @@ public class Clicks {
                     actions.click().perform();
                 }
             } catch (WebDriverException ex) {
-                log.debug("Error while clicking, trying JS: " + ex);
+                logger.warn("Error while clicking, trying JS: " + ex.getMessage());
                 javascriptClick(el);
             }
             StepUtils.closeAlert();
