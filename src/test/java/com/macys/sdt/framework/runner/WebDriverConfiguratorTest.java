@@ -139,8 +139,8 @@ public class WebDriverConfiguratorTest {
         RunConfig.browserVersion = "10";
         RunConfig.brand = "MCOM";
         RunConfig.useSauceLabs = true;
-        RunConfig.sauceUser = "cbt_mew_tablet";
-        RunConfig.sauceKey = "64c1f147-c498-4a12-b10e-48124ce70d8b";
+        RunConfig.sauceUser = "sdt_framework";
+        RunConfig.sauceKey = "26ddaa38-1e07-42f3-a7b1-0e9dc14f861b";
         try {
             driver = WebDriverConfigurator.initDriver(null);
             Assert.assertNotNull(((RemoteWebDriver) driver).getCapabilities().getCapability("webdriver.remote.sessionid"));
