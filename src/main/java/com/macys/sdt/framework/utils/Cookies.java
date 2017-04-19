@@ -107,7 +107,7 @@ public class Cookies {
                 options.deleteCookieNamed(name);
                 options.addCookie(new Cookie(name, encodedValue, domain, path, expiry));
             } catch (Exception e) {
-                System.out.println("Unable to set " + name + " cookie value: " + e);
+                logger.warn("Unable to set \'" + name + "\' cookie value due to : " + e.getMessage());
                 return false;
             }
         }
@@ -130,7 +130,7 @@ public class Cookies {
             options.deleteCookieNamed(name);
             return true;
         } catch (Exception e) {
-            System.out.println("Unable to delete " + name + " cookie");
+            logger.warn("Unable to delete \'" + name + "\' cookie");
             return false;
         }
     }
@@ -276,7 +276,7 @@ public class Cookies {
 
             return URLDecoder.decode(WebDriverManager.getWebDriver().manage().getCookieNamed(name).getValue(), "UTF-8");
         } catch (Exception e) {
-            System.err.println("Unable to get " + name + " cookie value: " + e);
+            logger.warn("Unable to get \'" + name + "\' cookie value: " + e.getMessage());
             return "";
         }
     }
@@ -287,11 +287,7 @@ public class Cookies {
      * @param name name of cookie to print out
      */
     public static void printCookie(String name) {
-        try {
-            System.out.println(getCookieValue(name));
-        } catch (Exception e) {
-            System.out.println("Unable to print cookie \"" + name + "\"");
-        }
+        logger.info(String.format("Cookie \'%s\' has value : %s", name, getCookieValue(name)));
     }
 
     /**
@@ -448,7 +444,7 @@ public class Cookies {
             String response = Utils.httpGet("http://segments.macys.com/campaign/all", null);
             return new JSONArray(response);
         } catch (Exception e) {
-            System.err.println("Unable to get segment json: " + e);
+            logger.warn("Unable to get segment json due to : " + e.getMessage());
         }
         return null;
     }
@@ -498,7 +494,7 @@ public class Cookies {
             }
             return Cookies.editSegments(toAdd, toRemove);
         } catch (JSONException e) {
-            Assert.fail("Unable to parse JSON: " + e);
+            Assert.fail("Unable to parse JSON: " + e.getMessage());
         }
         return false;
     }
@@ -549,7 +545,7 @@ public class Cookies {
         try {
             return URLEncoder.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            System.err.println("Could not encode string!");
+            logger.warn("Could not encode string : " + value);
             return value;
         }
     }
@@ -558,7 +554,7 @@ public class Cookies {
         try {
             return URLDecoder.decode(value, "UTF-8");
         } catch (Exception e) {
-            System.err.println("Unable to get " + value + " cookie value: " + e);
+            logger.warn("Unable to decode URL : " + value + " due to : " + e.getMessage());
             return "";
         }
     }
