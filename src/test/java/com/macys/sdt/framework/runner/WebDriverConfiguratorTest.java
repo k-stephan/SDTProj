@@ -139,14 +139,14 @@ public class WebDriverConfiguratorTest {
         RunConfig.browserVersion = "10";
         RunConfig.brand = "MCOM";
         RunConfig.useSauceLabs = true;
-        RunConfig.sauceUser = "satish-macys";
-        RunConfig.sauceKey = "4fc927f7-c0bd-4f1d-859b-ed3aea2bcc40";
+        RunConfig.sauceUser = "cbt_mew_tablet";
+        RunConfig.sauceKey = "64c1f147-c498-4a12-b10e-48124ce70d8b";
         try {
             driver = WebDriverConfigurator.initDriver(null);
             Assert.assertNotNull(((RemoteWebDriver) driver).getCapabilities().getCapability("webdriver.remote.sessionid"));
         }
         catch (Exception e) {
-            Assert.fail("Failed to initialize the driver due to: " +e.getMessage());
+            Assert.fail("Failed to initialize the driver due to: " + e.getMessage());
         }
         finally {
             RunConfig.useSauceLabs = false;
