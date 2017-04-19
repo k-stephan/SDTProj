@@ -165,7 +165,7 @@ public class RunConfig {
     /**
      * Path to project currently being run optionally given by "sdt_project" env variable
      */
-    public static String project;
+    public static String project = getEnvVar("sdt_project");
     /**
      * Path to active project files on file system
      */
@@ -206,7 +206,6 @@ public class RunConfig {
      * Retrieves project info either from "sdt_project" or "scenarios" env val if possible
      */
     static void getProject() {
-        project = getEnvVar("sdt_project");
         if (project == null) {
             project = getProjectFromFilePath();
         }
