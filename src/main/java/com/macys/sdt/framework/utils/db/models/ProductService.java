@@ -5,6 +5,8 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductService extends StepUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     /**
      * Method to get department ids for the products
@@ -53,7 +57,7 @@ public class ProductService extends StepUtils {
             }
             return productDepartment;
         } catch (SQLException | JSONException e) {
-            System.err.println("Unable to get department id for product(s)");
+            logger.error("Unable to get department id for product(s) due to : " + e.getMessage());
         }
         return null;
     }

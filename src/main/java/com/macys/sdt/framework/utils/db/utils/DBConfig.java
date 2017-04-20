@@ -120,15 +120,13 @@ public class DBConfig {
 
     public String generateDBUrl() {
         //jdbc:db2://11.168.114.41:60000/MLQ10
-        StringBuffer sb = new StringBuffer();
-        sb.append("jdbc:db2://");
-        sb.append(getHost());
-        sb.append(":");
-        sb.append(getPort());
-        sb.append("/");
-        sb.append(getDbName());
 
-        return sb.toString();
+        return "jdbc:db2://" +
+                getHost() +
+                ":" +
+                getPort() +
+                "/" +
+                getDbName();
     }
 
 }

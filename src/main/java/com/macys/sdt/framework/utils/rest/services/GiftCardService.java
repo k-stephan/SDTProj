@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import java.io.IOException;
 
 
 public class GiftCardService {
+
+    private static final Logger logger = LoggerFactory.getLogger(GiftCardService.class);
 
     /**
      * Returns valid gift card object
@@ -50,7 +54,7 @@ public class GiftCardService {
             }
 
         } catch (JSONException | IOException e) {
-            e.printStackTrace();
+            logger.error("issue in retrieving valid gift card details due to : " + e.getMessage());
         }
         return null;
     }

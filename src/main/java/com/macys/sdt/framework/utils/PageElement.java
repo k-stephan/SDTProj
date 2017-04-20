@@ -2,11 +2,15 @@ package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.RunConfig;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class PageElement {
+
+    private static final Logger logger = LoggerFactory.getLogger(PageElement.class);
 
     /**
      * example : home.logo = home.logo or panel.home.logo
@@ -151,7 +155,7 @@ public class PageElement {
                     elementLocators.add(locator);
                     elementValues.add(value);
                 } else {
-                    System.err.println("wrong locator : " + locator);
+                    logger.error("wrong locator : " + locator);
                 }
             } else {    // else use case example : url where no locator present
                 elementValues.add(value);
@@ -196,7 +200,7 @@ public class PageElement {
     private void parseKey() {
         // page process
         if (!elementKey.matches("(.*?).(.*?)")) {
-            System.err.println("-->Error - UI: element name format is not correct:" + elementKey);
+            logger.error("UI: element name format is not correct:" + elementKey);
             Assert.fail();
         }
 
@@ -206,7 +210,7 @@ public class PageElement {
             elementName = parts[parts.length - 1];
             pagePath = getPageFullPath(pageName);
         } else {
-            System.err.println("-->Error - UI: element name format is not correct:" + elementKey);
+            logger.error("UI: element name format is not correct:" + elementKey);
             Assert.fail();
         }
     }

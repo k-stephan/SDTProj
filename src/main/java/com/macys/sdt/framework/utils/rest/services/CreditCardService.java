@@ -5,6 +5,8 @@ import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.util.Random;
@@ -13,6 +15,8 @@ import java.util.Random;
  * Retrieves credit card data from SIM service
  */
 public class CreditCardService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CreditCardService.class);
 
     /**
      * Gets a random credit card from the SIM Data Delivery service based on given attributes
@@ -27,7 +31,7 @@ public class CreditCardService {
      */
     public static CreditCard getCreditCard(CreditCard.CardType type, boolean newAccount, boolean singleLine, boolean activation) {
         if (!type.abbreviation.matches("^AMEX$|^PROP$")) {
-            System.err.println("SIM credit card service only supports AMEX and PROP cards");
+            logger.error("SIM credit card service only supports AMEX and PROP cards");
             return null;
         }
 
@@ -47,7 +51,7 @@ public class CreditCardService {
             JSONObject card = cards.getJSONObject(new Random().nextInt(cards.length()));
             return CreditCard.createCardFromSimService(card, type);
         } catch (Exception e) {
-            System.err.println("Unable to get credit card from SIM Service: " + e);
+            logger.error("Unable to get credit card from SIM Service: " + e.getMessage());
             return null;
         }
     }

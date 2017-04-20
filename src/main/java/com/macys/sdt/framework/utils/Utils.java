@@ -72,7 +72,7 @@ public class Utils {
         } else {
             cmd = "cmd.exe /c \"" + cmd + "\"";
         }
-        System.out.println(cmd);
+        logger.info("command : " + cmd);
         try {
             if (isWindows()) {
                 p = Runtime.getRuntime().exec(cmd);
@@ -82,12 +82,12 @@ public class Utils {
             }
             return captureOutput(p);
         } catch (Throwable e1) {
-            e1.printStackTrace();
+            logger.warn("issue to execute command : " + e1.getMessage());
         } finally {
             if (p != null) {
                 p.destroy();
             }
-            System.out.println("-->" + (System.currentTimeMillis() - ts) + ":" + cmd);
+            logger.info("--> " + (System.currentTimeMillis() - ts) + " : " + cmd);
         }
 
         return null;
@@ -105,7 +105,7 @@ public class Utils {
         try {
             cmd = driverPath.getCanonicalPath();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("can't capture driver info due to : " + ex.getMessage());
             return msg;
         }
         Process p = null;
@@ -113,14 +113,14 @@ public class Utils {
         if (!isWindows()) {
             cmd = cmd.replaceAll("\"", "\\\\\"");
         }
-        System.out.println(cmd);
+        logger.info("command : " + cmd);
         ProcessWatchDog pd = null;
         try {
             p = Runtime.getRuntime().exec(cmd);
             pd = new ProcessWatchDog(p, 3000, "getSeleniumDriverInfo()");
             return captureOutput(p).replace('\n', ' ');
         } catch (Throwable e1) {
-            e1.printStackTrace();
+            logger.error("issue in capturing driver info due to : " + e1.getMessage());
             return msg;
         } finally {
             if (pd != null) {
@@ -129,7 +129,7 @@ public class Utils {
             if (p != null) {
                 p.destroy();
             }
-            //System.out.println("-->" + (System.currentTimeMillis() - ts) + ":" + cmd);
+            //logger.info("-->" + (System.currentTimeMillis() - ts) + ":" + cmd);
         }
     }
 
@@ -175,14 +175,14 @@ public class Utils {
     public static File createDirectory(File fDir, boolean clean) {
         if (!fDir.exists()) {
             if (!fDir.mkdirs()) {
-                System.err.println("Unable to make directory: " + fDir.getName());
+                logger.error("Unable to make directory: " + fDir.getName());
             }
         }
         if (clean) {
             try {
                 FileUtils.cleanDirectory(fDir);
             } catch (IOException e) {
-                System.out.println("Error cleaning directory:" + e.getMessage());
+                logger.error("Error cleaning directory: " + e.getMessage());
             }
         }
         return fDir;
@@ -208,7 +208,7 @@ public class Utils {
     public static String getScenarioShaKey(String feature, String scenario) {
         String path = (feature + scenario).replaceAll("\\s", "");
         String key = DigestUtils.sha256Hex(path);
-        System.err.println("...key generation: " + path + " : " + key);
+        logger.error("...key generation: " + path + " : " + key);
         return key;
     }
 
@@ -239,7 +239,7 @@ public class Utils {
             os.write(aBytes);
             return true;
         } catch (IOException ex) {
-            System.out.println("Cannot create:" + aFileName.getPath());
+            logger.error("Cannot create file : " + aFileName.getPath());
         } finally {
             closeIoOutput(os);
             closeIoOutput(fout);
@@ -293,15 +293,15 @@ public class Utils {
     public static boolean writeBinaryFile(byte[] aBytes, File aFileName, boolean append) {
         try {
             if (!append && aFileName.exists()) {
-                //				System.out.println("writeSmallBinaryFile(): deleting " + aFileName.getCanonicalPath());
+                //				logger.info("writeSmallBinaryFile(): deleting " + aFileName.getCanonicalPath());
                 if (!aFileName.delete()) {
-                    System.err.println("Unable to delete file: " + aFileName.getName());
+                    logger.error("Unable to delete file: " + aFileName.getName());
                 }
             }
             File fDir = aFileName.getAbsoluteFile().getParentFile();
             if (!fDir.exists()) {
                 if (!fDir.mkdirs()) {
-                    System.err.println("Unable to create directory: " + fDir.getName());
+                    logger.error("Unable to create directory: " + fDir.getName());
                     return false;
                 }
             }
@@ -313,8 +313,8 @@ public class Utils {
                 Files.write(path, aBytes); // creates, overwrites
             }
             return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            logger.error("unable to write file due to : " + e.getMessage());
             return false;
         }
     }
@@ -358,9 +358,8 @@ public class Utils {
             gherkin = FixJava.readReader(new InputStreamReader(new FileInputStream(path.trim()), "UTF-8"));
         } catch (FileNotFoundException e) {
             Assert.fail("Feature file not found at " + path);
-            // e.printStackTrace();
         } catch (UnsupportedEncodingException | RuntimeException e) {
-            e.printStackTrace();
+            logger.error("issue to convert feature file : " + e.getMessage());
         }
 
         StringBuilder json = new StringBuilder();
@@ -376,7 +375,7 @@ public class Utils {
         parser.parse(gherkin, path, 0);
         formatter.done();
         formatter.close();
-        //		System.out.println("json output: n" + json + "'");
+        //		logger.info("json output: n" + json + "'");
         return json.toString();
     }
 
@@ -496,9 +495,9 @@ public class Utils {
             pid_method.setAccessible(true);
 
             return (Integer) pid_method.invoke(mgmt);
-        } catch (Exception ex) {
-            System.out.println("--> Utils.getProcesId():" + ex.getMessage());
-            ex.printStackTrace();
+        } catch (Exception e) {
+            logger.error("error to retrieve process id : " + e.getMessage());
+            logger.debug("retrieve process id error : " + e);
         }
         return -1;
     }
@@ -516,7 +515,7 @@ public class Utils {
         Robot robot = new Robot();
         BufferedImage image = robot.createScreenCapture(screenRectangle);
         ImageIO.write(image, "png", out);
-        System.out.println("-->desktopCapture():" + (System.currentTimeMillis() - ts));
+        logger.info("capture desktop : " + (System.currentTimeMillis() - ts));
     }
 
     /**
@@ -592,8 +591,8 @@ public class Utils {
     /**
      * Convert List Object To String
      *
-     * @param list List Object of Strings
-     * @param token separator to used for string list
+     * @param list   List Object of Strings
+     * @param token  separator to used for string list
      * @param cleans strings to remove from list
      * @return List of strings separated by token
      */
@@ -633,7 +632,7 @@ public class Utils {
             Path path = Paths.get(file.getCanonicalPath());
             return Files.readAllBytes(path);
         } catch (IOException e) {
-            System.err.println("Could not read file: " + file.getName());
+            logger.error("Could not read file: " + file.getName());
             return null;
         }
     }
@@ -641,7 +640,7 @@ public class Utils {
     /**
      * Gets List of files inside a given tar file
      *
-     * @param tar tar file
+     * @param tar      tar file
      * @param filepath file path
      * @return list of files
      * @throws IOException throws IOException
@@ -661,7 +660,7 @@ public class Utils {
     /**
      * Gets List of files inside a given jar file
      *
-     * @param jar jar file
+     * @param jar      jar file
      * @param filepath file path
      * @return list of files
      * @throws IOException throws IOException
@@ -705,7 +704,7 @@ public class Utils {
                 }
                 byte[] ret = new byte[(int) entry.getSize()];
                 if (inputTar.read(ret, 0, ret.length) == -1) {
-                    System.err.println("Failed to read file: " + tar.getName());
+                    logger.error("Failed to read file: " + tar.getName());
                 }
                 return ret;
             }
@@ -724,15 +723,15 @@ public class Utils {
 
     private static boolean saveDriver(String driver, String rpath) {
         if (Utils.isWindows() && System.getenv("HOME") != null) {
-            System.out.println(new Date() + " --> Saving driver: " + driver);
+            logger.info(new Date() + " --> Saving driver: " + driver);
             File fcdriver = new File(System.getenv("HOME") + "/" + driver);
             File fdriver = new File(rpath + "/framework/selenium_drivers/" + driver);
             if (fdriver.exists() && (!fcdriver.exists() || fcdriver.length() != fdriver.length())) {
                 try {
                     Files.copy(fdriver.toPath(), fcdriver.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println(new Date() + " --> Saved driver to: " + fcdriver.getPath());
+                    logger.info(new Date() + " --> Saved driver to: " + fcdriver.getPath());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.warn("issue to save driver : " + e.getMessage());
                     return false;
                 }
             }
@@ -743,9 +742,9 @@ public class Utils {
     /**
      * Extract Resources from the given repoJar
      *
-     * @param repoJar repo Jar File
+     * @param repoJar   repo Jar File
      * @param workspace workspace path
-     * @param project project name
+     * @param project   project name
      * @throws IOException throws IOException
      */
     public static void extractResources(File repoJar, String workspace, String project) throws IOException {
@@ -830,7 +829,7 @@ public class Utils {
                 while ((length = inputTar.read(buff)) > -1) {
                     bout.write(buff, 0, length);
                 }
-                logger.debug(System.currentTimeMillis() - ts + ":" + bout.size());
+                logger.debug(System.currentTimeMillis() - ts + " : " + bout.size());
                 File ftemp = new File(fOut.getParentFile().getPath() + "/" + System.currentTimeMillis());
                 Utils.createDirectory(ftemp.getParent(), false);
                 for (int i = 0; i < 100; i++) {
@@ -857,7 +856,7 @@ public class Utils {
             for (int i = 0; i < retryCount; i++) {
                 String res = executeCMD("ren \"\"" + src.getPath() + "\"\" \"\"" + dest.getPath() + "\"\"");
                 if (res != null && res.trim().isEmpty() && dest.exists()) {
-                    System.err.print("--> used CMD");
+                    logger.error("used CMD");
                     return true;
                 }
                 threadSleep(3000, "*" + src.getName() + ":" + dest.getName() + ":" + i);
@@ -867,14 +866,14 @@ public class Utils {
         try {
             FileUtils.copyFile(src, dest);
             if (!src.delete()) {
-                System.err.println("Failed to delete file: " + src.getAbsolutePath());
+                logger.error("Failed to delete file: " + src.getAbsolutePath());
             }
             if (dest.exists()) {
-                System.err.print("!");
+                logger.error("!");
                 return true;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("issue to rename file : " + e.getMessage());
         }
         return false;
     }
@@ -989,7 +988,7 @@ public class Utils {
                     }
                 }
             } catch (Exception e1) {
-                e1.printStackTrace();
+                logger.warn("issue to append cookies : " + e1.getMessage());
             }
         }
     }
@@ -1013,15 +1012,15 @@ public class Utils {
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         if (!url.endsWith("/j_acegi_security_check")) {
-            System.out.println("post():" + url + "\n-->Params: " + ((url.endsWith("/json") ? "json_data..." : urlParameters)));
+            logger.info("post():" + url + "\n-->Params: " + ((url.endsWith("/json") ? "json_data..." : urlParameters)));
         } else {
-            System.out.println("post():" + url);
+            logger.info("post():" + url);
         }
         HttpResponse response = client.execute(post);
 
         int statusCode = response.getStatusLine().getStatusCode();
         if (200 > statusCode || statusCode >= 400) {
-            System.out.println("-->post().reponse: " + response);
+            logger.info("-->post().reponse: " + response);
             throw new Exception("Message code failed: " + response.getStatusLine());
         }
 
@@ -1043,7 +1042,7 @@ public class Utils {
             try {
                 items.add((JSONObject) json.get(i));
             } catch (JSONException e) {
-                System.err.println("Unable to convert JSONArray to List<JSONObject>: " + e);
+                logger.error("Unable to convert JSONArray to List<JSONObject>: " + e.getMessage());
             }
         }
         return items;
@@ -1064,7 +1063,7 @@ public class Utils {
                 Map metaData = new Gson().fromJson(System.getenv("meta_data"), Map.class);
                 ee = metaData.get("EE").toString();
             } catch (Exception ex) {
-                System.err.println("Unable to get EE URL");
+                logger.error("Unable to get EE URL : " + ex.getMessage());
             }
         }
 
@@ -1093,15 +1092,16 @@ public class Utils {
             String jsonTxt = Utils.readTextFile(file);
             jsonObject = new JSONObject(jsonTxt);
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            logger.warn("issue to convert file data to json due to : " + e.getMessage());
         }
         return jsonObject;
     }
 
     /**
-     *  Get the return_order.json file data
-     *  @param options order details which should match a record in return_order.json
-     *  @return matching object from return_order.json
+     * Get the return_order.json file data
+     *
+     * @param options order details which should match a record in return_order.json
+     * @return matching object from return_order.json
      */
     public static JSONObject getVirtualReturns(HashMap<String, String> options) {
         try {
@@ -1195,11 +1195,10 @@ public class Utils {
             String jsonTxt = Utils.readTextFile(queries);
             jsonObject = new JSONObject(jsonTxt);
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            logger.warn("issue retrieving contextual data due to : " + e.getMessage());
         }
 
         return jsonObject;
-
     }
 
     public static String removeFromString(String s, String... args) {
@@ -1211,7 +1210,6 @@ public class Utils {
 
     /**
      * Watchdog for Threads, to monitor it for timeouts
-     *
      */
     public static class ThreadWatchDog extends Thread {
         private Thread m_thread;
@@ -1222,9 +1220,9 @@ public class Utils {
         /**
          * Creates a watchdog for a Thread to monitor it for timeouts
          *
-         * @param th th Thread
-         * @param timeout timeout in milliseconds
-         * @param name Thread name
+         * @param th       th Thread
+         * @param timeout  timeout in milliseconds
+         * @param name     Thread name
          * @param callback Runnable
          */
         public ThreadWatchDog(Thread th, long timeout, String name, Runnable callback) {
@@ -1240,11 +1238,11 @@ public class Utils {
          */
         public void run() {
             if (Utils.threadSleep(this.m_timeout, "--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout)) {
-                System.err.println("--> ThreadWatchDog.start():" + this.m_name + ":" + this.m_timeout + ": exit normally.");
+                logger.error("--> ThreadWatchDog.start(): " + this.m_name + " : " + this.m_timeout + " : exit normally.");
                 return;
             }
             if (this.m_thread != null && this.m_thread.isAlive()) {
-                System.err.println("--> ThreadWatchDog.destroy():" + this.m_name + ":" + this.m_timeout);
+                logger.error("--> ThreadWatchDog.destroy(): " + this.m_name + " : " + this.m_timeout);
                 this.m_thread.interrupt();
             }
             if (this.m_callback != null) {
@@ -1274,14 +1272,13 @@ public class Utils {
                         break;
                     }
                     if (System.getenv("DEBUG") != null) {
-                        System.out.println(s);
+                        logger.info(s);
                     }
                     console.append(s).append("\n");
                 }
                 is.close();
             } catch (Exception ex) {
-                System.out.println("Problem reading stream " + name + "... :" + ex);
-                ex.printStackTrace();
+                logger.warn("Problem reading stream " + name + "... :" + ex.getMessage());
             }
         }
 
@@ -1327,7 +1324,7 @@ public class Utils {
         public void run() {
             Utils.threadSleep(this.m_timeout, null);
             if (this.m_process.isAlive()) {
-                System.out.println("--> ProcessWatchDog.destroyForcibly():" + this.m_name + ":" + this.m_timeout);
+                logger.info("--> ProcessWatchDog.destroyForcibly():" + this.m_name + ":" + this.m_timeout);
                 this.m_process.destroyForcibly();
             }
         }

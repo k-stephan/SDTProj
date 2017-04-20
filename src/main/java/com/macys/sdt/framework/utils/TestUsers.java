@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import static com.macys.sdt.framework.utils.StepUtils.macys;
 import static com.macys.sdt.framework.utils.StepUtils.prodEnv;
 import static com.macys.sdt.framework.utils.Utils.getResourceFile;
+import static com.macys.sdt.framework.utils.Utils.logger;
 
 /**
  * This class creates and manages test user information
@@ -75,7 +76,7 @@ public class TestUsers {
         try {
             Utils.httpGet(Utils.getEEUrl() + "/sdt/releaseProductionCustomer/" + lockedProductionCustomer, null);
         } catch (Exception e) {
-            System.err.println("Cannot release production customer:" + lockedProductionCustomer);
+            logger.error("Cannot release production customer: " + lockedProductionCustomer);
         }
     }
 
@@ -120,7 +121,7 @@ public class TestUsers {
 
             return prodCustomer;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("issue in locking production customer : " + ex.getMessage());
             throw new UserException("Cannot lock a production customer: " + url);
         }
     }
@@ -172,7 +173,7 @@ public class TestUsers {
         }
         currentEmail = customer.getUser().getProfileAddress().getEmail();
         currentPassword = customer.getUser().getLoginCredentials().getPassword();
-        System.out.println("Your New Email Address is: " + currentEmail);
+        logger.info("Your New Email Address is: " + currentEmail);
         return customer;
 
     }
@@ -628,7 +629,7 @@ public class TestUsers {
             File uslFile = getResourceFile("enrolled_usl_id.json");
             String jsonTxt = Utils.readTextFile(uslFile);
             //JSON from file to Object
-            List<UslInfo> uslInfoList = ObjectMapperProvidor.getJsonMapper().readValue(jsonTxt,
+            List<UslInfo> uslInfoList = ObjectMapperProvider.getJsonMapper().readValue(jsonTxt,
                     TypeFactory.defaultInstance().constructCollectionType(List.class,
                             UslInfo.class));
             return uslInfoList.get(0);
@@ -650,7 +651,7 @@ public class TestUsers {
             String jsonTxt = Utils.readTextFile(addressFile);
             Random rand = new Random();
             //JSON from file to Object
-            List<LoyalistDetails> loyalistDetailsList = ObjectMapperProvidor.getJsonMapper().readValue(jsonTxt,
+            List<LoyalistDetails> loyalistDetailsList = ObjectMapperProvider.getJsonMapper().readValue(jsonTxt,
                     TypeFactory.defaultInstance().constructCollectionType(List.class, LoyalistDetails.class));
 
             List<LoyalistDetails> loyalists = loyalistDetailsList.stream().filter(loyalistDetails -> loyalistDetails.getLoyallistType().equalsIgnoreCase(loyallistType)).collect(Collectors.toList());
@@ -700,7 +701,7 @@ public class TestUsers {
             options = new HashMap<>();
         }
         if (address == null) {
-            System.err.println("--> getRandomValidAddress: Address cannot be null");
+            logger.error("Address cannot be null");
             return;
         }
         options.putIfAbsent("country", "United States");
@@ -710,7 +711,7 @@ public class TestUsers {
             String jsonText = Utils.readTextFile(getResourceFile("valid_addresses.json"));
             JSONArray addressesJSON = new JSONObject(jsonText).getJSONArray("addresses");
             if (addressesJSON == null) {
-                System.err.println("Unable to get a valid address");
+                logger.error("Unable to get a valid address");
             }
 
             addresses = Utils.jsonArrayToList(addressesJSON);
@@ -744,7 +745,7 @@ public class TestUsers {
         try {
             address.fillFromJson(addressJson);
         } catch (JSONException e) {
-            System.err.println("Unable to get random address: " + e);
+            logger.error("Unable to get random address: " + e.getMessage());
         }
     }
 
@@ -841,7 +842,7 @@ public class TestUsers {
                         }
                     }
                     if (found) {
-                        System.out.println("found product id : " + new Product(product).id);
+                        logger.info("found product id : " + new Product(product).id);
                         return new Product(product);
                     }
                 }

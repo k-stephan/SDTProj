@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 public class MediaService {
 
+    private static final Logger logger = LoggerFactory.getLogger(MediaService.class);
+
     public static Statement statement;
     public static Connection connection;
     public static JSONObject queries;
@@ -32,7 +34,6 @@ public class MediaService {
     public static List<HashMap> allMediaComponentIds = new ArrayList<>();
     public static Date customDate;
     public static JSONObject contextData;
-    private static final Logger logger = LoggerFactory.getLogger(MediaService.class);
 
 
     public static List<Map> getFinalContextualizeCanvasData(String[] mediaNamesArray, String rowType, String[] contextAttrNames, String[] contextAttrValues) throws Throwable {

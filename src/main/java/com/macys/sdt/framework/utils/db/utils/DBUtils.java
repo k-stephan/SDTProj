@@ -5,11 +5,15 @@ import com.macys.sdt.framework.utils.*;
 import org.apache.http.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.Date;
 
 public class DBUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(DBUtils.class);
 
     public DBUtils() {
 
@@ -34,11 +38,10 @@ public class DBUtils {
             Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
             customDate = customDate == null ? currentTimeStamp : customDate;
         } catch (SQLException | JSONException e) {
-            e.printStackTrace();
+            logger.warn("not able to retrieve custom date due to : " + e.getMessage());
         }
 
         return customDate;
-
     }
 
     /**
@@ -47,8 +50,7 @@ public class DBUtils {
      * @return DB connection object
      */
     public static Connection setupDBConnection() {
-        DBConnection dbConnection = new DBConnection();
-        return dbConnection.createConnection();
+        return new DBConnection().createConnection();
     }
 
     /**
@@ -61,8 +63,7 @@ public class DBUtils {
      * @return database connection object
      */
     public static Connection setupDBConnection(String databaseName, String dbUrl, String username, String password) {
-        DBConnection dbConnection = new DBConnection();
-        return dbConnection.createConnection(databaseName, dbUrl, username, password);
+        return new DBConnection().createConnection(databaseName, dbUrl, username, password);
     }
 
     /**
@@ -118,11 +119,10 @@ public class DBUtils {
             dbconfig.setSchema(dbInfo.getString("dbSchema"));
             dbconfig.setEnvName(eName);
         } catch (ParseException | JSONException e) {
-            e.printStackTrace();
+            logger.warn("error in create config from JSON due to : " + e.getMessage());
         }
 
         return dbconfig;
-
     }
 
 }

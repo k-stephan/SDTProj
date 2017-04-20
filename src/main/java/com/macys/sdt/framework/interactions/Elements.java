@@ -475,7 +475,7 @@ public class Elements {
             int index = 1;
             for (String param : params) {
                 paramValue = paramValue.replace("{arg" + index + "}", param);
-                // System.out.println("Param element: (" + param + "): " + paramValue);
+                // logger.info("Param element: (" + param + "): " + paramValue);
                 index++;
             }
 

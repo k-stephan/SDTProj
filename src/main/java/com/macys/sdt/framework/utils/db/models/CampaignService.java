@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.sql.*;
@@ -21,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CampaignService extends StepUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(CampaignService.class);
 
     public static String earnPeriodType, redeemPeriodType, parentCampaignName, campaignName, campaignCode, queryPath;
     public static Statement statement;
@@ -84,7 +88,7 @@ public class CampaignService extends StepUtils {
      */
     public static void updateCampaignDetailsInDatabase(String campaignName) {
         updateCampaignDetails(campaignName);
-        System.out.println("Updated MB Money campaign to " + campaignName + " in database and cleared all MB Money caches!!");
+        logger.info("Updated MB Money campaign to " + campaignName + " in database and cleared all MB Money caches!!");
     }
 
     /**
@@ -111,7 +115,7 @@ public class CampaignService extends StepUtils {
                 campaignAttributes.add(cAttributes);
             }
         } catch (JSONException | SQLException e) {
-            System.err.println("Unable to get MBMoeny campaign exclusion details: " + e);
+            logger.error("Unable to get MBMoney campaign exclusion details: " + e.getMessage());
         }
         return campaignAttributes;
     }
@@ -139,7 +143,7 @@ public class CampaignService extends StepUtils {
                 campaignExclusions.add(cExclusions);
             }
         } catch (JSONException | SQLException e) {
-            System.err.println("Unable to get MBMoeny campaign exclusion details: " + e);
+            logger.error("Unable to get MBMoney campaign exclusion details: " + e.getMessage());
         }
         return campaignExclusions;
     }
@@ -177,7 +181,7 @@ public class CampaignService extends StepUtils {
                 }
             }
         } catch (JSONException | SQLException e) {
-            System.err.println("Failed to get active campaign details: " + e);
+            logger.error("Failed to get active campaign details: " + e.getMessage());
         }
         return activeCampaigns;
     }
@@ -189,7 +193,7 @@ public class CampaignService extends StepUtils {
         clearCustomerCampaignCache();
         clearOrderCampaignCache();
         clearShopAppCampaignCache();
-        System.out.println("All MBMoney related caches are updated!!");
+        logger.info("All MBMoney related caches are updated!!");
     }
 
     /**
@@ -287,7 +291,7 @@ public class CampaignService extends StepUtils {
             preparedStatement.setString(3, campaignId);
             preparedStatement.executeUpdate();
         } catch (JSONException | SQLException e) {
-            System.err.println("Unable to update MBMoeny campaign dates: " + e);
+            logger.error("Unable to update MBMoney campaign dates: " + e.getMessage());
         }
     }
 
@@ -341,7 +345,7 @@ public class CampaignService extends StepUtils {
                 campaignDetails = getCampaignDetails(campaignType, false);
             }
         } catch (JSONException | SQLException e) {
-            System.err.println("Unable to get MBMoney campaign details: " + e);
+            logger.error("Unable to get MBMoney campaign details: " + e.getMessage());
         }
         return campaignDetails;
     }
@@ -366,9 +370,9 @@ public class CampaignService extends StepUtils {
             }
             for (int index = 0; index < campaignAttributesQueries.length(); index++)
                 statement.executeUpdate(campaignAttributesQueries.getString(index));
-            System.out.println("Inserted " + campaignName + " campaign details !!");
+            logger.info("Inserted " + campaignName + " campaign details !!");
         } catch (JSONException | SQLException e) {
-            System.err.println("Unable to insert Campaign details: " + e);
+            logger.error("Unable to insert Campaign details: " + e.getMessage());
         }
     }
 
@@ -381,7 +385,7 @@ public class CampaignService extends StepUtils {
         if (response.getStatus() != 204) {
             throw new RuntimeException("HTTP error code : " + response.getStatus());
         }
-        System.out.println("Customer campaign cache cleared...");
+        logger.info("Customer campaign cache cleared...");
     }
 
     /**
@@ -393,7 +397,7 @@ public class CampaignService extends StepUtils {
         if (response.getStatus() != 200) {
             throw new RuntimeException("HTTP error code : " + response.getStatus());
         }
-        System.out.println("Order campaign cache cleared...");
+        logger.info("Order campaign cache cleared...");
     }
 
     /**
@@ -406,7 +410,7 @@ public class CampaignService extends StepUtils {
             if (response.getStatus() != 302) {
                 throw new Exception("ShopApp MBMoney cache is not cleared properly");
             }
-            System.out.println("ShopApp campaign cache cleared...");
+            logger.info("ShopApp campaign cache cleared...");
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
@@ -421,7 +425,7 @@ public class CampaignService extends StepUtils {
                 connection = DBUtils.setupDBConnection();
                 statement = connection.createStatement();
             } catch (Exception e) {
-                System.out.println("Error occure while craeting database connection" + e.getMessage());
+                logger.error("Error occur while creating database connection : " + e.getMessage());
             }
         }
     }

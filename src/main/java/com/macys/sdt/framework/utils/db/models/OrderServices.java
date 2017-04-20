@@ -4,6 +4,8 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -14,6 +16,9 @@ import java.sql.*;
 import java.util.*;
 
 public class OrderServices {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderServices.class);
+
     public Statement statement;
     public Connection connection;
     public JSONObject queries;
@@ -42,7 +47,7 @@ public class OrderServices {
                 orderDetails.put("RESERVATION_STATUS", resultSet.getString("RESERVATION_STATUS"));
             }
         } catch (SQLException | JSONException e) {
-            e.printStackTrace();
+            logger.warn("Error in retrieving order details due to : " + e.getMessage());
         }
         return orderDetails;
     }
@@ -66,7 +71,7 @@ public class OrderServices {
                 shipMethod.add(resultSet.getString("SHIP_METHOD_CODE"));
             }
         } catch (SQLException | JSONException e) {
-            e.printStackTrace();
+            logger.warn("Error in retrieving ship method code due to : " + e.getMessage());
         }
         return shipMethod;
     }
@@ -79,7 +84,7 @@ public class OrderServices {
      **/
     public List<Element> getPrepareOrderRequest(String orderNumber) {
         setupConnection();
-        List<Element> preapreOrderReq = new ArrayList();
+        List<Element> prepareOrderReq = new ArrayList<>();
         queries = Utils.getSqlQueries();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -88,12 +93,12 @@ public class OrderServices {
             while (resultSet.next()) {
                 String xmlData = resultSet.getString("XML_DATA");
                 Element prepareOrderXml = getXmlElements(xmlData);
-                preapreOrderReq.add(prepareOrderXml);
+                prepareOrderReq.add(prepareOrderXml);
             }
         } catch (SQLException | JSONException e) {
-            e.printStackTrace();
+            logger.warn("Error in retrieving prepare Order due to : " + e.getMessage());
         }
-        return preapreOrderReq ;
+        return prepareOrderReq ;
     }
 
     /**
@@ -124,7 +129,7 @@ public class OrderServices {
                 connection = DBUtils.setupDBConnection();
                 statement = connection.createStatement();
             } catch (Exception e) {
-                System.out.println("Error occurs while creating database connection" + e.getMessage());
+                logger.error("Error occurs while creating database connection : " + e.getMessage());
             }
         }
     }

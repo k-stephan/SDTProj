@@ -165,7 +165,7 @@ public class AbbreviationHelper {
         Optional<String> result = MONTH_MAP.keySet().stream()
                 .filter(abb -> MONTH_MAP.get(abb).equalsIgnoreCase(month))
                 .findFirst();
-        return result.isPresent() ? result.get() : null;
+        return result.orElse(null);
     }
 
 

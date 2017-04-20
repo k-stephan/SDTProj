@@ -241,7 +241,7 @@ public abstract class StepUtils {
                 WebDriverManager.getWebDriver().switchTo().frame(Elements.findElement(Elements.element(frame)));
             }
         } catch (NullPointerException e) {
-            System.out.println("Frame " + frame + " does not exist.");
+            logger.info("Frame " + frame + " does not exist.");
         } catch (DriverNotInitializedException e) {
             Assert.fail("Driver not initialized");
         }
@@ -366,7 +366,7 @@ public abstract class StepUtils {
     public static boolean onPage(String name) {
         // Appium doesn't have a good way to get page/activity info (that we've found yet)
         if (appTest) {
-            System.err.println("Use of onPage while testing an app - NOT SUPPORTED");
+            logger.warn("Use of onPage while testing an app - NOT SUPPORTED");
             return true;
         }
 
@@ -508,8 +508,8 @@ public abstract class StepUtils {
             Utils.threadSleep(500, null);
             String res = Navigate.execJavascript("return document.readyState").toString();
             return res != null && res.equals("complete") && Wait.ajaxDone();
-        } catch (Exception ex) {
-            System.out.print(ex.getMessage());
+        } catch (Exception e) {
+            logger.error("issue to stop page load : ", e.getMessage());
         }
         return false;
     }
@@ -554,14 +554,14 @@ public abstract class StepUtils {
             File scrFile = ((TakesScreenshot) WebDriverManager.getWebDriver()).getScreenshotAs(OutputType.FILE);
             boolean success = scrFile.renameTo(imgFile);
             if (!success) {
-                System.err.println("Failed to rename screenshot file");
+                logger.error("Failed to rename screenshot file");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.warn("issue in renaming screenshot file due to : " + ex.getMessage());
             try {
                 Utils.desktopCapture(new FileOutputStream(imgFile));
             } catch (Exception e) {
-                System.err.println("Cannot capture desktop: " + e);
+                logger.error("Cannot capture desktop: " + e.getMessage());
             }
         }
     }
@@ -657,7 +657,7 @@ public abstract class StepUtils {
             try {
                 singletonScenario = new SingletonScenario(stepName);
             } catch (Exception e) {
-                System.err.println("-->Cannot create step singleton");
+                logger.error("Cannot create step singleton");
             }
         }
 
@@ -680,9 +680,9 @@ public abstract class StepUtils {
                 try {
                     lockSocket = new ServerSocket(lockType);
                     if (lockType == PORT_SCENARIO) {
-                        System.err.println("...SingletonScenario: SCENARIO locked: " + this.lockName);
+                        logger.info("...SingletonScenario: SCENARIO locked: " + this.lockName);
                     } else {
-                        System.err.println("...SingletonScenario: STEP locked: " + this.lockName);
+                        logger.info("...SingletonScenario: STEP locked: " + this.lockName);
                     }
                     break;
                 } catch (Exception ex) {
@@ -691,7 +691,7 @@ public abstract class StepUtils {
                 Utils.threadSleep(10 * 1000, "...SingletonScenario:waiting for lock: " + this.lockName + "...");
             }
             if (!running) {
-                System.err.println("-->Exhausted SingletonScenario:waiting for lock: " + Utils.toDuration(TIMEOUT_DURATION));
+                logger.info("Exhausted SingletonScenario:waiting for lock: " + Utils.toDuration(TIMEOUT_DURATION));
             }
         }
 
@@ -709,10 +709,10 @@ public abstract class StepUtils {
                 if (this.isAlive()) {
                     this.interrupt();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception e) {
+                logger.warn("issue in releasing singleton scenario due to : " + e.getMessage());
             }
-            System.err.println("...SingletonScenario: lock is released: " + this.lockName);
+            logger.info("...SingletonScenario: lock is released: " + this.lockName);
         }
     }
 

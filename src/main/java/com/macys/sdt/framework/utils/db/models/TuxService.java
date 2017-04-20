@@ -1,6 +1,8 @@
 package com.macys.sdt.framework.utils.db.models;
 
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,6 +14,8 @@ import java.sql.SQLException;
  */
 public class TuxService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TuxService.class);
+
     /**
      * Check existence of marketplace_id in marketplace_attrib table
      *
@@ -20,12 +24,12 @@ public class TuxService {
      */
     public static Boolean isMkpReservationExists(String mkpReservationId) {
         Connection connection = DBUtils.setupDBConnection();
-        String selectQuery = "select * from marketplace_attrib where marketplace_id=" + mkpReservationId;
+        String selectQuery = String.format("select * from marketplace_attrib where marketplace_id=%s", mkpReservationId);
         try {
             ResultSet resultSet = connection.prepareStatement(selectQuery).executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
-            System.err.println("Failed to check mkpReservationId " + mkpReservationId + " existence in DB: " + e);
+            logger.error("Failed to check mkpReservationId " + mkpReservationId + " existence in DB: " + e.getMessage());
         }
         return false;
     }
@@ -37,13 +41,13 @@ public class TuxService {
      */
     public static void deleteMkpReservationRecord(String mkpReservationId) {
         Connection connection = DBUtils.setupDBConnection();
-        String deleteAttribute = "delete from marketplace_attrib where marketplace_id=" + mkpReservationId;
-        String deleteCartItem = "delete from cart_item where marketplace_id=" + mkpReservationId;
+        String deleteAttribute = String.format("delete from marketplace_attrib where marketplace_id=%s", mkpReservationId);
+        String deleteCartItem = String.format("delete from cart_item where marketplace_id=%s", mkpReservationId);
         try {
             connection.prepareStatement(deleteAttribute).executeUpdate();
             connection.prepareStatement(deleteCartItem).executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Failed to delete mkpReservation records for " + mkpReservationId +" from DB: " + e);
+            logger.error("Failed to delete mkpReservation records for " + mkpReservationId +" from DB: " + e.getMessage());
         }
     }
 }

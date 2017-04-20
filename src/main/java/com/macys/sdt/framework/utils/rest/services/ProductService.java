@@ -3,7 +3,7 @@ package com.macys.sdt.framework.utils.rest.services;
 import com.macys.sdt.framework.model.Product;
 import com.macys.sdt.framework.model.Promotion;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
-import com.macys.sdt.framework.utils.ObjectMapperProvidor;
+import com.macys.sdt.framework.utils.ObjectMapperProvider;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.db.models.OrderServices;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
@@ -12,6 +12,8 @@ import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import javax.ws.rs.core.MediaType;
@@ -20,6 +22,7 @@ import java.util.*;
 
 public class ProductService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     public static Map<String, String> checkoutHeaders = new HashMap<>();
 
@@ -36,7 +39,7 @@ public class ProductService {
             // We need to check these three parameter values to confirm the product is available for checkout or not
             return jsonResponse.getBoolean("active") && jsonResponse.getBoolean("live") && !jsonResponse.getBoolean("archived");
         } catch (JSONException e) {
-            System.err.println("Unable to get product information from FCC: " + e);
+            logger.error("Unable to get product information from FCC: " + e.getMessage());
         }
         return false;
     }
@@ -55,7 +58,7 @@ public class ProductService {
             for (int index = 0; index < jsonResponse.getJSONArray("upcs").length(); index++)
                 upcIds.add(((JSONObject) jsonResponse.getJSONArray("upcs").get(index)).getBigInteger("id").toString());
         } catch (JSONException e) {
-            System.err.println("Unable to get product information from FCC: " + e);
+            logger.error("Unable to get product information from FCC: " + e.getMessage());
         }
         return upcIds;
     }
@@ -86,7 +89,7 @@ public class ProductService {
             return true; // since there's no errors in response
         } catch (Exception e) {
             // assume error means product not available
-            System.err.println("Unable to get product availability from MST" + e);
+            logger.warn("Unable to get product availability from MST due to : " + e.getMessage());
         }
         return false;
     }
@@ -110,8 +113,8 @@ public class ProductService {
                 upcList.add(upcInfo);
             }
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
+        catch (Exception e) {
+            logger.warn("Unable to get all upc ids and BT status due to : " + e.getMessage());
         }
         return upcList;
     }
@@ -212,12 +215,12 @@ public class ProductService {
             Response response = RESTOperations.doGET(fullUrl, null);
             JSONArray promoProducts = new JSONArray(response.readEntity(String.class));
             String promoJSON = promoProducts.getJSONObject(new Random().nextInt(promoProducts.length())).toString();
-            Promotion promotion = ObjectMapperProvidor.getJsonMapper().readValue(promoJSON, Promotion.class);
+            Promotion promotion = ObjectMapperProvider.getJsonMapper().readValue(promoJSON, Promotion.class);
             Product p = new Product(promotion.productIds.get(0));
             p.promo = promotion;
             return p;
         } catch (Exception e) {
-            System.err.println("Unable to get or read data from SIM product service: " + e);
+            logger.error("Unable to get or read data from SIM product service: " + e.getMessage());
         }
         // fall back to DML product
         HashMap<String, Boolean> map = new HashMap<>();

@@ -7,6 +7,8 @@ import com.macys.sdt.framework.utils.db.utils.DBUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -15,6 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReturnService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReturnService.class);
+
     public Statement statement;
     public Connection connection;
 
@@ -37,7 +42,7 @@ public class ReturnService {
                 statement.executeUpdate(queries.getJSONObject("returns").get("delete_return_shipment").toString().replace("?", returnShipmentId));
             }
         } catch (SQLException | JSONException e) {
-            Assert.fail("deleteReturnRecord(): " + e);
+            Assert.fail("delete return record failed : " + e.getMessage());
         }
     }
 
@@ -110,7 +115,7 @@ public class ReturnService {
                 return resultSet.getString("USER_ID");
             }
         } catch (SQLException | JSONException e) {
-            System.err.println("Unable to get user ID for email: " + email);
+            logger.error("Unable to get user ID for email: " + email);
         }
         return null;
     }
@@ -129,7 +134,7 @@ public class ReturnService {
                 return resultSet.getString("BILLING_CONTACT");
             }
         } catch (SQLException | JSONException e) {
-            System.err.println("Unable to get billing contact ID from DB: " + e);
+            logger.error("Unable to get billing contact ID from DB: " + e.getMessage());
         }
         return null;
     }
@@ -208,7 +213,7 @@ public class ReturnService {
                     break;
             }
         } catch (SQLException | JSONException e) {
-            System.err.println("Unable to update return status: " + e);
+            logger.error("Unable to update return status: " + e.getMessage());
         }
     }
 
@@ -232,7 +237,7 @@ public class ReturnService {
             }
             return locationId;
         } catch (SQLException | JSONException e) {
-            System.err.println("Unable to get location id: " + e);
+            logger.error("Unable to get location id: " + e.getMessage());
         }
         return null;
     }
@@ -263,7 +268,7 @@ public class ReturnService {
             }
             return returnOrderInfo;
         } catch (SQLException | JSONException e) {
-            System.err.println("Unable to get return initiated order: " + e);
+            logger.error("Unable to get return initiated order: " + e.getMessage());
         }
         return null;
     }
@@ -291,21 +296,9 @@ public class ReturnService {
                 Assert.fail("ERROR - ENV Database returned nil for order number #{order_number}");
             }
         } catch (SQLException | JSONException e) {
-            System.err.println("Unable to get date of status update for order " + orderNumber);
+            logger.error("Unable to get date of status update for order " + orderNumber);
         }
         return date;
-    }
-
-
-    private void setupConnection() {
-        try {
-            if (statement == null) {
-                connection = DBUtils.setupDBConnection();
-                statement = connection.createStatement();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public Map getUserDetails(String orderNum) {
@@ -329,5 +322,19 @@ public class ReturnService {
             Assert.fail("Unable to found user details in db");
         }
         return userData;
+    }
+
+    /**
+     * setup db connection
+     */
+    private void setupConnection() {
+        try {
+            if (statement == null) {
+                connection = DBUtils.setupDBConnection();
+                statement = connection.createStatement();
+            }
+        } catch (SQLException e) {
+            logger.error("Error occurs while creating database connection : " + e.getMessage());
+        }
     }
 }

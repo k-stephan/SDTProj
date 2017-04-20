@@ -5,6 +5,8 @@ import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.db.utils.DBUtils;
 import org.json.JSONException;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,6 +15,8 @@ import java.sql.Statement;
 import java.util.Date;
 
 public class PromotionService extends StepUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(PromotionService.class);
 
     public Statement statement;
     public Date customDate;
@@ -80,7 +84,7 @@ public class PromotionService extends StepUtils {
                 Connection connection = DBUtils.setupDBConnection();
                 statement = connection.createStatement();
             } catch (Exception e) {
-                System.out.println("Error occurs while creating database connection" + e.getMessage());
+                logger.error("Error occurs while creating database connection : " + e.getMessage());
             }
         }
     }

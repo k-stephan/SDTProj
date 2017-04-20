@@ -24,8 +24,8 @@ public class ConvertedSteps extends StepUtils {
             Actions actions = new Actions(WebDriverManager.getWebDriver());
             actions.click().perform();
         } catch (DriverNotInitializedException e) {
-                Assert.fail("Driver not initialized");
-            }
+            Assert.fail("Driver not initialized");
+        }
     }
 
     /**

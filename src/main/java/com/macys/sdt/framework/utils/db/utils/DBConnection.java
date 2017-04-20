@@ -26,7 +26,8 @@ public class DBConnection {
                 con = null;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("error in closing db connection : " + e.getMessage());
+            logger.trace("db connection close error : " + e);
         }
     }
 

@@ -98,7 +98,7 @@ public class AnalyticsUtils {
             harBuffer = entries;
             RunConfig.analytics.analyze(ScenarioHelper.getScenarioInfo(), step, entries, ScenarioHelper.getLastStepResult());
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            logger.trace("collect analytics data issue : " + ex);
             Assert.fail(RunConfig.analytics.getClass().getSimpleName() + " test failed: " + ex.getMessage());
         }
     }
@@ -125,7 +125,7 @@ public class AnalyticsUtils {
         try {
             RunConfig.analytics.flush(ScenarioHelper.isScenarioPassed());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug("issue in flushing analytics data due to : " + e.getMessage());
         }
     }
 
@@ -140,7 +140,7 @@ public class AnalyticsUtils {
             har.writeTo(new File(ScenarioHelper.scenario.getName() + "." + ScenarioHelper.getScenarioIndex() + ".har"));
             return har;
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            logger.warn("get HAR issue : " + ex.getMessage());
             return null;
         }
     }

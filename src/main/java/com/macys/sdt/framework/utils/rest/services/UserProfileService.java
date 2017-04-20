@@ -6,7 +6,7 @@ import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.RunConfig;
-import com.macys.sdt.framework.utils.ObjectMapperProvidor;
+import com.macys.sdt.framework.utils.ObjectMapperProvider;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
@@ -45,16 +45,16 @@ public class UserProfileService {
             headers.put("x-macys-webservice-client-id", macys() ? RESTEndPoints.MCOM_API_KEY : RESTEndPoints.BCOM_API_KEY);
             Response response = RESTOperations.doPOST(getServiceURL(v1), MediaType.APPLICATION_XML,
                     userProfileXml, headers);
-            System.out.println("response : " + response);
+            logger.info("create user profile response : " + response);
             String entity = response.readEntity(String.class);
             Assert.assertEquals(v1 ? 200 : 201, response.getStatus());
             logger.info("User profile created successfully");
-            User user = ObjectMapperProvidor.getXmlMapper().readValue(v1 ? entity : userProfileXml, User.class);
+            User user = ObjectMapperProvider.getXmlMapper().readValue(v1 ? entity : userProfileXml, User.class);
             UserProfile profile = new UserProfile(user, null);
             TestUsers.setCurrentCustomer(profile);
             return profile;
         } catch (Exception e) {
-            logger.error("error creating user profile", e.getCause());
+            logger.error("error creating user profile : ", e.getCause());
             Assert.fail(e.getMessage());
         }
         return null;
@@ -79,7 +79,7 @@ public class UserProfileService {
             throw new EnvException("BCOM Environments do not support the user service");
         }
         try {
-            String createUserProfileDetail = ObjectMapperProvidor.getXmlMapper().writeValueAsString(profile.getUser());
+            String createUserProfileDetail = ObjectMapperProvider.getXmlMapper().writeValueAsString(profile.getUser());
             UserProfile createdProfile = createUserProfile(createUserProfileDetail, v1);
             if (createdProfile == null) {
                 logger.error("Error creating profile.");

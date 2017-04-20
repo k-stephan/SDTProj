@@ -7,14 +7,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Categories {
+
+    private static final Logger logger = LoggerFactory.getLogger(Categories.class);
+
     private static final String SERVICE_ENDPOINT = "catalog/v2/categories/";
     private static final int MAX_ACTIVE_CATEGORY_LIMIT = 1000;
     private static boolean useParasoftHost = true;
-    private static final Logger logger = LoggerFactory.getLogger(Categories.class);
 
     public static JSONObject category(String cat) {
         JSONObject jsonResponse = null;
@@ -28,13 +31,15 @@ public class Categories {
         headers.put("X-Macys-ClientId", "NavApp");
         headers.put("X-Macys-Customer-Id", "1234");
         headers.put("X-Macys-RequestId", "123456");
-        if (RunConfig.debugMode){
-            logger.info("--> Service Request URL: -> "+serviceUrl);
-            logger.info("--> Headers: -> "+headers.toString());
+        if (RunConfig.debugMode) {
+            logger.info("--> Service Request URL: -> " + serviceUrl);
+            logger.info("--> Headers: -> " + headers.toString());
         }
         try {
             jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class)).getJSONObject("category");
-        }catch (JSONException e){System.out.println("Unable to get information for cat id : "+cat);}
+        } catch (JSONException e) {
+            logger.warn("Unable to get information for cat id : " + cat);
+        }
         return jsonResponse;
     }
 
@@ -44,7 +49,7 @@ public class Categories {
         params.put("pageNumber", "1");
         params.put("countryCode", "US");
         params.put("deviceType", "DESKTOP");
-        if (otherParams != null ) {
+        if (otherParams != null) {
             params.putAll(otherParams);
         }
         String serviceUrl = "http://" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080/api/catalog/v2/categories/" + categoryId + "/products?_offset=" + params.get("pageNumber") + "&_limit=" + params.get("productsPerPage") + "&_sortby=ORIGINAL&sdpGrid=primary&returnNavigationProductPool=true&_deviceType=" + params.get("deviceType") + "&_shoppingMode=SITE&_regionCode=" + params.get("countryCode") + "&_application=SITE&_navigationType=BROWSE&matchAll=false&_customerExperiment=NO_EXPERIMENT";
@@ -65,14 +70,16 @@ public class Categories {
         headers.put("X-Macys-ClientId", "NavApp");
         headers.put("X-Macys-Customer-Id", "1234");
         headers.put("X-Macys-RequestId", "123456");
-        if (RunConfig.debugMode){
-            logger.info("--> Service Request URL: -> "+serviceUrl);
-            logger.info("--> Headers: -> "+headers.toString());
+        if (RunConfig.debugMode) {
+            logger.info("--> Service Request URL: -> " + serviceUrl);
+            logger.info("--> Headers: -> " + headers.toString());
         }
         try {
             jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class));
             status = jsonResponse.getJSONObject("category").getBoolean("live");
-        }catch (JSONException e){System.out.println("Unable to find the status for cat id: "+cat);}
+        } catch (JSONException e) {
+            logger.warn("Unable to find the status for cat id: " + cat);
+        }
         return status;
     }
 

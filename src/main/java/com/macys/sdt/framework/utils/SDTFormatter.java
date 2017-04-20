@@ -8,6 +8,8 @@ import gherkin.formatter.Formatter;
 import gherkin.formatter.NiceAppendable;
 import gherkin.formatter.Reporter;
 import gherkin.formatter.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ import java.util.Map;
 
 
 public class SDTFormatter implements Reporter, Formatter {
+
+    private static final Logger logger = LoggerFactory.getLogger(SDTFormatter.class);
+
     private final List<Map<String, Object>> featureMaps = new ArrayList<>();
     private final NiceAppendable out;
 
@@ -104,7 +109,7 @@ public class SDTFormatter implements Reporter, Formatter {
     @Override
     public void result(Result result) {
         if (!result.getStatus().equals("passed") && !RunConfig.dryRun) {
-            System.err.println(" --> " + result.getStatus().toUpperCase());
+            logger.info("run status " + result.getStatus().toUpperCase());
         }
         HashMap<String, Object> map = new HashMap<>(result.toMap());
         if (!RunConfig.dryRun && !result.getStatus().equals("passed")) {
@@ -208,20 +213,12 @@ public class SDTFormatter implements Reporter, Formatter {
     }
 
     private List<Map> getAllExamples() {
-        List<Map> allExamples = getFeatureElement().get("examples");
-        if (allExamples == null) {
-            allExamples = new ArrayList<>();
-            getFeatureElement().put("examples", allExamples);
-        }
+        List<Map> allExamples = getFeatureElement().computeIfAbsent("examples", k -> new ArrayList<>());
         return allExamples;
     }
 
     private List<Map> getSteps() {
-        List<Map> steps = getFeatureElement().get("steps");
-        if (steps == null) {
-            steps = new ArrayList<>();
-            getFeatureElement().put("steps", steps);
-        }
+        List<Map> steps = getFeatureElement().computeIfAbsent("steps", k -> new ArrayList<>());
         return steps;
     }
 
@@ -237,7 +234,7 @@ public class SDTFormatter implements Reporter, Formatter {
     private List<String> getOutput() {
         List<String> output = (List<String>) getCurrentStep(Phase.output).get("output");
         if (output == null) {
-            output = new ArrayList<String>();
+            output = new ArrayList<>();
             getCurrentStep(Phase.output).put("output", output);
         }
         return output;

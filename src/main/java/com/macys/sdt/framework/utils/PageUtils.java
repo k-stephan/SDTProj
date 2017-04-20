@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +17,13 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.utils.PageElement.getResponsivePath;
-import static com.macys.sdt.framework.utils.Utils.logger;
 
 /**
  * This class pulls and manages data from page and panel JSON files
  */
 public class PageUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(PageUtils.class);
 
     /**
      * This store paths and JSON values of the JSON page and panels present in the project
@@ -203,8 +206,8 @@ public class PageUtils {
             pageJson = new JSONObject(Utils.readTextFile(file));
         } catch (IOException | JSONException e) {
            logger.error("-->Error parsing json at PageUtils.loadPageJSON() for page: " + file.getAbsolutePath());
-            e.printStackTrace();
-            return;
+           logger.debug("error parsing json: " + e);
+           return;
         }
 
         // put new DataFile entry
@@ -242,7 +245,7 @@ public class PageUtils {
                     loadPageJSON(panelPath);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                logger.warn("issue in loading json : " + e.getMessage());
             }
         }
     }
@@ -384,7 +387,7 @@ public class PageUtils {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.warn("issue in check page's included panels for give element : " + e.getMessage());
             }
         }
         return null;

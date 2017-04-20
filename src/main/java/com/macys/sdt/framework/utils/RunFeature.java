@@ -24,7 +24,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
- *  This class is the entry point for EE
+ * This class is the entry point for EE
  */
 public class RunFeature {
     private static final String m_version = "1a.0001";
@@ -35,7 +35,7 @@ public class RunFeature {
     private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
 
     public RunFeature() throws Throwable {
-        
+
         int remoteDebugDelay = Utils.parseInt(System.getenv("REMOTE_DEBUG_DELAY"), 0);
         if (remoteDebugDelay > 0) {
             Utils.threadSleep(remoteDebugDelay * 1000, "Remote debug delay:" + remoteDebugDelay);
@@ -49,7 +49,7 @@ public class RunFeature {
         this.cleanWorkSpace();
         this.dumpEnvironmentVariables();
 
-        logger.info("\n\nPreparing workspace...");
+        logger.info("Preparing workspace...");
         Utils.extractResources(this.m_repo_jar, this.m_workspace, System.getenv("sdt_project").trim().replace(".", "/"));
 
         if (RunConfig.scenarios != null) {
@@ -59,10 +59,11 @@ public class RunFeature {
         getAnalyticsGolds();
 
         try {
-            logger.trace("\n\nInitializing MainRunner()...");
+            logger.info("\n\nInitializing MainRunner()...");
             MainRunner.main(null);
         } catch (Throwable th) {
-            th.printStackTrace();
+            logger.error("issue in executing MainRunner main() due to : " + th.getMessage());
+            logger.debug("issue in running MainRunner main() : " + th);
         }
         this.archive();
         System.exit(MainRunner.runStatus);
@@ -79,7 +80,8 @@ public class RunFeature {
                 new ProcessWatchDog();
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.error("issue in executing RunFeature main() due to : " + e.getMessage());
+            logger.debug("issue in running MainRunner main() : " + e);
         }
     }
 
@@ -96,32 +98,41 @@ public class RunFeature {
             if (result.equals("ABORTED")) {
                 return true;
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            logger.error("issue in checkAborted due to : " + e.getMessage());
+            logger.debug("issue in running checkAborted : " + e);
         }
         return false;
     }
 
     public static String getBuildConsole(String jobBuildLink) {
-        logger.info("getBuildConsole():" + jobBuildLink);
+        logger.info("get Build Console : " + jobBuildLink);
         String console = "console is not available...";
         try {
             console = "<pre>" + Utils.httpGet(jobBuildLink + "/logText/progressiveHtml", null) + "</pre>";
-            //			System.out.println(Jsoup.parse(console).text());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            //			logger.info(Jsoup.parse(console).text());
+        } catch (Exception e) {
+            logger.error("issue to get build console due to : " + e.getMessage());
+            logger.debug("issue to get build console : " + e);
         }
         return console;
     }
 
-    public static void downloadGold(String url, File fgolds, String goldName) {
+    /**
+     * download gold file from given url and set in the specified file path
+     *
+     * @param url          url to download gold file from
+     * @param goldFilepath file path to save the retrieved gold file
+     * @param goldFileName gold file name to store the gold file
+     */
+    public static void downloadGold(String url, File goldFilepath, String goldFileName) {
         try {
-            logger.info("downloading from:" + url);
+            logger.info("downloading gold file from: " + url);
             String data = Utils.httpGet(url, null);
-            logger.info("received :" + data.length() + " bytes");
-            Utils.writeBinaryFile(data.getBytes(), new File(fgolds.getCanonicalPath() + "/" + goldName), false);
-        } catch (Exception ex) {
-            logger.info("downloadGolds():Cannot download gold:" + url);
+            logger.info("received : " + data.length() + " bytes");
+            Utils.writeBinaryFile(data.getBytes(), new File(goldFilepath.getCanonicalPath() + "/" + goldFileName), false);
+        } catch (Exception e) {
+            logger.warn("Cannot download gold from url: " + url + "due to : " + e.getMessage());
         }
     }
 
@@ -136,12 +147,12 @@ public class RunFeature {
                 if (f.getName().equals(this.m_repo_jar.getName())) {
                     continue;
                 }
-                logger.info(" removing " + f.getPath());
+                logger.info("removing " + f.getPath());
                 if (f.isDirectory()) {
                     try {
                         FileUtils.cleanDirectory(f);
                     } catch (IOException iex) {
-                        logger.error("Cannot clean " + f.getPath() + ":" + iex.getMessage());
+                        logger.error("Cannot clean " + f.getPath() + " : " + iex.getMessage());
                         continue;
                     }
                 }
@@ -149,18 +160,24 @@ public class RunFeature {
                     logger.error("Failed to delete file: " + f.getPath());
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            logger.error("issue in cleaning workspace due to : " + e.getMessage());
+            logger.debug("issue in cleaning workspace : " + e);
         }
     }
 
+    /**
+     * get analytics gold file
+     */
     public void getAnalyticsGolds() {
         String analytics = RunConfig.getEnvOrExParam("analytics");
         if (analytics == null) {
             logger.info("non analytics run: skip analytics gold download.");
             return;
+        } else {
+            logger.info("analytics : " + analytics);
         }
-        logger.info("dowloading golds...");
+        logger.info("downloading golds...");
         File goldDir = Utils.createDirectory(this.m_workspace + "/golds");
         String url = "http://" + System.getenv("EE") + "/getAnalyticsGold/" + analytics + "/";
         String global = RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json";
@@ -172,15 +189,15 @@ public class RunFeature {
             if (featureMap != null) {
                 try {
                     String goldName = Analytics.getGoldName(featureMap);
-                    logger.info("dowloading golds:" + goldName);
+                    logger.info("downloading golds: " + goldName);
                     downloadGold(url + goldName, goldDir, goldName);
                 } catch (Exception ex) {
-                    logger.info("Cannot download gold:" + feature + ":" + ex.getMessage());
-                    logger.info(featureMap.toString());
-                    ex.printStackTrace();
+                    logger.info("Cannot download gold: " + feature + " : " + ex.getMessage());
+                    logger.info("features : " + featureMap.toString());
+                    logger.debug("issue : " + ex);
                 }
             } else {
-                logger.info("Cannot download gold:" + feature);
+                logger.info("Cannot download gold : " + feature);
             }
         }
     }
@@ -243,8 +260,9 @@ public class RunFeature {
                         logger.info("==> " + res);
                     }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception e) {
+                logger.error("issue in archiving logs due to : " + e.getMessage());
+                logger.debug("issue in archiving logs : " + e);
             }
 
             return;
@@ -270,7 +288,7 @@ public class RunFeature {
     }
 
     public void sendToServer(File ftempPushtar, File fpushed) throws Exception {
-        logger.info("pushing log.tar:" + ftempPushtar.getCanonicalPath());
+        logger.info("pushing log.tar: " + ftempPushtar.getCanonicalPath());
         HashMap<String, String> hparams = new HashMap<>();
         hparams.put("file_name", "builds/" + InetAddress.getLocalHost().getHostAddress() + "." + ftempPushtar.getName());
         hparams.put("last_modified", ftempPushtar.lastModified() + "");
@@ -285,8 +303,8 @@ public class RunFeature {
                 Utils.post(client, this.m_eeURL, hparams, cookies, result);
                 return;
             } catch (Exception ex) {
-                ex.printStackTrace();
-                Utils.threadSleep(5000, "Failed post log to EE.  Try again in 5 seconds...:" + i);
+                logger.error("issue in post to server : " + ex.getMessage());
+                Utils.threadSleep(5000, "Failed post log to EE.  Try again in 5 seconds...: " + i);
             }
         }
     }
@@ -331,7 +349,7 @@ public class RunFeature {
                 if (m_fpushed != null && !m_fpushed.delete()) {
                     logger.error("Unable to delete fPushed file");
                 }
-                ex.printStackTrace();
+                logger.error("issue due to " + ex.getMessage());
             }
         }
 
@@ -360,14 +378,14 @@ public class RunFeature {
                         throw new Exception(result.toString());
                     }
                     total += read;
-                    System.out.print(".");
+                    logger.info(".");
                     Utils.threadSleep(200, null);
                 }
 
                 hparams.put("append", "close");
                 hparams.remove("file_data");
                 this.m_runFeature.postToServer(hparams, cookies, result);
-                logger.info("File uploaded:" + flogTar.getCanonicalPath() + ":" + total + ":" + hparams.get("file_name") + "\n" + hparams);
+                logger.info("File uploaded: " + flogTar.getCanonicalPath() + ":" + total + ":" + hparams.get("file_name") + "\n" + hparams);
                 if (!flogTar.delete()) {
                     logger.error("Unable to delete log tar file");
                 }
@@ -380,7 +398,7 @@ public class RunFeature {
                         fis.close();
                     }
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    logger.error("issue in closing file due to : " + ex.getMessage());
                 }
             }
         }

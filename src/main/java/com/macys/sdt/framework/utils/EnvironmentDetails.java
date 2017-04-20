@@ -33,7 +33,7 @@ public class EnvironmentDetails {
     private static boolean printOnFinish = false;
 
     private static JSONObject servicesJson;
-    private static final Logger log = LoggerFactory.getLogger(EnvironmentDetails.class);
+    private static final Logger logger = LoggerFactory.getLogger(EnvironmentDetails.class);
 
     private EnvironmentDetails() {
     }
@@ -129,11 +129,11 @@ public class EnvironmentDetails {
                 releaseDate = siteInfo.select("releasedate").html();
                 version = siteInfo.select("version").html();
                 if (printOnFinish) {
-                    log.info(getDetails());
+                    logger.info(getDetails());
                     printOnFinish = false;
                 }
             } catch (Exception e) {
-                System.err.println("Unable to get environment details from " + env);
+                logger.error("Unable to get environment details from " + env);
             }
             try {
                 // services data
@@ -141,7 +141,7 @@ public class EnvironmentDetails {
                 servicesJson = new JSONObject(Utils.httpGet(serviceUrl, null));
                 ready = true;
             } catch (Exception e) {
-                System.err.println("Unable to get server details for " + env);
+                logger.error("Unable to get server details for " + env);
             }
         });
         t.setName("EnvironmentDetails");
@@ -150,7 +150,7 @@ public class EnvironmentDetails {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                System.err.println("Interrupted while waiting for env details request to return");
+                logger.error("Interrupted while waiting for env details request to return");
             }
         }
     }
@@ -178,7 +178,7 @@ public class EnvironmentDetails {
                 t.join();
                 return true;
             } catch (InterruptedException e) {
-                System.err.println("Interrupted while waiting for env details request to return");
+                logger.error("Interrupted while waiting for env details request to return");
                 return false;
             }
         }
@@ -226,11 +226,10 @@ public class EnvironmentDetails {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("issue in returning my services application details due to : " + e.getMessage());
         }
 
         return appDetails;
-
     }
 
     /**
@@ -268,11 +267,10 @@ public class EnvironmentDetails {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("issue in returning application details due to : " + e.getMessage());
         }
 
         return appDetails;
-
     }
 
     /**
@@ -314,7 +312,7 @@ public class EnvironmentDetails {
             String[] split = url.getHost().split("\\.");
             return split[0].matches("www|m|m2qa1") ? split[1] : split[0];
         } catch (MalformedURLException e) {
-            System.err.println("Unable to get environment details");
+            logger.error("Unable to get environment details");
             return null;
         }
     }

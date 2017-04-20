@@ -31,7 +31,8 @@ public class RESTOperations {
             logger.info("request payload : " + requestPayload);
             response = webTarget.request(mediaType).post(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST POST call : " + e.getMessage());
+            logger.trace("REST POST call error : " + e);
         }
         return response;
     }
@@ -59,7 +60,8 @@ public class RESTOperations {
             }
             response = requestBuilder.post(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST POST call : " + e.getMessage());
+            logger.trace("REST POST call error : " + e);
         }
         return response;
     }
@@ -78,7 +80,8 @@ public class RESTOperations {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             response = webTarget.request().get();
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST GET call : " + e.getMessage());
+            logger.trace("REST GET call error : " + e);
         }
         return response;
     }
@@ -103,7 +106,8 @@ public class RESTOperations {
             }
             response = requestBuilder.get();
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST GET call : " + e.getMessage());
+            logger.trace("REST GET call error : " + e);
         }
         return response;
     }
@@ -122,7 +126,8 @@ public class RESTOperations {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             response = webTarget.request().delete();
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST DELETE call : " + e.getMessage());
+            logger.trace("REST DELETE call error : " + e);
         }
         return response;
     }
@@ -147,7 +152,8 @@ public class RESTOperations {
             }
             response = requestBuilder.delete();
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST DELETE call : " + e.getMessage());
+            logger.trace("REST DELETE call error : " + e);
         }
         return response;
     }
@@ -169,7 +175,8 @@ public class RESTOperations {
             logger.info("request payload : " + requestPayload);
             response = webTarget.request(mediaType).put(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST PUT call : " + e.getMessage());
+            logger.trace("REST PUT call error : " + e);
         }
         return response;
     }
@@ -197,7 +204,8 @@ public class RESTOperations {
             }
             response = requestBuilder.put(Entity.entity(requestPayload, mediaType));
         } catch (Exception e) {
-            logger.error("error in REST call : " + e.toString());
+            logger.error("error in REST PUT call : " + e.getMessage());
+            logger.trace("REST PUT call error : " + e);
         }
         return response;
     }

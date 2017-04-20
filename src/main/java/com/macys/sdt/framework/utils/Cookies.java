@@ -188,6 +188,7 @@ public class Cookies {
             Navigate.execJavascript("document.cookie = '" + name + "=" + encodedValue + "'");
             return true;
         } catch (Exception e) {
+            logger.warn("issue in add or replace cookie using js : " + e.getMessage());
             return false;
         }
     }
@@ -215,6 +216,7 @@ public class Cookies {
             Navigate.execJavascript("document.cookie = '" + name + "=" + encodedValue + "; path=" + path + "; expires=" + expiry.toString() + "; domain=" + domain + "'");
             return true;
         } catch (Exception e) {
+            logger.warn("issue in add or replace cookie using js : " + e.getMessage());
             return false;
         }
     }
