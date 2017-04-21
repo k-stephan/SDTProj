@@ -66,6 +66,8 @@ public class RunConfig {
      * True if using header file
      */
     public static boolean useHeaders = booleanParam("use_headers");
+
+    public static String userAgent = getEnvOrExParam("user_agent");
     /**
      * Map of all headers and their values
      */
@@ -525,6 +527,10 @@ public class RunConfig {
     }
 
     private static void getHeaders() {
+        if (userAgent != null) {
+            headers.put("User-Agent", userAgent);
+            useProxy = true;
+        }
         if (!useHeaders) {
             return;
         }
@@ -538,6 +544,10 @@ public class RunConfig {
             for (String key : headerJSON.keySet()) {
                 Object o = headerJSON.get(key);
                 if (o instanceof String) {
+                    // don't overwrite user-agent if we already have it from user-agent arg
+                    if (key.equals("User-Agent") && headers.containsKey("User-Agent")) {
+                        continue;
+                    }
                     headers.put(key, (String) headerJSON.get(key));
                 } else {
                     logger.warn("Bad header: " + key);
