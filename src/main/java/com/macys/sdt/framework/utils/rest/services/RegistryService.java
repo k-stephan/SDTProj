@@ -14,6 +14,8 @@ import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
+import org.json.JSONObject;
+import org.json.XML;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,12 @@ public class RegistryService {
             logger.info("response : " + response);
             Assert.assertEquals(response.getStatus(), 200);
             logger.info("User Registry created successfully");
+
+            JSONObject jsonResponse = XML.toJSONObject(response.readEntity(String.class));
+            registry.setId(((JSONObject) jsonResponse.get("registry")).get("id").toString());
+            UserProfile userProfile = TestUsers.getCustomer(null);
+            userProfile.setRegistry(registry);
+
             return registry;
         } catch (JsonProcessingException e) {
             logger.error("error creating registry", e.getCause());
@@ -94,7 +102,7 @@ public class RegistryService {
         Registry serviceCopy = Registry.getRegistryServiceRegistry(registry);
         serviceCopy = RegistryService.createRegistry(serviceCopy, user.getTokenCredentials().getToken());
         Assert.assertNotNull(serviceCopy);
-        return registry;
+        return serviceCopy;
     }
 
     private static String getServiceURL() {

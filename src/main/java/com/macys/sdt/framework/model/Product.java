@@ -23,7 +23,7 @@ public class Product {
     public boolean registryItem, normalItem, parentProductId, available, orderable, masterAvailable, bopsAvailable,
             prodAvailable, bopsEligible, bigTicket, fitPredictorEligible, categoryBreadcrumb, beautyItem, giftCard,
             electronicGiftCard, masterProduct, ishipEligible, clickToCall, availableInStore, sddEligible, hasColor,
-            sddAvailable, hasWarranty, giftWrappable, giftMessageable, tuxItem;
+            sddAvailable, hasWarranty, giftWrappable, giftMessageable, tuxItem, virtualGiftCard;
     public Promotion promo;
     // attributes with unknown types:
     // product_images, color_swatch_images, promotions, default_image
@@ -126,6 +126,8 @@ public class Product {
                 return "giftCard";
             case "electronic_gift_card":
                 return "electronicGiftCard";
+            case "virtual_gift_card":
+                return "virtualGiftCard";
             case "iship_eligible":
                 return "ishipEligible";
             case "click_to_call":
