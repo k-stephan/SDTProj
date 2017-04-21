@@ -439,7 +439,7 @@ class WebDriverConfigurator {
             if (tunnelIdentifier != null) {
                 if (tunnelIdentifier.equalsIgnoreCase("parent")) {
                     capabilities.setCapability("tunnel-identifier", "macysParentTunnel");
-                    capabilities.setCapability("parentTunnel", "satish-macys");
+                    capabilities.setCapability("parentTunnel", "macys-parent");
                     logger.info("Using sauce connect tunnel: macysParentTunnel");
                 } else {
                     capabilities.setCapability("tunnel-identifier", tunnelIdentifier);
