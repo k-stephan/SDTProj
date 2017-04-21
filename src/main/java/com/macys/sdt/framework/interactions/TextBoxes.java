@@ -89,7 +89,7 @@ public class TextBoxes {
             element.clear();
             element.sendKeys(text);
 
-            if (StepUtils.safari()) {
+            if (StepUtils.safari() || RunConfig.useAppium) {
                 try {
                     element.submit();
                 } catch (Exception e) {
