@@ -73,10 +73,17 @@ class WebDriverConfigurator {
 
         Assert.assertNotNull("ERROR - SCRIPT : Driver should have been initialized by now ", driver);
 
-        if (!remoteOS.equals("Linux") && !appTest) {
-            WebDriver.Timeouts to = driver.manage().timeouts();
-            to.pageLoadTimeout(timeout, TimeUnit.SECONDS);
-            to.setScriptTimeout(timeout, TimeUnit.SECONDS);
+        try {
+            if (!remoteOS.equals("Linux") && !appTest) {
+
+                // timeout is throwing error with firefox version 53.0 hence wrapped in try catch
+                WebDriver.Timeouts to = driver.manage().timeouts();
+                to.pageLoadTimeout((long) timeout, TimeUnit.SECONDS);
+                to.setScriptTimeout((long) timeout, TimeUnit.SECONDS);
+            }
+        } catch (Exception e) {
+            logger.warn("issue in setting timeout");
+            logger.debug("set timeout issue : " + e);
         }
 
         return driver;
@@ -457,7 +464,7 @@ class WebDriverConfigurator {
                 try {
                     // depending on firefox version, marionette is set
                     if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta"))) {
-                        capabilities.setCapability("seleniumVersion", "3.0.1");
+                        capabilities.setCapability("seleniumVersion", "3.3.1");
                         capabilities.setCapability("marionette", true);
                     } else if (browserVersion != null && browserVersion.compareTo("48.0") < 0) {
                         capabilities.setCapability("marionette", false);

@@ -55,7 +55,7 @@ public class RunFeature {
         if (RunConfig.scenarios != null) {
             RunConfig.scenarios = RunConfig.scenarios.replaceAll("features/", System.getenv("sdt_project").trim().replace(".", "/") + "/features/");
         }
-        logger.info("\n\n.getAnalyticsGolds");
+        logger.info("get Analytics Golds...");
         getAnalyticsGolds();
 
         try {
