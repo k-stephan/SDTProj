@@ -46,10 +46,27 @@ public class ScenarioHelper {
         MainRunner.URLStack = new ArrayList<>();
     }
 
+    /**
+     * increment cucumber related background step count index
+     */
     public static void incrementBackgroundStepCount() {
         backgroundStepCount++;
     }
 
+    /**
+     * get the number of background steps
+     *
+     * @return background steps count
+     */
+    public static int getBackgroundStepCount()  {
+        return backgroundStepCount;
+    }
+
+    /**
+     * To check if current step is in cucumber background or normal execution
+     *
+     * @return true if the step is cucumber background
+     */
     public static boolean isBackground() {
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
         for (StackTraceElement element : stack) {
