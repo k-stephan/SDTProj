@@ -208,7 +208,9 @@ public class Utils {
     public static String getScenarioShaKey(String feature, String scenario) {
         String path = (feature + scenario).replaceAll("\\s", "");
         String key = DigestUtils.sha256Hex(path);
-        logger.error("...key generation: " + path + " : " + key);
+        logger.info("key generation ...");
+        logger.info("Scenario path: " + path);
+        logger.info("Scenario ShaKey: " + key);
         return key;
     }
 

@@ -53,7 +53,7 @@ public class Wait {
             wait.until((WebDriver driver) -> condition.getAsBoolean());
             return true;
         } catch (Exception ex) {
-            logger.debug(ex.getMessage());
+            logger.debug("issue in until condition : " + ex.getMessage());
             return false;
         }
     }
@@ -80,7 +80,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception ex) {
-            logger.debug("-->Error:untilElementNotPresent(): " + selector.toString() + ": " + ex.getMessage());
+            logger.debug("issue in until an element " + selector.toString() + " no longer present " + ex.getMessage());
             return false;
         }
     }
@@ -97,7 +97,7 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfAllElements(list));
             return true;
         } catch (Exception ex) {
-            logger.warn("Unable to ensure if elements are no longer present due to " + ex.getMessage());
+            logger.debug("Unable to ensure if elements are no longer present due to " + ex.getMessage());
             return false;
         }
     }
@@ -225,10 +225,10 @@ public class Wait {
             WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), seconds);
             wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
             return true;
-        } catch (Exception ex) {
+        } catch (Exception e) {
             logger.debug(Utils.listToString(Utils.getCallFromFunction(
                     "secondsUntilElementPresent"), "\n\t ", null) + ": " + selector.toString());
-            logger.error(ex.getMessage());
+            logger.warn("issue in waiting for element due to : " + e.getMessage());
             return false;
         }
     }
@@ -259,9 +259,8 @@ public class Wait {
             WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), seconds);
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
-        } catch (Exception ex) {
-            logger.debug("Element targeted by selector: " + selector.toString());
-            logger.error(ex.getMessage());
+        } catch (Exception e) {
+            logger.warn(String.format("issue in waiting for element %s to not be present : %s ", selector.toString(), e.getMessage()));
             return false;
         }
     }
@@ -321,8 +320,8 @@ public class Wait {
                     return;
                 }
             }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
+        } catch (Exception e) {
+            logger.warn("error in click element with refresh due to : " + e.getMessage());
         }
     }
 
@@ -424,7 +423,7 @@ public class Wait {
                     return animationDone() && ajaxDone() && isPageLoaded();
                 } catch (Exception e) {
                     // IE likes to throw a lot of garbage exceptions, don't bother printing them out
-                    if (RunConfig.debugMode && !StepUtils.ie() && !StepUtils.safari()) {
+                    if (!StepUtils.ie() && !StepUtils.safari()) {
                         logger.debug("Exception while checking for page ready : " + e.getMessage());
                     }
                     return false;
@@ -460,6 +459,7 @@ public class Wait {
             return true;
         }
         Object done = Navigate.execJavascript("return $(\":animated\").length == 0;");
+        logger.trace("animation done js response : " + done);
         return done instanceof Boolean ? (Boolean) done : true;
     }
 
@@ -470,7 +470,7 @@ public class Wait {
      */
     public static boolean isPageLoaded() {
         String state = (String) Navigate.execJavascript("return document.readyState;");
-        //System.out.print("." + ret);
+        logger.trace("document ready state : " + state);
         return state.matches("complete|loaded|interactive");
     }
 
@@ -488,6 +488,7 @@ public class Wait {
 
             //below script returns either string or long value, so fetching the results conditionally to avoid type cast error
             Object jsResponse = Navigate.execJavascript("return jQuery.active;");
+            logger.trace("response for jQuery active : " + jsResponse);
             Long queries;
 
             if (jsResponse instanceof Long) {
@@ -500,7 +501,7 @@ public class Wait {
                 logger.trace("Unable to get num ajax calls!");
                 return true;
             }
-            //System.out.print("." + queries + " AJAX");
+            //logger.info("." + queries + " AJAX");
 
             // TEMPORARY - currently a bug in BCOM sign in, checkout, MEW search and MCOM VGC PDP page that leaves AJAX calls hanging
             WebDriverManager.getCurrentUrl();
@@ -525,7 +526,7 @@ public class Wait {
     /**
      * Wait for an element to appear and then disappear again (such as a loading symbol)
      *
-     * @param selector By selector to use
+     * @param selector element path in format "page_name.element_name"
      */
     public static void forLoading(String selector) {
         forLoading(Elements.element(selector));
@@ -537,11 +538,17 @@ public class Wait {
      * @param selector By selector to use
      */
     public static void forLoading(By selector) {
+        logger.trace("selector used to verify for loading : " + selector);
         untilElementPresent(selector);
         untilElementNotPresent(selector);
     }
 
-    private static String getPageText() {
+    /**
+     * get page text
+     *
+     * @return page text content
+     */
+    public static String getPageText() {
         try {
             return Navigate.execJavascript("return document.body.textContent").toString();
         } catch (Exception ex) {
