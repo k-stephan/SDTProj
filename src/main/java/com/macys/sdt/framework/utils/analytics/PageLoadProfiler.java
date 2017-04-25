@@ -23,7 +23,7 @@ public class PageLoadProfiler {
         lastUrl = MainRunner.currentURL;
     }
 
-    public static void stopTimer() {
+    public static void stopAndReport() {
         if (MainRunner.currentURL.equals(lastUrl)) {
             lastLoadTime = 0;
         } else {

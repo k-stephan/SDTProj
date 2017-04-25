@@ -197,7 +197,10 @@ public class MainRunner {
         Navigate.addAfterNavigation(WebDriverManager::getCurrentUrl);
         Navigate.addAfterNavigation(PageHangWatchDog::resetWatchDog);
         Navigate.addAfterNavigation(Wait::setWaitDone);
-        Navigate.addAfterNavigation(PageLoadProfiler::stopTimer);
+        Navigate.addAfterNavigation(PageLoadProfiler::stopAndReport);
+        if (efcKey != null) {
+            Navigate.addAfterNavigation(StepUtils::setEFCKey);
+        }
     }
 
     /**

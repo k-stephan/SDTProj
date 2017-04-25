@@ -28,9 +28,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.runner.RunConfig.appTest;
 
@@ -311,6 +315,28 @@ public abstract class StepUtils {
         }
 
         WebDriverManager.closeAlert();
+    }
+
+    private static String lastUrl = "";
+
+    public static void setEFCKey() {
+        if (!lastUrl.equals(url()) && (RunConfig.exPath == null || url().contains(RunConfig.exPath))) {
+            lastUrl = url();
+            try {
+                String decoded = URLDecoder.decode(lastUrl, "UTF-8");
+                String experiment = "EFCKEY={\"EXPERIMENT\":[" + RunConfig.efcKey + "]}";
+                if (decoded.contains("EXPERIMENT")) {
+                    decoded = decoded.replaceFirst("EFCKEY=\\{\"EXPERIMENT\":\\[.*?]}", experiment);
+                } else if (decoded.contains("EFCKEY")){
+                    decoded = decoded.replaceFirst("EFCKEY=\\{}", "EFCKEY={\"EXPERIMENT\":[" + RunConfig.efcKey + "]}");
+                } else {
+                    decoded += (decoded.contains("?") ? "&" : "?") + experiment;
+                }
+                Navigate.visit(decoded);
+            } catch (UnsupportedEncodingException e) {
+                logger.debug("Unable to decode EFCKey");
+            }
+        }
     }
 
     /**

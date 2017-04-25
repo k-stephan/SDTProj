@@ -3,6 +3,8 @@ package com.macys.sdt.framework.runner;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.macys.sdt.framework.utils.PageElement;
+import com.macys.sdt.framework.utils.PageUtils;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import com.macys.sdt.framework.utils.analytics.Analytics;
@@ -33,6 +35,14 @@ public class RunConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(RunConfig.class);
 
+    /**
+     * Value to set the "EFCKEY" url param to
+     */
+    public static String efcKey = getEnvOrExParam("efckey");
+    /**
+     * Path (or page) on which to set efckey value
+     */
+    public static String exPath = getEnvOrExParam("ex_path");
     /**
      * True if executing through sauce labs. Checks for valid sauce labs info in "sauce_user" and "sauce_key" env variables
      */
@@ -571,6 +581,7 @@ public class RunConfig {
         workspace = workspace.replace('\\', '/');
         workspace = workspace.endsWith("/") ? workspace : workspace + "/";
 
+        // in debug mode, set stdout to show debug messages and sdt-debug.log to show trace messages
         if (debugMode) {
             ((ConsoleAppender) org.apache.log4j.Logger.getRootLogger().getAppender("STDOUT")).setThreshold(Level.DEBUG);
             ((FileAppender) org.apache.log4j.Logger.getRootLogger().getAppender("FILE")).setThreshold(Level.TRACE);
@@ -592,6 +603,9 @@ public class RunConfig {
             scenarios = temp.toString();
         }
         scenarios = scenarios.replace('\\', '/');
+
+        // get project from environment variables - requires "workspace" and "scenarios" variables to be set
+        getProject();
 
         if (!url.matches("^https?://.*")) {
             url = "http://" + url;
@@ -679,11 +693,16 @@ public class RunConfig {
             timeout = StepUtils.safari() ? 130 : 95;
         }
 
-        // get project from environment variables
-        getProject();
-
         //check if project is MST project
         checkMST();
+
+        // check if given exPath is a page
+        if (exPath != null && exPath.split("_").length == 2) {
+            String pageUrl = PageUtils.getElementJSONValue(new PageElement(exPath + ".url"));
+            if (pageUrl != null) {
+                exPath = pageUrl;
+            }
+        }
 
         // check for headers file
         // needs to be after project is set in order to check project resources
