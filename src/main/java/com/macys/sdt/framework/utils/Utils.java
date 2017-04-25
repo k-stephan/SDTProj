@@ -529,15 +529,22 @@ public class Utils {
         String path;
         // project data
         String resourcePath = getResourcePath(fName);
-        for (String dir : RunConfig.projectResourceDirs) {
-            path = RunConfig.workspace + dir + "/data/" + resourcePath;
+        for (String resourceDir : RunConfig.projectResourceDirs) {
+            // default location: <screen size>/<site>/fName
+            path = RunConfig.workspace + resourceDir + "/data/" + resourcePath;
             resource = new File(path);
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
             }
 
+            // root of resources dir
+            resource = new File(RunConfig.workspace + resourceDir + "/" + fName);
+            if (resource.exists() && !resource.isDirectory()) {
+                return resource;
+            }
+
             // check for a responsive resource if applicable
-            if (!resource.exists() && path.matches(".*?(/MEW/|/website/).*?")) {
+            if (path.matches(".*?(/MEW/|/website/).*?")) {
                 resource = new File(path.replace("/MEW/", "/responsive/").replace("/website/", "responsive"));
                 if (resource.exists() && !resource.isDirectory()) {
                     return resource;
@@ -545,11 +552,9 @@ public class Utils {
             }
 
             //fallback to website resources
-            if (!resource.exists()) {
-                resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
-                if (resource.exists() && !resource.isDirectory()) {
-                    return resource;
-                }
+            resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
+            if (resource.exists() && !resource.isDirectory()) {
+                return resource;
             }
         }
 

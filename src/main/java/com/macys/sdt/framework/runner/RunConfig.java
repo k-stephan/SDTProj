@@ -75,7 +75,7 @@ public class RunConfig {
     /**
      * True if using header file
      */
-    public static boolean useHeaders = booleanParam("use_headers");
+    public static String headerFile = getEnvOrExParam("header_file");
     /**
      * Value to set "userAgent" header to. Only works in firefox. If needed otherwise, use a header file.
      */
@@ -539,24 +539,30 @@ public class RunConfig {
     }
 
     private static void getHeaders() {
-        if (!useHeaders) {
+        if (headerFile == null) {
             return;
         }
         try {
-            File headerFile = Utils.getResourceFile("headers.json");
-            if (!headerFile.exists()) {
+            if (headerFile.matches("t|true")) {
+                headerFile = "headers.json";
+            }
+            if (!headerFile.endsWith(".json")) {
+                headerFile += ".json";
+            }
+            File headers = Utils.getResourceFile(headerFile);
+            if (!headers.exists()) {
                 return;
             }
             useProxy = true;
-            JSONObject headerJSON = new JSONObject(Utils.readTextFile(headerFile));
+            JSONObject headerJSON = new JSONObject(Utils.readTextFile(headers));
             for (String key : headerJSON.keySet()) {
                 Object o = headerJSON.get(key);
                 if (o instanceof String) {
                     // don't overwrite user-agent if we already have it from user-agent arg
-                    if (key.equals("User-Agent") && headers.containsKey("User-Agent")) {
+                    if (key.equals("User-Agent") && RunConfig.headers.containsKey("User-Agent")) {
                         continue;
                     }
-                    headers.put(key, (String) headerJSON.get(key));
+                    RunConfig.headers.put(key, (String) headerJSON.get(key));
                 } else {
                     logger.warn("Bad header: " + key);
                 }

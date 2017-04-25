@@ -134,7 +134,7 @@ public abstract class StepUtils {
             return RunConfig.brand.equalsIgnoreCase("mcom");
         }
 
-        return RunConfig.url.matches(".*?(macys|mcom).*?");
+        return RunConfig.url.matches(".*?(macys|mcom|mcy).*?");
     }
 
     /**
@@ -147,7 +147,7 @@ public abstract class StepUtils {
             return RunConfig.brand.equalsIgnoreCase("bcom");
         }
 
-        return RunConfig.url.matches(".*?(bloomingdales|bcom).*?");
+        return RunConfig.url.matches(".*?(bloomingdales|bcom|blm).*?");
     }
 
     /**
