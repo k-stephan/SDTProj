@@ -566,6 +566,16 @@ public class RunConfig {
         }
     }
 
+    private static void sanitizeEfcKey() {
+        if (efcKey == null) {
+            return;
+        }
+        ArrayList<String> split = new ArrayList<>();
+        Collections.addAll(split, efcKey.split(","));
+        efcKey = "\"" + Utils.listToString(split, "\",\"", null) + "\"";
+
+    }
+
     private static void checkMST() {
         File mstPages = new File(projectResourceDirs.get(0) + "elements/website/mst");
         mst = mstPages.exists() && mstPages.isDirectory();
@@ -703,6 +713,7 @@ public class RunConfig {
                 exPath = pageUrl;
             }
         }
+        sanitizeEfcKey();
 
         // check for headers file
         // needs to be after project is set in order to check project resources
