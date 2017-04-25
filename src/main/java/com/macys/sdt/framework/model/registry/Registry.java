@@ -485,7 +485,7 @@ public class Registry {
         setEventType("WEDDING");
         setEventMonth("April");
         setEventDay("18");
-        setEventYear("2016");
+        setEventYear("2020");
         setEventLocation("Alaska");
         setNumberOfGuest("110");
         setPreferredStoreState("New York");
