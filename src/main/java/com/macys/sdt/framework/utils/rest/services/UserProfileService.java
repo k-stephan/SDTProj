@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils.rest.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.macys.sdt.framework.exceptions.DataException;
 import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.model.user.User;
@@ -37,8 +38,6 @@ public class UserProfileService {
     private static UserProfile createUserProfile(String userProfileXml, boolean v1) throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
-        } else if (StepUtils.bloomingdales()) {
-            throw new EnvException("BCOM Environments do not support the user service");
         }
         try {
             HashMap<String, String> headers = new HashMap<>();
@@ -66,6 +65,18 @@ public class UserProfileService {
      * Note: The v2 service requires significantly less data to create an account than v1.
      * If you have only a few fields filled in, use v2.
      * </p>
+     * <p>
+     * Note: For BCOM, address_state should be in abbreviation only (Ex: CA for California) in order to create profile using services
+     * Use service_eligible:true option/attribute to get a random address with state abbreviation from valid_addresses.json
+     * Example:
+     *     {@code
+     *         HashMap<String, String> options = new HashMap<>();
+     *         options.put("country", "United States");
+     *         options.put("service_eligible", "true");
+     *         UserProfile userProfile = TestUsers.getCustomer(null, options);
+     *         UserProfileService.createUserProfile(userProfile, true);
+     *     }
+     * </p>
      *
      * @param profile profile to create
      * @param v1      true for service v1, false for service v2
@@ -75,8 +86,8 @@ public class UserProfileService {
     public static boolean createUserProfile(UserProfile profile, boolean v1) throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
-        } else if (StepUtils.bloomingdales()) {
-            throw new EnvException("BCOM Environments do not support the user service");
+        } else if (!profile.getUser().getProfileAddress().getState().matches("\\b\\w{2}\\b")) {
+            throw new DataException("State must be in abbreviation only. (Ex: CA for California)");
         }
         try {
             String createUserProfileDetail = ObjectMapperProvider.getXmlMapper().writeValueAsString(profile.getUser());

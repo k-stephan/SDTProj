@@ -141,20 +141,35 @@ public class TestUsers {
     /**
      * Generates a new customer with random data
      *
-     * @param country Country the profile should have (US if null)
+     * @param country Country the profile should have (United States if null)
      * @return UserProfile with customer data
      */
     public static UserProfile getCustomer(String country) {
+        if (country == null) {
+            country = "United States";
+        }
+        HashMap<String, String> options = new HashMap<>();
+        options.put("country", country);
+        return getCustomer(country, options);
+    }
+
+    /**
+     * Generates a new customer with random data
+     *
+     * @param country Country the profile should have (US if null)
+     * @param options to get a random valid address from valid_addresses.json file
+     * @return UserProfile with customer data
+     */
+    public static UserProfile getCustomer(String country, HashMap<String,String> options) {
         if (customer == null) {
             if (country == null) {
                 country = "United States";
             }
-            HashMap<String, String> opts = new HashMap<>();
-            opts.put("country", country);
+            options.putIfAbsent("country", country);
             customer = new UserProfile();
             user = new User();
             ProfileAddress profileAddress = new ProfileAddress();
-            getRandomValidAddress(opts, profileAddress);
+            getRandomValidAddress(options, profileAddress);
 
             UserPasswordHint userPasswordHint = new UserPasswordHint();
             userPasswordHint.setId(1L);
