@@ -66,7 +66,9 @@ public class RunConfig {
      * True if using header file
      */
     public static boolean useHeaders = booleanParam("use_headers");
-
+    /**
+     * Value to set "userAgent" header to. Only works in firefox. If needed otherwise, use a header file.
+     */
     public static String userAgent = getEnvOrExParam("user_agent");
     /**
      * Map of all headers and their values
@@ -527,10 +529,6 @@ public class RunConfig {
     }
 
     private static void getHeaders() {
-        if (userAgent != null) {
-            headers.put("User-Agent", userAgent);
-            useProxy = true;
-        }
         if (!useHeaders) {
             return;
         }

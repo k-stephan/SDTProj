@@ -187,6 +187,9 @@ class WebDriverConfigurator {
                 capabilities = DesiredCapabilities.firefox();
                 FirefoxProfile firefoxProfile = new FirefoxProfile();
                 ArrayList<File> extensions = new ArrayList<>();
+                if (userAgent != null) {
+                    firefoxProfile.setPreference("general.useragent.override", userAgent);
+                }
                 if (tagCollection) {
                     logger.info("tag collection started ...");
                     path = sharedResourceDir + "/framework/plugins/firefox/coremetricstools@coremetrics.xpi";
