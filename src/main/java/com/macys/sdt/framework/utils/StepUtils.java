@@ -406,22 +406,22 @@ public abstract class StepUtils {
         for (String expectedURL : expectedURLs) {
             if (!verifyElement.isEmpty() && expectedURL != null) {
                 if (Elements.elementPresent(verifyElementKey) && currentURL.contains(expectedURL)) {
-                    logger.info("On Page: " + name);
+                    logger.info("On Page: " + name + ".json");
                     return true;
                 }
             } else if (expectedURL != null && currentURL.contains(expectedURL)) {
-                logger.info("On Page: " + name);
+                logger.info("On Page: " + name + ".json");
                 return true;
             }
         }
         if (verifyElement == null) {
-            logger.debug("onPage(): No verify_page element defined in page: " + name);
+            logger.debug("No verify_page element defined in page: " + name + ".json");
         } else if (!Elements.elementPresent(verifyElementKey)) {
-            logger.debug("onPage(): verify_page element for page " + name + " not present");
+            logger.debug("verify_page element for page " + name + ".json not present");
         }
 
         if (expectedURLs.size() == 0) {
-            logger.debug("onPage(): No url element defined in page: " + name);
+            logger.debug("No url element defined in page: " + name + ".json");
         } else {
             expectedURLs.forEach(expectedURL -> {
                 if (!currentURL.contains(expectedURL)) {
