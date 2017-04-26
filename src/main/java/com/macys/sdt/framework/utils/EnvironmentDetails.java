@@ -155,10 +155,15 @@ public class EnvironmentDetails {
         }
     }
 
+    /**
+     * get environment details
+     *
+     * @return environment details
+     */
     public static String getDetails() {
         if (t.isAlive()) {
             printOnFinish = true;
-            return "\nEnvironment Details are not ready yet\n";
+            return "Environment Details are not ready yet\n";
         }
         if (site == null) {
             return "\n======> Environment Details <======\n\nUnable to get environment details\n\n"
