@@ -1,14 +1,14 @@
 package com.macys.sdt.framework.utils.rest.services;
 
+import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.exceptions.UserException;
 import com.macys.sdt.framework.model.CreditCard;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.TokenCredentials;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
-import com.macys.sdt.framework.utils.EnvironmentDetails;
-import com.macys.sdt.framework.utils.StepUtils;
-import com.macys.sdt.framework.utils.TestUsers;
+import com.macys.sdt.framework.utils.*;
 import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
@@ -71,22 +71,35 @@ public class CreditCardService {
      * @param card Credit card instance
      * @param defaultCard true to make card as default card, else false
      * @throws ProductionException while trying to add credit card in production environment
-     * @throws RuntimeException while failed to add credit card using services
+     * @throws EnvException if failed to add credit card using services
      **/
     public static void addCreditCardToWallet(CreditCard card, boolean defaultCard) throws Throwable {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
         }
+        if (card == null) {
+            card = CreditCards.getValidCard("Visa");
+        }
         HashMap<String, String> headers = new HashMap<>();
         User user = TestUsers.getCustomer(null).getUser();
         if (user.getTokenCredentials() == null) {
-            throw new UserException("Add card to wallet service requires sign in user or user with valid user ID");
+            user.setTokenCredentials(new TokenCredentials());
+            user.getTokenCredentials().setToken(Cookies.getSecureUserToken());
+            if (user.getTokenCredentials().getToken().isEmpty()) {
+                throw new UserException("Add credit card service requires sign in user or user with valid secure token");
+            }
+        }
+        if (user.getId() == null) {
+            user.setId(Cookies.getCurrentUserId());
+            if (user.getId().isEmpty()) {
+                throw new UserException("Add credit card service requires sign in user or user with valid user ID");
+            }
         }
         headers.put("X-Macys-SecurityToken", user.getTokenCredentials().getToken());
         headers.put("Content-Type", "application/xml");
-        Response response = RESTOperations.doPOST(getAddCreditCardToWalletServiceURL(user.getId()), MediaType.APPLICATION_XML, addCreditCardToWalletPayload(card,defaultCard), headers);
-        if(response.getStatus() != 200){
-            throw new RuntimeException("Failed to add credit card to wallet");
+        Response response = RESTOperations.doPOST(getAddCreditCardToWalletServiceURL(user.getId()), MediaType.APPLICATION_XML, addCreditCardToWalletPayload(card, defaultCard), headers);
+        if (response.getStatus() != 200) {
+            throw new EnvException("Failed to add credit card to wallet");
         }
         logger.info("Credit card successfully added to user profile");
     }

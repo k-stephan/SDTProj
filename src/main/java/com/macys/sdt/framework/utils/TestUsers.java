@@ -145,27 +145,12 @@ public class TestUsers {
      * @return UserProfile with customer data
      */
     public static UserProfile getCustomer(String country) {
-        if (country == null) {
-            country = "United States";
-        }
-        HashMap<String, String> options = new HashMap<>();
-        options.put("country", country);
-        return getCustomer(country, options);
-    }
-
-    /**
-     * Generates a new customer with random data
-     *
-     * @param country Country the profile should have (US if null)
-     * @param options to get a random valid address from valid_addresses.json file
-     * @return UserProfile with customer data
-     */
-    public static UserProfile getCustomer(String country, HashMap<String,String> options) {
         if (customer == null) {
             if (country == null) {
                 country = "United States";
             }
-            options.putIfAbsent("country", country);
+            HashMap<String, String> options = new HashMap<>();
+            options.put("country", country);
             customer = new UserProfile();
             user = new User();
             ProfileAddress profileAddress = new ProfileAddress();

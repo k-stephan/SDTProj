@@ -58,7 +58,7 @@ public class RegistryService {
             logger.info("User Registry created successfully");
 
             JSONObject jsonResponse = XML.toJSONObject(response.readEntity(String.class));
-            registry.setId(jsonResponse.getJSONObject("registry").getString("id"));
+            registry.setId(jsonResponse.getJSONObject("registry").get("id").toString());
             UserProfile userProfile = TestUsers.getCustomer(null);
             userProfile.setRegistry(registry);
 

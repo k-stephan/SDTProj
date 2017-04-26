@@ -1,9 +1,12 @@
 package com.macys.sdt.framework.utils.rest.services;
 
 import com.macys.sdt.framework.exceptions.DataException;
+import com.macys.sdt.framework.exceptions.EnvException;
+import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.model.Product;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.model.user.UserProfile;
+import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.db.models.TuxService;
@@ -145,25 +148,27 @@ public class AddToBagService {
      *
      * @param product - product to add to shopping bag
      * @param userId  - userId to add product to the user
+     * @throws ProductionException if called while executing against production
      */
-    public void addToBag(Product product, String userId) {
+    public static void addToBag(Product product, String userId) throws ProductionException {
+        if (StepUtils.prodEnv()) {
+            throw new ProductionException("Cannot use services on prod!");
+        }
         String serviceURL = getServiceURL() + "?userId=" + userId;
         if (product.bopsAvailable) {
             serviceURL += "&storeLocNumber=" + product.storeLocationNum;
         }
         Response response = RESTOperations.doPOST(serviceURL, MediaType.APPLICATION_JSON, getPayload(product).toString(), null);
         if (response.getStatus() != 200) {
-            throw new RuntimeException("Error - ENV: Failed to add product to bag. Got response code:" + response.getStatus());
+            throw new EnvException("Failed to add product to bag. Got response code:" + response.getStatus());
         }
         if (product.bopsAvailable) {
             JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
             JSONArray items = jsonObject.getJSONObject("bag").getJSONArray("items");
             items.forEach((item) -> {
                 JSONObject itemDetails = (JSONObject) item;
-                if (itemDetails.getInt("productId") == product.id) {
-                    if (!itemDetails.getBoolean("pickUpFromStore")) {
-                        throw new DataException("product id: " + product.id + " is not eligible for pick up.");
-                    }
+                if (itemDetails.getInt("productId") == product.id && !itemDetails.getBoolean("pickUpFromStore")) {
+                    throw new DataException("product id: " + product.id + " is not eligible for pick up.");
                 }
             });
         }
@@ -176,13 +181,14 @@ public class AddToBagService {
      * @param product -  to create payload by getting upcId from this product
      * @return - item payload in jsonObject
      */
-    private JSONObject getPayload(Product product) {
+    private static JSONObject getPayload(Product product) {
         String upcId = ProductService.getAllUpcIds(Integer.toString(product.id)).get(0);
         JSONObject item = new JSONObject();
         item.put("quantity", "1");
         item.put("upcId", upcId);
-        if (product.bopsAvailable)
+        if (product.bopsAvailable) {
             item.put("pickUpFromStore", "true");
+        }
         if (product.registryItem) {
             UserProfile customer = TestUsers.getCustomer(null);
             JSONObject regJson = new JSONObject();
