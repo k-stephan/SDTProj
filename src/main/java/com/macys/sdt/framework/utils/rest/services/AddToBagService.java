@@ -183,8 +183,11 @@ public class AddToBagService {
      */
     private static JSONObject getPayload(Product product) {
         String upcId = ProductService.getAllUpcIds(Integer.toString(product.id)).get(0);
+        if (product.quantity == 0) {
+            product.quantity = 1;
+        }
         JSONObject item = new JSONObject();
-        item.put("quantity", "1");
+        item.put("quantity", product.quantity);
         item.put("upcId", upcId);
         if (product.bopsAvailable) {
             item.put("pickUpFromStore", "true");
