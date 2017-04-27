@@ -234,7 +234,7 @@ class WebDriverConfigurator {
      * This method set chromeDriver from the repo in the running machine for execution
      */
     private static void setChromeDriverLocation() {
-        String fileName = Utils.isOSX() ? "chromedriver" : "chromedriver.exe";
+        String fileName = addOSEnding("chromedriver");
         String path = sharedResourceDir + "/framework/selenium_drivers/" + fileName;
         File file = new File(workspace + path);
         if (!file.exists()) {
@@ -255,7 +255,7 @@ class WebDriverConfigurator {
      * This method set firefox gecko driver from the repo in the running machine for execution
      */
     private static void setFirefoxDriverLocation() {
-        String fileName = Utils.isOSX() ? "geckodriver" : "geckodriver.exe";
+        String fileName = addOSEnding("geckodriver");
         String path = sharedResourceDir + "/framework/selenium_drivers/" + fileName;
         File file = new File(workspace + path);
         if (!file.exists()) {
@@ -269,6 +269,23 @@ class WebDriverConfigurator {
         } else {
             logger.warn("Unable to use built-in firefox geckodriver, will use machine's geckodriver if it exists");
         }
+    }
+
+    /**
+     * Tags on the correct driver file name ending for each file system - .exe, Mac, or Linux
+     *
+     * @param fileName driver name (should be chromedriver or firefox)
+     * @return full name of file
+     */
+    private static String addOSEnding(String fileName) {
+        if (Utils.isWindows()) {
+            fileName += ".exe";
+        } else if (Utils.isOSX()) {
+            fileName += "Mac";
+        } else {
+            fileName += "Linux";
+        }
+        return fileName;
     }
 
     /**
