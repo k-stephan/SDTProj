@@ -6,6 +6,7 @@ import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.model.user.User;
 import com.macys.sdt.framework.model.user.UserProfile;
 import com.macys.sdt.framework.runner.RunConfig;
+import com.macys.sdt.framework.utils.AbbreviationHelper;
 import com.macys.sdt.framework.utils.ObjectMapperProvider;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
@@ -37,8 +38,6 @@ public class UserProfileService {
     private static UserProfile createUserProfile(String userProfileXml, boolean v1) throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
-        } else if (StepUtils.bloomingdales()) {
-            throw new EnvException("BCOM Environments do not support the user service");
         }
         try {
             HashMap<String, String> headers = new HashMap<>();
@@ -75,9 +74,9 @@ public class UserProfileService {
     public static boolean createUserProfile(UserProfile profile, boolean v1) throws ProductionException, EnvException {
         if (StepUtils.prodEnv()) {
             throw new ProductionException("Cannot use services on prod!");
-        } else if (StepUtils.bloomingdales()) {
-            throw new EnvException("BCOM Environments do not support the user service");
         }
+        String state = AbbreviationHelper.getStateAbbreviation(profile.getUser().getProfileAddress().getState());
+        profile.getUser().getProfileAddress().setState(state);
         try {
             String createUserProfileDetail = ObjectMapperProvider.getXmlMapper().writeValueAsString(profile.getUser());
             UserProfile createdProfile = createUserProfile(createUserProfileDetail, v1);
