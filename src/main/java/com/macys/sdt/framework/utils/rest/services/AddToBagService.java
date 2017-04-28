@@ -1,6 +1,12 @@
 package com.macys.sdt.framework.utils.rest.services;
 
+import com.macys.sdt.framework.exceptions.DataException;
+import com.macys.sdt.framework.exceptions.EnvException;
+import com.macys.sdt.framework.exceptions.ProductionException;
+import com.macys.sdt.framework.model.Product;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
+import com.macys.sdt.framework.model.user.UserProfile;
+import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.TestUsers;
 import com.macys.sdt.framework.utils.EnvironmentDetails;
 import com.macys.sdt.framework.utils.db.models.TuxService;
@@ -8,8 +14,10 @@ import com.macys.sdt.framework.utils.rest.utils.RESTEndPoints;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,6 +30,7 @@ import java.util.Random;
  */
 public class AddToBagService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AddToBagService.class);
     private static final String[] eventTypes = {"WEDDING", "SPECIAL"};
     private static final String[] garmentTypes = {"COAT", "PANT", "VEST", "TIE", "SHOES", "SHIRT", "CUFFLINKS"};
     private static final String[] garmentIds = {"8857HBBLO", "8857HBBLN", "8857HBBLM", "8857HBBLK", "8857HBBLS"};
@@ -129,6 +138,81 @@ public class AddToBagService {
         JSONObject item = new JSONObject();
         item.put("mkpReservations", mkpReservations);
 
+        JSONObject object = new JSONObject();
+        object.put("item", item);
+        return object;
+    }
+
+    /**
+     * Add a product to shopping bag using the rest service url
+     *
+     * @param product - product to add to shopping bag
+     * @param userId  - userId to add product to the user
+     * @throws ProductionException if called while executing against production
+     */
+    public static void addToBag(Product product, String userId) throws ProductionException {
+        if (StepUtils.prodEnv()) {
+            throw new ProductionException("Cannot use services on prod!");
+        }
+        String serviceURL = getServiceURL() + "?userId=" + userId;
+        if (product.bopsAvailable) {
+            serviceURL += "&storeLocNumber=" + product.storeLocationNum;
+        }
+        Response response = RESTOperations.doPOST(serviceURL, MediaType.APPLICATION_JSON, getPayload(product).toString(), null);
+        if (response.getStatus() != 200) {
+            throw new EnvException("Failed to add product to bag. Got response code:" + response.getStatus());
+        }
+        if (product.bopsAvailable) {
+            JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
+            JSONArray items = jsonObject.getJSONObject("bag").getJSONArray("items");
+            items.forEach((item) -> {
+                JSONObject itemDetails = (JSONObject) item;
+                if (itemDetails.getInt("productId") == product.id && !itemDetails.getBoolean("pickUpFromStore")) {
+                    throw new DataException("product id: " + product.id + " is not eligible for pick up.");
+                }
+            });
+        }
+        logger.info("Product is added to bag: " + product.id);
+    }
+
+    /**
+     * Create a payload for the rest service using the product and return payload as jsonObject
+     *
+     * @param product -  to create payload by getting upcId from this product
+     * @return - item payload in jsonObject
+     */
+    private static JSONObject getPayload(Product product) {
+        String upcId = ProductService.getAllUpcIds(Integer.toString(product.id)).get(0);
+        if (product.quantity == 0) {
+            product.quantity = 1;
+        }
+        JSONObject item = new JSONObject();
+        item.put("quantity", product.quantity);
+        item.put("upcId", upcId);
+        if (product.bopsAvailable) {
+            item.put("pickUpFromStore", "true");
+        }
+        if (product.registryItem) {
+            UserProfile customer = TestUsers.getCustomer(null);
+            JSONObject regJson = new JSONObject();
+            regJson.put("id", customer.getRegistry().getId());
+            item.put("registry", regJson);
+        }
+        if (product.electronicGiftCard) {
+            item.put("syndicationId", "3545465");
+            item.put("syndicationSource", "ASI");
+            item.put("syndicationItemId", "6565");
+            item.put("syndicationTransactionId", "565");
+            item.put("syndicationItemDesc", "5656");
+            item.put("giftCardAmount", "10");
+        }
+        if (product.virtualGiftCard) {
+            item.put("giftCardAmount", "10");
+            item.put("giftCardEmailId", "testuser@gmail.com");
+            item.put("giftCardFrom", "test user");
+            item.put("giftCardMessage", "test message");
+            item.put("giftCardSubject", "test subject");
+        }
         JSONObject object = new JSONObject();
         object.put("item", item);
         return object;
