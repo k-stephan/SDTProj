@@ -480,7 +480,7 @@ public abstract class StepUtils {
         for (String name : names)
             pages += " " + name.replace("_", " ") + ", ";
         pages = pages.substring(0, pages.length() - 2);
-        throw new EnvException("Not on pages: " + pages);
+        throw new EnvException("Not on pages: " + pages + " Current URL: " + WebDriverManager.getCurrentUrl());
     }
 
     /**
