@@ -476,9 +476,10 @@ public abstract class StepUtils {
             return;
         }
 
-        String pages = "";
+        StringBuilder builder = new StringBuilder();
         for (String name : names)
-            pages += " " + name.replace("_", " ") + ", ";
+            builder.append(" ").append(name.replace("_", " ")).append(", ");
+        String pages = builder.toString();
         pages = pages.substring(0, pages.length() - 2);
         throw new EnvException("Not on pages: " + pages);
     }

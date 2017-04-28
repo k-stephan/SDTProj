@@ -399,22 +399,33 @@ public class RunConfig {
         if (scenarios == null) {
             return scenarioList;
         }
-        scenarios = scenarios.trim();
-        if (!scenarios.contains(project.replace('.', '/'))) {
-            scenarios = scenarios.replaceAll("features/", project.replace(".", "/") + "/features/");
-        }
-        logger.info("Parsing env scenarios : " + scenarios);
-        String delimit = ".feature";
-        int i = 0, end = scenarios.indexOf(delimit);
-        while (i < scenarios.length()) {
-            end = scenarios.indexOf(' ', end + 1);
-            if (end == -1) {
-                end = scenarios.length();
+        File dirTest = new File(scenarios);
+        if (dirTest.exists() && dirTest.isDirectory()) {
+            File[] featureFiles = dirTest.listFiles();
+            if (featureFiles != null) {
+                StringBuilder newScenarios = new StringBuilder();
+                for (File f : featureFiles) {
+                    try {
+                        newScenarios.append(f.getCanonicalPath()).append(" ");
+                    } catch (IOException e) {
+                        //
+                    }
+                }
+                scenarios = newScenarios.toString();
             }
-            String scenarioPath = scenarios.substring(i, end).trim();
-            logger.info("scenario path : " + scenarioPath);
-            scenarioList.add(scenarioPath);
-            i = end;
+        }
+
+        // look behind doesn't allow an unknown numbers of characters. This expression supports line
+        // numbers up to 4 digits long. If we need more, something's gone horribly wrong
+        scenarioList.addAll(Arrays.asList(scenarios.split("(?<=\\.feature(?::[0-9][0-9]?[0-9]?[0-9]?)?) ")));
+
+        for (int i = 0; i < scenarioList.size(); i++) {
+            String file = scenarioList.get(i);
+            file = file.trim();
+            if (!file.contains(project.replace(".", "/"))) {
+                file = file.replace("features/", project.replace(".", "/") + "/features/");
+            }
+            scenarioList.set(i, file);
         }
 
         Collections.sort(scenarioList);
@@ -423,11 +434,8 @@ public class RunConfig {
             workspace = "";
         }
         for (String featureFilePath : scenarioList) {
-            String[] featureInfo = featureFilePath.split(".feature:");
+            String[] featureInfo = featureFilePath.split("(?<=\\.feature):");
             String path = featureInfo[0];
-            if (!path.endsWith(".feature")) {
-                path += ".feature";
-            }
             int line = 0;
             if (featureInfo.length == 2) {
                 line = Utils.parseInt(featureInfo[1], 0);
@@ -440,8 +448,7 @@ public class RunConfig {
                 }
                 String json = Utils.gherkinToJson(false, path);
                 try {
-                    featureScenarios = new Gson().fromJson(json, new TypeToken<ArrayList<Map>>() {
-                    }.getType());
+                    featureScenarios = new Gson().fromJson(json, new TypeToken<ArrayList<Map>>() {}.getType());
                 } catch (JsonSyntaxException jex) {
                     logger.error("Failed to parse : " + path);
                     logger.error("json :\n\n" + json);
@@ -456,7 +463,7 @@ public class RunConfig {
         // remove windows drive to avoid incorrect matches on ":"
         final String drive = scenarioList.get(0).matches("[A-Z]:.*?") ? scenarioList.get(0).substring(0, 2) : null;
         if (drive != null) {
-            for (i = 0; i < scenarioList.size(); i++) {
+            for (int i = 0; i < scenarioList.size(); i++) {
                 String scenario = scenarioList.remove(i);
                 scenarioList.add(i, scenario.substring(2));
             }
@@ -483,7 +490,7 @@ public class RunConfig {
                 .collect(Collectors.toList()));
 
         if (drive != null) {
-            for (i = 0; i < scenarioList.size(); i++) {
+            for (int i = 0; i < scenarioList.size(); i++) {
                 String scenario = scenarioList.remove(i);
                 scenarioList.add(i, drive + scenario);
             }
