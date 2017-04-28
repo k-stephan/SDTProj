@@ -116,7 +116,7 @@ public class AbbreviationHelper {
         Optional<String> result = STATE_MAP.keySet().stream()
                 .filter(abb -> STATE_MAP.get(abb).equalsIgnoreCase(state))
                 .findFirst();
-        return result.isPresent() ? result.get() : null;
+        return result.orElse(null);
     }
 
     /**
