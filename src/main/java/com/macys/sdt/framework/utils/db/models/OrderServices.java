@@ -23,6 +23,11 @@ public class OrderServices {
     public Connection connection;
     public JSONObject queries;
 
+    public OrderServices() {
+        setupConnection();
+        queries = Utils.getSqlQueries();
+    }
+
     /**
      * Method to get orderDetails from site DB(table:ORDER) for a given order number
      *
@@ -30,9 +35,7 @@ public class OrderServices {
      * @return orderDetails in hashMap format
      **/
     public HashMap getOrderDetails(String orderNumber) {
-        setupConnection();
         HashMap<String, String> orderDetails = new HashMap<>();
-        queries = Utils.getSqlQueries();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service")
                     .getString("order_details").replaceFirst("'\\?'", "'" + orderNumber + "'"));
@@ -59,8 +62,6 @@ public class OrderServices {
      * @return order context info details in hashMap format
      */
     public HashMap<String, String> getOrderContextInfo(String orderNumber) {
-        setupConnection();
-        queries = Utils.getSqlQueries();
         HashMap<String, String> orderContextInfo = new HashMap<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service")
@@ -85,8 +86,6 @@ public class OrderServices {
      * @return order attributes in hashMap format
      */
     public HashMap<String, String> getAllOrderAttributes(String orderNumber) {
-        setupConnection();
-        queries = Utils.getSqlQueries();
         HashMap<String, String> orderAttributes = new HashMap<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service")
@@ -110,8 +109,6 @@ public class OrderServices {
      * @return EPS authorization request in Element format
      */
     public Element getEpsAuthorizationRequest(String orderNumber, String paymentType) {
-        setupConnection();
-        queries = Utils.getSqlQueries();
         Element epsAuthorizationRequest = null;
         String serviceName = null;
         switch (paymentType.toLowerCase()) {
@@ -147,8 +144,6 @@ public class OrderServices {
      * @return EPS authorization response in Element format
      */
     public Element getEpsAuthorizationResponse(String orderNumber, String paymentType) {
-        setupConnection();
-        queries = Utils.getSqlQueries();
         Element epsAuthorizationResponse = null;
         String serviceName = null;
         switch (paymentType.toLowerCase()) {
@@ -182,9 +177,7 @@ public class OrderServices {
      * @return List of shipments in HashMap format
      **/
     public List<HashMap> getShipments(String orderNumber) {
-        setupConnection();
         List<HashMap> shipments = new ArrayList<>();
-        queries = Utils.getSqlQueries();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     queries.getJSONObject("order_service").getString("order_shipment_details"));
@@ -212,9 +205,7 @@ public class OrderServices {
      * @return shippingMethodCode
      **/
     public List<String> getShipMethodCode(String orderNumber) {
-        setupConnection();
         List<String> shipMethod = new ArrayList<>();
-        queries = Utils.getSqlQueries();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     queries.getJSONObject("order_service").getString("order_shipment_details").replaceFirst("'\\?'", "'" + orderNumber + "'"));
@@ -236,9 +227,7 @@ public class OrderServices {
      * @return prepareOrderReq in List Element format
      **/
     public List<Element> getPrepareOrderRequest(String orderNumber) {
-        setupConnection();
         List<Element> prepareOrderReq = new ArrayList<>();
-        queries = Utils.getSqlQueries();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     queries.getJSONObject("order_service").getString("prepare_order_details").replaceFirst("'\\?'", "'" + orderNumber + "'"));
@@ -251,7 +240,7 @@ public class OrderServices {
         } catch (SQLException | JSONException e) {
             logger.warn("Error in retrieving prepare Order due to : " + e.getMessage());
         }
-        return prepareOrderReq ;
+        return prepareOrderReq;
     }
 
     /**
