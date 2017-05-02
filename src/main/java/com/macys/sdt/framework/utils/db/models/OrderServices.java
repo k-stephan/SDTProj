@@ -252,9 +252,6 @@ public class OrderServices {
     public String getOrderConfirmationMessage(String orderNumber) {
         String status = null;
 
-        setupConnection();
-        queries = Utils.getSqlQueries();
-
         try {
             String query = queries.getJSONObject("order_service")
                     .getString("order_confirmation_message_status")
