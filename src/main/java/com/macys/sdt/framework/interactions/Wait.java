@@ -8,6 +8,7 @@ import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -225,12 +226,15 @@ public class Wait {
             WebDriverWait wait = new WebDriverWait(WebDriverManager.getWebDriver(), seconds);
             wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
             return true;
+        } catch (NoSuchElementException e)  {
+            logger.warn("Cannot locate an element using " + selector);
         } catch (Exception e) {
+            String errorMessage = e.getMessage().contains("Build info") ? e.getMessage().split("Build info")[0] : e.getMessage();
+            logger.warn("issue in waiting for element due to : " + errorMessage);
             logger.debug(Utils.listToString(Utils.getCallFromFunction(
                     "secondsUntilElementPresent"), "\n\t ", null) + ": " + selector.toString());
-            logger.warn("issue in waiting for element due to : " + e.getMessage());
-            return false;
         }
+        return false;
     }
 
     /**
@@ -260,7 +264,8 @@ public class Wait {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(selector));
             return true;
         } catch (Exception e) {
-            logger.warn(String.format("issue in waiting for element %s to not be present : %s ", selector.toString(), e.getMessage()));
+            String errorMessage = e.getMessage().contains("Build info") ? e.getMessage().split("Build info")[0] : e.getMessage();
+            logger.warn(String.format("issue in waiting for element %s to not be present : %s ", selector.toString(), errorMessage));
             return false;
         }
     }

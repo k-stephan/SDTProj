@@ -34,9 +34,9 @@ public class DigitalAnalytics extends Analytics {
     }
 
     private HashMap getLastTagIds(ArrayList<LinkedTreeMap> entries, boolean bcount) {
-        HashMap<String, ArrayList> hlastIds = new HashMap();
+        HashMap<String, ArrayList> hlastIds = new HashMap<>();
         if (bcount) {
-            logger.info("-> " + this.getClass().getSimpleName() + ".getLastTagIds():entries:" + entries.size());
+            logger.info(this.getClass().getSimpleName() + ".getLastTagIds() : entries: " + entries.size());
         }
         for (LinkedTreeMap entry : entries) {
             Map e = this.getAnalyticsData(entry);
@@ -98,7 +98,7 @@ public class DigitalAnalytics extends Analytics {
             }
 
             if (!hdiff.isEmpty()) {
-                logger.info("-->" + this.getClass().getSimpleName() + " Results: " + Utils.jsonPretty(hdiff) + "\n");
+                logger.info(this.getClass().getSimpleName() + " Results: \n" + Utils.jsonPretty(hdiff) + "\n");
             }
             return hdiff;
         } finally {

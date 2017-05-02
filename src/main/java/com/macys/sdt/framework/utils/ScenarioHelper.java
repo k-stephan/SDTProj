@@ -153,6 +153,7 @@ public class ScenarioHelper {
             return stepIndex + ": " + Utils.parseInt(currentStep.get("line"), -1) + " - " + currentStep.get("name");
         } catch (NullPointerException e) {
             logger.error("Failed to get scenario name from current scenario");
+            logger.debug("error to get scenario name due to : " + e);
             return "";
         }
     }

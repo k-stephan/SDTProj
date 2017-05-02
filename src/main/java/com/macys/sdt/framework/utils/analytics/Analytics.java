@@ -52,6 +52,9 @@ public abstract class Analytics {
         step_page_sources.put(link, pageSource);
     }
 
+    /**
+     * load global file
+     */
     protected void loadGlobals() {
         try {
             File fglobal = new File(getGoldPath() + RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json");
@@ -97,6 +100,12 @@ public abstract class Analytics {
         return hrecord;
     }
 
+    /**
+     * Create a gold directory and return the directory path. If directory already exists return path of the gold directory
+     *
+     * @return path of gold directory
+     * @throws IOException io related exception
+     */
     public String getGoldPath() throws IOException {
         return Utils.createDirectory(RunConfig.workspace + "/golds").getCanonicalPath() + "/";
     }
@@ -111,27 +120,45 @@ public abstract class Analytics {
      */
     public void flush(boolean isScenarioPassed) throws IOException {
         File fgold = new File(getGoldPath() + getGoldName(this.scenario_info));
-        if (!fgold.exists() || fgold.length() == 0) {
+        if (!fgold.exists() || fgold.length() == 0) { // gold file does not exist
             if (isScenarioPassed) {
                 File flogGold = Utils.createDirectory(RunConfig.logs + "/golds");
                 fgold = new File(flogGold.getCanonicalPath() + "/" + fgold.getName());
+
+                logger.info("writing gold file...");
+                // write gold file
                 Utils.writeSmallBinaryFile(new Gson().toJson(this.gold).getBytes(), fgold);
                 logger.info("Flushing recorded analytics as gold: " + fgold.getCanonicalPath());
+
+                logger.info("writing tag histogram file...");
+                // write tag histogram in json file
+                Utils.writeSmallBinaryFile(new Gson().toJson(this.tag_histogram).getBytes(), new File(RunConfig.logs + fgold.getName() + ".tag_histogram.json"));
             } else {
                 logger.info("Scenario did not pass. Skip gold recording.");
             }
             this.gold = null;
-        } else {
+        } else { // gold file exist hence comparision data between gold and current execution
             File fresult = new File(RunConfig.logs + fgold.getName() + ".analytics.result.json");
             Utils.writeSmallBinaryFile(new Gson().toJson(this.results).getBytes(), fresult);
-            logger.info("Flushing analytics results: " + fresult.getCanonicalPath());
-            this.results = new HashMap();
+            logger.info("Flushing analytics comparision results: " + fresult.getCanonicalPath());
+            this.results = new HashMap<>();
+
+            logger.info("writing tag histogram file...");
+            // write tag histogram in json file
+            Utils.writeSmallBinaryFile(new Gson().toJson(this.tag_histogram).getBytes(), new File(RunConfig.logs + fgold.getName() + ".tag_histogram.json"));
         }
-        Utils.writeSmallBinaryFile(new Gson().toJson(this.tag_histogram).getBytes(), new File(RunConfig.logs + fgold.getName() + ".tag_histogram.json"));
+
         this.gold = null;
         this.tag_histogram.clear();
     }
 
+    /**
+     * convert harentry present in arraylist to json format
+     *
+     * @param harEntries arraylist containg har entries
+     *
+     * @return har entries
+     */
     protected ArrayList convertHarEntries(ArrayList harEntries) {
         return this.entries = new Gson().fromJson(new Gson().toJson(harEntries), ArrayList.class);
     }
@@ -154,10 +181,24 @@ public abstract class Analytics {
         return (ArrayList) record.get("har_entries");
     }
 
+    /**
+     * strip the input string of any whitespace character
+     *
+     * @param s input string
+     * @return input string stripped of any whitespace character
+     */
     private String stripNonChars(String s) {
         return s.trim().toLowerCase().replaceAll("\\s", "");
     }
 
+    /**
+     * compare the gold and current coremetrics value by checking if current value contains gold value
+     *
+     * @param cval current run coremetrics value
+     * @param gval gold coremetrics value
+     *
+     * @return true if value is equal
+     */
     private boolean compareEqual(String cval, String gval) {
         String gcomp = stripNonChars(gval);
         String ccomp = stripNonChars(cval);
@@ -261,6 +302,15 @@ public abstract class Analytics {
         return WebDriverManager.getCurrentUrl();
     }
 
+    /**
+     * This method compare coremetrics gold value with current execution value
+     *
+     * @param hdiff hashmap having value comparison status with other information
+     * @param tagAttr tag attribute
+     * @param gval coremetrics gold value
+     * @param cval coremetrics current execution value
+     * @param tagid coremetrics tag id
+     */
     private void compareFilter(HashMap hdiff, String tagAttr, String gval, String cval, String tagid) {
         HashMap compare = new HashMap();
         compare.put("gold", gval);
@@ -272,10 +322,14 @@ public abstract class Analytics {
             if (tagAttr.equals("ul")) {
                 String page_url = getCurrentURL();
                 if (cval.equals(page_url)) {
-                    hresult.put("action", "page_url:" + page_url);
+                    hresult.put("action", "page_url: " + page_url);
                     hresult.put("status", "pass");
+                } else {
+                    hresult.put("status", "fail");
                 }
             } else {
+
+                // when tag attribute is updated globally
                 String globalValue = this.global_values.get(tagAttr);
                 if (globalValue != null) {
                     compare.put("gold", globalValue);
@@ -284,6 +338,7 @@ public abstract class Analytics {
                     return;
                 }
 
+                // when tag attribute is updated globally for a specific tag
                 globalValue = this.global_values.get(tagid + "." + tagAttr);
                 if (globalValue != null) {
                     compare.put("gold", globalValue);
@@ -293,13 +348,18 @@ public abstract class Analytics {
                 }
 
                 Object res;
+
                 if (gval.startsWith("_ignore_") ||
                         this.global_ignores.contains("all." + tagAttr) ||
                         this.global_ignores.contains(tagid + "." + tagAttr)) {
+                    // when tag attribute is to be ignored
+                    // default : when specific tag attribute is ignored
                     String action = "ignore";
                     if (this.global_ignores.contains("all." + tagAttr)) {
+                        // when tag attribute is ignored globally
                         action = "ignore_global";
                     } else if (this.global_ignores.contains(tagid + "." + tagAttr)) {
+                        // when tag attribute is ignored globally for a specific tag
                         action = "ignore_global_tag";
                     }
                     hresult.put("action", action);
@@ -307,20 +367,40 @@ public abstract class Analytics {
                 } else if (gval.startsWith("_has_value_") ||
                         this.global_has_values.contains("all." + tagAttr) ||
                         this.global_has_values.contains(tagid + "." + tagAttr)) {
+
+                    // has value scenario where tag attribute needs to have value irrespective to actual value
+                    // here for all has_value scenario action is set to "has_value"
                     if (cval != null && !cval.isEmpty()) {
                         hresult.put("status", "pass");
                     } else {
                         hresult.put("status", "fail");
                     }
                     hresult.put("action", "has_value");
+                } else if (cval.isEmpty() || gval.isEmpty())   {
+                    if (cval.isEmpty() && gval.isEmpty())   {
+                        // when both current and gold value are empty
+                        hresult.put("action", "current and gold value are empty");
+                        hresult.put("status", "pass");
+                    } else if (cval.isEmpty() && !gval.isEmpty()) {
+                        // when current value is empty
+                        hresult.put("action", "current value is empty");
+                        hresult.put("status", "fail");
+                    } else {
+                        // when gold value is empty
+                        hresult.put("action", "gold value is empty");
+                        hresult.put("status", "fail");
+                    }
                 } else if (compareEqual(cval, gval)) {
+                    // when current value contains gold value, value stripped of any whitespace character
                     hresult.put("status", "pass");
                 } else if (cval.contains(gval)) {
-                    hresult.put("action", "val_contains_gold");
+                    // when current value contains gold value
+                    hresult.put("action", "currentValue_contains_goldValue");
                     hresult.put("status", "pass");
                 } else if (gval.contains(cval)) {
+                    // when gold value contains current value
                     hresult.put("status", "pass");
-                    hresult.put("action", "gold_contains_val");
+                    hresult.put("action", "goldValue_contains_currentValue");
                 } else if ((res = compareElementClicks(cval)) != null) {
                     hresult.put("status", "pass");
                     hresult.put("action", "element_click:" + res);
@@ -332,6 +412,7 @@ public abstract class Analytics {
                 }
             }
         } finally {
+            // add tag attribute with result information
             hdiff.put(tagAttr, hresult);
         }
     }
@@ -353,6 +434,12 @@ public abstract class Analytics {
         return hdiff;
     }
 
+    /**
+     * check if a string is email or not
+     *
+     * @param email email string to check for
+     * @return true if the value input is email string
+     */
     public boolean emailValidator(String email) {
         if (email == null) {
             return false;
