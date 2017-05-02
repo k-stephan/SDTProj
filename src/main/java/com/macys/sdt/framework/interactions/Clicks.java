@@ -479,7 +479,7 @@ public class Clicks {
      * @return true if element was clicked
      */
     public static boolean clickWhenPresent(By selector) {
-        if (Wait.secondsUntilElementPresent(selector, 5)) {
+        if (Wait.untilElementPresent(selector)) {
             click(selector);
             return true;
         }
