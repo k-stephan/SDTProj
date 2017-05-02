@@ -244,6 +244,32 @@ public class OrderServices {
     }
 
     /**
+     * Method to get status message from site DB(TABLE:order_confirmation_message) for a given order number
+     *
+     * @param orderNumber order number to get info for
+     * @return status in String format
+     */
+    public String getOrderConfirmationMessage(String orderNumber) {
+        String status = null;
+
+        try {
+            String query = queries.getJSONObject("order_service")
+                    .getString("order_confirmation_message_status")
+                    .replaceFirst("'\\?'", "'" + orderNumber + "'");
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                status = resultSet.getString("status");
+            }
+        } catch (SQLException | JSONException e) {
+            logger.warn("Error in retrieving order confirmation message status code due to : " + e.getMessage());
+        }
+
+        return status;
+    }
+
+    /**
      * Method to parse the XML into TagElements
      *
      * @param xmlData Data to look for
@@ -278,4 +304,3 @@ public class OrderServices {
 
 
 }
-
