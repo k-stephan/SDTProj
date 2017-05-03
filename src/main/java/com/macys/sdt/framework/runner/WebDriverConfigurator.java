@@ -9,6 +9,8 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
+import net.lightbody.bmp.filters.RequestFilterAdapter;
+
 import org.junit.Assert;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
@@ -655,10 +657,14 @@ class WebDriverConfigurator {
         capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
         WebDriver driver = initDriver(capabilities);
         browsermobServer.newHar(System.currentTimeMillis() + "");
+        
         if (!StepUtils.mobileDevice() && !StepUtils.MEW()) {
-            browsermobServer.addRequestFilter(new ProxyFilters.ProxyRequestFilter(url));
+        	ProxyFilters.ProxyRequestFilter filter = new ProxyFilters.ProxyRequestFilter(url);
+            browsermobServer.addRequestFilter(filter);
             browsermobServer.addResponseFilter(new ProxyFilters.ProxyResponseFilter());
+            browsermobServer.addFirstHttpFilterFactory(new RequestFilterAdapter.FilterSource(filter, 16777216)); // 2097152 or whatever buffer size you want
         }
+        
         return driver;
     }
 }
