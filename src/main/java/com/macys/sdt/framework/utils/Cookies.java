@@ -98,7 +98,7 @@ public class Cookies {
         if (expiry == null) {
             expiry = getExpiry();
         }
-        if (ie() || edge()) {
+        if (ie() || edge() || (iOS() && safari())) {
             addCookieJavascript(name, value, path, expiry);
         } else {
             try {
@@ -266,7 +266,7 @@ public class Cookies {
         }
 
         try {
-            if (ie() || safari() || edge()) {
+            if (ie() || (iOS() && safari()) || edge()) {
                 String cookieValue = "";
                 for (String cookie : ((String) Navigate.execJavascript("return document.cookie")).split("; ")) {
                     if (cookie.split("=")[0].equals(name)) {
