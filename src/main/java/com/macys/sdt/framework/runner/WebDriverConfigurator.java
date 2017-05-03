@@ -484,9 +484,10 @@ class WebDriverConfigurator {
                 return initAppiumDevice(capabilities);
             } else if (StepUtils.firefox()) {   // Desktop Firefox
                 try {
-                    // depending on firefox version, marionette is set
-                    if (browserVersion != null && (browserVersion.compareTo("48.0") >= 0 || browserVersion.equalsIgnoreCase("beta"))) {
-                        capabilities.setCapability("seleniumVersion", "3.3.1");
+                    // depending on firefox version, set the marionette and seleniumVersion capabilities
+                    if (browserVersion != null && browserVersion.compareTo("48.0") >= 0) {
+                        capabilities.setCapability("seleniumVersion",
+                                (browserVersion.compareTo("52.0") > 0 || browserVersion.equalsIgnoreCase("beta")) ? "3.4.0" : "3.3.1");
                         capabilities.setCapability("marionette", true);
                     } else if (browserVersion != null && browserVersion.compareTo("48.0") < 0) {
                         capabilities.setCapability("marionette", false);
