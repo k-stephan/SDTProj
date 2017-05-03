@@ -337,6 +337,13 @@ public class TestUsers {
     }
 
     /**
+     * Clear the active registry data
+     */
+    public static void clearRegistry() {
+        registry = null;
+    }
+
+    /**
      * Gets an enrolled USL ID
      * <p>
      * Will contain values for the USL id,
