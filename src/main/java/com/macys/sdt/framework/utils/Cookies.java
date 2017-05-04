@@ -28,7 +28,7 @@ public class Cookies {
     private static final Logger logger = LoggerFactory.getLogger(Cookies.class);
 
     private static String domain = "." +
-            Utils.removeFromString(RunConfig.url, "www1.", "www.", "http://", "https://", "m\\.", "m2qa1\\.");
+            Utils.removeFromString(RunConfig.url, "www1.", "www.", "http://", "https://", "m.", "m2qa1.");
 
     /**
      * Changes the domain used to create and update cookies
