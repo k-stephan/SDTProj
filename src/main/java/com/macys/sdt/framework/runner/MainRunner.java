@@ -421,6 +421,10 @@ public class MainRunner {
             hangWatchDog.reset(null);
         }
 
+        /**
+         * pause watchdog if argument is true
+         * @param pause true to pause watch dog
+         */
         public static void pause(boolean pause) {
             PageHangWatchDog.pause = pause;
             if (pause) {

@@ -401,11 +401,14 @@ public class RunConfig {
         }
         File dirTest = new File(scenarios);
         if (dirTest.exists() && dirTest.isDirectory()) {
+            logger.info("scenario mentioned is a directory exist at path : " + dirTest.getAbsolutePath());
             File[] featureFiles = dirTest.listFiles();
             if (featureFiles != null) {
+                logger.info("feature files exist in directory " + dirTest.getName());
                 StringBuilder newScenarios = new StringBuilder();
                 for (File f : featureFiles) {
                     try {
+                        logger.info("feature file present : " + f.getName());
                         newScenarios.append(f.getCanonicalPath()).append(" ");
                     } catch (IOException e) {
                         //
@@ -415,10 +418,12 @@ public class RunConfig {
             }
         }
 
+        // separate multiple scenarios entries mentioned with or without linenumber (example : xxx.feature[:1])
         // look behind doesn't allow an unknown numbers of characters. This expression supports line
         // numbers up to 4 digits long. If we need more, something's gone horribly wrong
         scenarioList.addAll(Arrays.asList(scenarios.split("(?<=\\.feature(?::[0-9][0-9]?[0-9]?[0-9]?)?) ")));
 
+        // include project name to scenario list if not present already
         for (int i = 0; i < scenarioList.size(); i++) {
             String file = scenarioList.get(i);
             file = file.trim();
@@ -434,6 +439,7 @@ public class RunConfig {
             workspace = "";
         }
         for (String featureFilePath : scenarioList) {
+            // split feature file path to feature file path and line number
             String[] featureInfo = featureFilePath.split("(?<=\\.feature):");
             String path = featureInfo[0];
             int line = 0;
@@ -526,10 +532,10 @@ public class RunConfig {
             }
         }
         int closest = 0;
-        for (Integer l : hScenario.keySet()) {
-            int dist = Math.abs(line - l);
-            if (dist < line - closest) {
-                closest = l;
+        for (Integer scenarioLineNoAbsolute : hScenario.keySet()) {
+            int dist = Math.abs(line - scenarioLineNoAbsolute);
+            if (dist < Math.abs(line - closest)) {
+                closest = scenarioLineNoAbsolute;
             }
         }
         if (closest > 0) {

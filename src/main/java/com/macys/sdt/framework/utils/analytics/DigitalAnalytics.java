@@ -116,6 +116,8 @@ public class DigitalAnalytics extends Analytics {
 
             if (!hdiff.isEmpty()) {
                 logger.info(this.getClass().getSimpleName() + " Results: \n" + Utils.jsonPretty(hdiff) + "\n");
+            } else {
+                logger.info("gold and current analytics data are same. No Diff!!");
             }
             return hdiff;
         } finally {
