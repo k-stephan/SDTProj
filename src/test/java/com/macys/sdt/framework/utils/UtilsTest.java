@@ -4,10 +4,7 @@ import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.runner.RunConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,6 +18,11 @@ import static java.lang.Runtime.getRuntime;
  * Tests for Utils
  */
 public class UtilsTest {
+
+    @Before
+    public void setup() {
+        RunConfig.workspace = "";
+    }
 
     @Test
     public void testExecuteCMD() throws Exception {
@@ -172,8 +174,8 @@ public class UtilsTest {
 
         RunConfig.url = "http://www.qa0codemacys.fds.com";
         RunConfig.project = "framework";
-            RunConfig.projectResourceDirs = new ArrayList<>();
-            RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
+        RunConfig.projectResourceDirs = new ArrayList<>();
+        RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         Assert.assertTrue(Utils.getResourceFile("orderable_products.json").exists());
 
         //fallback to website resources
@@ -247,7 +249,6 @@ public class UtilsTest {
         RunConfig.project = "framework";
         RunConfig.projectResourceDirs = new ArrayList<>();
         RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
-        RunConfig.workspace = "";
 
         HashMap<String, String> options = new HashMap<>();
         options.put("return_order", "intransit");

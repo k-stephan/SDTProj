@@ -134,7 +134,7 @@ public class AnalyticsUtils {
      *
      * @return browsermob har
      */
-    public Har getHar() {
+    public static Har getHar() {
         try {
             Har har = MainRunner.browsermobServer.getHar();
             har.writeTo(new File(ScenarioHelper.scenario.getName() + "." + ScenarioHelper.getScenarioIndex() + ".har"));
