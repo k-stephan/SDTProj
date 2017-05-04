@@ -53,13 +53,22 @@ public abstract class Analytics {
     }
 
     /**
-     * load global file
+     * read analytics global data file (xxx_global.json)
+     * and set global variables ("global_ignores", "global_has_values", "global_values") to corresponding values present in the file
      */
     protected void loadGlobals() {
         try {
-            File fglobal = new File(getGoldPath() + RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json");
+            String site_type = RunConfig.getEnvVar("site_type");
+            if (site_type == null)  {
+                logger.warn("site_type absent");
+                return;
+            }
+            File fglobal = new File(getGoldPath() + site_type.toLowerCase() + "_global.json");
             if (fglobal.exists()) {
+                // read analytics global data file and convert to Map
                 Map globals = new Gson().fromJson(Utils.readTextFile(fglobal), Map.class);
+
+                // assign values "ignore", "has_value" and "update" to global variables
                 if (globals.get("ignore") != null) {
                     this.global_ignores = (List) globals.get("ignore");
                 }
@@ -72,8 +81,8 @@ public abstract class Analytics {
             } else {
                 logger.info("Global analytics data file does not exist.");
             }
-        } catch (Exception ex) {
-            logger.warn("Cannot load analytics global data file : " + ex.getMessage());
+        }  catch (Exception e) {
+             logger.warn("Cannot load analytics global data file : " + e.getMessage());
         }
     }
 
@@ -163,6 +172,14 @@ public abstract class Analytics {
         return this.entries = new Gson().fromJson(new Gson().toJson(harEntries), ArrayList.class);
     }
 
+    /**
+     * compare analytics data of gold and current execution for a tag
+     *
+     * @param tagid coremetrics tag id
+     * @param gmap gold analytics value
+     * @param cmap current analytics value
+     * @return comparison data between gold and current analytics data for a tag
+     */
     protected Map compareEntries(String tagid, Map gmap, Map cmap) {
         Set gset = gmap.keySet();
         Set cset = cmap.keySet();
@@ -173,6 +190,14 @@ public abstract class Analytics {
         return hdiff;
     }
 
+    /**
+     * get "har_entries" data stored in scenario gold file
+     * gold file value stored in global variable "gold"
+     * step is the step index stored in global variable "step"
+     *
+     * @return "har_entries" data stored in scenario gold file
+     * @throws Exception throw unexpected exceptions
+     */
     protected ArrayList getGoldStepHarEntries() throws Exception {
         Map record = (Map) this.gold.get(this.step + "");
         if (record == null) {

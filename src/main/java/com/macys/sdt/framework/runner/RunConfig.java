@@ -469,6 +469,7 @@ public class RunConfig {
             }
         }
 
+        // handle cases where line number for test scenario in feature file is mentioned with feature file
         for (String scenario : scenarioList) {
             int lineIndex = scenario.lastIndexOf(':');
             if (lineIndex == -1) {
@@ -481,6 +482,7 @@ public class RunConfig {
             lines.add(lineNum);
         }
 
+        // remove scenario list which have line number mentioned as it is already take care in above code
         scenarioList.removeAll(scenarioList.stream()
                 .filter(str -> str.contains(":"))
                 .collect(Collectors.toList()));
@@ -499,20 +501,28 @@ public class RunConfig {
         return scenarioList;
     }
 
+    /**
+     * find scenario finds scenario details and set those information in "features" global variable
+     *
+     * @param featureScenarios feature scenarios details
+     * @param scenarioPath feature file path
+     * @param line line number location
+     */
     private static void findScenario(ArrayList<Map> featureScenarios, String scenarioPath, int line) {
         HashMap<Integer, Map> hScenario = new HashMap<>();
         for (Map scenario : featureScenarios) {
-            ArrayList<Map> elements = (ArrayList<Map>) scenario.get("elements");
-            for (Map element : elements) {
-                element.put("uri", scenario.get("uri"));
-                int l = Utils.parseInt(element.get("line"), 0);
-                if (line == 0 || line == l) {
-                    features.put(scenarioPath + ":" + l, element);
+            ArrayList<Map> cucumberElements = (ArrayList<Map>) scenario.get("elements");
+            for (Map cucumberElement : cucumberElements) {
+                cucumberElement.put("uri", scenario.get("uri"));
+                int scenarioLineNumber = Utils.parseInt(cucumberElement.get("line"), 0);
+                if (line == 0 || line == scenarioLineNumber) {
+                    // set values of current cucumber features in "feature" global variable
+                    features.put(scenarioPath + ":" + scenarioLineNumber, cucumberElement);
                     if (line == 0) {
                         continue;
                     }
                 }
-                hScenario.put(l, element);
+                hScenario.put(scenarioLineNumber, cucumberElement);
             }
         }
         int closest = 0;

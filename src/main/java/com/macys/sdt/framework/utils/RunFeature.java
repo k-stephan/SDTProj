@@ -177,11 +177,14 @@ public class RunFeature {
         } else {
             logger.info("analytics : " + analytics);
         }
-        logger.info("downloading golds...");
         File goldDir = Utils.createDirectory(this.m_workspace + "/golds");
         String url = "http://" + System.getenv("EE") + "/getAnalyticsGold/" + analytics + "/";
-        String global = RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json";
-        downloadGold(url + global, goldDir, global);
+        String globalFileName = RunConfig.getEnvVar("site_type").toLowerCase() + "_global.json";
+
+        logger.info("downloading global gold file: " + globalFileName);
+
+        // download global gold file
+        downloadGold(url + globalFileName, goldDir, globalFileName);
 
         RunConfig.getFeatureScenarios();
         for (String feature : RunConfig.features.keySet()) {
@@ -189,12 +192,14 @@ public class RunFeature {
             if (featureMap != null) {
                 try {
                     String goldName = Analytics.getGoldName(featureMap);
-                    logger.info("downloading golds: " + goldName);
+                    logger.info("downloading scenario gold file: " + goldName);
+
+                    // download scenario gold file
                     downloadGold(url + goldName, goldDir, goldName);
-                } catch (Exception ex) {
-                    logger.info("Cannot download gold: " + feature + " : " + ex.getMessage());
+                } catch (Exception e) {
+                    logger.info("Cannot download gold: " + feature + " : " + e.getMessage());
                     logger.info("features : " + featureMap.toString());
-                    logger.debug("issue : " + ex);
+                    logger.debug("issue in download gold file : " + e);
                 }
             } else {
                 logger.info("Cannot download gold : " + feature);

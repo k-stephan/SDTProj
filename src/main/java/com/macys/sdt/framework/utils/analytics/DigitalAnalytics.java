@@ -33,12 +33,20 @@ public class DigitalAnalytics extends Analytics {
         }
     }
 
+    /**
+     *  get all coremetrics call for the step from browser's coremetrics call
+     *
+     * @param entries all browser's coremetrics call for a step
+     * @param bcount put tag count in tag_histogram if true else skip adding
+     * @return all coremetrics call for the step from browser's coremetrics call
+     */
     private HashMap getLastTagIds(ArrayList<LinkedTreeMap> entries, boolean bcount) {
         HashMap<String, ArrayList> hlastIds = new HashMap<>();
         if (bcount) {
             logger.info(this.getClass().getSimpleName() + ".getLastTagIds() : entries: " + entries.size());
         }
         for (LinkedTreeMap entry : entries) {
+            // extract analytics data from query string in entry
             Map e = this.getAnalyticsData(entry);
             if (e.get("tid") == null) {
                 continue;
@@ -62,6 +70,14 @@ public class DigitalAnalytics extends Analytics {
         return hlastIds;
     }
 
+    /**
+     * save diff data between gold and current coremetrics value in HashMap(hdiff) passed as argument
+     *
+     * @param hdiff HashMap having diff data between gold and current coremetrics value
+     * @param tagid coremetrics tag id
+     * @param golds gold coremetrics value
+     * @param curs current coremetrics value
+     */
     private void recordTagDiff(HashMap hdiff, String tagid, List<Map> golds, List<Map> curs) {
         for (int i = 0; i < curs.size(); i++) {
             Map gold = new HashMap();
@@ -83,6 +99,7 @@ public class DigitalAnalytics extends Analytics {
             HashMap<String, List> hlgoldIds = getLastTagIds(getGoldStepHarEntries(), false);
             HashMap<String, List> hlcurIds = getLastTagIds(this.entries, true);
 
+            // TODO : if a value is present in current but not in gold will be skipped from reporting =: to fix
             Set<String> tagIdsDiff = Sets.difference(hlgoldIds.keySet(), hlcurIds.keySet());
             for (String tagid : tagIdsDiff) {
                 if (hlgoldIds.get(tagid) == null) {
@@ -130,6 +147,13 @@ public class DigitalAnalytics extends Analytics {
         }
     }
 
+    /**
+     * extract analytics data as Map (from query string from request) from browser's call to coremetrics
+     *
+     * @param entryQuery browser's coremetrics call
+     *
+     * @return analytics data (extracted from query string) as Map
+     */
     protected Map getAnalyticsData(Map entryQuery) {
         HashMap data = new HashMap();
         Map request = (Map) entryQuery.get("request");
