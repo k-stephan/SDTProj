@@ -17,6 +17,7 @@ public class PageUtilsTest {
     public static void setUp() {
         RunConfig.project = "framework";
         RunConfig.projectResourceDirs = new ArrayList<>();
+        RunConfig.brand = "mcom";
         RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         RunConfig.workspace = System.getProperty("user.dir") + "/";
     }
@@ -45,10 +46,12 @@ public class PageUtilsTest {
         Assert.assertNotNull(PageUtils.projectPages.get("website.mcom.panel.test_panel"));
 
         // fallback
+        RunConfig.brand = "bcom";
         PageUtils.loadPageJSON("website.bcom.page.mcom_another_page");
         Assert.assertNotNull(PageUtils.projectPages.get("website.mcom.page.mcom_another_page"));
 
         // responsive
+        RunConfig.brand = "mcom";
         PageUtils.loadPageJSON("MEW.mcom.page.responsive_page");
         Assert.assertNotNull(PageUtils.projectPages.get("responsive.mcom.page.responsive_page"));
 
