@@ -20,6 +20,7 @@ public class PageUtilsTest {
         RunConfig.brand = "mcom";
         RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         RunConfig.workspace = System.getProperty("user.dir") + "/";
+        RunConfig.browser = "chrome";
     }
 
     @After
@@ -62,6 +63,7 @@ public class PageUtilsTest {
 
     @Test
     public void testGetElementJSONValue() {
+        RunConfig.brand = "bcom";
         RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
         String elementJSONValue = PageUtils.getElementJSONValue(new PageElement("test_page.test_element"));
         Assert.assertNotNull(elementJSONValue);
