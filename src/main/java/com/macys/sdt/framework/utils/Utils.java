@@ -537,16 +537,12 @@ public class Utils {
             resource = new File(path);
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
-            } else {
-                logger.info("Bad resource file: " + resource);
             }
 
             // root of resources dir
             resource = new File(RunConfig.workspace + resourceDir + "/" + fName);
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
-            } else {
-                logger.info("Bad resource file: " + resource);
             }
 
             // check for a responsive resource if applicable
@@ -555,16 +551,12 @@ public class Utils {
                 if (resource.exists() && !resource.isDirectory()) {
                     return resource;
                 }
-            } else {
-                logger.info("Bad resource file: " + resource);
             }
 
             //fallback to website resources
             resource = new File(path.replace("/MEW/", "/website/").replace("/iOS/", "/website/").replace("/android/", "/website/"));
             if (resource.exists() && !resource.isDirectory()) {
                 return resource;
-            } else {
-                logger.info("Bad resource file: " + resource);
             }
         }
 

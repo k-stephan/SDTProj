@@ -1,10 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.RunConfig;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 
@@ -21,6 +18,11 @@ public class PageUtilsTest {
         RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         RunConfig.workspace = System.getProperty("user.dir") + "/";
         RunConfig.browser = "chrome";
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        RunConfig.brand = null;
     }
 
     @After
