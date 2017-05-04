@@ -49,7 +49,7 @@ public class LoyaltyAccount {
         address.setAddressLine1(data.getString("Address"));
         address.setCity(data.getString("City"));
         address.setState(data.getString("State"));
-        address.setZipCode(Integer.parseInt(data.getString("Zip")));
+        address.setZipCode(data.getString("Zip"));
         address.setBestPhone(data.getString("Phone"));
         address.setEmail(data.getString("Email"));
         address.setCountryCode(data.getString("Country"));

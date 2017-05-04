@@ -92,13 +92,18 @@ public class PageUtils {
         loadJSONFiles(resPath, pagePath);
 
         // on MCOM env, we're done done
-        if (!pagePath.contains(".bcom.")) {
+        if (StepUtils.macys()) {
             return;
         }
 
-        // on BCOM env, fallback onto mcom elements
-        resPath = resPath.replace("/bcom/", "/mcom/");
-        pagePath = pagePath.replace(".bcom.", ".mcom.");
+        // on BCOM env, fallback onto mcom elements OR bcom elements in recursive case
+        if (resPath.contains("/bcom/")) {
+            resPath = resPath.replace("/bcom/", "/mcom/");
+            pagePath = pagePath.replace(".bcom.", ".mcom.");
+        } else {
+            resPath = resPath.replace("/mcom/", "/bcom/");
+            pagePath = pagePath.replace(".mcom.", ".bcom.");
+        }
         loadJSONFiles(resPath, pagePath);
 
     }

@@ -23,8 +23,9 @@ public class ProfileAddress extends Address {
     private String addressLine2;
     private String city;
     private String state;
-    private Integer zipCode;
+    private String zipCode;
     private String countryCode;
+    private String country;
     private String email;
     private String bestPhone;
     private Boolean primaryFlag = true;
@@ -36,7 +37,7 @@ public class ProfileAddress extends Address {
 
     public ProfileAddress(Long id, String attention, Long sequenceNumber, String firstName, String lastName,
                           String middleName, String addressLine1, String addressLine2, String city, String state,
-                          Integer zipCode, String countryCode, String email, String bestPhone, Boolean primaryFlag) {
+                          String zipCode, String countryCode, String email, String bestPhone, Boolean primaryFlag) {
         this.id = id;
         this.attention = attention;
         this.sequenceNumber = sequenceNumber;
@@ -61,20 +62,43 @@ public class ProfileAddress extends Address {
      */
     public static ProfileAddress getDefaultProfileAddress() {
         return new ProfileAddress(null, "testattention", 11L, "first", "last", "middle", "postbox", "AP", "Hyderabad",
-                "AL", 32701, "USA", TestUsers.generateRandomEmail(7), "123-444-5577", true);
+                "AL", "32701", "USA", TestUsers.generateRandomEmail(7), "123-444-5577", true);
     }
 
     public void fillFromJson(JSONObject address) {
         this.setFirstName(generateRandomFirstName());
         this.setLastName(generateRandomLastName());
+        this.setEmail(generateRandomEmail(16));
         this.setAddressLine1(address.getString("address_line_1"));
         this.setAddressLine2(address.getString("address_line_2"));
         this.setCity(address.getString("address_city"));
         this.setState(address.getString("address_state"));
-        this.setZipCode(Integer.valueOf(address.getString("address_zip_code").trim()));
-        this.setEmail(generateRandomEmail(16));
+        this.setZipCode(address.getString("address_zip_code").trim());
         this.setBestPhone(generateRandomPhoneNumber());
+        this.setCountry(address.getString("country"));
+        if (address.has("country_code")) {
+            this.setCountryCode(address.getString("country_code"));
+        } else {
+            this.setCountryCode("US");
+        }
+    }
 
+    /**
+     * Gets the country of the ProfileAdress
+     *
+     * @return name of country
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * Sets the country of ProfileAddress
+     *
+     * @param country name of country
+     */
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     /**
@@ -262,7 +286,7 @@ public class ProfileAddress extends Address {
      *
      * @return ProfileAddress ZipCode
      */
-    public Integer getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
@@ -271,7 +295,7 @@ public class ProfileAddress extends Address {
      *
      * @param zipCode Profile Address
      */
-    public void setZipCode(Integer zipCode) {
+    public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 

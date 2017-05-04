@@ -412,7 +412,7 @@ public class Wait {
     public static boolean forPageReady(final String pageName) {
         // app loading is handled much better, there are already built-in waits in appium interactions
         // that work perfectly well. Sadly, not the same for the website.
-        if (RunConfig.appTest || waitDone) {
+        if (RunConfig.appTest || waitDone || !WebDriverManager.driverInitialized() || !Navigate.pageVisited) {
             return true;
         }
 
@@ -450,7 +450,6 @@ public class Wait {
         } else {
             logger.debug("No page name provided");
         }
-        StepUtils.closeJQueryPopup();
         return true;
     }
 
@@ -510,7 +509,7 @@ public class Wait {
 
             // TEMPORARY - currently a bug in BCOM sign in, checkout, MEW search and MCOM VGC PDP page that leaves AJAX calls hanging
             WebDriverManager.getCurrentUrl();
-            if ((StepUtils.bloomingdales() || StepUtils.MEW()) || (StepUtils.macys())) {
+            if ((StepUtils.bloomingdales() || StepUtils.MEW())) {
                 // now order review page and pdp have 2 open.
                 if (MainRunner.currentURL.matches(".*?(chkout|product).*?")) {
                     return queries <= 2;

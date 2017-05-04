@@ -27,6 +27,7 @@ public class Navigate {
     private static ArrayList<Runnable> beforeNavigate = new ArrayList<>();
     private static ArrayList<Runnable> afterNavigate = new ArrayList<>();
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    static boolean pageVisited = false;
 
     /**
      * Adds a method (or lambda) to the list of methods to run before any clicks or other navigation
@@ -276,6 +277,7 @@ public class Navigate {
             logger.debug("-->Error:StepUtils.visit(): " + pageURL + ": " + ex.getMessage());
         }
         runAfterNavigation();
+        pageVisited = true;
     }
 
     private static String formatJsonURL(String jsonURL, Object... urlFormatParams) {
@@ -375,7 +377,7 @@ public class Navigate {
      * @return returned value of JS code - One of Boolean, Long, Double, String, List or WebElement. Or null. (if any) otherwise empty string
      */
     public static synchronized Object execJavascript(String script, Object... args) {
-        if (!WebDriverManager.driverInitialized()) {
+        if (!(WebDriverManager.driverInitialized() && pageVisited)) {
             return "";
         }
 
@@ -383,7 +385,7 @@ public class Navigate {
             JavascriptExecutor scriptExe = ((JavascriptExecutor) WebDriverManager.getWebDriver());
             return scriptExe.executeScript(script, args);
         } catch (Exception e) {
-            logger.debug("Error in executing javascript : " + e.getMessage());
+            logger.debug("Error in executing javascript : " + e);
             return "";
         }
     }

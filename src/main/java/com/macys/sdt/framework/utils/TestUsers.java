@@ -6,7 +6,8 @@ import com.google.gson.reflect.TypeToken;
 import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.exceptions.ProductionException;
 import com.macys.sdt.framework.exceptions.UserException;
-import com.macys.sdt.framework.model.*;
+import com.macys.sdt.framework.model.CreditCard;
+import com.macys.sdt.framework.model.Product;
 import com.macys.sdt.framework.model.addresses.Address;
 import com.macys.sdt.framework.model.addresses.ProfileAddress;
 import com.macys.sdt.framework.model.registry.Registry;
@@ -95,7 +96,8 @@ public class TestUsers {
             }
 
             String lockCustomer = Utils.httpGet(url, null);
-            Map<String, Map<String, String>> customer = new Gson().fromJson(lockCustomer, new TypeToken<Map<String, Map<String, String>>>(){}.getType());
+            Map<String, Map<String, String>> customer = new Gson().fromJson(lockCustomer, new TypeToken<Map<String, Map<String, String>>>() {
+            }.getType());
             prodCustomer.getUser().getLoginCredentials().setPassword(customer.get("login").get("password"));
             prodCustomer.getUser().getProfileAddress().setEmail(customer.get("login").get("email"));
             currentEmail = prodCustomer.getUser().getProfileAddress().getEmail();
@@ -141,20 +143,22 @@ public class TestUsers {
     /**
      * Generates a new customer with random data
      *
-     * @param country Country the profile should have (United States if null)
+     * @param addressOpts Options for address (country, state, etc.)
      * @return UserProfile with customer data
      */
-    public static UserProfile getCustomer(String country) {
-        if (customer == null) {
-            if (country == null) {
-                country = "United States";
-            }
-            HashMap<String, String> options = new HashMap<>();
-            options.put("country", country);
+    public static UserProfile getCustomer(HashMap<String, String> addressOpts) {
+        if (addressOpts == null) {
+            addressOpts = new HashMap<>();
+            addressOpts.put("country", "United States");
+        }
+        // create a new customer if current one doesn't exist or is from the wrong country
+        if (customer == null || (customer.getUser().getProfileAddress().getCountry() != null &&
+                customer.getUser().getProfileAddress().getCountry().equalsIgnoreCase(addressOpts.get("country")))) {
+
             customer = new UserProfile();
             user = new User();
             ProfileAddress profileAddress = new ProfileAddress();
-            getRandomValidAddress(options, profileAddress);
+            getRandomValidAddress(addressOpts, profileAddress);
 
             UserPasswordHint userPasswordHint = new UserPasswordHint();
             userPasswordHint.setId(1L);
@@ -170,12 +174,11 @@ public class TestUsers {
             user.setProfileAddress(profileAddress);
             user.setUserPasswordHint(userPasswordHint);
             customer.setUser(user);
+            currentEmail = customer.getUser().getProfileAddress().getEmail();
+            currentPassword = customer.getUser().getLoginCredentials().getPassword();
+            logger.info("Your New Email Address is: " + currentEmail);
         }
-        currentEmail = customer.getUser().getProfileAddress().getEmail();
-        currentPassword = customer.getUser().getLoginCredentials().getPassword();
-        logger.info("Your New Email Address is: " + currentEmail);
         return customer;
-
     }
 
     /**
@@ -189,8 +192,9 @@ public class TestUsers {
         if (prodEnv()) {
             throw new ProductionException("Cannot access REST APIs on production");
         }
-
-        UserProfile profile = getCustomer(country);
+        HashMap<String, String> opts = new HashMap<>();
+        opts.put("country", country);
+        UserProfile profile = getCustomer(opts);
         if (!UserProfileService.createUserProfile(profile)) {
             Assert.fail("Unable to create user profile through REST");
         }
@@ -256,7 +260,7 @@ public class TestUsers {
     /**
      * Creates a new customer with random data and valid USL info
      *
-     * @param country         Country the profile should have (US if null)
+     * @param country Country the profile should have (US if null)
      * @return UserProfile with customer data
      */
     public static UserProfile getuslCustomer(String country) {
@@ -804,9 +808,9 @@ public class TestUsers {
             // Big Ticket specific code
             String BTRequestedStatus = null;
             List<String> BTStatus = Arrays.asList("ONHAND", "BACKORDER", "UNAVAILABLE");
-            boolean BTFound = BTStatus.stream().anyMatch(e -> options.containsKey(e));
-            if (BTFound){
-                BTRequestedStatus = BTStatus.stream().filter(e -> options.containsKey(e)).findFirst().get();
+            boolean BTFound = BTStatus.stream().anyMatch(options::containsKey);
+            if (BTFound) {
+                BTRequestedStatus = BTStatus.stream().filter(options::containsKey).findFirst().orElse(null);
                 options.remove(BTRequestedStatus);
             }
             String jsonTxt = Utils.readTextFile(addressFile);
@@ -834,8 +838,8 @@ public class TestUsers {
                         }
                     }
                 }
-                if (found){
-                    if (BTFound){
+                if (found) {
+                    if (BTFound) {
                         List<HashMap> BTProductStatus = ProductService.getBTProductDeliverabilityStatus(product.get("id").toString(), product.getString("zip_code"));
                         final String finalBTRequestedStatus = BTRequestedStatus;
                         found = BTProductStatus.stream().anyMatch(e -> e.get("status").equals(finalBTRequestedStatus));
@@ -843,9 +847,10 @@ public class TestUsers {
                         if (orderable && !prodEnv()) {
                             List<String> upcIds = ProductService.getAllUpcIds(product.get("id").toString());
                             // Skip product if the product have more than one upcId
-                            if (upcIds.size() != 1)
+                            if (upcIds.size() != 1) {
                                 continue;
-                            found = ProductService.checkoutAvailability(product.get("id").toString()) && ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
+                            }
+                            found = ProductService.checkoutAvailability(product.get("id").toString());// && ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
                         }
                     }
                     if (found) {

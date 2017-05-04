@@ -115,7 +115,7 @@ public class ProfileAddressTest {
 
     @Test
     public void testGetZipCode() throws Exception {
-        Integer zipCode = 32701;
+        String zipCode = "32701";
         profileAddress.setZipCode(zipCode);
         Assert.assertEquals(zipCode, profileAddress.getZipCode());
     }

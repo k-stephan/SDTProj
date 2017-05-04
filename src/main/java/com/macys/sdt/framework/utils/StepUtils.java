@@ -542,35 +542,6 @@ public abstract class StepUtils {
     }
 
     /**
-     * Closes any open jquery popups
-     *
-     * @return true if a popup was closed
-     */
-    public static boolean closeJQueryPopup() {
-        if (safari()) {
-            return true;
-        }
-
-        String[] texts = new String[]{"some technical issues"};
-        for (String text : texts) {
-            try {
-                boolean res = (boolean) Navigate.execJavascript(
-                        "return $('div.rc-overlay-visible').text().contains('" + text + "')"
-                );
-                if (res) {
-                    Navigate.execJavascript(
-                            "$('div.rc-overlay-visible').find('button').click()"
-                    );
-                }
-                return true;
-            } catch (Exception ex) {
-                //ignore failure, will return false anyway
-            }
-        }
-        return false;
-    }
-
-    /**
      * Captures the browser window and saves to a specified file name
      *
      * @param fileName file name to save screenshot as

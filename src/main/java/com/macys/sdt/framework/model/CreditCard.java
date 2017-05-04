@@ -149,7 +149,11 @@ public class CreditCard {
      * @param expiryMonth Credit Card
      */
     public void setExpiryMonth(String expiryMonth) {
-        this.expiryMonth = expiryMonth;
+        if (expiryMonth.length() == 1) {
+            this.expiryMonth = "0" + expiryMonth;
+        } else {
+            this.expiryMonth = expiryMonth;
+        }
     }
 
     /**
