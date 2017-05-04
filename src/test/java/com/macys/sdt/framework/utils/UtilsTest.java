@@ -247,6 +247,7 @@ public class UtilsTest {
         RunConfig.project = "framework";
         RunConfig.projectResourceDirs = new ArrayList<>();
         RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
+        RunConfig.workspace = "";
 
         HashMap<String, String> options = new HashMap<>();
         options.put("return_order", "intransit");
