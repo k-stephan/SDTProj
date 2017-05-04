@@ -207,8 +207,8 @@ public class OrderServices {
     public List<String> getShipMethodCode(String orderNumber) {
         List<String> shipMethod = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    queries.getJSONObject("order_service").getString("order_shipment_details").replaceFirst("'\\?'", "'" + orderNumber + "'"));
+            PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service").getString("order_shipment_details"));
+            preparedStatement.setString(1, orderNumber);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
