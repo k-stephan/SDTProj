@@ -182,7 +182,7 @@ public class Cookies {
         if (RunConfig.appTest) {
             return false;
         }
-
+        removeDuplicateJS(name);
         String encodedValue = encodeURL(value);
         try {
             Navigate.execJavascript("document.cookie = '" + name + "=" + encodedValue + "'");
@@ -206,6 +206,7 @@ public class Cookies {
         if (RunConfig.appTest) {
             return false;
         }
+        removeDuplicateJS(name);
         String encodedValue = encodeURL(value);
         if (expiry == null) {
             Calendar calendar = Calendar.getInstance();
@@ -218,6 +219,13 @@ public class Cookies {
         } catch (Exception e) {
             logger.warn("issue in add or replace cookie using js : " + e.getMessage());
             return false;
+        }
+    }
+
+    private static void removeDuplicateJS(String name ) {
+        String cookies = (String)Navigate.execJavascript("return document.cookie");
+        if (cookies.contains(name)) {
+            deleteCookieJavascript(name);
         }
     }
 
