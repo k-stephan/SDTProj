@@ -26,6 +26,17 @@
             "registrable": true,
             "category_page_type": "Browse",
             "available": true
+        },
+        {
+            "id": 2112827,
+            "available_bops": true,
+            "registrable": true,
+            "click_to_call": false,
+            "upc": 86279088208,
+            "store_location_nbr": 93,
+            "zip_code": 22102,
+            "master_product": false,
+            "available": true
         }
     ]
 }

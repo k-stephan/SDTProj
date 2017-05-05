@@ -795,7 +795,7 @@ public class TestUsers {
      * @param options attributes the product should have
      * @return Product object with all attributes
      */
-    public static Product getRandomProduct(HashMap<String, Boolean> options) {
+    public static Product getRandomProduct(HashMap options) {
         try {
             JSONArray products;
             if (prodEnv()) {
@@ -803,14 +803,20 @@ public class TestUsers {
             }
             File addressFile = getResourceFile("orderable_products.json");
             // for now all our products are orderable
-            boolean orderable = options.containsKey("orderable") && options.get("orderable");
+            boolean orderable = options.containsKey("orderable") && Boolean.valueOf(options.get("orderable").toString());
             options.remove("orderable");
+
+            // for checking BOPS availability
+            boolean checkBopsAvailable = options.containsKey("available_bops");
+            // if checkBopsAvailable is false this variable won't be used, so false is ok
+            boolean expectedBopsAvailability = checkBopsAvailable ? Boolean.valueOf(options.get("available_bops").toString()) : false;
+
             // Big Ticket specific code
             String BTRequestedStatus = null;
             List<String> BTStatus = Arrays.asList("ONHAND", "BACKORDER", "UNAVAILABLE");
             boolean BTFound = BTStatus.stream().anyMatch(options::containsKey);
-            if (BTFound) {
-                BTRequestedStatus = BTStatus.stream().filter(options::containsKey).findFirst().orElse(null);
+            if (BTFound){
+                BTRequestedStatus = BTStatus.stream().filter(options::containsKey).findFirst().get();
                 options.remove(BTRequestedStatus);
             }
             String jsonTxt = Utils.readTextFile(addressFile);
@@ -824,33 +830,46 @@ public class TestUsers {
             for (int i = 0; i < products.length(); i++) {
                 JSONObject product = products.getJSONObject(i);
                 boolean found = true;
-                for (String key : options.keySet()) {
+                String productId = product.get("id").toString();
+                for (Object key : options.keySet()) {
                     try {
-                        if (!options.get(key).equals(product.getBoolean(key))) {
+                        // items maybe bool, int or str, so making all as string and comparing
+                        if (!options.get(key).toString()
+                                .equalsIgnoreCase(
+                                        product.get(key.toString())
+                                                .toString())
+                                ) {
                             found = false;
                             break;
                         }
                     } catch (JSONException e) {
                         //attribute not present, assumed false
-                        if (options.get(key)) {
+                        if (Boolean.parseBoolean(options.get(key).toString()) ||
+                                !options.get(key).toString().equalsIgnoreCase("false")) {
                             found = false;
                             break;
                         }
                     }
                 }
-                if (found) {
-                    if (BTFound) {
-                        List<HashMap> BTProductStatus = ProductService.getBTProductDeliverabilityStatus(product.get("id").toString(), product.getString("zip_code"));
+                if (found){
+                    if (BTFound){
+                        List<HashMap> BTProductStatus = ProductService.getBTProductDeliverabilityStatus(productId, product.getString("zip_code"));
                         final String finalBTRequestedStatus = BTRequestedStatus;
                         found = BTProductStatus.stream().anyMatch(e -> e.get("status").equals(finalBTRequestedStatus));
                     } else {
                         if (orderable && !prodEnv()) {
-                            List<String> upcIds = ProductService.getAllUpcIds(product.get("id").toString());
+                            List<String> upcIds = ProductService.getAllUpcIds(productId);
                             // Skip product if the product have more than one upcId
                             if (upcIds.size() != 1) {
                                 continue;
                             }
                             found = ProductService.checkoutAvailability(product.get("id").toString());// && ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
+                        }
+                        if (found && checkBopsAvailable) {
+                            options.putIfAbsent("store_location_nbr", macys() ? 93 : 343); // default store values
+                            boolean actualBopsAvailability = ProductService.checkProductBopsAvailability(productId,
+                                    options.get("store_location_nbr").toString());
+                            found = actualBopsAvailability == expectedBopsAvailability;
                         }
                     }
                     if (found) {
