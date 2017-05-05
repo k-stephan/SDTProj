@@ -153,7 +153,7 @@ public class TestUsers {
         }
         // create a new customer if current one doesn't exist or is from the wrong country
         if (customer == null || (customer.getUser().getProfileAddress().getCountry() != null &&
-                customer.getUser().getProfileAddress().getCountry().equalsIgnoreCase(addressOpts.get("country")))) {
+                !customer.getUser().getProfileAddress().getCountry().equalsIgnoreCase(addressOpts.get("country")))) {
 
             customer = new UserProfile();
             user = new User();
