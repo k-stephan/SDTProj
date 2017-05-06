@@ -795,7 +795,7 @@ public class TestUsers {
      * @param options attributes the product should have
      * @return Product object with all attributes
      */
-    public static Product getRandomProduct(HashMap options) {
+    public static Product getRandomProduct(Map options) {
         try {
             JSONArray products;
             if (prodEnv()) {
@@ -809,14 +809,14 @@ public class TestUsers {
             // for checking BOPS availability
             boolean checkBopsAvailable = options.containsKey("available_bops");
             // if checkBopsAvailable is false this variable won't be used, so false is ok
-            boolean expectedBopsAvailability = checkBopsAvailable ? Boolean.valueOf(options.get("available_bops").toString()) : false;
+            boolean expectedBopsAvailability = checkBopsAvailable && Boolean.valueOf(options.get("available_bops").toString());
 
             // Big Ticket specific code
             String BTRequestedStatus = null;
             List<String> BTStatus = Arrays.asList("ONHAND", "BACKORDER", "UNAVAILABLE");
             boolean BTFound = BTStatus.stream().anyMatch(options::containsKey);
-            if (BTFound){
-                BTRequestedStatus = BTStatus.stream().filter(options::containsKey).findFirst().get();
+            if (BTFound) {
+                BTRequestedStatus = BTStatus.stream().filter(options::containsKey).findFirst().orElse(null);
                 options.remove(BTRequestedStatus);
             }
             String jsonTxt = Utils.readTextFile(addressFile);
@@ -834,11 +834,7 @@ public class TestUsers {
                 for (Object key : options.keySet()) {
                     try {
                         // items maybe bool, int or str, so making all as string and comparing
-                        if (!options.get(key).toString()
-                                .equalsIgnoreCase(
-                                        product.get(key.toString())
-                                                .toString())
-                                ) {
+                        if (!options.get(key).toString().equalsIgnoreCase(product.get(key.toString()).toString())) {
                             found = false;
                             break;
                         }
