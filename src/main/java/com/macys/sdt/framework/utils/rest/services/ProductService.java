@@ -120,6 +120,45 @@ public class ProductService {
     }
 
     /**
+     * check item is BOPS available/not available
+     *
+     * @param productId ID of product
+     * @param storeId ID of store to check availability for
+     * @return is product  be available
+     */
+    public static boolean checkProductBopsAvailability(String productId, String storeId) {
+        String url = String.format("%s/%s?productId=%s&_fields=name,inventories", getStoresURL(), storeId, productId);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Macys-ClientId", "NavApp");
+        String response = RESTOperations.doGET(url, headers).readEntity(String.class);
+
+        JSONArray stores = new JSONObject(response)
+                .getJSONObject("stores")
+                .getJSONArray("store");
+
+        try {
+            JSONArray inventories = stores
+                    .getJSONObject(0)
+                    .getJSONObject("inventories")
+                    .getJSONArray("inventory");
+
+            for (int i = 0; i < inventories.length(); i++) {
+                String bopsAvailability = inventories.getJSONObject(i)
+                        .getJSONObject("storeInventory")
+                        .getString("bopsAvailability");
+                if (bopsAvailability.equals("AVAILABLE")) {
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            logger.warn(String.format("Unable to check bops availability for prodID %s, storeID %s.\\n Response %s.\\n Error %s",
+                    productId, storeId, response, e.getMessage()));
+        }
+
+        return false;
+    }
+
+    /**
      * Add item (UPC ID) to bag using MSPOrder IP and get the response
      *
      * @param upcId ID of product to check
@@ -223,7 +262,7 @@ public class ProductService {
             logger.error("Unable to get or read data from SIM product service: " + e.getMessage());
         }
         // fall back to DML product
-        HashMap<String, Boolean> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("promo_code_eligible", true);
         map.put("orderable", true);
         return TestUsers.getRandomProduct(map);
@@ -244,6 +283,10 @@ public class ProductService {
 
     private static String getServiceURL() {
         return "http://" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080/api/" + RESTEndPoints.PRODUCTS_ENDPOINT;
+    }
+
+    private static String getStoresURL() {
+        return "http://" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080/api/" + RESTEndPoints.STORES_ENDPOINT;
     }
 
 }
