@@ -262,7 +262,7 @@ public class ProductService {
             logger.error("Unable to get or read data from SIM product service: " + e.getMessage());
         }
         // fall back to DML product
-        HashMap<String, Boolean> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("promo_code_eligible", true);
         map.put("orderable", true);
         return TestUsers.getRandomProduct(map);

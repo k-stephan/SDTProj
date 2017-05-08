@@ -795,7 +795,7 @@ public class TestUsers {
      * @param options attributes the product should have
      * @return Product object with all attributes
      */
-    public static Product getRandomProduct(Map options) {
+    public static Product getRandomProduct(Map<String, Object> options) {
         try {
             JSONArray products;
             if (prodEnv()) {
@@ -831,10 +831,10 @@ public class TestUsers {
                 JSONObject product = products.getJSONObject(i);
                 boolean found = true;
                 String productId = product.get("id").toString();
-                for (Object key : options.keySet()) {
+                for (String key : options.keySet()) {
                     try {
                         // items maybe bool, int or str, so making all as string and comparing
-                        if (!options.get(key).toString().equalsIgnoreCase(product.get(key.toString()).toString())) {
+                        if (!options.get(key).toString().equalsIgnoreCase(product.get(key).toString())) {
                             found = false;
                             break;
                         }

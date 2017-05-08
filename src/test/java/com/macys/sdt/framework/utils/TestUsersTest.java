@@ -363,7 +363,7 @@ public class TestUsersTest {
 
     @Test
     public void testGetRandomProductBoolean() throws Exception {
-        HashMap<String, Boolean> options = new HashMap<>();
+        HashMap<String, Object> options = new HashMap<>();
         options.put("gift_wrappable", true);
         Product product = TestUsers.getRandomProduct(options);
         Assert.assertNotNull(product);
@@ -372,7 +372,7 @@ public class TestUsersTest {
 
     @Test
     public void testGetRandomProductString() throws Exception {
-        HashMap<String, String> options = new HashMap<>();
+        HashMap<String, Object> options = new HashMap<>();
         options.put("zip_code", "22102");
         Product product = TestUsers.getRandomProduct(options);
         Assert.assertNotNull(product);
