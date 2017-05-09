@@ -3,6 +3,8 @@ package com.macys.sdt.framework.model;
 import com.google.gson.Gson;
 import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -12,6 +14,9 @@ import java.util.Map;
  * Gets kill switch data from EE API
  */
 public class KillSwitch {
+
+    private static final Logger logger = LoggerFactory.getLogger(KillSwitch.class);
+
     private static Map<String, Map<String, String>> data;
 
     /**
@@ -43,17 +48,16 @@ public class KillSwitch {
         try {
             String env = new URL(System.getenv("website")).getHost().replaceAll("www1.", "").replaceAll("www.", "").replaceAll(".fds.com", "").replaceAll(".com", "");
             String ksurl = Utils.getEEUrl() + "/api/ee/getKillSwitch/" + env;
-            System.out.println("--> Dumping KillSwitch data for:" + ksurl);
+            logger.info("Dumping KillSwitch data for : " + ksurl);
             String ks = Utils.httpGet(ksurl, null);
             try {
                 KillSwitch.data = new Gson().fromJson(ks, Map.class);
                 return ks;
-            } catch (Exception ex) {
-                System.out.println("--> Killswitch data not available:" + ex.getMessage());
+            } catch (Exception e) {
+                logger.warn("Killswitch data not available : " + e.getMessage());
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("issue in fetching KillSwitch data : " + e.getMessage());
         }
         return "{}";
     }

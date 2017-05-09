@@ -118,6 +118,7 @@ class WebDriverConfigurator {
                 return driver;
             case "edge":
                 return new EdgeDriver(capabilities);
+            case "firefox":
             default:
                 boolean marionette = browserVersion.compareTo("48") >= 0;
                 capabilities.setCapability("marionette", marionette);
@@ -167,14 +168,14 @@ class WebDriverConfigurator {
             case "chrome":
                 capabilities = DesiredCapabilities.chrome();
                 setChromeDriverLocation();
-                ChromeOptions chrome = new ChromeOptions();
-                chrome.addArguments("test-type");
-                chrome.addArguments("--disable-extensions");
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--test-type");
+                chromeOptions.addArguments("--disable-extensions");
 
                 //hide info bar if a session is being controlled by an automated test
-                chrome.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+                chromeOptions.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
 
-                capabilities.setCapability(ChromeOptions.CAPABILITY, chrome);
+                capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
                 return disabledProxyCap(capabilities);
             case "safari":
                 capabilities = DesiredCapabilities.safari();
@@ -184,6 +185,7 @@ class WebDriverConfigurator {
                 logger.warn("Microsoft's Edge Driver is not fully implemented yet. There may be strange or unexpected errors.");
                 capabilities = DesiredCapabilities.edge();
                 return disabledProxyCap(capabilities);
+            case "firefox":
             default:
                 setFirefoxDriverLocation();
                 capabilities = DesiredCapabilities.firefox();
@@ -615,6 +617,7 @@ class WebDriverConfigurator {
                 return version;
             case "chrome":
                 return "56.0";
+            case "firefox":
             default: // firefox version we have in Lorraine VM's
                 return "46.0";
         }
