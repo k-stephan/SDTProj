@@ -859,12 +859,19 @@ public class TestUsers {
                             if (upcIds.size() != 1) {
                                 continue;
                             }
-                            found = ProductService.checkoutAvailability(product.get("id").toString());// && ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
+                            found = ProductService.checkoutAvailability(product.get("id").toString());// found = ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
                         }
                         if (found && checkBopsAvailable) {
-                            options.putIfAbsent("store_location_nbr", macys() ? 93 : 343); // default store values
-                            boolean actualBopsAvailability = ProductService.checkProductBopsAvailability(productId,
-                                    options.get("store_location_nbr").toString());
+                            String storeLocationKey = "store_location_nbr";
+                            String storeLocationNumber;
+                            if (options.containsKey(storeLocationKey)) {
+                                storeLocationNumber = options.get(storeLocationKey).toString();
+                            } else if (product.keySet().contains(storeLocationKey)) {
+                                storeLocationNumber = product.get(storeLocationKey).toString();
+                            } else {
+                                storeLocationNumber = macys() ? "93" : "343";
+                            }
+                            boolean actualBopsAvailability = ProductService.checkProductBopsAvailability(productId, storeLocationNumber);
                             found = actualBopsAvailability == expectedBopsAvailability;
                         }
                     }
