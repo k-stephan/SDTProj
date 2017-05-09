@@ -452,9 +452,7 @@ class WebDriverConfigurator {
             capabilities.setCapability("tags", getEnvOrExParam("tags"));
 
             // set test name for sauceLabs
-            String scenarioName = ScenarioHelper.scenario != null ? ScenarioHelper.scenario.getName() : "";
-            capabilities.setCapability("name", (StepUtils.macys() ? "MCOM" : "BCOM") +
-                    " SDT " + (project != null ? project : "") + " : " + scenarioName);
+            capabilities.setCapability("name", formatScenarioName());
             capabilities.setCapability("maxDuration", 3600);
 
             // to use sauce connect
@@ -512,6 +510,15 @@ class WebDriverConfigurator {
     }
 
     /**
+     * Format the scenario name to set for Sauce Labs and Test Object tests
+     * @return formatted Scenario name
+     */
+    private static String formatScenarioName() {
+        return (StepUtils.macys() ? "MCOM" : "BCOM") + " SDT " + (project != null ? project : "")
+                + " : " + (ScenarioHelper.scenario != null ? ScenarioHelper.scenario.getName() : "");
+    }
+
+    /**
      * initiate appium driver (ios or android) with given capabilities for local execution or saucelabs
      *
      * @param capabilities preferred configurations for ios or android driver
@@ -538,6 +545,7 @@ class WebDriverConfigurator {
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testobjectAPIKey);
             capabilities.setCapability("testobject_device", testobjectDevice);
+            capabilities.setCapability("testobject_test_name", formatScenarioName());
         } else {    // for non saucelabs or testobject execution
             capabilities.setCapability("appiumVersion", "1.6");
         }
@@ -549,7 +557,7 @@ class WebDriverConfigurator {
             if (useSauceLabs) {
                 url = new URL("http://" + sauceUser + ":" + sauceKey + "@ondemand.saucelabs.com:80/wd/hub");
             } else if (useTestObject) {
-                url = new URL("http://appium.testobject.com/wd/hub");
+                url = new URL("https://us1.appium.testobject.com/wd/hub");
             } else {
                 String appiumURL = getEnvOrExParam("appium_server");
                 appiumURL = appiumURL == null ? "http://127.0.0.1" : appiumURL;
