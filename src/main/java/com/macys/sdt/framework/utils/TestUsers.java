@@ -217,7 +217,7 @@ public class TestUsers {
         }
         UserProfile userProfile = getCustomer(null);
 
-        if (userProfile != null && registry == null) {
+        if (userProfile.getRegistry() == null) {
             registry = new Registry();
             registry.addRandomData();
 
@@ -229,8 +229,8 @@ public class TestUsers {
 
             userProfile.setRegistry(registry);
         }
-        currentEmail = userProfile != null ? userProfile.getUser().getProfileAddress().getEmail() : currentEmail;
-        currentPassword = userProfile != null ? userProfile.getUser().getLoginCredentials().getPassword() : currentPassword;
+        currentEmail = userProfile.getUser().getProfileAddress().getEmail();
+        currentPassword = userProfile.getUser().getLoginCredentials().getPassword();
         return userProfile;
     }
 
