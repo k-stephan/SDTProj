@@ -125,12 +125,12 @@ public class RunConfig {
     /**
      * The TestObject API key for the device
      */
-    public static String testobjectAPIKey = getEnvOrExParam("testobject_api_key");
+    public static String testObjectAPIKey = getEnvOrExParam("testobject_api_key");
 
     /**
-     * The TestObject Device
+     * The TestObject User
      */
-    public static String testobjectDevice = getEnvOrExParam("testobject_device");
+    public static String testObjectUser = getEnvOrExParam("testobject_user");
 
     /**
      * Workspace path as given in "WORKSPACE" env variable
@@ -693,8 +693,8 @@ public class RunConfig {
         // use saucelabs when valid "sauce_user" and "sauce_key" is provided
         useSauceLabs = sauceUser != null && sauceKey != null;
 
-        // use testobject when valid "testobject_api_key" and "testobject_device" is provided
-        useTestObject = testobjectAPIKey != null && testobjectDevice != null;
+        // use testobject when valid "testobject_api_key" and "testObjectUser" is provided
+        useTestObject = testObjectAPIKey != null && testObjectUser != null;
 
         // use chrome emulation when it is mobile device and use of Appium is not mentioned
         useChromeEmulation = StepUtils.mobileDevice() && !useAppium;

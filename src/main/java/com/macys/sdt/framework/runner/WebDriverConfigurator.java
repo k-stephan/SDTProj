@@ -4,6 +4,7 @@ import com.macys.sdt.framework.utils.ProxyFilters;
 import com.macys.sdt.framework.utils.ScenarioHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
+import com.macys.sdt.framework.utils.rest.utils.TestObjectUtil;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -545,15 +546,15 @@ class WebDriverConfigurator {
                 capabilities.setCapability("appiumVersion", "1.6.3");
             }
         } else if (useTestObject) { // for testobject execution
-            capabilities.setCapability("testobject_api_key", testobjectAPIKey);
-            capabilities.setCapability("testobject_device", testobjectDevice);
+            capabilities.setCapability("testobject_api_key", testObjectAPIKey);
+            capabilities.setCapability("testobject_device", TestObjectUtil.getRandomTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
             capabilities.setCapability("testobject_test_name", formatScenarioName());
         } else {    // for non saucelabs or testobject execution
             capabilities.setCapability("appiumVersion", "1.6");
         }
 
+        URL url = null;
         try {
-            URL url;
 
             // URL creation
             if (useSauceLabs) {
@@ -580,7 +581,17 @@ class WebDriverConfigurator {
             } else {
                 return new AndroidDriver(url, capabilities);
             }
-        } catch (MalformedURLException e) {
+        } catch (SessionNotCreatedException se) {
+            logger.info("Looking for next available device!!");
+            if (useTestObject) {
+                capabilities.setCapability("testobject_device", TestObjectUtil.getRandomTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+                if (StepUtils.iOS()) {
+                    return new IOSDriver(url, capabilities);
+                } else {
+                    return new AndroidDriver(url, capabilities);
+                }
+            }
+        }catch (MalformedURLException e) {
             logger.error("Could not create appium driver: " + e);
         }
         return null;

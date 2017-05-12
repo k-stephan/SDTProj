@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.utils.rest.utils;
 
+import com.macys.sdt.framework.runner.RunConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,10 +12,12 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
+import static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_USERNAME;
+import static org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.HTTP_AUTHENTICATION_BASIC_PASSWORD;
+
 public class RESTOperations {
 
     private static Logger logger = LoggerFactory.getLogger(RESTOperations.class);
-
     /**
      * POST operation
      *
@@ -99,6 +103,38 @@ public class RESTOperations {
         try {
             WebTarget webTarget = RESTUtils.createTarget(client, resource);
             Invocation.Builder requestBuilder = webTarget.request();
+            if (headers != null && !headers.isEmpty()) {
+                for (String headerKey : headers.keySet()) {
+                    requestBuilder.header(headerKey, headers.get(headerKey));
+                }
+            }
+            response = requestBuilder.get();
+        } catch (Exception e) {
+            logger.error("error in REST GET call : " + e.getMessage());
+            logger.trace("REST GET call error : " + e);
+        }
+        return response;
+    }
+
+    /**
+     * GET operation with Basic authentication detail
+     *
+     * @param resource  : REST uri
+     * @param headers   : headers (put null if no data)
+     * @param user      : user name
+     * @param password  : password
+     * @return REST response
+     */
+    public static Response doGETWithBasicAuth(String resource, Map<String, String> headers, String user, String password) {
+        Response response = null;
+        HttpAuthenticationFeature feature = HttpAuthenticationFeature.basicBuilder().build();
+        Client client = RESTUtils.createClient();
+        client.register(feature);
+        try {
+            WebTarget webTarget = RESTUtils.createTarget(client, resource);
+            Invocation.Builder requestBuilder = webTarget.request()
+                    .property(HTTP_AUTHENTICATION_BASIC_USERNAME, user)
+                    .property(HTTP_AUTHENTICATION_BASIC_PASSWORD, password);
             if (headers != null && !headers.isEmpty()) {
                 for (String headerKey : headers.keySet()) {
                     requestBuilder.header(headerKey, headers.get(headerKey));
