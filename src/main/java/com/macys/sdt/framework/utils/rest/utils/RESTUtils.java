@@ -14,7 +14,7 @@ import javax.ws.rs.client.WebTarget;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class RESTUtils {
+class RESTUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(RESTUtils.class);
 
@@ -24,7 +24,7 @@ public class RESTUtils {
      * @param relativePath : relative REST uri
      * @return absolute REST uri
      */
-    public static String fullURI(String relativePath) {
+    static String fullURI(String relativePath) {
         return getBaseAddress() + relativePath;
     }
 
@@ -33,7 +33,7 @@ public class RESTUtils {
      *
      * @return REST client
      */
-    public static Client createClient() {
+    static Client createClient() {
         ClientConfig config = new ClientConfig();
         config.property(ClientProperties.CONNECT_TIMEOUT, 30 * 1000);
         config.property(ClientProperties.READ_TIMEOUT, 60 * 1000);
@@ -47,7 +47,7 @@ public class RESTUtils {
      * @param resource : resource path to specific API
      * @return WebTarget
      */
-    public static WebTarget createTarget(Client client, String resource) {
+    static WebTarget createTarget(Client client, String resource) {
         String baseAddress = getBaseAddress();
         WebTarget webTarget;
         String pattern = "^https?://.+";        //works for both http and https
@@ -72,14 +72,14 @@ public class RESTUtils {
      *
      * @return base address
      */
-    public static String getBaseAddress() {
+    private static String getBaseAddress() {
         try {
             String baseAddress = Optional.ofNullable(RunConfig.url).orElseThrow(Exception::new);
             baseAddress = baseAddress.replace("m.", "");
             logger.info("base address : " + baseAddress);
             return baseAddress;
         } catch (Exception e) {
-            Assert.fail("Website detail not present");
+            logger.warn("Website detail not present");
             return null;
         }
     }

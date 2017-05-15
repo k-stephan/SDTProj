@@ -29,7 +29,7 @@ public class RESTUtilsTest {
             TestUtils.setEnv(env);
             RESTUtils.createTarget(RESTUtils.createClient(), "/api/path/someapi");
         } catch (Exception e) {
-            Assert.fail("Failed testCreateTarget" + e.getMessage());
+            Assert.fail("Failed testCreateTarget " + e.getMessage());
         }
     }
 }
