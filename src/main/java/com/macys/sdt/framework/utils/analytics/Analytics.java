@@ -46,7 +46,7 @@ public abstract class Analytics {
 
     public abstract Map analyze(LinkedTreeMap scenarioInfo, int step, ArrayList entries, Result result) throws Exception;
 
-    protected abstract Map test() throws Exception;
+    protected abstract Map getAnalyticsDataDiff() throws Exception;
 
     public void recordPageSource(String link, String pageSource) {
         step_page_sources.put(link, pageSource);
@@ -187,6 +187,7 @@ public abstract class Analytics {
         HashMap hdiff = new HashMap();
         hdiff.putAll(saveDiff(Sets.intersection(gset, cset).iterator(), gmap, cmap, tagid));
         hdiff.putAll(saveDiff(Sets.difference(gset, cset).iterator(), gmap, cmap, tagid));
+        hdiff.putAll(saveDiff(Sets.difference(cset, gset).iterator(), gmap, cmap, tagid));
         return hdiff;
     }
 
@@ -442,6 +443,16 @@ public abstract class Analytics {
         }
     }
 
+    /**
+     * it compares attributes present in gold and current tag value for a specific tagid
+     *
+     * @param it iterator on which basis elements will be checked in gold and current
+     * @param gmap gold values for a tag
+     * @param cmap current values for a tag
+     * @param tagid tag id
+     *
+     * @return diff data of gold and current attribute value of a tag value
+     */
     private HashMap saveDiff(Iterator it, Map gmap, Map cmap, String tagid) {
         HashMap hdiff = new HashMap();
         while (it.hasNext()) {

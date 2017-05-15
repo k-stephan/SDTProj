@@ -22,7 +22,7 @@ public class DigitalAnalytics extends Analytics {
                 if (this.gold == null) {
                     this.gold = new Gson().fromJson(Utils.readTextFile(fgold), LinkedTreeMap.class);
                 }
-                return test();
+                return getAnalyticsDataDiff();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 logger.error("Error loading gold: " + fgold.getAbsolutePath());
@@ -34,38 +34,43 @@ public class DigitalAnalytics extends Analytics {
     }
 
     /**
-     *  get all coremetrics call for the step from browser's coremetrics call
+     * get all coremetrics call for the step from browser's coremetrics call
      *
-     * @param entries all browser's coremetrics call for a step
-     * @param bcount put tag count in tag_histogram if true else skip adding
-     * @return all coremetrics call for the step from browser's coremetrics call
+     * @param entries all browser's coremetrics call for a step (har entries)
+     * @param shouldAddCountInTagHistogram put tag count in tag_histogram if true else skip adding
+     * @return all coremetrics call for the step (in form of HashMap tagId and value) stored in argument "entries"
      */
-    private HashMap getLastTagIds(ArrayList<LinkedTreeMap> entries, boolean bcount) {
-        HashMap<String, ArrayList> hlastIds = new HashMap<>();
-        if (bcount) {
-            logger.info(this.getClass().getSimpleName() + ".getLastTagIds() : entries: " + entries.size());
-        }
+    private HashMap<String, List> getTagIds(ArrayList<LinkedTreeMap> entries, boolean shouldAddCountInTagHistogram) {
+        HashMap<String, List> hlastIds = new HashMap<>();
+
+        logger.info("getTagIds() : entries: " + entries.size());
+
         for (LinkedTreeMap entry : entries) {
-            // extract analytics data from query string in entry
-            Map e = this.getAnalyticsData(entry);
+
+            // extract analytics data from "queryString" in entry
+            Map<String, String> e = this.getAnalyticsData(entry);
+
             if (e.get("tid") == null) {
                 continue;
             }
 
-            String tid = e.get("tid").toString();
-            ArrayList tentries = hlastIds.get(tid);
+            String tid = e.get("tid");
+            List<Map> tentries = hlastIds.get(tid);
             if (tentries == null) {
-                tentries = new ArrayList();
+                tentries = new ArrayList<>();
             }
             tentries.add(e);
             hlastIds.put(tid, tentries);
-            if (bcount) {
+
+            // put "tid" specific count in tag_histogram
+            if (shouldAddCountInTagHistogram) {
                 Integer count = this.tag_histogram.get(tid);
                 if (count == null) {
                     count = 0;
                 }
                 this.tag_histogram.put(tid, ++count);
             }
+
         }
         return hlastIds;
     }
@@ -93,29 +98,38 @@ public class DigitalAnalytics extends Analytics {
         }
     }
 
-    protected Map test() throws Exception {
+    /**
+     * This method extract and compare overall analytics data of gold and current execution for a step execution
+     *
+     * @return overall diff data of gold and current execution for a step
+     * @throws Exception in case of error
+     */
+    protected Map getAnalyticsDataDiff() throws Exception {
         HashMap hdiff = new HashMap();
         try {
-            HashMap<String, List> hlgoldIds = getLastTagIds(getGoldStepHarEntries(), false);
-            HashMap<String, List> hlcurIds = getLastTagIds(this.entries, true);
+            HashMap<String, List> hlgoldTagIds = getTagIds(getGoldStepHarEntries(), false);
+            HashMap<String, List> hlcurrentTagIds = getTagIds(this.entries, true);
 
-            // TODO : if a value is present in current but not in gold will be skipped from reporting =: to fix
-            Set<String> tagIdsDiff = Sets.difference(hlgoldIds.keySet(), hlcurIds.keySet());
-            for (String tagid : tagIdsDiff) {
-                if (hlgoldIds.get(tagid) == null) {
-                    recordTagDiff(hdiff, tagid, new ArrayList(), hlcurIds.get(tagid));
-                } else {
-                    recordTagDiff(hdiff, tagid, hlgoldIds.get(tagid), new ArrayList());
-                }
+            // record tagid present in gold but not in current execution
+            Set<String> tagIdsDiffGold = Sets.difference(hlgoldTagIds.keySet(), hlcurrentTagIds.keySet());
+            for (String tagid : tagIdsDiffGold) {
+                recordTagDiff(hdiff, tagid, hlgoldTagIds.get(tagid), new ArrayList());
             }
 
-            Set<String> tagIdsIntersect = Sets.intersection(hlgoldIds.keySet(), hlcurIds.keySet());
+            // record tagid present in current execution but not in gold
+            Set<String> tagIDsDiffCurrent = Sets.difference(hlcurrentTagIds.keySet(), hlgoldTagIds.keySet());
+            for (String tagid : tagIDsDiffCurrent) {
+                recordTagDiff(hdiff, tagid, new ArrayList(), hlcurrentTagIds.get(tagid));
+            }
+
+            // record tagid present in both gold and current execution
+            Set<String> tagIdsIntersect = Sets.intersection(hlgoldTagIds.keySet(), hlcurrentTagIds.keySet());
             for (String tagid : tagIdsIntersect) {
-                recordTagDiff(hdiff, tagid, hlgoldIds.get(tagid), hlcurIds.get(tagid));
+                recordTagDiff(hdiff, tagid, hlgoldTagIds.get(tagid), hlcurrentTagIds.get(tagid));
             }
 
             if (!hdiff.isEmpty()) {
-                logger.info(this.getClass().getSimpleName() + " Results: \n" + Utils.jsonPretty(hdiff) + "\n");
+                logger.info("Analytics Compare Result: \n" + Utils.jsonPretty(hdiff) + "\n");
             } else {
                 logger.info("gold and current analytics data are same. No Diff!!");
             }
@@ -150,14 +164,14 @@ public class DigitalAnalytics extends Analytics {
     }
 
     /**
-     * extract analytics data as Map (from query string from request) from browser's call to coremetrics
+     * extract analytics data as Map (from "queryString" from request) from browser's call to coremetrics
      *
      * @param entryQuery browser's coremetrics call
      *
      * @return analytics data (extracted from query string) as Map
      */
-    protected Map getAnalyticsData(Map entryQuery) {
-        HashMap data = new HashMap();
+    protected Map<String, String> getAnalyticsData(Map entryQuery) {
+        HashMap<String, String> data = new HashMap<>();
         Map request = (Map) entryQuery.get("request");
         ArrayList<Map> list = (ArrayList) request.get("queryString");
         for (Map vpair : list) {
@@ -165,7 +179,7 @@ public class DigitalAnalytics extends Analytics {
             if (vpair.get("action") != null) {
                 val = "_" + vpair.get("action") + "_" + val;
             }
-            data.put(vpair.get("name"), val);
+            data.put((String) vpair.get("name"), val);
         }
         return data;
     }
