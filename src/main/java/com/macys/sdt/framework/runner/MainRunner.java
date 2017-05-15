@@ -141,11 +141,15 @@ public class MainRunner {
             dryRun = true;
             cucumberArgs.add("--dry-run");
         }
-
-        logger.info("Testing " + url + " on " +
-                (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS : browser + " " + browserVersion)
-                + (useSauceLabs ? " on Sauce Labs" : ""));
-
+        if(!useTestObject) {
+            logger.info("Testing " + url + " on " +
+                    (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS :
+                            browser + " " + browserVersion) + (useSauceLabs ? " on Sauce Labs" : ""));
+        } else {
+            logger.info("Testing " + url + " on " +
+                    (useAppium ? " TestObject device running " + (StepUtils.iOS() ? "iOS " : "Android ")
+                            + remoteOS : browser + " " + browserVersion));
+        }
         setBeforeNavigationHooks();
         setAfterNavigationHooks();
         EnvironmentDetails.loadEnvironmentDetails(url, false);

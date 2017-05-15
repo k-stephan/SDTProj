@@ -57,17 +57,19 @@ public class TestObjectUtil {
         String deviceStatus = "";
         try {
             JSONArray jsonArray = new JSONArray(response.readEntity(String.class));
-            logger.debug("JSONResponse for TestObject device status: " + jsonArray);
+            logger.debug("JSON Response from the TestObject DeviceStatus API for the device: " + deviceId + " is: " + jsonArray);
             ArrayList<JSONObject> list = Utils.jsonArrayToList(jsonArray);
-            for (JSONObject js : list) {
-                deviceStatus = js.getString("status");
-            }
-
-            if (deviceStatus.equalsIgnoreCase("AVAILABLE")) {
-                found = true;
-            } else {
-                logger.info("Currently, requested device: " + deviceId
-                        + " is not available to test. Try another device!!");
+            if(list.size() > 0){
+                deviceStatus = list.get(0).getString("status");
+                if (deviceStatus.equalsIgnoreCase("AVAILABLE")) {
+                    found = true;
+                } else {
+                    logger.info("Currently, requested device: " + deviceId
+                            + " is not available to test. Try another device!!");
+                }
+            }else{
+                logger.info("Not a valid JSON Response from TestObject DeviceStatus API for the device: "
+                        + deviceId+", try another device!!");
             }
         } catch (JSONException e) {
             logger.error("Unable to check the device status: " + e.getMessage());

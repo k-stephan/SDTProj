@@ -352,7 +352,10 @@ class WebDriverConfigurator {
             remoteOS = useAppium ? remoteOS : "Linux";
         }
         caps.setCapability("platformVersion", remoteOS);
-        caps.setCapability("deviceName", device);
+        // deviceName capability is not required for test object tests
+        if(!useTestObject) {
+            caps.setCapability("deviceName", device);
+        }
         caps.setCapability("deviceOrientation", "portrait");
         return caps;
     }
@@ -548,7 +551,8 @@ class WebDriverConfigurator {
             }
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testObjectAPIKey);
-            capabilities.setCapability("testobject_device", TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+            capabilities.setCapability("testobject_device",
+                    TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
             capabilities.setCapability("testobject_test_name", formatScenarioName());
         } else {    // for non saucelabs or testobject execution
             capabilities.setCapability("appiumVersion", "1.6");
@@ -583,9 +587,11 @@ class WebDriverConfigurator {
                 return new AndroidDriver(url, capabilities);
             }
         } catch (SessionNotCreatedException se) {
+            logger.error(se.getMessage());
             if (useTestObject) {
                 logger.info("Looking for next available device!!");
-                capabilities.setCapability("testobject_device", TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+                capabilities.setCapability("testobject_device",
+                        TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
                 if (StepUtils.iOS()) {
                     return new IOSDriver(url, capabilities);
                 } else {
