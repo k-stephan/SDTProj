@@ -1,8 +1,8 @@
-package com.macys.sdt.framework.utils.rest.utils;
+package com.macys.sdt.framework.utils;
 
 
 import com.macys.sdt.framework.runner.RunConfig;
-import com.macys.sdt.framework.utils.Utils;
+import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +26,7 @@ public class TestObjectUtil {
      * @param osVersion : required os version(9.3, 10.0, 5.1, 6.0 etc.,)
      * @return random device Id
      */
-    public static String getRandomTestObjectDevice(String osType, String osVersion) {
-        boolean found = false;
+    public static String getRandomAvailableTestObjectDevice(String osType, String osVersion) {
         JSONArray deviceArray = testObjectDevices.getJSONObject(osType).getJSONArray(osVersion);
         String deviceId = "";
         if (deviceArray != null) {
@@ -58,7 +57,7 @@ public class TestObjectUtil {
         String deviceStatus = "";
         try {
             JSONArray jsonArray = new JSONArray(response.readEntity(String.class));
-            logger.debug("JSONResponse for TestOjbect device status: "+jsonArray);
+            logger.debug("JSONResponse for TestObject device status: " + jsonArray);
             ArrayList<JSONObject> list = Utils.jsonArrayToList(jsonArray);
             for (JSONObject js : list) {
                 deviceStatus = js.getString("status");

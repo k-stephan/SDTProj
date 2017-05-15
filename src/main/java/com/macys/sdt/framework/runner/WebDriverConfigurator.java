@@ -4,7 +4,7 @@ import com.macys.sdt.framework.utils.ProxyFilters;
 import com.macys.sdt.framework.utils.ScenarioHelper;
 import com.macys.sdt.framework.utils.StepUtils;
 import com.macys.sdt.framework.utils.Utils;
-import com.macys.sdt.framework.utils.rest.utils.TestObjectUtil;
+import com.macys.sdt.framework.utils.TestObjectUtil;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -514,6 +514,7 @@ class WebDriverConfigurator {
 
     /**
      * Format the scenario name to set for Sauce Labs and Test Object tests
+     *
      * @return formatted Scenario name
      */
     private static String formatScenarioName() {
@@ -547,7 +548,7 @@ class WebDriverConfigurator {
             }
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testObjectAPIKey);
-            capabilities.setCapability("testobject_device", TestObjectUtil.getRandomTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+            capabilities.setCapability("testobject_device", TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
             capabilities.setCapability("testobject_test_name", formatScenarioName());
         } else {    // for non saucelabs or testobject execution
             capabilities.setCapability("appiumVersion", "1.6");
@@ -582,16 +583,16 @@ class WebDriverConfigurator {
                 return new AndroidDriver(url, capabilities);
             }
         } catch (SessionNotCreatedException se) {
-            logger.info("Looking for next available device!!");
             if (useTestObject) {
-                capabilities.setCapability("testobject_device", TestObjectUtil.getRandomTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+                logger.info("Looking for next available device!!");
+                capabilities.setCapability("testobject_device", TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
                 if (StepUtils.iOS()) {
                     return new IOSDriver(url, capabilities);
                 } else {
                     return new AndroidDriver(url, capabilities);
                 }
             }
-        }catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             logger.error("Could not create appium driver: " + e);
         }
         return null;
@@ -680,14 +681,14 @@ class WebDriverConfigurator {
         capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
         WebDriver driver = initDriver(capabilities);
         browsermobServer.newHar(System.currentTimeMillis() + "");
-        
+
         if (!StepUtils.mobileDevice() && !StepUtils.MEW()) {
-        	ProxyFilters.ProxyRequestFilter filter = new ProxyFilters.ProxyRequestFilter(url);
+            ProxyFilters.ProxyRequestFilter filter = new ProxyFilters.ProxyRequestFilter(url);
             browsermobServer.addRequestFilter(filter);
             browsermobServer.addResponseFilter(new ProxyFilters.ProxyResponseFilter());
             browsermobServer.addFirstHttpFilterFactory(new RequestFilterAdapter.FilterSource(filter, 16777216)); // 2097152 or whatever buffer size you want
         }
-        
+
         return driver;
     }
 }
