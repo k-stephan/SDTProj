@@ -547,7 +547,7 @@ class WebDriverConfigurator {
                 //observed that Saucelabs using different appium versions between emulators / real devices
                 capabilities.setCapability("appiumVersion", appiumVersion);
             } else {
-                capabilities.setCapability("appiumVersion", "1.6.3");
+                capabilities.setCapability("appiumVersion", "1.6.4");
             }
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testObjectAPIKey);
