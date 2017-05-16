@@ -204,10 +204,10 @@ public class AddToBagService {
             item.put("syndicationItemId", "6565");
             item.put("syndicationTransactionId", "565");
             item.put("syndicationItemDesc", "5656");
-            item.put("giftCardAmount", "10");
+            item.put("giftCardAmount", product.totalPrice);
         }
         if (product.virtualGiftCard) {
-            item.put("giftCardAmount", "10");
+            item.put("giftCardAmount", product.totalPrice);
             item.put("giftCardEmailId", "testuser@gmail.com");
             item.put("giftCardFrom", "test user");
             item.put("giftCardMessage", "test message");
