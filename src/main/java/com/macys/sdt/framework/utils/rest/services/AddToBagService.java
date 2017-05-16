@@ -186,6 +186,9 @@ public class AddToBagService {
         if (product.quantity == 0) {
             product.quantity = 1;
         }
+        if (product.totalPrice == 0.0) {
+            product.totalPrice = 20.00;
+        }
         JSONObject item = new JSONObject();
         item.put("quantity", product.quantity);
         item.put("upcId", upcId);
@@ -204,10 +207,10 @@ public class AddToBagService {
             item.put("syndicationItemId", "6565");
             item.put("syndicationTransactionId", "565");
             item.put("syndicationItemDesc", "5656");
-            item.put("giftCardAmount", "10");
+            item.put("giftCardAmount", product.totalPrice);
         }
         if (product.virtualGiftCard) {
-            item.put("giftCardAmount", "10");
+            item.put("giftCardAmount", product.totalPrice);
             item.put("giftCardEmailId", "testuser@gmail.com");
             item.put("giftCardFrom", "test user");
             item.put("giftCardMessage", "test message");
