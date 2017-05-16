@@ -186,6 +186,9 @@ public class AddToBagService {
         if (product.quantity == 0) {
             product.quantity = 1;
         }
+        if (product.totalPrice == 0.0) {
+            product.totalPrice = 20.00;
+        }
         JSONObject item = new JSONObject();
         item.put("quantity", product.quantity);
         item.put("upcId", upcId);
