@@ -554,6 +554,8 @@ class WebDriverConfigurator {
             capabilities.setCapability("testobject_device",
                     TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
             capabilities.setCapability("testobject_test_name", formatScenarioName());
+            // set the session timeout to 3mins; default is 15mins
+            capabilities.setCapability("testobject_session_creation_timeout", "180000");
         } else {    // for non saucelabs or testobject execution
             capabilities.setCapability("appiumVersion", "1.6");
         }
@@ -592,6 +594,7 @@ class WebDriverConfigurator {
                 logger.info("Looking for next available device!!");
                 capabilities.setCapability("testobject_device",
                         TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+                capabilities.setCapability("testobject_session_creation_timeout", "180000");
                 if (StepUtils.iOS()) {
                     return new IOSDriver(url, capabilities);
                 } else {
