@@ -552,7 +552,7 @@ class WebDriverConfigurator {
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testObjectAPIKey);
             capabilities.setCapability("testobject_device",
-                    TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+                    TestObjectUtil.getAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
             capabilities.setCapability("testobject_test_name", formatScenarioName());
             // set the session timeout to 3mins; default is 15mins
             capabilities.setCapability("testobject_session_creation_timeout", "180000");
@@ -593,7 +593,7 @@ class WebDriverConfigurator {
             if (useTestObject) {
                 logger.info("Looking for next available device!!");
                 capabilities.setCapability("testobject_device",
-                        TestObjectUtil.getRandomAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+                        TestObjectUtil.getAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
                 capabilities.setCapability("testobject_session_creation_timeout", "180000");
                 if (StepUtils.iOS()) {
                     return new IOSDriver(url, capabilities);

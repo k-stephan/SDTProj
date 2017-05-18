@@ -26,12 +26,12 @@ public class TestObjectUtil {
      * @param osVersion : required os version(9.3, 10.0, 5.1, 6.0 etc.,)
      * @return random device Id
      */
-    public static String getRandomAvailableTestObjectDevice(String osType, String osVersion) {
+    public static String getAvailableTestObjectDevice(String osType, String osVersion) {
         JSONArray deviceArray = testObjectDevices.getJSONObject(osType).getJSONArray(osVersion);
         String deviceId = "";
         if (deviceArray != null) {
             for (int i = 0; i < deviceArray.length(); i++) {
-                deviceId = (String) deviceArray.get(new Random().nextInt(deviceArray.length()));
+                deviceId = (String) deviceArray.get(i);
                 if (checkDeviceAvailability(deviceId)) {
                     logger.info("Matching device " + deviceId + " is available for test");
                     return deviceId;
@@ -58,18 +58,19 @@ public class TestObjectUtil {
         try {
             JSONArray jsonArray = new JSONArray(response.readEntity(String.class));
             logger.debug("JSON Response from the TestObject DeviceStatus API for the device: " + deviceId + " is: " + jsonArray);
-            ArrayList<JSONObject> list = Utils.jsonArrayToList(jsonArray);
-            if(list.size() > 0){
-                deviceStatus = list.get(0).getString("status");
-                if (deviceStatus.equalsIgnoreCase("AVAILABLE")) {
-                    found = true;
-                } else {
-                    logger.info("Currently, requested device: " + deviceId
-                            + " is not available to test. Try another device!!");
+            // There can be multiple device statuses for same device
+            ArrayList<JSONObject> deviceStatusList = Utils.jsonArrayToList(jsonArray);
+            if (deviceStatusList.size() > 0) {
+                for (JSONObject device : deviceStatusList) {
+                    deviceStatus = device.getString("status");
+                    if (deviceStatus.equalsIgnoreCase("AVAILABLE")) {
+                        found = true;
+                        return found;
+                    }
                 }
-            }else{
+            } else {
                 logger.info("Not a valid JSON Response from TestObject DeviceStatus API for the device: "
-                        + deviceId+", try another device!!");
+                        + deviceId + ", try another device!!");
             }
         } catch (JSONException e) {
             logger.error("Unable to check the device status: " + e.getMessage());
