@@ -547,7 +547,8 @@ class WebDriverConfigurator {
                 //observed that Saucelabs using different appium versions between emulators / real devices
                 capabilities.setCapability("appiumVersion", appiumVersion);
             } else {
-                capabilities.setCapability("appiumVersion", "1.6.4");
+                // Sauce sets appropriate or latest point release automatically for selected platform
+                capabilities.setCapability("appiumVersion", "1.6");
             }
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testObjectAPIKey);
@@ -556,6 +557,9 @@ class WebDriverConfigurator {
             capabilities.setCapability("testobject_test_name", formatScenarioName());
             // set the session timeout to 3mins; default is 15mins
             capabilities.setCapability("testobject_session_creation_timeout", "180000");
+            if(StepUtils.iOS()){
+                capabilities.setCapability("automationName", "XCUITest");
+            }
         } else {    // for non saucelabs or testobject execution
             capabilities.setCapability("appiumVersion", "1.6");
         }
@@ -594,7 +598,8 @@ class WebDriverConfigurator {
                 logger.info("Looking for next available device!!");
                 capabilities.setCapability("testobject_device",
                         TestObjectUtil.getAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
-                capabilities.setCapability("testobject_session_creation_timeout", "180000");
+                // set the timeout to 4mins
+                capabilities.setCapability("testobject_session_creation_timeout", "240000");
                 if (StepUtils.iOS()) {
                     return new IOSDriver(url, capabilities);
                 } else {
