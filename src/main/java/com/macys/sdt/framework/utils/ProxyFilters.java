@@ -90,12 +90,13 @@ public class ProxyFilters {
                         DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer(Utils.readSmallBinaryFile(fcache)));
                         response.headers().set(CONTENT_TYPE, contents.getContentType());
                         response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
-                        for (String key : headers.keySet()) {
-                            request.headers().remove(key);
-                            request.headers().add(key, headers.get(key));
-                        }
                         return response;
                     }
+                }
+            } else {
+                for (String key : headers.keySet()) {
+                    request.headers().remove(key);
+                    request.headers().add(key, headers.get(key));
                 }
             }
             return null;
