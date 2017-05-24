@@ -276,7 +276,7 @@ public class CreditCard {
 
         public static CardType fromString(String value) {
             for (CardType type : CardType.values())
-                if (value.equals(type.name) || value.equals(type.abbreviation)) {
+                if (value.equalsIgnoreCase(type.name) || value.equalsIgnoreCase(type.abbreviation)) {
                     return type;
                 }
             return null;
