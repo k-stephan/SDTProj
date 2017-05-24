@@ -552,8 +552,7 @@ class WebDriverConfigurator {
             }
         } else if (useTestObject) { // for testobject execution
             capabilities.setCapability("testobject_api_key", testObjectAPIKey);
-            capabilities.setCapability("testobject_device",
-                    TestObjectUtil.getAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
+            capabilities.setCapability("testobject_device", TestObjectUtil.getAvailableTestObjectDevice());
             capabilities.setCapability("testobject_test_name", formatScenarioName());
             // set the session timeout to 3mins; default is 15mins
             capabilities.setCapability("testobject_session_creation_timeout", "180000");
@@ -595,15 +594,19 @@ class WebDriverConfigurator {
         } catch (SessionNotCreatedException se) {
             logger.error(se.getMessage());
             if (useTestObject) {
-                logger.info("Looking for next available device!!");
-                capabilities.setCapability("testobject_device",
-                        TestObjectUtil.getAvailableTestObjectDevice(StepUtils.iOS() ? "IOS" : "Android", remoteOS));
-                // set the timeout to 4mins
-                capabilities.setCapability("testobject_session_creation_timeout", "240000");
-                if (StepUtils.iOS()) {
-                    return new IOSDriver(url, capabilities);
-                } else {
-                    return new AndroidDriver(url, capabilities);
+                for (int i = 0; i <= 7; i++) {
+                    TestObjectUtil.setAvailability(capabilities.getCapability("testobject_device").toString(), "false");
+                    logger.info("Looking for next available device!!");
+                    try {
+                        capabilities.setCapability("testobject_device", TestObjectUtil.getAvailableTestObjectDevice());
+                        if (StepUtils.iOS()) {
+                            return new IOSDriver(url, capabilities);
+                        } else {
+                            return new AndroidDriver(url, capabilities);
+                        }
+                    } catch (SessionNotCreatedException nse) {
+                        logger.error(nse.getMessage());
+                    }
                 }
             }
         } catch (MalformedURLException e) {

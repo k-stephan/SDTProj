@@ -6,40 +6,39 @@ import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestObjectUtil {
     private static final Logger logger = LoggerFactory.getLogger(TestObjectUtil.class);
-    public static JSONObject testObjectDevices = loadTestObjectDevices();
+    public static List<HashMap<String, String>> testObjectDevices = loadTestObjectDevices();
     public static final String testObjectServiceUrl = "https://app.testobject.com/api/rest/v1/devices/";
     public static final String testObjectDeviceStatusEndpoint = "/status";
 
     /**
-     * To fetch the random test object device id for a given os type and version
+     * To fetch the random test object device id for given RunConfig
      *
-     * @param osType    : required os type (IOS, Android)
-     * @param osVersion : required os version(9.3, 10.0, 5.1, 6.0 etc.,)
-     * @return random device Id
+     * @return available device Id
      */
-    public static String getAvailableTestObjectDevice(String osType, String osVersion) {
-        JSONArray deviceArray = testObjectDevices.getJSONObject(osType).getJSONArray(osVersion);
+    public static String getAvailableTestObjectDevice() {
+        String osType = StepUtils.iOS() ? "IOS" : "Android";
+        String osVersion = RunConfig.remoteOS;
         String deviceId = "";
-        if (deviceArray != null) {
-            for (int i = 0; i < deviceArray.length(); i++) {
-                deviceId = (String) deviceArray.get(i);
-                if (checkDeviceAvailability(deviceId)) {
-                    logger.info("Matching device " + deviceId + " is available for test");
-                    return deviceId;
-                }
+        for (HashMap<String, String> device : testObjectDevices) {
+            if (device.get("available").equals("true")) { // && checkDeviceAvailability(deviceId)
+                deviceId = device.get("device");
+                logger.info("Matching device " + deviceId + " is available for test");
+                break;
             }
-        } else {
-            logger.info("No matching devices found for the given OSType: " + osType + ", OSVersion: " + osVersion);
         }
+        Assert.assertFalse("No available matching devices found for the given OSType: " + osType + ", OSVersion: " + osVersion, deviceId.isEmpty());
         return deviceId;
     }
 
@@ -83,7 +82,25 @@ public class TestObjectUtil {
      *
      * @return devices
      */
-    private static JSONObject loadTestObjectDevices() {
-        return Utils.getFileDataInJson(Utils.getResourceFile("testobject_devices.json"));
+    private static List<HashMap<String, String>> loadTestObjectDevices() {
+        JSONArray deviceJson = Utils.getFileDataInJson(Utils.getResourceFile("testobject_devices.json")).getJSONObject(StepUtils.iOS() ? "IOS" : "Android").getJSONArray(RunConfig.remoteOS);
+        List<HashMap<String, String>> deviceList = new ArrayList<>();
+        for (Object a : deviceJson) {
+            HashMap<String, String> device = new HashMap<>();
+            device.put("device", ((JSONObject)a).getString("device"));
+            device.put("available", ((JSONObject)a).getString("available"));
+            deviceList.add(device);
+        }
+        return deviceList;
+    }
+
+    public static void setAvailability(String device, String availability) {
+        testObjectDevices = testObjectDevices.stream()
+                .map(d -> {
+                    if (d.get("device").equals(device))
+                        d.put("available", availability);
+                    return d;
+                }).collect(Collectors.toList());
+        logger.info("Setting device " + device + " availability to " + availability);
     }
 }
