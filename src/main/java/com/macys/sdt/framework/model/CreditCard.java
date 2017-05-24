@@ -1,5 +1,6 @@
 package com.macys.sdt.framework.model;
 
+import com.macys.sdt.framework.model.addresses.Address;
 import org.json.JSONObject;
 
 /**
@@ -15,8 +16,10 @@ public class CreditCard {
     private String expiryYear;
     private boolean has3DSecure;
     private String securePassword;
+    private Address address;
 
-    private CreditCard() {}
+    private CreditCard() {
+    }
 
     public CreditCard(CardType cardType, String cardNumber, String securityCode, double balance, String expiryMonth, String expiryMonthIndex, String expiryYear) {
         this.cardType = cardType;
@@ -60,6 +63,24 @@ public class CreditCard {
         card.has3DSecure = false;
         card.securePassword = null;
         return card;
+    }
+
+    /**
+     * Gets the address of the credit card
+     *
+     * @return the address of the credit card
+     */
+    public Address getAddress() {
+        return address;
+    }
+
+    /**
+     * Sets the adress of the credit card
+     *
+     * @param address address to set
+     */
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     /**
