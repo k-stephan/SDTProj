@@ -14,11 +14,14 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class TestObjectUtil {
     private static final Logger logger = LoggerFactory.getLogger(TestObjectUtil.class);
     public static List<HashMap<String, String>> testObjectDevices = loadTestObjectDevices();
+    public static boolean resetDeviceList = true;
     public static final String testObjectServiceUrl = "https://app.testobject.com/api/rest/v1/devices/";
     public static final String testObjectDeviceStatusEndpoint = "/status";
 
@@ -30,16 +33,20 @@ public class TestObjectUtil {
     public static String getAvailableTestObjectDevice() {
         String osType = StepUtils.iOS() ? "IOS" : "Android";
         String osVersion = RunConfig.remoteOS;
-        String deviceId = "";
-        for (HashMap<String, String> device : testObjectDevices) {
-            if (device.get("available").equals("true")) { // && checkDeviceAvailability(deviceId)
-                deviceId = device.get("device");
-                logger.info("Matching device " + deviceId + " is available for test");
-                break;
-            }
+        Predicate<HashMap<String, String>> filter = d -> d.get("available").equals("true"); // && checkDeviceAvailability(deviceId);
+        Optional<HashMap<String, String>> device = testObjectDevices.stream().filter(filter).findFirst();
+
+        // give one more chance
+        if (!device.isPresent() && resetDeviceList) {
+            logger.info("Resetting TestObject devices availability");
+            testObjectDevices = loadTestObjectDevices();
+            device = testObjectDevices.stream().filter(filter).findFirst();
+            resetDeviceList = false;
         }
-        Assert.assertFalse("No available matching devices found for the given OSType: " + osType + ", OSVersion: " + osVersion, deviceId.isEmpty());
-        return deviceId;
+
+        Assert.assertTrue("No available matching devices found for the given OSType: " + osType + ", OSVersion: " + osVersion, device.isPresent());
+        logger.info("Matching device " + device.get().get("device") + " is available for test");
+        return device.get().get("device");
     }
 
     /**
