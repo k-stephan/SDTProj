@@ -33,15 +33,46 @@ public class ProductService {
      * @return true if product is available
      */
     public static boolean checkoutAvailability(String productId) {
-        Response response = RESTOperations.doGET(getServiceURL() + productId, null);
         try {
-            JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
+            JSONObject jsonResponse = getProductDetails(productId);
             // We need to check these three parameter values to confirm the product is available for checkout or not
             return jsonResponse.getBoolean("active") && jsonResponse.getBoolean("live") && !jsonResponse.getBoolean("archived");
         } catch (JSONException e) {
             logger.error("Unable to get product information from FCC: " + e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * To fetch complete product details for a given product id using FCC service
+     *
+     * @param productId ID of product to fetch
+     * @return product details
+     */
+    public static JSONObject getProductDetails(String productId) {
+        Response response = RESTOperations.doGET(getServiceURL() + productId, null);
+        try {
+            JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
+            return jsonResponse;
+        } catch (JSONException e) {
+            logger.error("Unable to get product information from FCC: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * To fetch the price details for a given Product Id
+     *
+     * @param productId ID of product to fetch
+     * @return product prices
+     */
+    public static Map<String, Object> getProductPrices(String productId) {
+        try {
+            return getProductDetails(productId).getJSONObject("price").toMap();
+        } catch (JSONException e) {
+            logger.error("Unable to get product information from FCC: " + e.getMessage());
+        }
+        return null;
     }
 
     /**
@@ -52,11 +83,10 @@ public class ProductService {
      */
     public static List<String> getAllUpcIds(String productId) {
         List<String> upcIds = new ArrayList<>();
-        Response response = RESTOperations.doGET(getServiceURL() + productId, null);
         try {
-            JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
-            for (int index = 0; index < jsonResponse.getJSONArray("upcs").length(); index++)
-                upcIds.add(((JSONObject) jsonResponse.getJSONArray("upcs").get(index)).getBigInteger("id").toString());
+            JSONArray upcsArray = getProductDetails(productId).getJSONArray("upcs");
+            for (int index = 0; index < upcsArray.length(); index++)
+                upcIds.add(((JSONObject) upcsArray.get(index)).getBigInteger("id").toString());
         } catch (JSONException e) {
             logger.error("Unable to get product information from FCC: " + e.getMessage());
         }
