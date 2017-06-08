@@ -161,12 +161,10 @@ public class ProductService {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Macys-ClientId", "NavApp");
         String response = RESTOperations.doGET(url, headers).readEntity(String.class);
-
-        JSONArray stores = new JSONObject(response)
-                .getJSONObject("stores")
-                .getJSONArray("store");
-
         try {
+            JSONArray stores = new JSONObject(response)
+                    .getJSONObject("stores")
+                    .getJSONArray("store");
             JSONArray inventories = stores
                     .getJSONObject(0)
                     .getJSONObject("inventories")
@@ -180,7 +178,7 @@ public class ProductService {
                     return true;
                 }
             }
-        } catch (JSONException e) {
+        } catch (NullPointerException|JSONException e) {
             logger.warn(String.format("Unable to check bops availability for prodID %s, storeID %s.\\n Response %s.\\n Error %s",
                     productId, storeId, response, e.getMessage()));
         }

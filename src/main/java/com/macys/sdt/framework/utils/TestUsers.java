@@ -861,7 +861,7 @@ public class TestUsers {
                             }
                             found = ProductService.checkoutAvailability(product.get("id").toString());// found = ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
                         }
-                        if (found && checkBopsAvailable) {
+                        if (found && checkBopsAvailable && !prodEnv()) {
                             String storeLocationKey = "store_location_nbr";
                             String storeLocationNumber;
                             if (options.containsKey(storeLocationKey)) {
