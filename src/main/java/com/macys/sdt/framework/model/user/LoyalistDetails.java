@@ -5,7 +5,7 @@ package com.macys.sdt.framework.model.user;
  */
 public class LoyalistDetails {
 
-    private String loyallistType;
+    private LoyallistType loyallistType;
     private String loyaltyId;
     private String lastName;
     private String zipCode;
@@ -14,12 +14,24 @@ public class LoyalistDetails {
     private String billingLastName;
     private String billingZipCode;
 
+    public LoyalistDetails(LoyallistType loyallistType, String loyaltyId, String lastName, String zipCode,
+                   String cardNumber, String securityCode, String billingLastName, String billingZipCode ) {
+        this.loyallistType = loyallistType;
+        this.loyaltyId = loyaltyId;
+        this.lastName = lastName;
+        this.zipCode = zipCode;
+        this.cardNumber = cardNumber;
+        this.securityCode = securityCode;
+        this.billingLastName = billingLastName;
+        this.billingZipCode = billingZipCode;
+    }
+
     /**
      * Gets the loyalty type of Loyalist
      *
      * @return loyalty type
      */
-    public String getLoyallistType() {
+    public LoyallistType getLoyallistType() {
         return loyallistType;
     }
 
@@ -28,7 +40,7 @@ public class LoyalistDetails {
      *
      * @param loyallistType loyalty type of Loyalist
      */
-    public void setLoyallistType(String loyallistType) {
+    public void setLoyallistType(LoyallistType loyallistType) {
         this.loyallistType = loyallistType;
     }
 
@@ -156,5 +168,30 @@ public class LoyalistDetails {
      */
     public void setBillingZipCode(String billingZipCode) {
         this.billingZipCode = billingZipCode;
+    }
+
+    /**
+     * Different Loyallist Types
+     */
+    public enum LoyallistType {
+        TOP_TIER("top_tier"),
+        BASE_TIER("base_tier"),
+        THIRDPARTY("thirdparty"),
+        REWARD("reward"),
+        INACTIVE("inactive");
+
+        private final String name;
+
+        LoyallistType(String name) {
+            this.name = name;
+        }
+
+        private static LoyallistType fromString(String value) {
+            for (LoyallistType type : LoyallistType.values())
+                if (value.equalsIgnoreCase(type.name)) {
+                    return type;
+                }
+            return null;
+        }
     }
 }
