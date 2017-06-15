@@ -385,7 +385,7 @@ public class Navigate {
             JavascriptExecutor scriptExe = ((JavascriptExecutor) WebDriverManager.getWebDriver());
             return scriptExe.executeScript(script, args);
         } catch (Exception e) {
-            logger.debug("Error in executing javascript : " + e);
+            logger.debug(String.format("Error in executing javascript : %s", e.toString().split("\\(Session")[0]));
             return "";
         }
     }
