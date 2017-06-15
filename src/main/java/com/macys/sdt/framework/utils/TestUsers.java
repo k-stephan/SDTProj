@@ -665,7 +665,7 @@ public class TestUsers {
             List<LoyalistDetails> loyalistDetailsList = ObjectMapperProvider.getJsonMapper().readValue(jsonTxt,
                     TypeFactory.defaultInstance().constructCollectionType(List.class, LoyalistDetails.class));
 
-            List<LoyalistDetails> loyalists = loyalistDetailsList.stream().filter(loyalistDetails -> loyalistDetails.getLoyallistType().equalsIgnoreCase(loyallistType)).collect(Collectors.toList());
+            List<LoyalistDetails> loyalists = loyalistDetailsList.stream().filter(loyalistDetails -> loyalistDetails.getLoyallistType().toString().equalsIgnoreCase(loyallistType)).collect(Collectors.toList());
             return loyalists.get(rand.nextInt(loyalists.size()));
 
         } catch (Exception e) {

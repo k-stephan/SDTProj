@@ -26,6 +26,9 @@ public class LoyalistDetails {
         this.billingZipCode = billingZipCode;
     }
 
+    public LoyalistDetails()    {}
+
+
     /**
      * Gets the loyalty type of Loyalist
      *
