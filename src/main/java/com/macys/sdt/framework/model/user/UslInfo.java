@@ -24,6 +24,8 @@ public class UslInfo {
         this.redeemedPlentiPoints = redeemedPlentiPoints;
     }
 
+    public UslInfo()    {}
+
     /**
      * Gets the PlentiId of UslInfo
      *
@@ -166,6 +168,10 @@ public class UslInfo {
             this.name = name;
         }
 
+        public String getName() {
+            return name;
+        }
+
         private static UslType fromString(String value) {
             for (UslType type : UslType.values())
                 if (value.equalsIgnoreCase(type.name)) {
@@ -186,6 +192,10 @@ public class UslInfo {
 
         CardType(String name) {
             this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
 
         private static CardType fromString(String value) {

@@ -113,7 +113,7 @@ public class UserTest {
     public void testGetLoyalistDetails() throws Exception {
         LoyalistDetails loyallistInfo = new LoyalistDetails();
         loyallistInfo.setLoyaltyId("L920000100935");
-        loyallistInfo.setLoyallistType("toptier_loyallist");
+        loyallistInfo.setLoyallistType(LoyalistDetails.LoyallistType.TOP_TIER);
         loyallistInfo.setLastName("test");
         loyallistInfo.setZipCode("10022");
         loyallistInfo.setCardNumber("6035342200026252");
@@ -124,7 +124,7 @@ public class UserTest {
         LoyalistDetails loyallistDetails = user.getLoyalistDetails();
         Assert.assertNotNull(loyallistDetails);
         Assert.assertEquals(loyallistDetails.getLoyaltyId(), "L920000100935");
-        Assert.assertEquals(loyallistDetails.getLoyallistType(), "toptier_loyallist");
+        Assert.assertEquals(loyallistDetails.getLoyallistType().getName(), "top_tier");
         Assert.assertEquals(loyallistDetails.getLastName(), "test");
         Assert.assertEquals(loyallistDetails.getZipCode(), "10022");
         Assert.assertEquals(loyallistDetails.getCardNumber(), "6035342200026252");

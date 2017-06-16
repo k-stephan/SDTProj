@@ -189,6 +189,10 @@ public class LoyalistDetails {
             this.name = name;
         }
 
+        public String getName() {
+            return name;
+        }
+
         private static LoyallistType fromString(String value) {
             for (LoyallistType type : LoyallistType.values())
                 if (value.equalsIgnoreCase(type.name)) {

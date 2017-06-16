@@ -17,9 +17,9 @@ public class LoyalistDetailsTest {
 
     @Test
     public void testGetLoyalistType() throws Exception {
-        String loyallistType = "toptier_loyallist";
-        loyalistDetails.setLoyallistType(loyallistType);
-        Assert.assertEquals(loyallistType, loyalistDetails.getLoyallistType());
+        String loyallistType = "top_tier";
+        loyalistDetails.setLoyallistType(LoyalistDetails.LoyallistType.TOP_TIER);
+        Assert.assertEquals(loyallistType, loyalistDetails.getLoyallistType().getName());
     }
 
     @Test
