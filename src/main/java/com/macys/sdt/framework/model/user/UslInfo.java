@@ -144,11 +144,11 @@ public class UslInfo {
     }
 
     /**
-     * Sets the credit card type linked to plenti
+     * Sets the usl type to plenti
      *
      * @param uslType UslInfo
      */
-    public void setUslLinkedCardType(UslType uslType) {
+    public void setUslType(UslType uslType) {
         this.uslType = uslType;
     }
 
