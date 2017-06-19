@@ -313,7 +313,7 @@ public class TestUsers {
     /**
      * Creates a new customer with random data and valid loyalist info
      *
-     * @param loyallistType Type of loyallist. Currently only "toptier_loyallist" is available
+     * @param loyallistType Type of loyallist. Currently only "top_tier" is available
      * @return UserProfile with customer data
      */
     public static LoyalistDetails getLoyallistInformation(String loyallistType) {
@@ -653,7 +653,7 @@ public class TestUsers {
     /**
      * Gets a random valid USL id from "loyalty.json"
      *
-     * @param loyallistType type of loyallist - currently only "toptier_loyallist" is available
+     * @param loyallistType type of loyallist - currently only "top_tier" is available
      * @return JSONObject containing loyallist information
      */
     public static LoyalistDetails getLoyallistDetails(String loyallistType) {

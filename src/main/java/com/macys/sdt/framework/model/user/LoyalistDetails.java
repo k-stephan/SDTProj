@@ -1,5 +1,7 @@
 package com.macys.sdt.framework.model.user;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 /**
  * This class represents a Loyalist and contains all the details about that Loyalist
  */
@@ -26,7 +28,7 @@ public class LoyalistDetails {
         this.billingZipCode = billingZipCode;
     }
 
-    public LoyalistDetails()    {}
+    public LoyalistDetails() {}
 
 
     /**
@@ -45,6 +47,11 @@ public class LoyalistDetails {
      */
     public void setLoyallistType(LoyallistType loyallistType) {
         this.loyallistType = loyallistType;
+    }
+
+    @JsonSetter("loyallistType")
+    public void setLoyallistType(String type) {
+        this.loyallistType = LoyallistType.fromString(type);
     }
 
     /**
@@ -198,7 +205,7 @@ public class LoyalistDetails {
                 if (value.equalsIgnoreCase(type.name)) {
                     return type;
                 }
-            return null;
+            return BASE_TIER;
         }
     }
 }

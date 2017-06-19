@@ -6,6 +6,7 @@ import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +37,9 @@ public class Canvas {
         headers.put("X-Macys-ClientId", "NavApp");
         headers.put("X-Macys-Customer-Id", "1234");
         headers.put("X-Macys-RequestId", "123456");
-        if (RunConfig.debugMode){
-            logger.info("--> Service Request URL: -> "+serviceUrl);
-            logger.info("--> Headers: -> "+headers.toString());
+        if (RunConfig.debugMode) {
+            logger.info("--> Service Request URL: -> " + serviceUrl);
+            logger.info("--> Headers: -> " + headers.toString());
         }
         jsonResponse = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class));
         return jsonResponse;

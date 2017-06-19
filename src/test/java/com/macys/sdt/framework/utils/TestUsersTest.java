@@ -28,10 +28,11 @@ public class TestUsersTest {
         RunConfig.projectResourceDirs = new ArrayList<>();
         RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
         RunConfig.url = "http://www.qa0codemacys.fds.com";
+        RunConfig.workspace = "";
     }
 
 
-    @Test @Ignore
+    @Test
     public void testGetSiteType() throws Exception {
         Assert.assertEquals("mcom", TestUsers.getSiteType());
     }
@@ -45,7 +46,7 @@ public class TestUsersTest {
         Assert.assertNotNull(TestUsers.getCustomerInformation());
     }
 
-    @Test @Ignore
+    @Test
     public void testGetCustomer() throws Exception {
         UserProfile customer = TestUsers.getCustomer(null);
         Assert.assertNotNull(customer);
@@ -123,10 +124,10 @@ public class TestUsersTest {
         Assert.assertNotNull(TestUsers.getCustomerInformation());
     }
 
-    @Test @Ignore
+    @Test
     public void testGetLoyallistInformation() throws Exception {
         RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
-        LoyalistDetails loyalist = TestUsers.getLoyallistInformation("basetier_loyallist");
+        LoyalistDetails loyalist = TestUsers.getLoyallistInformation("base_tier");
         Assert.assertNotNull(loyalist);
         Assert.assertNotNull(loyalist.getLoyaltyId());
         Assert.assertNotNull(loyalist.getLastName());
@@ -141,7 +142,7 @@ public class TestUsersTest {
         Assert.assertNull(TestUsers.getCustomerInformation());
     }
 
-    @Test @Ignore
+    @Test
     public void testGetUSLInformation() throws Exception {
         UslInfo uslInfo = TestUsers.getUSLInformation();
         Assert.assertNotNull(uslInfo);
@@ -150,7 +151,7 @@ public class TestUsersTest {
         Assert.assertNotNull(uslInfo.getUslPin());
     }
 
-    @Test @Ignore
+    @Test
     public void testGetPayPalInformation() throws Exception {
         HashMap paypalInfo = TestUsers.getPayPalInformation();
         Assert.assertNotNull(paypalInfo);
@@ -286,7 +287,7 @@ public class TestUsersTest {
         Assert.assertNotNull(creditCard.getExpiryYear());
     }
 
-    @Test @Ignore
+    @Test
     public void testGetValid3DSecureCard() throws Exception {
         CreditCard creditCard = TestUsers.getValid3DSecureCard("MasterCard");
         Assert.assertNotNull(creditCard);
@@ -301,7 +302,7 @@ public class TestUsersTest {
         Assert.assertNotNull(creditCard.getSecurePassword());
     }
 
-    @Test @Ignore
+    @Test
     public void testGetEnrolledUslId() throws Exception {
         UslInfo uslInfo = TestUsers.getEnrolledUslId();
         Assert.assertNotNull(uslInfo);
@@ -310,7 +311,7 @@ public class TestUsersTest {
         Assert.assertNotNull(uslInfo.getUslPin());
     }
 
-    @Test @Ignore
+    @Test
     public void testGetLoyallistDetails() throws Exception {
         RunConfig.url = "http://www.qa0codebloomingdales.fds.com";
         String loyalistType = "top_tier";
@@ -334,7 +335,7 @@ public class TestUsersTest {
         Assert.assertNotNull(promotion.get("promo_code"));
     }
 
-    @Test @Ignore
+    @Test
     public void testGetRandomValidAddress() throws Exception {
         HashMap<String, String> options = new HashMap<>();
         options.put("checkout_eligible", "true");

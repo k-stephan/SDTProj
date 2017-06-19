@@ -1,6 +1,6 @@
 [
     {
-        "loyallistType": "toptier_loyallist",
+        "loyallistType": "top_tier",
         "loyaltyId": "L920000100935",
         "lastName": "test",
         "zipCode": "10022",
@@ -10,7 +10,7 @@
         "billingZipCode": "94105"
     },
     {
-        "loyallistType": "basetier_loyallist",
+        "loyallistType": "base_tier",
         "loyaltyId": "L910003944343",
         "lastName": "JONAH",
         "zipCode": "94105",

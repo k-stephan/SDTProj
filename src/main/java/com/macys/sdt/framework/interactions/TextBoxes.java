@@ -9,6 +9,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.macys.sdt.framework.runner.RunConfig.appTest;
 
@@ -16,6 +18,9 @@ import static com.macys.sdt.framework.runner.RunConfig.appTest;
  * A collection of ways to interact with text boxes
  */
 public class TextBoxes {
+
+    private static Logger log = LoggerFactory.getLogger(TextBoxes.class);
+
     /**
      * Types text into a text box
      *
@@ -24,7 +29,7 @@ public class TextBoxes {
      */
     public static void typeTextbox(String selector, String text) {
         typeTextbox(Elements.element(selector), text);
-        System.out.println("Typing: " + selector.split("\\.")[1] + " = \"" + text + "\"");
+        log.info("Typing: " + selector.split("\\.")[1] + " = \"" + text + "\"");
     }
 
     /**
@@ -44,12 +49,12 @@ public class TextBoxes {
                 element.sendKeys(text);
                 Wait.forPageReady();
             } else {
-                System.err.println("Could not type text \"" + text +
+                log.error("Could not type text \"" + text +
                         "\"\n into text box " + selector + "\nbecause no element was found");
             }
             Navigate.runAfterNavigation();
         } catch (DriverNotInitializedException e) {
-
+            log.warn("Driver not initialized. Unexpected behavior may occur");
         }
     }
 
@@ -61,7 +66,7 @@ public class TextBoxes {
      */
     public static void typeTextNEnter(String selector, String text) {
         typeTextNEnter(Elements.element(selector), text);
-        System.out.println(selector.split("\\.")[1] + ": " + text);
+        log.info(selector.split("\\.")[1] + ": " + text);
     }
 
     /**
