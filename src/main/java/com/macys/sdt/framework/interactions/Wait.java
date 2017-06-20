@@ -511,10 +511,10 @@ public class Wait {
             WebDriverManager.getCurrentUrl();
             if ((StepUtils.bloomingdales() || StepUtils.MEW())) {
                 // now order review page and pdp have 2 open.
-                if (MainRunner.currentURL.matches(".*?(chkout|product).*?")) {
+                if (MainRunner.currentURL.matches(".*?(chkout|product|bag).*?")) {
                     return queries <= 2;
                 }
-                if (MainRunner.currentURL.matches(".*?(signin|profile|myaccount|addressbook|shop|bag).*?")
+                if (MainRunner.currentURL.matches(".*?(signin|profile|myaccount|addressbook|shop).*?")
                         || (StepUtils.MEW() && MainRunner.currentURL.contains("/shop"))) {
                     return queries <= 1;
                 }
