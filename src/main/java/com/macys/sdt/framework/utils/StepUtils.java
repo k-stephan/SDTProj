@@ -178,7 +178,7 @@ public abstract class StepUtils {
         if (url.isEmpty()) {
             url = RunConfig.url;
         }
-        return url.matches(".*?((?:m(2qa1)?\\.(qa[0-9][0-9]?code)?(macys|mcom|bcom|bloomingdales))|(?:/mobile-UI/)).*?");
+        return url.matches(".*?((?:m(2qa1|2d2)?\\.(qa[0-9][0-9]?code)?(macys|mcom|bcom|bloomingdales))|(?:/mobile-UI/)).*?");
     }
 
     /**
