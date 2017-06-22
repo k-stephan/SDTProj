@@ -413,6 +413,53 @@ public class Clicks {
     }
 
     /**
+     * Clicks on an element and holds for 2 seconds
+     *
+     * @param el string selector to use
+     */
+    public static void longPress(String el) {
+        longPress(Elements.findElement(el), 2000);
+    }
+
+    /**
+     * Clicks on an element and holds for the given duration
+     *
+     * @param el string selector to use
+     */
+    public static void longPress(String el, long pause) {
+        longPress(Elements.findElement(el), pause);
+    }
+
+    /**
+     * Clicks on an element and holds for the given duration
+     *
+     * @param el By selector to find element with
+     * @param pause how long to hold the mouse down
+     */
+    public static void longPress(By el, long pause) {
+        longPress(Elements.findElement(el), pause);
+    }
+
+    /**
+     * Clicks on an element and holds for the given duration
+     *
+     * @param el Element to long press
+     * @param pause how long to hold the mouse down
+     */
+    public static void longPress(WebElement el, long pause) {
+        WebDriver driver;
+        try {
+            driver = WebDriverManager.getWebDriver();
+        } catch (DriverNotInitializedException e) {
+            logger.error("Driver not initialized");
+            return;
+        }
+        Actions action = new Actions(driver);
+        action.clickAndHold(el).perform();
+        action.pause(pause);
+    }
+
+    /**
      * Sends an enter key to a random element from a group of elements
      *
      * @param selector String selector in format "page_name.element_name"
