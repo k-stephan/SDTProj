@@ -25,7 +25,7 @@ import static com.macys.sdt.framework.runner.RunConfig.*;
 /**
  * This class handles the configuration and running of cucumber scenarios and features
  */
-public class MainRunner {
+public class  MainRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(MainRunner.class);
 
@@ -152,7 +152,6 @@ public class MainRunner {
         }
         setBeforeNavigationHooks();
         setAfterNavigationHooks();
-        EnvironmentDetails.loadEnvironmentDetails(url, false);
 
         try {
             Thread cucumberThread = new Thread(() -> {

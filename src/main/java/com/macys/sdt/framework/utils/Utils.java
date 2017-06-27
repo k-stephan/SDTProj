@@ -1104,6 +1104,15 @@ public class Utils {
         return jsonObject;
     }
 
+    public static JSONObject findObjectWithProperty(JSONArray arr, String prop, String match) {
+        for (int i = 0; i < arr.length(); i++) {
+            if (arr.getJSONObject(i).getString(prop).equalsIgnoreCase(match)) {
+                return arr.getJSONObject(i);
+            }
+        }
+        return null;
+    }
+
     /**
      * Get the return_order.json file data
      *

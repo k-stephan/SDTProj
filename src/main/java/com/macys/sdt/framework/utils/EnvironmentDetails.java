@@ -7,21 +7,40 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.openqa.selenium.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Retrieves and stores information about the environment under test
  */
 public class EnvironmentDetails {
 
+
     private static String envUrl = RunConfig.url;
     private static boolean stage5 = RunConfig.url.matches(
             ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
+
+    public static boolean isStage5() {
+        return stage5;
+    }
+
+    public static boolean isZeus() {
+        return zeus;
+    }
+
+    public static String getEnvUrl() {
+        return envUrl;
+    }
+
+    private static boolean zeus = RunConfig.url.matches("\\.tbe\\.zeus\\.fds\\.com");
     private static String site = null;
     private static String type = null;
     private static String appServer = null;
@@ -112,12 +131,23 @@ public class EnvironmentDetails {
     }
 
     public static void loadEnvironmentDetails(String environment, boolean waitForFinish) {
+        Set<Cookie> cookies = Cookies.getCookies();
+        String cookieStr = cookies == null ? null :
+                Utils.listToString(cookies.stream()
+                                .map(c -> c.getName() + "=" + c.getValue())
+                                .collect(Collectors.toList()),
+                        ";", null);
+
         environment = environment == null ? envUrl : environment;
         String env = environment.replace("http://", "https://");
         t = new Thread(() -> {
             try {
                 // basic site details
-                String html = RESTOperations.doGET(env, null).readEntity(String.class);
+                HashMap<String, String> headers = new HashMap<>();
+                if (cookieStr != null) {
+                    headers.put("cookie", cookieStr);
+                }
+                String html = RESTOperations.doGET(env, headers).readEntity(String.class);
                 Document doc = Jsoup.parse(html);
                 Element siteInfo = doc.select("div#soasta_pageinfo").last();
                 site = siteInfo.select("site").html();
@@ -161,7 +191,7 @@ public class EnvironmentDetails {
      * @return environment details
      */
     public static String getDetails() {
-        if (t.isAlive()) {
+        if (t.isAlive() && !printOnFinish) {
             printOnFinish = true;
             return "Environment Details are not ready yet\n";
         }
@@ -170,7 +200,7 @@ public class EnvironmentDetails {
                     + "===================================\n";
         }
         return String.format("\n======> Environment Details <======\n\nSite: %s\nType: %s\nApp Server: %s\nServer: %s\n" +
-                "Timestamp: %s\nRelease: %s\nRelease Date: %s\nVersion: %s\n\n===================================\n",
+                        "Timestamp: %s\nRelease: %s\nRelease Date: %s\nVersion: %s\n\n===================================\n",
                 site, type, appServer, server, timestamp, release, releaseDate, version);
     }
 
@@ -245,7 +275,7 @@ public class EnvironmentDetails {
      */
     public static AppDetails otherApp(String appName) {
 
-        AppDetails appDetails = new AppDetails(null, null, null);
+        AppDetails appDetails = null;
 
         try {
             String eName = getEnv(envUrl);
@@ -253,6 +283,9 @@ public class EnvironmentDetails {
             JSONArray applicationInfo;
             // make sure thread getting env details is done
             waitForReady();
+            if (zeus) {
+                return getZeusApp(appName);
+            }
             if (stage5) {
                 JSONArray environmentDetails = new JSONArray(servicesJson.get("envDetails").toString());
                 applicationInfo = (JSONArray) environmentDetails.getJSONObject(0).get("applicationBolist");
@@ -278,6 +311,28 @@ public class EnvironmentDetails {
         return appDetails;
     }
 
+    private static AppDetails getZeusApp(String appName) {
+        JSONArray componentList = servicesJson.getJSONObject("component").getJSONArray("components");
+        JSONObject obj = Utils.findObjectWithProperty(componentList, "name", appName);
+        JSONArray component = obj == null ? null : obj.getJSONObject("io").getJSONArray("offerings");
+        if (component == null) {
+            return null;
+        }
+        String ip = null;
+        String url = null;
+        for (int i = 0; i < component.length(); i++) {
+            obj = component.getJSONObject(i);
+            String name = obj.getString("name");
+            if (name.endsWith("_ip")) {
+                ip = obj.getString("value");
+            } else if (name.endsWith("_url")) {
+                url = obj.getString("value");
+            }
+        }
+
+        return new AppDetails(getEnv(envUrl), ip, url);
+    }
+
     /**
      * Fills services details with test data from file
      *
@@ -300,7 +355,8 @@ public class EnvironmentDetails {
     public static String getServiceURL(String envUrl) {
         final String GET_URL = stage5 ?
                 "http://mdc2vr6133:8088/EnvironmentDetailsRestApi/environmentService/getNewEnvDetails/" :
-                "http://c4d.devops.fds.com/reinfo/";
+                zeus ? "https://stable.zeus.fds.com/zeus_core/apis/v1/environments/" :
+                        "http://c4d.devops.fds.com/reinfo/";
 
         return GET_URL + getEnv(envUrl);
     }
@@ -311,7 +367,7 @@ public class EnvironmentDetails {
      * @param envUrl environment URL
      * @return environment name
      */
-    private static String getEnv(String envUrl) {
+    public static String getEnv(String envUrl) {
         try {
             URL url = new URL(envUrl);
             String[] split = url.getHost().split("\\.");

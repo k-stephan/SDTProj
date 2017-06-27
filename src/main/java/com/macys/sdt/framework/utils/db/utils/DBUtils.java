@@ -3,6 +3,7 @@ package com.macys.sdt.framework.utils.db.utils;
 import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.*;
 import org.apache.http.ParseException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -103,6 +104,10 @@ public class DBUtils {
 
         try {
             String eName;
+            if (EnvironmentDetails.isZeus()) {
+                return getDetailsFromZeus(json);
+            }
+
             try {
                 eName = json.getString("envName");
             } catch (JSONException e) {
@@ -123,6 +128,28 @@ public class DBUtils {
         }
 
         return dbconfig;
+    }
+
+    private DBConfig getDetailsFromZeus(JSONObject details) {
+        JSONArray components = details.getJSONObject("component").getJSONArray("components");
+        DBConfig config = new DBConfig();
+
+        JSONObject obj = Utils.findObjectWithProperty(components, "name", "sitedb");
+        JSONArray offerings = obj == null ? null : obj.getJSONObject("ie").getJSONArray("offerings");
+
+        if (offerings != null) {
+            JSONObject siteDB = Utils.findObjectWithProperty(offerings, "name", "sitedb");
+            if (siteDB != null) {
+                config.setPort(siteDB.getString("port"));
+                config.setUserName(siteDB.getString("username"));
+                config.setPassword(siteDB.getString("password"));
+                config.setHost(siteDB.getString("host"));
+                config.setDbName(siteDB.getString("dbname"));
+                config.setSchema(siteDB.getString("schema"));
+                config.setHost(EnvironmentDetails.getEnv(EnvironmentDetails.getEnvUrl()));
+            }
+        }
+        return config;
     }
 
 }
