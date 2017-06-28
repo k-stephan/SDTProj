@@ -49,7 +49,6 @@ public class EnvironmentDetails {
     private static String release = null;
     private static String releaseDate = null;
     private static String version = null;
-    private static boolean printOnFinish = false;
 
     private static JSONObject servicesJson;
     private static final Logger logger = LoggerFactory.getLogger(EnvironmentDetails.class);
@@ -126,11 +125,15 @@ public class EnvironmentDetails {
     private static boolean ready = false;
     private static Thread t = null;
 
+    public static void loadEnvironmentDetails() {
+        loadEnvironmentDetails(null, true);
+    }
+
     public static void loadEnvironmentDetails(String environment) {
         loadEnvironmentDetails(environment, true);
     }
 
-    public static void loadEnvironmentDetails(String environment, boolean waitForFinish) {
+    public static void loadEnvironmentDetails(String environment, final boolean printOnFinish) {
         Set<Cookie> cookies = Cookies.getCookies();
         String cookieStr = cookies == null ? null :
                 Utils.listToString(cookies.stream()
@@ -158,10 +161,6 @@ public class EnvironmentDetails {
                 release = siteInfo.select("release").html();
                 releaseDate = siteInfo.select("releasedate").html();
                 version = siteInfo.select("version").html();
-                if (printOnFinish) {
-                    logger.info(getDetails());
-                    printOnFinish = false;
-                }
             } catch (Exception e) {
                 logger.error("Unable to get environment details from " + env);
             }
@@ -170,13 +169,16 @@ public class EnvironmentDetails {
                 String serviceUrl = getServiceURL(envUrl);
                 servicesJson = new JSONObject(Utils.httpGet(serviceUrl, null));
                 ready = true;
+                if (printOnFinish) {
+                    logger.info(getDetails());
+                }
             } catch (Exception e) {
                 logger.error("Unable to get server details for " + env);
             }
         });
         t.setName("EnvironmentDetails");
         t.start();
-        if (waitForFinish) {
+        if (printOnFinish) {
             try {
                 t.join();
             } catch (InterruptedException e) {
@@ -191,8 +193,7 @@ public class EnvironmentDetails {
      * @return environment details
      */
     public static String getDetails() {
-        if (t.isAlive() && !printOnFinish) {
-            printOnFinish = true;
+        if (!ready) {
             return "Environment Details are not ready yet\n";
         }
         if (site == null) {
@@ -219,10 +220,6 @@ public class EnvironmentDetails {
         }
 
         return true;
-    }
-
-    public static boolean ready() {
-        return ready;
     }
 
     public static void updateStage5() {
