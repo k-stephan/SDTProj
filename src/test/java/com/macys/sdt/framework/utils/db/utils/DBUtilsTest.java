@@ -1,15 +1,11 @@
 package com.macys.sdt.framework.utils.db.utils;
 
-import com.macys.sdt.framework.runner.RunConfig;
-import com.macys.sdt.framework.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Tests for DBUtils
@@ -18,14 +14,7 @@ public class DBUtilsTest {
 
     @BeforeClass
     public static void setup() {
-        RunConfig.url = "http://www.qa0codemacys.fds.com";
-        RunConfig.project = "framework";
-        RunConfig.projectResourceDirs = new ArrayList<>();
-        RunConfig.projectResourceDirs.add("src/test/java/com/macys/sdt/framework/resources");
-        HashMap<String, String> env = new HashMap<>();
-        env.put("dbUnitTest", "true");
-        env.put("dbUnitTestConfig", "{\"dbInfo\":{\"dbName\":\"mcyprdst\",\"dbSchema\":\"DB2MCYS\",\"dbUsername\":\"mcyapp\",\"dbPassword\":\"dbacce5s\",\"dbPortNo\":\"60020\",\"dbHost\":\"ibm80p49\",\"dbUrl\":\"jdbc:db2://ibm80p49:60020/MCYPRDST\"}}");
-        TestUtils.setEnv(env);
+        DBConnectionTest.setup();
     }
 
     @Test

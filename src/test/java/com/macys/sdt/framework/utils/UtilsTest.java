@@ -19,6 +19,11 @@ import static java.lang.Runtime.getRuntime;
  */
 public class UtilsTest {
 
+    @BeforeClass
+    public static void prepare() {
+        RunConfig.workspace = "";
+    }
+
     @Test
     public void testExecuteCMD() throws Exception {
         Assert.assertNotNull(Utils.executeCMD(Utils.isWindows()? "cd" : "pwd"));
