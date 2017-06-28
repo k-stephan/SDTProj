@@ -4,6 +4,7 @@ import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class DBConnectionTest {
         TestUtils.setEnv(env);
     }
 
-   @Test
+   @Test @Ignore
     public void testCreateAndCloseConnection() throws Exception {
         DBConnection dbConnection;
         Connection con = null;

@@ -9,7 +9,8 @@ import org.junit.Test;
  */
 public class RESTOperationsTest {
 
-    @Test
+    //TODO: this URL is not available from build server, need to replace it
+    @Test @Ignore
     public void testDoPOST() throws Exception {
         String url = "http://mdc2vr4073:9099/RAPADDashboardConfig/getEnvDetails.html";
         String payload = "{\"stream\": \"MCOM\", \"stage\": \"5\", \"release\": \"15R\"}";

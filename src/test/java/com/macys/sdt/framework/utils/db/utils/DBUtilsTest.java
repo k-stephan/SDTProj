@@ -2,6 +2,7 @@ package com.macys.sdt.framework.utils.db.utils;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -17,7 +18,7 @@ public class DBUtilsTest {
         DBConnectionTest.setup();
     }
 
-    @Test
+    @Test @Ignore
     public void testGetCustomDate() {
         try {
             Assert.assertNotNull("Date generated is null", DBUtils.getCustomDate());
@@ -26,7 +27,7 @@ public class DBUtilsTest {
         }
     }
 
-    @Test
+    @Test @Ignore
     public void testSetupDBConnection() throws SQLException {
         Connection con = null;
         try {
