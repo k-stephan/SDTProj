@@ -1,9 +1,5 @@
 package com.macys.sdt.framework.utils;
 
-import com.macys.sdt.framework.runner.RunConfig;
-import com.macys.sdt.framework.utils.db.models.RegistryService;
-import org.junit.Test;
-
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Map;
@@ -48,9 +44,4 @@ public class TestUtils {
         }
     }
 
-    @Test
-    public void asdf() {
-        RunConfig.url = "http://www.qa15codemacys.fds.com";
-        RegistryService.registryExists("12345");
-    }
 }
