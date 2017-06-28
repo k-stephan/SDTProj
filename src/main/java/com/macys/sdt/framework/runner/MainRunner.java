@@ -64,6 +64,7 @@ public class  MainRunner {
         // When test are aborted by user or EE, need to make sure sauce labs still gets driver quit command
         // This code should help with "Test did not see a new command for 300 seconds" error
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            EnvironmentDetails.waitForThread();
             if (WebDriverManager.driverInitialized() && (closeBrowserAtExit || useSauceLabs)) {
                 WebDriverManager.driver.quit();
             }

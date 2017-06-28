@@ -178,12 +178,13 @@ public class EnvironmentDetails {
         });
         t.setName("EnvironmentDetails");
         t.start();
-        if (printOnFinish) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                logger.error("Interrupted while waiting for env details request to return");
-            }
+    }
+
+    public static void waitForThread() {
+        try {
+            t.join(5000);
+        } catch (InterruptedException e) {
+            logger.error("Unable to wait for env details thread");
         }
     }
 
