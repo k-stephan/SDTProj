@@ -508,8 +508,9 @@ public class Wait {
             //logger.info("." + queries + " AJAX");
 
             // TEMPORARY - currently a bug in BCOM sign in, checkout, MEW search and MCOM VGC PDP page that leaves AJAX calls hanging
+            // Now MCOM PDP page is also
             WebDriverManager.getCurrentUrl();
-            if ((StepUtils.bloomingdales() || StepUtils.MEW())) {
+            if ((StepUtils.bloomingdales() || StepUtils.MEW() || (StepUtils.macys() && MainRunner.currentURL.contains("/shop")))) {
                 // now order review page and pdp have 2 open.
                 if (MainRunner.currentURL.matches(".*?(chkout|product|bag).*?")) {
                     return queries <= 2;
