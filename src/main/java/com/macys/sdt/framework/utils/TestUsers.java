@@ -51,6 +51,7 @@ public class TestUsers {
      */
     public static String lockedProductionCustomer = null;
     private static UserProfile customer = null;
+    private static Product product = null;
     private static UserProfile prodCustomer = null;
     private static LoyalistDetails loyaltyDetailCustomer = null;
     private static UslInfo uslInfo = null;
@@ -179,6 +180,15 @@ public class TestUsers {
             logger.info("Your New Email Address is: " + currentEmail);
         }
         return customer;
+    }
+
+    /**
+     * Provides currently generated random product
+     *
+     * @return Product with currently generated product
+     */
+    public static Product getCurrentProduct() {
+        return product;
     }
 
     /**
@@ -822,19 +832,19 @@ public class TestUsers {
             String jsonTxt = Utils.readTextFile(addressFile);
             JSONObject json = new JSONObject(jsonTxt);
             if (macys()) {
-                products = (JSONArray) json.get("macys");
+                products = json.getJSONArray("macys");
             } else {
-                products = (JSONArray) json.get("bloomingdales");
+                products = json.getJSONArray("bloomingdales");
             }
 
             for (int i = 0; i < products.length(); i++) {
-                JSONObject product = products.getJSONObject(i);
+                JSONObject productJson = products.getJSONObject(i);
                 boolean found = true;
-                String productId = product.get("id").toString();
+                String productId = productJson.get("id").toString();
                 for (String key : options.keySet()) {
                     try {
                         // items maybe bool, int or str, so making all as string and comparing
-                        if (!options.get(key).toString().equalsIgnoreCase(product.get(key).toString())) {
+                        if (!options.get(key).toString().equalsIgnoreCase(productJson.get(key).toString())) {
                             found = false;
                             break;
                         }
@@ -849,7 +859,7 @@ public class TestUsers {
                 }
                 if (found){
                     if (BTFound){
-                        List<HashMap> BTProductStatus = ProductService.getBTProductDeliverabilityStatus(productId, product.getString("zip_code"));
+                        List<HashMap> BTProductStatus = ProductService.getBTProductDeliverabilityStatus(productId, productJson.getString("zip_code"));
                         final String finalBTRequestedStatus = BTRequestedStatus;
                         found = BTProductStatus.stream().anyMatch(e -> e.get("status").equals(finalBTRequestedStatus));
                     } else {
@@ -859,15 +869,15 @@ public class TestUsers {
                             if (upcIds.size() != 1) {
                                 continue;
                             }
-                            found = ProductService.checkoutAvailability(product.get("id").toString());// found = ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
+                            found = ProductService.checkoutAvailability(productJson.get("id").toString());// found = ProductService.checkProductAvailabilityAtMST(upcIds.get(0));
                         }
                         if (found && checkBopsAvailable && !prodEnv()) {
                             String storeLocationKey = "store_location_nbr";
                             String storeLocationNumber;
                             if (options.containsKey(storeLocationKey)) {
                                 storeLocationNumber = options.get(storeLocationKey).toString();
-                            } else if (product.keySet().contains(storeLocationKey)) {
-                                storeLocationNumber = product.get(storeLocationKey).toString();
+                            } else if (productJson.keySet().contains(storeLocationKey)) {
+                                storeLocationNumber = productJson.get(storeLocationKey).toString();
                             } else {
                                 storeLocationNumber = macys() ? "93" : "343";
                             }
@@ -876,8 +886,10 @@ public class TestUsers {
                         }
                     }
                     if (found) {
-                        logger.info("found product id : " + new Product(product).id);
-                        return new Product(product);
+                        //every time we generate new product it is available at any other place within framework
+                        product = new Product(productJson);
+                        logger.info("found product id : " + product.id);
+                        return product;
                     }
                 }
             }
