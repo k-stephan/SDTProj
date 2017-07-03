@@ -40,7 +40,8 @@ public class EnvironmentDetails {
         return envUrl;
     }
 
-    private static boolean zeus = RunConfig.url.matches("\\.tbe\\.zeus\\.fds\\.com");
+    private static boolean zeus = RunConfig.url.matches(".*?\\.tbe\\.zeus\\.fds\\.com.*?");
+    private static boolean detailsCollected = false;
     private static String site = null;
     private static String type = null;
     private static String appServer = null;
@@ -134,6 +135,7 @@ public class EnvironmentDetails {
     }
 
     public static void loadEnvironmentDetails(String environment, final boolean printOnFinish) {
+        detailsCollected = true;
         Set<Cookie> cookies = Cookies.getCookies();
         String cookieStr = cookies == null ? null :
                 Utils.listToString(cookies.stream()
@@ -167,7 +169,11 @@ public class EnvironmentDetails {
             try {
                 // services data
                 String serviceUrl = getServiceURL(envUrl);
-                servicesJson = new JSONObject(Utils.httpGet(serviceUrl, null));
+                HashMap<String, String> headers = new HashMap<>();
+                if (zeus) {
+                    headers.put("Authorization", "Token c8b9cd48daa6942784d6dd23f6cde39b3d10b941");
+                }
+                servicesJson = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class));
                 ready = true;
                 if (printOnFinish) {
                     logger.info(getDetails());
@@ -207,10 +213,19 @@ public class EnvironmentDetails {
     }
 
     public static boolean waitForReady() {
-        if (t == null) {
+        if (detailsCollected) {
             return true;
         }
-        if (t.isAlive()) {
+        if (t != null && t.isAlive()) {
+            try {
+                t.join();
+                return true;
+            } catch (InterruptedException e) {
+                logger.error("Interrupted while waiting for env details request to return");
+                return false;
+            }
+        } else {
+            loadEnvironmentDetails();
             try {
                 t.join();
                 return true;
@@ -219,8 +234,6 @@ public class EnvironmentDetails {
                 return false;
             }
         }
-
-        return true;
     }
 
     public static void updateStage5() {
@@ -246,6 +259,8 @@ public class EnvironmentDetails {
             if (stage5) {
                 JSONArray environmentDetails = new JSONArray(servicesJson.get("envDetails").toString());
                 myServicesInfo = (JSONArray) environmentDetails.getJSONObject(0).get("myServicesIpBoList");
+            } else if (zeus) {
+                return getZeusApp(appName);
             } else {
                 myServicesInfo = (JSONArray) servicesJson.get("myServicesIpBoList");
             }
@@ -283,8 +298,7 @@ public class EnvironmentDetails {
             waitForReady();
             if (zeus) {
                 return getZeusApp(appName);
-            }
-            if (stage5) {
+            } else if (stage5) {
                 JSONArray environmentDetails = new JSONArray(servicesJson.get("envDetails").toString());
                 applicationInfo = (JSONArray) environmentDetails.getJSONObject(0).get("applicationBolist");
             } else {
@@ -318,6 +332,7 @@ public class EnvironmentDetails {
         }
         String ip = null;
         String url = null;
+        String port = null;
         for (int i = 0; i < component.length(); i++) {
             obj = component.getJSONObject(i);
             String name = obj.getString("name");
@@ -325,10 +340,12 @@ public class EnvironmentDetails {
                 ip = obj.getString("value");
             } else if (name.endsWith("_url")) {
                 url = obj.getString("value");
+            } else if (name.endsWith("_port")) {
+                port = obj.getString("value");
             }
         }
 
-        return new AppDetails(getEnv(envUrl), ip, url);
+        return new AppDetails(getEnv(envUrl), ip, url, port);
     }
 
     /**
@@ -356,7 +373,7 @@ public class EnvironmentDetails {
                 zeus ? "https://stable.zeus.fds.com/zeus_core/apis/v1/environments/" :
                         "http://c4d.devops.fds.com/reinfo/";
 
-        return GET_URL + getEnv(envUrl);
+        return GET_URL + getEnv(envUrl) + (zeus ? "/?format=json" : "");
     }
 
     /**
@@ -378,12 +395,19 @@ public class EnvironmentDetails {
 
     public static class AppDetails {
 
-        public String envName, ipAddress, hostName;
+        public String envName, ipAddress, hostName, port;
 
         public AppDetails(String envName, String ipAddress, String hostName) {
             this.envName = envName;
             this.ipAddress = ipAddress;
             this.hostName = hostName;
+        }
+
+        public AppDetails(String envName, String ipAddress, String hostName, String port) {
+            this.envName = envName;
+            this.ipAddress = ipAddress;
+            this.hostName = hostName;
+            this.port = port;
         }
 
     }
