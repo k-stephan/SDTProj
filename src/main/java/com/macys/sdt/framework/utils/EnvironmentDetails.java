@@ -1,6 +1,7 @@
 package com.macys.sdt.framework.utils;
 
 import com.macys.sdt.framework.runner.RunConfig;
+import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.utils.rest.utils.RESTOperations;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -255,7 +256,8 @@ public class EnvironmentDetails {
             String eName = getEnv(envUrl);
             JSONArray myServicesInfo;
             // make sure thread getting env details is done
-            waitForReady();
+            if (WebDriverManager.driverInitialized())
+                waitForReady();
             if (stage5) {
                 JSONArray environmentDetails = new JSONArray(servicesJson.get("envDetails").toString());
                 myServicesInfo = (JSONArray) environmentDetails.getJSONObject(0).get("myServicesIpBoList");
