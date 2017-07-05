@@ -79,6 +79,7 @@ public class EnvironmentDetailsTest {
         RunConfig.url = WEBSITE;
         EnvironmentDetails.setEnvUrl(WEBSITE);
         EnvironmentDetails.updateStage5();
+        EnvironmentDetails.getTestServiceData();
         EnvironmentDetails.AppDetails envDetails = EnvironmentDetails.otherApp("BagApp");
         Assert.assertEquals("11.168.50.195", envDetails.ipAddress);
         Assert.assertEquals("jcia5694", envDetails.hostName);

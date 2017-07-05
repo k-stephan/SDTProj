@@ -297,7 +297,8 @@ public class EnvironmentDetails {
 
             JSONArray applicationInfo;
             // make sure thread getting env details is done
-            waitForReady();
+            if (WebDriverManager.driverInitialized())
+                waitForReady();
             if (zeus) {
                 return getZeusApp(appName);
             } else if (stage5) {
