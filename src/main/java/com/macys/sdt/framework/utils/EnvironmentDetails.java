@@ -136,7 +136,6 @@ public class EnvironmentDetails {
     }
 
     public static void loadEnvironmentDetails(String environment, final boolean printOnFinish) {
-        detailsCollected = true;
         Set<Cookie> cookies = Cookies.getCookies();
         String cookieStr = cookies == null ? null :
                 Utils.listToString(cookies.stream()
@@ -176,6 +175,7 @@ public class EnvironmentDetails {
                 }
                 servicesJson = new JSONObject(RESTOperations.doGET(serviceUrl, headers).readEntity(String.class));
                 ready = true;
+                detailsCollected = true;
                 if (printOnFinish) {
                     logger.info(getDetails());
                 }
