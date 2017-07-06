@@ -217,23 +217,17 @@ public class EnvironmentDetails {
         if (detailsCollected) {
             return true;
         }
-        if (t != null && t.isAlive()) {
-            try {
-                t.join();
-                return true;
-            } catch (InterruptedException e) {
-                logger.error("Interrupted while waiting for env details request to return");
-                return false;
-            }
-        } else {
+
+        if (t == null || !t.isAlive()) {
             loadEnvironmentDetails();
-            try {
-                t.join();
-                return true;
-            } catch (InterruptedException e) {
-                logger.error("Interrupted while waiting for env details request to return");
-                return false;
-            }
+        }
+
+        try {
+            t.join();
+            return true;
+        } catch (InterruptedException e) {
+            logger.error("Interrupted while waiting for env details request to return");
+            return false;
         }
     }
 

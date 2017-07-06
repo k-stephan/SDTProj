@@ -1,13 +1,16 @@
 package com.macys.sdt.framework.model.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * This class represents a Loyalist and contains all the details about that Loyalist
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoyalistDetails {
 
     private LoyallistType loyallistType;
+    private int points;
     private String loyaltyId;
     private String lastName;
     private String zipCode;
@@ -17,7 +20,7 @@ public class LoyalistDetails {
     private String billingZipCode;
 
     public LoyalistDetails(LoyallistType loyallistType, String loyaltyId, String lastName, String zipCode,
-                   String cardNumber, String securityCode, String billingLastName, String billingZipCode ) {
+                           String cardNumber, String securityCode, String billingLastName, String billingZipCode) {
         this.loyallistType = loyallistType;
         this.loyaltyId = loyaltyId;
         this.lastName = lastName;
@@ -30,6 +33,24 @@ public class LoyalistDetails {
 
     public LoyalistDetails() {}
 
+
+    /**
+     * Gets number of loyalty points
+     *
+     * @return number of loyalty points the user has
+     */
+    public int getPoints() {
+        return points;
+    }
+
+    /**
+     * Sets the number of loyalty points
+     *
+     * @param points number of points to set
+     */
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
     /**
      * Gets the loyalty type of Loyalist

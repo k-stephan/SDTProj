@@ -24,6 +24,7 @@ import org.junit.Assert;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.macys.sdt.framework.utils.StepUtils.macys;
@@ -667,6 +668,22 @@ public class TestUsers {
      * @return JSONObject containing loyallist information
      */
     public static LoyalistDetails getLoyallistDetails(String loyallistType) {
+        return getLoyallistDetails(loyallistType, null);
+    }
+
+    /**
+     * Gets a random valid USL id from "loyalty.json"
+     * <p>
+     * example to get user with > 2500 points:
+     * <br>
+     * <code>LoyalistDetails details = getLoyallistDetails("base_tier", (detail) -> detail.getPoints() > 2500);</code>
+     * </p>
+     *
+     * @param loyallistType type of loyallist (may be null)
+     * @param filterBy Predicate to filter results by (may be null)
+     * @return JSONObject containing loyallist information
+     */
+    public static LoyalistDetails getLoyallistDetails(String loyallistType, Predicate<LoyalistDetails> filterBy) {
         try {
             File addressFile = getResourceFile("loyalty.json");
             String jsonTxt = Utils.readTextFile(addressFile);
@@ -675,9 +692,17 @@ public class TestUsers {
             List<LoyalistDetails> loyalistDetailsList = ObjectMapperProvider.getJsonMapper().readValue(jsonTxt,
                     TypeFactory.defaultInstance().constructCollectionType(List.class, LoyalistDetails.class));
 
-            List<LoyalistDetails> loyalists = loyalistDetailsList.stream().filter(loyalistDetails -> loyalistDetails.getLoyallistType().toString().equalsIgnoreCase(loyallistType)).collect(Collectors.toList());
-            return loyalists.get(rand.nextInt(loyalists.size()));
-
+            if (loyallistType != null && !loyallistType.isEmpty()) {
+                loyalistDetailsList = loyalistDetailsList.stream()
+                        .filter(loyalistDetails -> loyalistDetails.getLoyallistType().toString().equalsIgnoreCase(loyallistType))
+                        .collect(Collectors.toList());
+            }
+            if (filterBy != null) {
+                loyalistDetailsList = loyalistDetailsList.stream()
+                        .filter(filterBy)
+                        .collect(Collectors.toList());
+            }
+            return loyalistDetailsList.get(rand.nextInt(loyalistDetailsList.size()));
         } catch (Exception e) {
             Assert.fail("Unable to parse JSON: " + e);
             return null;
@@ -857,8 +882,8 @@ public class TestUsers {
                         }
                     }
                 }
-                if (found){
-                    if (BTFound){
+                if (found) {
+                    if (BTFound) {
                         List<HashMap> BTProductStatus = ProductService.getBTProductDeliverabilityStatus(productId, productJson.getString("zip_code"));
                         final String finalBTRequestedStatus = BTRequestedStatus;
                         found = BTProductStatus.stream().anyMatch(e -> e.get("status").equals(finalBTRequestedStatus));
