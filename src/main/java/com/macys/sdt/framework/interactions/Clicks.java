@@ -425,6 +425,7 @@ public class Clicks {
      * Clicks on an element and holds for the given duration
      *
      * @param el string selector to use
+     * @param pause how long to hold the mouse down
      */
     public static void longPress(String el, long pause) {
         longPress(Elements.findElement(el), pause);

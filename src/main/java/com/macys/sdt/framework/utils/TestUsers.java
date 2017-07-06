@@ -664,7 +664,7 @@ public class TestUsers {
     /**
      * Gets a random valid USL id from "loyalty.json"
      *
-     * @param loyallistType type of loyallist - currently only "top_tier" is available
+     * @param loyallistType type of loyallist
      * @return JSONObject containing loyallist information
      */
     public static LoyalistDetails getLoyallistDetails(String loyallistType) {
@@ -674,9 +674,9 @@ public class TestUsers {
     /**
      * Gets a random valid USL id from "loyalty.json"
      * <p>
-     * example to get user with > 2500 points:
+     * example to get user with over 2500 points:
      * <br>
-     * <code>LoyalistDetails details = getLoyallistDetails("base_tier", (detail) -> detail.getPoints() > 2500);</code>
+     * <code>LoyalistDetails details = getLoyallistDetails("base_tier", (detail) -&gt; detail.getPoints() &gt; 2500);</code>
      * </p>
      *
      * @param loyallistType type of loyallist (may be null)
