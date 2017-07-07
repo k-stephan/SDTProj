@@ -755,19 +755,34 @@ public class Utils {
      * @throws IOException throws IOException
      */
     public static void extractResources(File repoJar, String workspace, String project) throws IOException {
-        if (resourcesExtracted) {
+        extractResources(repoJar, workspace, project, false);
+    }
+
+    /**
+     * Extract Resources from the given repoJar
+     *
+     * @param repoJar   repo Jar File
+     * @param workspace workspace path
+     * @param project   project name
+     * @param skipShared true if only extracting project resources
+     * @throws IOException throws IOException
+     */
+    public static void extractResources(File repoJar, String workspace, String project, boolean skipShared) throws IOException {
+        if (resourcesExtracted && !skipShared) {
             return;
         }
-        String resPath = "com/macys/sdt/framework/resources";
-        logger.debug(resPath);
-        extractJarFile(repoJar, resPath, workspace + "/" + resPath);
+        String resPath;
+        if (!skipShared) {
+            resPath = "com/macys/sdt/framework/resources";
+            logger.debug(resPath);
+            extractJarFile(repoJar, resPath, workspace + "/" + resPath);
 
-        resPath = "com/macys/sdt/shared/resources";
-        logger.debug(resPath);
-        extractJarFile(repoJar, resPath, workspace + "/" + resPath);
-        saveDriver("chromedriver.exe", resPath);
-        saveDriver("IEDriverServer.exe", resPath);
-
+            resPath = "com/macys/sdt/shared/resources";
+            logger.debug(resPath);
+            extractJarFile(repoJar, resPath, workspace + "/" + resPath);
+            saveDriver("chromedriver.exe", resPath);
+            saveDriver("IEDriverServer.exe", resPath);
+        }
         resPath = "com/macys/sdt/projects/";
         logger.debug(resPath);
         extractJarFile(repoJar, resPath + project, workspace + "/" + project, "/resources", "/features", "pom.xml");

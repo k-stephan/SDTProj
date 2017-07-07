@@ -236,12 +236,19 @@ public class RunConfig {
                 Utils.extractResources(new File(repoJar), workspace, project.replace(".", "/"));
             }
         } catch (IOException e) {
-            logger.error("Failed to extract resources from jar");
+            logger.error("Failed to extract resources from jar: " + e);
         }
         includedProjects = getDependencies(project);
         // old, proprietary resource location
         projectResourceDirs.add(getProjectResourceDir(project));
         for (String prj : includedProjects) {
+            if (repoJar != null) {
+                try {
+                    Utils.extractResources(new File(repoJar), workspace, prj.replace(".", "/"), true);
+                } catch (IOException e) {
+                    logger.error("Failed to extract resources for " + prj + " from jar: " + e);
+                }
+            }
             projectResourceDirs.add(getProjectResourceDir(prj));
         }
     }
@@ -553,6 +560,7 @@ public class RunConfig {
                 if (e.html().startsWith("sdt-")) {
                     String[] name = e.html().split("-");
                     deps.add(name[1] + "." + name[2]);
+                    logger.debug("Found dependency: " + name[1] + "." + name[2]);
                 }
             }
         } catch (IOException e) {
