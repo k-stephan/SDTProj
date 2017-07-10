@@ -270,6 +270,50 @@ public class OrderServices {
     }
 
     /**
+     *
+     */
+    public Map<String, String> getBTSalescheck(String orderNumber) {
+        HashMap<String, String> btSalescheck = new HashMap<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service")
+                    .getString("bt_salescheck").replaceFirst("'\\?'", "'" + orderNumber + "'"));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                btSalescheck.put("BT_SALESCHECK_NBR", resultSet.getString("BT_SALESCHECK_NBR"));
+                btSalescheck.put("DELIVERY_FEE", resultSet.getString("DELIVERY_FEE"));
+                btSalescheck.put("TAX_AMT", resultSet.getString("TAX_AMT"));
+                btSalescheck.put("TOTAL_AMT", resultSet.getString("TOTAL_AMT"));
+                btSalescheck.put("RECYCLE_FEE", resultSet.getString("RECYCLE_FEE"));
+                btSalescheck.put("BED_REMOVAL_FEE", resultSet.getString("BED_REMOVAL_FEE"));
+                btSalescheck.put("WORRY_NO_MORE_FEE", resultSet.getString("WORRY_NO_MORE_FEE"));
+            }
+        } catch (SQLException | JSONException e) {
+            logger.warn("Error in retrieving big ticket sales check details due to : " + e.getMessage());
+        }
+        return btSalescheck;
+    }
+
+    /**
+     *
+     */
+    public Map<String, String> getBTCreditcardPayment(String orderNumber) {
+        HashMap<String, String> btSalescheck = new HashMap<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(queries.getJSONObject("order_service")
+                    .getString("bt_credit_card_payment").replaceFirst("'\\?'", "'" + orderNumber + "'"));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                btSalescheck.put("ORDER_NUMBER", resultSet.getString("ORDER_NUMBER"));
+                btSalescheck.put("BT_SALESCHECK_NBR", resultSet.getString("BT_SALESCHECK_NBR"));
+                btSalescheck.put("AMOUNT_CHARGED", resultSet.getString("AMOUNT_CHARGED"));
+            }
+        } catch (SQLException | JSONException e) {
+            logger.warn("Error in retrieving big ticket order credit card payment due to : " + e.getMessage());
+        }
+        return btSalescheck;
+    }
+
+    /**
      * Method to parse the XML into TagElements
      *
      * @param xmlData Data to look for
