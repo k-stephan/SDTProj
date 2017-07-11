@@ -461,6 +461,13 @@ public class  MainRunner {
         }
 
         public void run() {
+            while (cucumberThread == null) {
+                // Macs make threads even more confusing than they should be.
+                // This thread is started after the cucumber thread, but sometimes
+                // on mac it comes up null. Go figure.
+                Utils.threadSleep(5000, this.getClass().getSimpleName());
+            }
+
             while (cucumberThread.isAlive()) {
                 try {
                     if (!WebDriverManager.driverInitialized()) {
