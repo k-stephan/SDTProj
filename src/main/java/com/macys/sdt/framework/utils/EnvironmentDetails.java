@@ -181,7 +181,6 @@ public class EnvironmentDetails {
         });
         t.setName("EnvironmentDetails");
         t.start();
-        waitForThread();
     }
 
     public static void waitForThread() {
