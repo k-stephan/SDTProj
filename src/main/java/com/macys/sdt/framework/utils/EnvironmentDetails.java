@@ -184,6 +184,9 @@ public class EnvironmentDetails {
     }
 
     public static void waitForThread() {
+        if (t == null) {
+            return;
+        }
         try {
             t.join(5000);
         } catch (InterruptedException e) {
