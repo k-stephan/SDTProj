@@ -50,7 +50,11 @@ public class Cookies {
             Set<Cookie> cookies = new HashSet<>();
             for (String cookie : ((String) Navigate.execJavascript("return document.cookie")).split("; ")) {
                 String[] cookieValue = cookie.split("=");
-                cookies.add(new Cookie(cookieValue[0], cookieValue[1]));
+                if (cookieValue.length > 1) {
+                    cookies.add(new Cookie(cookieValue[0], cookieValue[1]));
+                } else {
+                    cookies.add(new Cookie(cookieValue[0], ""));
+                }
             }
             return cookies;
         } else {
