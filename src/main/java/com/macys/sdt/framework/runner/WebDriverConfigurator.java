@@ -377,6 +377,9 @@ class WebDriverConfigurator {
             case "iphone 6":
                 emulationOptions.put("deviceName", "Apple iPhone 6");
                 return getChromeEmulatorConfig(emulationOptions);
+            case "iphone 5":
+                emulationOptions.put("deviceName", "Apple iPhone 5");
+                return getChromeEmulatorConfig(emulationOptions);
             case "ipad":
                 emulationOptions.put("deviceName", "Apple iPad");
                 return getChromeEmulatorConfig(emulationOptions);

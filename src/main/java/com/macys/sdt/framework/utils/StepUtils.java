@@ -1,19 +1,16 @@
 package com.macys.sdt.framework.utils;
 
-import com.google.gson.Gson;
 import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.exceptions.EnvException;
 import com.macys.sdt.framework.interactions.Clicks;
 import com.macys.sdt.framework.interactions.Elements;
 import com.macys.sdt.framework.interactions.Navigate;
 import com.macys.sdt.framework.interactions.Wait;
+import com.macys.sdt.framework.runner.MainRunner;
 import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
-import com.macys.sdt.framework.runner.MainRunner;
 import cucumber.api.Scenario;
-import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.core.har.HarEntry;
-import net.lightbody.bmp.core.har.HarRequest;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
@@ -27,14 +24,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.macys.sdt.framework.runner.RunConfig.appTest;
 
@@ -48,7 +42,7 @@ public abstract class StepUtils {
     /**
      * A regex string that will match allowed mobile devices
      */
-    public static final String MOBILE_DEVICES = "(?i)Android|iPhone 6|Google Nexus [0-9](p|x)?|Samsung Galaxy S4|Android Emulator|Nexus [0-9]";
+    public static final String MOBILE_DEVICES = "(?i)Android|iPhone [5-6]|Google Nexus [0-9](p|x)?|Samsung Galaxy S4|Android Emulator|Nexus [0-9]";
 
     /**
      * A regex string that will match allowed tablets
@@ -186,7 +180,7 @@ public abstract class StepUtils {
      *
      * @return true if using a mobile device or on MEW
      */
-    public static boolean mobile()  {
+    public static boolean mobile() {
         return mobileDevice() || MEW();
     }
 
@@ -299,7 +293,7 @@ public abstract class StepUtils {
      * Closes BCOM Loyalty Promotion Video popup present
      */
     public static void closeBcomLoyaltyPromotionVideoOverlay() {
-        if (bloomingdales()){
+        if (bloomingdales()) {
             Wait.untilElementPresent(By.id("close-loyallist-video"));
             Clicks.clickIfPresent(By.id("close-loyallist-video"));
         }
@@ -327,7 +321,7 @@ public abstract class StepUtils {
                 String experiment = "EFCKEY={\"EXPERIMENT\":[" + RunConfig.efcKey + "]}";
                 if (decoded.contains("EXPERIMENT")) {
                     decoded = decoded.replaceFirst("EFCKEY=\\{\"EXPERIMENT\":\\[.*?]}", experiment);
-                } else if (decoded.contains("EFCKEY")){
+                } else if (decoded.contains("EFCKEY")) {
                     decoded = decoded.replaceFirst("EFCKEY=\\{}", "EFCKEY={\"EXPERIMENT\":[" + RunConfig.efcKey + "]}");
                 } else {
                     decoded += (decoded.contains("?") ? "&" : "?") + experiment;
