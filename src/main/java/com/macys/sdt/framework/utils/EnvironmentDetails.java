@@ -25,9 +25,25 @@ import java.util.stream.Collectors;
 public class EnvironmentDetails {
 
 
+    private static final Logger logger = LoggerFactory.getLogger(EnvironmentDetails.class);
     private static String envUrl = RunConfig.url;
     private static boolean stage5 = RunConfig.url.matches(
-            ".*?(http://)?(www\\.)?(m\\.)?qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales)\\.fds\\.com.*?");
+            ".*?(http://)?(www\\.)?(m\\.)?((mcom|bcom)?external[0-9][0-9]?[0-9]?|qa[0-9][0-9]?code(macys|mcom|bcom|bloomingdales))\\.fds\\.com.*?");
+    private static boolean zeus = RunConfig.url.matches(".*?\\.tbe\\.zeus\\.fds\\.com.*?");
+    private static boolean detailsCollected = false;
+    private static String site = null;
+    private static String type = null;
+    private static String appServer = null;
+    private static String server = null;
+    private static String timestamp = null;
+    private static String release = null;
+    private static String releaseDate = null;
+    private static String version = null;
+    private static JSONObject servicesJson;
+    private static boolean ready = false;
+    private static Thread t = null;
+    private EnvironmentDetails() {
+    }
 
     public static boolean isStage5() {
         return stage5;
@@ -41,21 +57,8 @@ public class EnvironmentDetails {
         return envUrl;
     }
 
-    private static boolean zeus = RunConfig.url.matches(".*?\\.tbe\\.zeus\\.fds\\.com.*?");
-    private static boolean detailsCollected = false;
-    private static String site = null;
-    private static String type = null;
-    private static String appServer = null;
-    private static String server = null;
-    private static String timestamp = null;
-    private static String release = null;
-    private static String releaseDate = null;
-    private static String version = null;
-
-    private static JSONObject servicesJson;
-    private static final Logger logger = LoggerFactory.getLogger(EnvironmentDetails.class);
-
-    private EnvironmentDetails() {
+    public static void setEnvUrl(String url) {
+        envUrl = url;
     }
 
     public static JSONObject getServicesJson() {
@@ -120,13 +123,6 @@ public class EnvironmentDetails {
         return version;
     }
 
-    public static void setEnvUrl(String url) {
-        envUrl = url;
-    }
-
-    private static boolean ready = false;
-    private static Thread t = null;
-
     public static void loadEnvironmentDetails() {
         loadEnvironmentDetails(null, true);
     }
@@ -188,6 +184,9 @@ public class EnvironmentDetails {
     }
 
     public static void waitForThread() {
+        if (t == null) {
+            return;
+        }
         try {
             t.join(5000);
         } catch (InterruptedException e) {
