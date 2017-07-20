@@ -4,6 +4,7 @@ import com.macys.sdt.framework.exceptions.DriverNotInitializedException;
 import com.macys.sdt.framework.runner.RunConfig;
 import com.macys.sdt.framework.runner.WebDriverManager;
 import com.macys.sdt.framework.utils.StepUtils;
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import org.junit.Assert;
 import org.openqa.selenium.*;
@@ -564,6 +565,60 @@ public class Clicks {
             click(element.get());
         } else {
             Assert.fail("element with text \"" + find + "\" not found");
+        }
+    }
+
+    /**
+     * Swipe from one element to another - equivalent to drag and drop
+     *
+     * @param from String selector for element to start at
+     * @param to String selector for element to end at
+     */
+    public static void swipe(String from, String to) {
+        swipe(Elements.findElement(from), Elements.findElement(to));
+    }
+
+    /**
+     * Swipe from one element to another - equivalent to drag and drop
+     *
+     * @param from By for element to start at
+     * @param to By for element to end at
+     */
+    public static void swipe(By from, By to) {
+        swipe(Elements.findElement(from), Elements.findElement(to));
+    }
+
+    /**
+     * Swipe from one element to another - equivalent to drag and drop
+     *
+     * @param from element to start at
+     * @param to element to end at
+     */
+    public static void swipe(WebElement from, WebElement to) {
+        Wait.forPageReady();
+        WebDriver driver;
+        try {
+            driver = WebDriverManager.getWebDriver();
+        } catch (DriverNotInitializedException e) {
+            logger.error("Driver not initialized");
+            return;
+        }
+        if (driver instanceof AppiumDriver) {
+            AppiumDriver appiumDriver = (AppiumDriver)driver;
+
+            Dimension dimension = from.getSize();
+            Point upperLeft = from.getLocation();
+            Point fromCenter = new Point(upperLeft.getX() + dimension.getWidth() / 2, upperLeft.getY() + dimension.getHeight() / 2);
+
+            dimension = to.getSize();
+            upperLeft = to.getLocation();
+            Point toCenter = new Point(upperLeft.getX() + dimension.getWidth() / 2, upperLeft.getY() + dimension.getHeight() / 2);
+
+            // swipe args: startX, startY, endX, endY, duration
+            appiumDriver.swipe(fromCenter.x, fromCenter.y, toCenter.x, toCenter.y, 200);
+        } else {
+            Actions action = new Actions(driver);
+            action.dragAndDrop(from, to).perform();
         }
     }
 }
