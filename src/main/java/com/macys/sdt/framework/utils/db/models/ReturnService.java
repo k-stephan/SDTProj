@@ -296,11 +296,17 @@ public class ReturnService {
                 Assert.fail("ERROR - ENV Database returned nil for order number #{order_number}");
             }
         } catch (SQLException | JSONException e) {
-            logger.error("Unable to get date of status update for order " + orderNumber);
+            logger.error("Unable to get date of status update for order : " + orderNumber);
         }
         return date;
     }
 
+    /**
+     * get user details corresponding to an order number
+     *
+     * @param orderNum order_number of an order
+     * @return user details containing email and password associated to the order number given
+     */
     public Map getUserDetails(String orderNum) {
         setupConnection();
         Map<String, String> userData = new HashMap<>();

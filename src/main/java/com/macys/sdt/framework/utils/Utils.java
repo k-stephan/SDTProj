@@ -527,6 +527,7 @@ public class Utils {
      * @return resulting File
      */
     public static File getResourceFile(String fName) {
+        logger.debug("file name : " + fName);
         File resource;
         String path;
         // project data
