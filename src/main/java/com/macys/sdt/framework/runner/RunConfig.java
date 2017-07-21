@@ -197,6 +197,10 @@ public class RunConfig {
      */
     public static String repoJar = getEnvOrExParam("repo_jar");
     /**
+     * Download bandwidth in Kbps
+     */
+    public static int bandwidth = Utils.parseInt(getEnvOrExParam("bandwidth"), -1);
+    /**
      * Path to shared resources
      */
     public static String sharedResourceDir = repoJar != null ?
@@ -213,8 +217,7 @@ public class RunConfig {
     protected static String appLocation = getEnvOrExParam("app_location");
 
     // don't allow objects of this type to be initialized, static access only
-    private RunConfig() {
-    }
+    private RunConfig() {}
 
     /**
      * Retrieves project info either from "sdt_project" or "scenarios" env val if possible
@@ -685,6 +688,10 @@ public class RunConfig {
             if (analytics != null) {
                 logger.info("Including Analytics: " + analytics.getClass().getSimpleName());
             }
+        }
+
+        if (bandwidth > 0) {
+            useProxy = true;
         }
 
         // tag_collection

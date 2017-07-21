@@ -695,6 +695,9 @@ class WebDriverConfigurator {
             logger.error("Cannot find open port for proxy server.\nAbort run.");
             System.exit(-1);
         }
+        if (RunConfig.bandwidth > 0) {
+            browsermobServer.setReadBandwidthLimit(RunConfig.bandwidth * 1024 / 8);
+        }
 
         Proxy seleniumProxy = ClientUtil.createSeleniumProxy(browsermobServer);
         DesiredCapabilities capabilities = StepUtils.mobileDevice() ? initDeviceCapabilities() : initBrowserCapabilities();
