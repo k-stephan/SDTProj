@@ -21,7 +21,7 @@ public class Categories {
 
     public static JSONObject category(String cat) {
         JSONObject jsonResponse = null;
-        String serviceUrl = "";
+        String serviceUrl;
         if (useParasoftHost) {
             serviceUrl = getServiceURL() + cat + "?_fields=id,name,parentCategoryId,externalHostUrl,attributes,leaf,canvasIds&_expand=id,live,countryEligible,subCategories(name,leaf).depth%3D2,parentCategory(live).depth%3D2147483647&sdpGrid=primary&ip=" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080";
         } else {
@@ -59,7 +59,7 @@ public class Categories {
 
     public static boolean activeCategory(String cat) {
         JSONObject jsonResponse;
-        String serviceUrl = null;
+        String serviceUrl;
         boolean status = false;
         if (useParasoftHost) {
             serviceUrl = getServiceURL() + cat + "?_fields=live&ip=" + EnvironmentDetails.otherApp("FCC").ipAddress + ":8080";

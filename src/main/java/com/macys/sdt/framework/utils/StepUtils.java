@@ -50,7 +50,7 @@ public abstract class StepUtils {
     public static final String TABLETS = "(?i)ipad( 2)?|galaxy note 10.1|Google Nexus ([0-9][0-9]|[7-9])";
 
     /**
-     * A regex string that will match allowed ipads
+     * A regex string that will match allowed iPads
      */
     public static final String IPAD = "(?i)ipad( 2)?";
 

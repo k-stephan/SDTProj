@@ -325,18 +325,18 @@ public class RunConfig {
                 StringBuilder sb = new StringBuilder(exParams);
                 for (int i = 0, quoteIndex = -1; i < sb.length(); i++) {
                     char c = sb.charAt(i);
-                    if (c == '\"' && quoteIndex == -1) {
+                    if (c == '"') {
                         quoteIndex = i;
                     }
                     if (quoteIndex > -1) {
                         for (i = i + 1; i < sb.length(); i++) {
                             c = sb.charAt(i);
-                            if (c == '\"') {
+                            if (c == '"') {
                                 quoteIndex = -1;
                                 break;
                             }
                             if (c == ' ') {
-                                sb.setCharAt(i, '|');
+                                sb.setCharAt(i, '~');
                             }
                         }
                     }
@@ -345,7 +345,7 @@ public class RunConfig {
                 String[] paramList = exParams.split(" ");
                 for (String param : paramList) {
                     if (param.startsWith(name)) {
-                        return param.split("=")[1].trim().replace('|', ' ').replace("\"", "");
+                        return param.split("=")[1].trim().replace('~', ' ').replace("\"", "");
                     }
                 }
             }

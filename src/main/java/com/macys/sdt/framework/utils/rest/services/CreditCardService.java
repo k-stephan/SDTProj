@@ -66,7 +66,7 @@ public class CreditCardService {
     }
 
     /**
-     * Method to add credit card to exisitng user wallet using Rest services
+     * Method to add credit card to existing user wallet using Rest services
      *
      * @param card Credit card instance
      * @param defaultCard true to make card as default card, else false

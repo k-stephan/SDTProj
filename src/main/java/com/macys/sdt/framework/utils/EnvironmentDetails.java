@@ -42,8 +42,7 @@ public class EnvironmentDetails {
     private static JSONObject servicesJson;
     private static boolean ready = false;
     private static Thread t = null;
-    private EnvironmentDetails() {
-    }
+    private EnvironmentDetails() {}
 
     public static boolean isStage5() {
         return stage5;
@@ -188,7 +187,7 @@ public class EnvironmentDetails {
             return;
         }
         try {
-            t.join(5000);
+            t.join(20000);
         } catch (InterruptedException e) {
             logger.error("Unable to wait for env details thread");
         }

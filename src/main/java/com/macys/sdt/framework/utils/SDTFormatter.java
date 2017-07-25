@@ -131,11 +131,8 @@ public class SDTFormatter implements Reporter, Formatter {
 
     @Override
     public void after(Match match, Result result) {
+        getFeatureElement().putIfAbsent("after", new ArrayList<>());
         List<Map> hooks = getFeatureElement().get("after");
-        if (hooks == null) {
-            hooks = new ArrayList<>();
-            getFeatureElement().put("after", hooks);
-        }
         hooks.add(buildHookMap(match, result));
     }
 
@@ -213,13 +210,11 @@ public class SDTFormatter implements Reporter, Formatter {
     }
 
     private List<Map> getAllExamples() {
-        List<Map> allExamples = getFeatureElement().computeIfAbsent("examples", k -> new ArrayList<>());
-        return allExamples;
+        return getFeatureElement().computeIfAbsent("examples", k -> new ArrayList<>());
     }
 
     private List<Map> getSteps() {
-        List<Map> steps = getFeatureElement().computeIfAbsent("steps", k -> new ArrayList<>());
-        return steps;
+        return getFeatureElement().computeIfAbsent("steps", k -> new ArrayList<>());
     }
 
     private List<Map<String, String>> getEmbeddings() {

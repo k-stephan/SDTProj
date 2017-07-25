@@ -35,6 +35,9 @@ public class ProductService {
     public static boolean checkoutAvailability(String productId) {
         try {
             JSONObject jsonResponse = getProductDetails(productId);
+            if (jsonResponse == null) {
+                return false;
+            }
             // We need to check these three parameter values to confirm the product is available for checkout or not
             return jsonResponse.getBoolean("active") && jsonResponse.getBoolean("live") && !jsonResponse.getBoolean("archived");
         } catch (JSONException e) {
@@ -52,8 +55,7 @@ public class ProductService {
     public static JSONObject getProductDetails(String productId) {
         Response response = RESTOperations.doGET(getServiceURL() + productId, null);
         try {
-            JSONObject jsonResponse = new JSONObject(response.readEntity(String.class)).getJSONObject("product");
-            return jsonResponse;
+            return new JSONObject(response.readEntity(String.class)).getJSONObject("product");
         } catch (JSONException e) {
             logger.error("Unable to get product information from FCC: " + e.getMessage());
         }
@@ -68,8 +70,12 @@ public class ProductService {
      */
     public static Map<String, Object> getProductPrices(String productId) {
         try {
-            return getProductDetails(productId).getJSONObject("price").toMap();
-        } catch (JSONException e) {
+            JSONObject details = getProductDetails(productId);
+            if (details == null) {
+                return null;
+            }
+            return details.getJSONObject("price").toMap();
+        } catch (JSONException | NullPointerException e) {
             logger.error("Unable to get product information from FCC: " + e.getMessage());
         }
         return null;
@@ -84,7 +90,11 @@ public class ProductService {
     public static List<String> getAllUpcIds(String productId) {
         List<String> upcIds = new ArrayList<>();
         try {
-            JSONArray upcsArray = getProductDetails(productId).getJSONArray("upcs");
+            JSONObject details = getProductDetails(productId);
+            if (details == null) {
+                return null;
+            }
+            JSONArray upcsArray = details.getJSONArray("upcs");
             for (int index = 0; index < upcsArray.length(); index++)
                 upcIds.add(((JSONObject) upcsArray.get(index)).getBigInteger("id").toString());
         } catch (JSONException e) {

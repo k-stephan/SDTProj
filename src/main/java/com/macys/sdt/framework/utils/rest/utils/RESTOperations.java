@@ -1,6 +1,5 @@
 package com.macys.sdt.framework.utils.rest.utils;
 
-import com.macys.sdt.framework.runner.RunConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +25,8 @@ public class RESTOperations {
      * @param requestPayload : request payload (compatible with mediaType)
      * @return REST response
      */
-    @Deprecated
     public static Response doPOST(String resource, String mediaType, String requestPayload) {
-        Response response = null;
-        Client client = RESTUtils.createClient();
-        try {
-            WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            logger.info("request payload : " + requestPayload);
-            response = webTarget.request(mediaType).post(Entity.entity(requestPayload, mediaType));
-        } catch (Exception e) {
-            logger.error("error in REST POST call : " + e.getMessage());
-            logger.trace("REST POST call error : " + e);
-        }
-        return response;
+        return doPOST(resource, mediaType, requestPayload, null);
     }
 
     /**
@@ -76,18 +64,8 @@ public class RESTOperations {
      * @param resource : REST uri
      * @return REST response
      */
-    @Deprecated
     public static Response doGET(String resource) {
-        Response response = null;
-        Client client = RESTUtils.createClient();
-        try {
-            WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            response = webTarget.request().get();
-        } catch (Exception e) {
-            logger.error("error in REST GET call : " + e.getMessage());
-            logger.trace("REST GET call error : " + e);
-        }
-        return response;
+        return doGET(resource, null);
     }
 
     /**
@@ -156,16 +134,7 @@ public class RESTOperations {
      */
     @Deprecated
     public static Response doDELETE(String resource) {
-        Response response = null;
-        Client client = RESTUtils.createClient();
-        try {
-            WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            response = webTarget.request().delete();
-        } catch (Exception e) {
-            logger.error("error in REST DELETE call : " + e.getMessage());
-            logger.trace("REST DELETE call error : " + e);
-        }
-        return response;
+        return doDELETE(resource, null);
     }
 
     /**
@@ -204,17 +173,7 @@ public class RESTOperations {
      */
     @Deprecated
     public static Response doPUT(String resource, String mediaType, String requestPayload) {
-        Response response = null;
-        Client client = RESTUtils.createClient();
-        try {
-            WebTarget webTarget = RESTUtils.createTarget(client, resource);
-            logger.info("request payload : " + requestPayload);
-            response = webTarget.request(mediaType).put(Entity.entity(requestPayload, mediaType));
-        } catch (Exception e) {
-            logger.error("error in REST PUT call : " + e.getMessage());
-            logger.trace("REST PUT call error : " + e);
-        }
-        return response;
+        return doPUT(resource, mediaType, requestPayload, null);
     }
 
     /**

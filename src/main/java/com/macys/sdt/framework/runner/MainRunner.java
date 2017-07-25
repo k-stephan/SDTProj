@@ -71,7 +71,57 @@ public class  MainRunner {
         }));
 
         getEnvVars(args);
+        ArrayList<String> cucumberArgs = getCucumberArgs(args);
+        printTestInfo();
+        setBeforeNavigationHooks();
+        setAfterNavigationHooks();
+        runCucumber(cucumberArgs);
+        close();
+        if (args != null) {
+            System.exit(runStatus);
+        }
+    }
 
+    private static void printTestInfo() {
+        if (!useTestObject) {
+            logger.info("Testing " + url + " on " +
+                    (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS :
+                            browser + " " + browserVersion) + (useSauceLabs ? " on Sauce Labs" : ""));
+        } else {
+            logger.info("Testing " + url + " on " +
+                    (useAppium ? " TestObject device running " + (StepUtils.iOS() ? "iOS " : "Android ")
+                            + remoteOS : browser + " " + browserVersion));
+        }
+    }
+
+    private static void runCucumber(final ArrayList<String> cucumberArgs) {
+        try {
+            Thread cucumberThread = new Thread(() -> {
+                int status = 1;
+                try {
+                    status = Main.run(cucumberArgs.toArray(new String[cucumberArgs.size()]),
+                            Thread.currentThread().getContextClassLoader());
+                } catch (IOException e) {
+                    logger.error("IOException in cucumber run: " + e);
+                } finally {
+                    runStatus = status;
+                }
+            });
+            cucumberThread.setName("Cucumber");
+            cucumberThread.start();
+            if (!appTest) {
+                PageHangWatchDog.init(cucumberThread);
+                new AuthenticationDialog(cucumberThread);
+            }
+            cucumberThread.join();
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+            runStatus = 1;
+        }
+    }
+
+    private static ArrayList<String> getCucumberArgs(String[] args) throws Exception {
         ArrayList<String> cucumberArgs = getFeatureScenarios();
         if (cucumberArgs == null) {
             throw new Exception("Error getting scenarios");
@@ -106,7 +156,24 @@ public class  MainRunner {
             }
         }
 
+        cucumberArgs.addAll(getGlueAndSettings(args));
+
+        // check if dry-run passed as env or ex param
+        if (!dryRun && booleanParam("dry-run")) {
+            dryRun = true;
+            cucumberArgs.add("--dry-run");
+        }
+        return cucumberArgs;
+    }
+
+    private static ArrayList<String> getGlueAndSettings(String[] args) {
+        ArrayList<String> cucumberArgs = new ArrayList<>();
         if (project != null) {
+            cucumberArgs.add("--glue");
+            cucumberArgs.add("com.macys.sdt.projects." + project);
+        }
+
+        for (String project : includedProjects) {
             cucumberArgs.add("--glue");
             cucumberArgs.add("com.macys.sdt.projects." + project);
         }
@@ -131,58 +198,7 @@ public class  MainRunner {
                 }
             }
         }
-
-        for (String project : includedProjects) {
-            cucumberArgs.add("--glue");
-            cucumberArgs.add("com.macys.sdt.projects." + project);
-        }
-
-        // check if dry-run passed as env or ex param
-        if (!dryRun && booleanParam("dry-run")) {
-            dryRun = true;
-            cucumberArgs.add("--dry-run");
-        }
-        if(!useTestObject) {
-            logger.info("Testing " + url + " on " +
-                    (useAppium ? device + " running " + (StepUtils.iOS() ? "iOS " : "Android ") + remoteOS :
-                            browser + " " + browserVersion) + (useSauceLabs ? " on Sauce Labs" : ""));
-        } else {
-            logger.info("Testing " + url + " on " +
-                    (useAppium ? " TestObject device running " + (StepUtils.iOS() ? "iOS " : "Android ")
-                            + remoteOS : browser + " " + browserVersion));
-        }
-        setBeforeNavigationHooks();
-        setAfterNavigationHooks();
-
-        try {
-            Thread cucumberThread = new Thread(() -> {
-                int status = 1;
-                try {
-                    status = Main.run(cucumberArgs.toArray(new String[cucumberArgs.size()]),
-                            Thread.currentThread().getContextClassLoader());
-                } catch (IOException e) {
-                    logger.error("IOException in cucumber run: " + e);
-                } finally {
-                    runStatus = status;
-                }
-            });
-            cucumberThread.setName("Cucumber");
-            cucumberThread.start();
-            if (!appTest) {
-                PageHangWatchDog.init(cucumberThread);
-                new AuthenticationDialog(cucumberThread);
-            }
-            cucumberThread.join();
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-            runStatus = 1;
-        } finally {
-            close();
-            if (args != null) {
-                System.exit(runStatus);
-            }
-        }
+        return cucumberArgs;
     }
 
     /**

@@ -21,16 +21,20 @@ public class Canvas {
             application = "SITE";
         }
         JSONObject jsonResponse;
-        String requestedContextParams = canvasId + "?catId=" + categoryId + "&_deviceType=" + ((Map) context.get(0)).get("DEVICE_TYPE") + "&_shoppingMode=" + ((Map) context.get(0)).get("SHOPPING_MODE") + "&_regionCode=" + ((Map) context.get(0)).get("REGION_CODE") + "&_application=" + application + "&_navigationType=" + ((Map) context.get(0)).get("NAVIGATION_TYPE") + "&_expand=media";
+        String requestedContextParams = canvasId + "?catId=" + categoryId + "&_deviceType=" +
+                ((Map) context.get(0)).get("DEVICE_TYPE") + "&_shoppingMode=" +
+                ((Map) context.get(0)).get("SHOPPING_MODE") + "&_regionCode=" +
+                ((Map) context.get(0)).get("REGION_CODE") + "&_application=" + application + "&_navigationType=" +
+                ((Map) context.get(0)).get("NAVIGATION_TYPE") + "&_expand=media";
         if (!canvasIdsInheritable.isEmpty()) {
-            String can = null;
+            StringBuilder canvasIds = new StringBuilder();
             for (int index = 0; index < canvasIdsInheritable.size(); index++)
                 if (index < canvasIdsInheritable.size() - 1) {
-                    can = can + canvasIdsInheritable.get(index) + ",";
+                    canvasIds.append(canvasIdsInheritable.get(index)).append(",");
                 } else {
-                    can = can + canvasIdsInheritable.get(index);
+                    canvasIds.append(canvasIdsInheritable.get(index));
                 }
-            requestedContextParams = requestedContextParams + "&inheritableCanvasIds=" + can;
+            requestedContextParams = requestedContextParams + "&inheritableCanvasIds=" + canvasIds;
         }
         String serviceUrl = getServiceURL() + requestedContextParams;
         Map<String, String> headers = new HashMap<>();
